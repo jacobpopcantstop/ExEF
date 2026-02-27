@@ -3240,6 +3240,78 @@ body.has-topic-clusters.has-topic-clusters-plain main {
   color: #fff;
 }
 
+#ef-story-form .esqr-skill-group {
+  background: linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
+  border-color: #d8e2ef;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+}
+
+#ef-story-form .esqr-item__text,
+#ef-story-form .esqr-skill-group__legend {
+  color: var(--color-heading);
+}
+
+#ef-story-form .esqr-rating__option span {
+  background: #ffffff;
+  border-color: #c6d4e1;
+  color: var(--color-heading);
+}
+
+#ef-story-form .esqr-rating__label {
+  color: var(--color-text-light);
+}
+
+#ef-story-form .esqr-rating__option:hover span {
+  background: #eef6ff;
+}
+
+.guided-diagnostic-list {
+  display: grid;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.guided-diagnostic-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-lg);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbfd 100%);
+}
+
+.guided-diagnostic-card__title {
+  display: block;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-bottom: var(--space-xs);
+}
+
+.guided-diagnostic-card__hint {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.95rem;
+  color: var(--color-text-light);
+}
+
+[data-theme="dark"] #ef-story-form .esqr-skill-group,
+[data-theme="dark"] .guided-diagnostic-card {
+  background: #1a2332;
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] #ef-story-form .esqr-rating__option span {
+  background: #132039;
+  border-color: #41557a;
+  color: #d2e2ff;
+}
+
+[data-theme="dark"] .guided-diagnostic-card__title {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .guided-diagnostic-card__hint,
+[data-theme="dark"] #ef-story-form .esqr-rating__label {
+  color: #b8c7de;
+}
+
 /* Print: always light mode */
 @media print {
   [data-theme="dark"] {

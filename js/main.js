@@ -282,8 +282,18 @@ document.addEventListener('DOMContentLoaded', function () {
     if (currentPage !== 'resources.html') return;
 
     var TIME_KEY = 'efi_time_blindness_entries';
+    var TIME_BENCHMARKS = [
+      { key: 'reply-email', label: 'Reply to one important email', benchmark: 12, range: '8-15 min' },
+      { key: 'weekly-plan', label: 'Map out one week in your planner', benchmark: 25, range: '20-30 min' },
+      { key: 'laundry', label: 'Start and switch one laundry load', benchmark: 18, range: '12-20 min' },
+      { key: 'school-form', label: 'Fill out one school or work form', benchmark: 15, range: '10-20 min' },
+      { key: 'grocery-list', label: 'Make a grocery list for the week', benchmark: 14, range: '10-18 min' },
+      { key: 'bedroom-reset', label: 'Reset one bedroom or workspace', benchmark: 22, range: '15-30 min' },
+      { key: 'morning-routine', label: 'Get out the door for a normal morning', benchmark: 35, range: '25-45 min' },
+      { key: 'essay-start', label: 'Set up and begin a school writing assignment', benchmark: 28, range: '20-35 min' }
+    ];
     var tbEstimated = document.getElementById('tb-estimated');
-    var tbActual = document.getElementById('tb-actual');
+    var tbTask = document.getElementById('tb-task');
     var tbAdd = document.getElementById('tb-add-entry');
     var tbReset = document.getElementById('tb-reset');
     var tbCopySummary = document.getElementById('tb-copy-summary');
@@ -292,6 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var tbMessage = document.getElementById('tb-message');
     var tbConfidence = document.getElementById('tb-confidence');
     var tbSummary = document.getElementById('tb-summary');
+    var tbBenchmarkNote = document.getElementById('tb-benchmark-note');
 
     function readEntries() {
       try { return JSON.parse(localStorage.getItem(TIME_KEY)) || []; } catch (e) { return []; }
@@ -301,37 +312,62 @@ document.addEventListener('DOMContentLoaded', function () {
       localStorage.setItem(TIME_KEY, JSON.stringify(entries.slice(-25)));
     }
 
-    function median(values) {
-      if (!values.length) return 0;
-      var sorted = values.slice().sort(function (a, b) { return a - b; });
-      var mid = Math.floor(sorted.length / 2);
-      return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+    function findBenchmark(taskKey) {
+      return TIME_BENCHMARKS.find(function (item) { return item.key === taskKey; }) || null;
+    }
+
+    function populateTimeBenchmarks() {
+      if (!tbTask) return;
+      var html = '<option value="">Choose a common task...</option>';
+      TIME_BENCHMARKS.forEach(function (item) {
+        html += '<option value="' + item.key + '">' + item.label + '</option>';
+      });
+      tbTask.innerHTML = html;
+    }
+
+    function describeSelectedBenchmark() {
+      if (!tbBenchmarkNote || !tbTask) return;
+      var benchmark = findBenchmark(tbTask.value);
+      if (!benchmark) {
+        tbBenchmarkNote.textContent = 'Choose a task to see EFI\'s typical time benchmark.';
+        return;
+      }
+      tbBenchmarkNote.textContent = 'Typical baseline: about ' + benchmark.benchmark + ' minutes (' + benchmark.range + ').';
     }
 
     function computeTimeMetrics(entries) {
       if (!entries.length) return null;
-      var ratios = entries.map(function (entry) { return Number(entry.actual) / Number(entry.estimated); });
-      var mean = ratios.reduce(function (sum, ratio) { return sum + ratio; }, 0) / ratios.length;
-      var med = median(ratios);
-      var estimateBase = 30;
+      var ratios = [];
+      var deltas = [];
+      entries.forEach(function (entry) {
+        var benchmark = Number(entry.benchmark || entry.actual || 0);
+        var estimated = Number(entry.estimated || 0);
+        if (!benchmark || !estimated) return;
+        ratios.push(estimated / benchmark);
+        deltas.push(estimated - benchmark);
+      });
+      if (!ratios.length) return null;
+      var meanRatio = ratios.reduce(function (sum, ratio) { return sum + ratio; }, 0) / ratios.length;
+      var meanDelta = deltas.reduce(function (sum, delta) { return sum + delta; }, 0) / deltas.length;
+      var correctionFactor = meanRatio > 0 ? (1 / meanRatio) : 1;
       return {
         entries: entries.length,
-        mean: mean,
-        median: med,
-        sampleEstimate: estimateBase,
-        correctedByMean: Math.round(estimateBase * mean),
-        correctedByMedian: Math.round(estimateBase * med)
+        meanRatio: meanRatio,
+        meanDelta: meanDelta,
+        correctionFactor: correctionFactor
       };
     }
 
     function buildTimeSummary(metrics) {
       if (!metrics) return 'No entries yet.';
+      var direction = metrics.meanDelta < 0 ? 'under' : (metrics.meanDelta > 0 ? 'over' : 'right on');
+      var deltaValue = Math.abs(Math.round(metrics.meanDelta));
       return (
         'Time Blindness Calibrator: ' +
         metrics.entries + ' entries, ' +
-        'mean factor ' + metrics.mean.toFixed(2) + 'x, ' +
-        'median factor ' + metrics.median.toFixed(2) + 'x. ' +
-        'For a 30-minute estimate, plan about ' + metrics.correctedByMean + '-' + metrics.correctedByMedian + ' minutes.'
+        'your guesses run about ' + metrics.meanRatio.toFixed(2) + 'x the typical baseline, ' +
+        'which means you usually land ' + direction + ' by about ' + deltaValue + ' minutes. ' +
+        'Multiply first-draft estimates by about ' + metrics.correctionFactor.toFixed(2) + 'x.'
       );
     }
 
@@ -346,8 +382,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var entries = readEntries();
       if (!tbBody || !tbMessage) return;
       if (!entries.length) {
-        tbBody.innerHTML = '<tr><td colspan="3">No rows yet</td></tr>';
-        tbMessage.textContent = 'No entries yet. Add 3-5 tasks for a usable baseline.';
+        tbBody.innerHTML = '<tr><td colspan="4">No rows yet</td></tr>';
+        tbMessage.textContent = 'No entries yet. Compare 3-5 tasks to see how your time guesses drift from a typical baseline.';
         if (tbConfidence) tbConfidence.textContent = 'Confidence: unavailable (add entries)';
         if (tbSummary) tbSummary.textContent = 'Summary unavailable until entries are added.';
         return;
@@ -355,15 +391,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
       var html = '';
       entries.forEach(function (entry) {
-        var ratio = Number(entry.actual) / Number(entry.estimated);
-        html += '<tr><td>' + Number(entry.estimated).toFixed(0) + ' min</td><td>' + Number(entry.actual).toFixed(0) + ' min</td><td>' + ratio.toFixed(2) + 'x</td></tr>';
+        var benchmark = Number(entry.benchmark || entry.actual || 0);
+        var delta = Number(entry.delta);
+        if (!Number.isFinite(delta)) delta = Number(entry.estimated || 0) - benchmark;
+        html += '<tr>' +
+          '<td>' + (entry.taskLabel || 'Saved task') + '</td>' +
+          '<td>' + Number(entry.estimated).toFixed(0) + ' min</td>' +
+          '<td>' + benchmark.toFixed(0) + ' min</td>' +
+          '<td>' + (delta === 0 ? 'On target' : ((delta > 0 ? '+' : '') + Math.round(delta) + ' min')) + '</td>' +
+        '</tr>';
       });
       tbBody.innerHTML = html;
 
       var metrics = computeTimeMetrics(entries);
+      var direction = metrics.meanDelta < 0 ? 'under' : (metrics.meanDelta > 0 ? 'over' : 'aligned with');
       tbMessage.textContent =
-        'Mean factor: ' + metrics.mean.toFixed(2) + 'x. Median: ' + metrics.median.toFixed(2) + 'x. ' +
-        'Plan about ' + metrics.correctedByMean + '-' + metrics.correctedByMedian + ' min for a 30-min estimate.';
+        'Across your saved tasks, your first guess runs ' + direction + ' the benchmark by about ' + Math.abs(Math.round(metrics.meanDelta)) +
+        ' minutes. A strong default is to multiply first-draft estimates by ' + metrics.correctionFactor.toFixed(2) + 'x.';
       if (tbConfidence) tbConfidence.textContent = 'Confidence: ' + confidenceLabel(metrics.entries) + ' (' + metrics.entries + ' entries)';
       if (tbSummary) tbSummary.textContent = buildTimeSummary(metrics);
     }
@@ -382,11 +426,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (tbMessage) tbMessage.textContent = 'Add at least one row before exporting CSV.';
         return;
       }
-      var rows = ['estimated_minutes,actual_minutes,ratio,timestamp'];
+      var rows = ['task,estimated_minutes,benchmark_minutes,delta_minutes,timestamp'];
       entries.forEach(function (entry) {
-        var ratio = (Number(entry.actual) / Number(entry.estimated)).toFixed(3);
+        var benchmark = Number(entry.benchmark || entry.actual || 0);
+        var delta = Number(entry.delta);
+        if (!Number.isFinite(delta)) delta = Number(entry.estimated || 0) - benchmark;
         rows.push(
-          [entry.estimated, entry.actual, ratio, entry.at || ''].join(',')
+          ['"' + String(entry.taskLabel || 'Saved task').replace(/"/g, '""') + '"', entry.estimated, benchmark, Math.round(delta), entry.at || ''].join(',')
         );
       });
       var blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
@@ -404,20 +450,30 @@ document.addEventListener('DOMContentLoaded', function () {
     if (tbAdd) {
       tbAdd.addEventListener('click', function () {
         var estimated = Number(tbEstimated && tbEstimated.value ? tbEstimated.value : 0);
-        var actual = Number(tbActual && tbActual.value ? tbActual.value : 0);
-        if (estimated <= 0 || actual <= 0) {
-          if (tbMessage) tbMessage.textContent = 'Enter positive estimated and actual minutes.';
+        var benchmark = findBenchmark(tbTask ? tbTask.value : '');
+        if (!benchmark) {
+          if (tbMessage) tbMessage.textContent = 'Choose a task before comparing your estimate.';
           return;
         }
-        if (estimated > 2000 || actual > 2000) {
+        if (estimated <= 0) {
+          if (tbMessage) tbMessage.textContent = 'Enter a positive estimate in minutes.';
+          return;
+        }
+        if (estimated > 2000) {
           if (tbMessage) tbMessage.textContent = 'Use minute values below 2000 for cleaner calibration.';
           return;
         }
         var entries = readEntries();
-        entries.push({ estimated: estimated, actual: actual, at: new Date().toISOString() });
+        entries.push({
+          taskKey: benchmark.key,
+          taskLabel: benchmark.label,
+          estimated: estimated,
+          benchmark: benchmark.benchmark,
+          delta: estimated - benchmark.benchmark,
+          at: new Date().toISOString()
+        });
         writeEntries(entries);
         if (tbEstimated) tbEstimated.value = '';
-        if (tbActual) tbActual.value = '';
         renderTimeCalibrator();
       });
     }
@@ -443,107 +499,123 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     var TASK_FRICTION_KEY = 'efi_task_friction_latest';
+    var TF_PROMPTS = [
+      {
+        key: 'clarity',
+        label: 'First-step clarity',
+        prompt: 'How fuzzy does the very first step feel right now?',
+        action: 'Write one tiny visible first move before you do anything else.'
+      },
+      {
+        key: 'energy',
+        label: 'Body energy',
+        prompt: 'How much does your body feel like it wants to avoid this?',
+        action: 'Shrink the entry point to a five-minute warm start.'
+      },
+      {
+        key: 'overwhelm',
+        label: 'Task size pressure',
+        prompt: 'How big, heavy, or endless does this task feel in your head?',
+        action: 'Break the task into three micro-steps and only commit to step one.'
+      },
+      {
+        key: 'environment',
+        label: 'Environment pull',
+        prompt: 'How likely is your space, device, or notifications to pull you away?',
+        action: 'Remove one distraction and stage only the materials for the next step.'
+      },
+      {
+        key: 'emotion',
+        label: 'Emotional resistance',
+        prompt: 'How much dread, shame, or tension is attached to starting?',
+        action: 'Name the feeling out loud, then pair the task with one low-pressure action.'
+      }
+    ];
     var tfRun = document.getElementById('tf-run');
     var tfReset = document.getElementById('tf-reset');
     var tfCopy = document.getElementById('tf-copy');
     var tfResult = document.getElementById('tf-result');
     var tfMessage = document.getElementById('tf-message');
-    var tfClarity = document.getElementById('tf-clarity');
-    var tfEnergy = document.getElementById('tf-energy');
-    var tfOverwhelm = document.getElementById('tf-overwhelm');
-    var tfEnvironment = document.getElementById('tf-environment');
-    var tfEmotion = document.getElementById('tf-emotion');
-    var tfClarityValue = document.getElementById('tf-clarity-value');
-    var tfEnergyValue = document.getElementById('tf-energy-value');
-    var tfOverwhelmValue = document.getElementById('tf-overwhelm-value');
-    var tfEnvironmentValue = document.getElementById('tf-environment-value');
-    var tfEmotionValue = document.getElementById('tf-emotion-value');
+    var tfTaskName = document.getElementById('tf-task-name');
+    var tfGuidedList = document.getElementById('tf-guided-list');
     var lastProtocol = '';
+
+    function renderTaskFrictionPrompts() {
+      if (!tfGuidedList) return;
+      var html = '';
+      TF_PROMPTS.forEach(function (item, index) {
+        html += '<div class="guided-diagnostic-card">';
+        html += '<span class="guided-diagnostic-card__title">' + (index + 1) + '. ' + item.label + '</span>';
+        html += '<p class="guided-diagnostic-card__hint">' + item.prompt + '</p>';
+        html += '<div class="esqr-rating" role="radiogroup" aria-label="' + item.label + '">';
+        html += '<span class="esqr-rating__label">Not at all</span>';
+        for (var value = 1; value <= 5; value++) {
+          html += '<label class="esqr-rating__option"><input type="radio" name="tf-' + item.key + '" value="' + value + '"' + (value === 3 ? ' checked' : '') + '><span>' + value + '</span></label>';
+        }
+        html += '<span class="esqr-rating__label">Very much</span>';
+        html += '</div></div>';
+      });
+      tfGuidedList.innerHTML = html;
+    }
+
+    function getTaskFrictionScores() {
+      return TF_PROMPTS.map(function (item) {
+        var checked = document.querySelector('input[name="tf-' + item.key + '"]:checked');
+        return {
+          key: item.key,
+          label: item.label,
+          friction: Number(checked ? checked.value : 3),
+          action: item.action
+        };
+      });
+    }
 
     function runFrictionDiagnostic() {
       if (!tfResult) return;
-      var scores = [
-        {
-          key: 'clarity',
-          label: 'Task Clarity',
-          friction: Math.max(0, 6 - Number(tfClarity ? tfClarity.value : 3)),
-          action: 'Write a two-line task definition: done-state + first visible action.'
-        },
-        {
-          key: 'energy',
-          label: 'Energy',
-          friction: Math.max(0, 6 - Number(tfEnergy ? tfEnergy.value : 3)),
-          action: 'Shrink scope to a 10-minute start block and run one low-friction warm-up action.'
-        },
-        {
-          key: 'overwhelm',
-          label: 'Overwhelm',
-          friction: Number(tfOverwhelm ? tfOverwhelm.value : 3),
-          action: 'Split task into three micro-steps and commit to only step one.'
-        },
-        {
-          key: 'environment',
-          label: 'Environment',
-          friction: Number(tfEnvironment ? tfEnvironment.value : 3),
-          action: 'Remove one distraction source and stage required materials before starting.'
-        },
-        {
-          key: 'emotion',
-          label: 'Emotional Resistance',
-          friction: Number(tfEmotion ? tfEmotion.value : 3),
-          action: 'Use a two-minute reset and label resistance before starting the first action.'
-        }
-      ];
+      var taskName = tfTaskName && tfTaskName.value ? tfTaskName.value.trim() : 'this task';
+      var scores = getTaskFrictionScores();
 
       var total = scores.reduce(function (sum, s) { return sum + s.friction; }, 0);
       var frictionPercent = Math.round((total / (scores.length * 5)) * 100);
       var ranked = scores.slice().sort(function (a, b) { return b.friction - a.friction; });
-      var top = ranked.slice(0, 2);
+      var top = ranked.slice(0, 3);
       var riskLabel = frictionPercent >= 70 ? 'High' : (frictionPercent >= 45 ? 'Moderate' : 'Low');
-      var firstStep = 'Start timer for 10 minutes and execute the first micro-action now.';
+      var firstStep = 'Set a 10-minute timer, do the smallest visible action, and stop only after the timer ends.';
       lastProtocol =
-        'Task Start Friction: ' + frictionPercent + '% (' + riskLabel + '). ' +
-        'Top blockers: ' + top[0].label + ', ' + top[1].label + '. ' +
-        'Actions: 1) ' + top[0].action + ' 2) ' + top[1].action + ' 3) ' + firstStep;
+        'Starting "' + taskName + '" looks like a ' + frictionPercent + '% friction task (' + riskLabel + '). ' +
+        'The biggest drag points are ' + top[0].label + ', ' + top[1].label + ', and ' + top[2].label + '. ' +
+        'Start plan: 1) ' + top[0].action + ' 2) ' + top[1].action + ' 3) ' + firstStep;
 
       localStorage.setItem(TASK_FRICTION_KEY, JSON.stringify({
         generatedAt: new Date().toISOString(),
+        taskName: taskName,
         frictionPercent: frictionPercent,
         riskLabel: riskLabel,
-        topBlockers: [top[0].label, top[1].label],
+        topBlockers: [top[0].label, top[1].label, top[2].label],
         protocol: lastProtocol
       }));
 
       tfResult.innerHTML =
-        '<strong>Start Friction: ' + frictionPercent + '% (' + riskLabel + ' risk)</strong>' +
-        '<p style="margin:var(--space-sm) 0 0;">Top blockers: ' + top[0].label + ' and ' + top[1].label + '.</p>' +
+        '<strong>Start story for "' + taskName + '": ' + frictionPercent + '% friction (' + riskLabel + ')</strong>' +
+        '<p style="margin:var(--space-sm) 0 0;">The heaviest pressure points right now are <strong>' + top[0].label + '</strong>, <strong>' + top[1].label + '</strong>, and <strong>' + top[2].label + '</strong>.</p>' +
         '<ul style="margin:var(--space-sm) 0 0;padding-left:var(--space-lg);">' +
           '<li>' + top[0].action + '</li>' +
           '<li>' + top[1].action + '</li>' +
           '<li>' + firstStep + '</li>' +
         '</ul>';
-      if (tfMessage) tfMessage.textContent = 'Protocol ready. Copy it into notes before starting.';
-    }
-
-    function bindRangeValue(input, output) {
-      if (!input || !output) return;
-      function sync() { output.textContent = String(input.value || '3'); }
-      input.addEventListener('input', sync);
-      sync();
+      if (tfMessage) tfMessage.textContent = 'Your start story is ready. Copy it before you try the task.';
     }
 
     if (tfRun) tfRun.addEventListener('click', runFrictionDiagnostic);
     if (tfReset) {
       tfReset.addEventListener('click', function () {
-        [tfClarity, tfEnergy, tfOverwhelm, tfEnvironment, tfEmotion].forEach(function (input) {
-          if (input) input.value = '3';
-        });
-        [tfClarityValue, tfEnergyValue, tfOverwhelmValue, tfEnvironmentValue, tfEmotionValue].forEach(function (out) {
-          if (out) out.textContent = '3';
+        if (tfTaskName) tfTaskName.value = '';
+        document.querySelectorAll('input[name^="tf-"]').forEach(function (input) {
+          input.checked = input.value === '3';
         });
         lastProtocol = '';
         localStorage.removeItem(TASK_FRICTION_KEY);
-        if (tfResult) tfResult.textContent = 'Set the sliders and run analysis to generate your next-start protocol.';
+        if (tfResult) tfResult.textContent = 'Rate each friction layer to generate your guided start story.';
         if (tfMessage) tfMessage.textContent = 'No protocol copied yet.';
       });
     }
@@ -560,11 +632,12 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    bindRangeValue(tfClarity, tfClarityValue);
-    bindRangeValue(tfEnergy, tfEnergyValue);
-    bindRangeValue(tfOverwhelm, tfOverwhelmValue);
-    bindRangeValue(tfEnvironment, tfEnvironmentValue);
-    bindRangeValue(tfEmotion, tfEmotionValue);
+    if (tbTask) {
+      populateTimeBenchmarks();
+      tbTask.addEventListener('change', describeSelectedBenchmark);
+      describeSelectedBenchmark();
+    }
+    renderTaskFrictionPrompts();
     renderTimeCalibrator();
   })();
 

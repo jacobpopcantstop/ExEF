@@ -438,33 +438,36 @@
 
         <article class="card" style="border-top:4px solid var(--module-1);">
           <h3>Time Blindness Calibrator</h3>
-          <p style="color:var(--color-text-light);">Log estimated and actual task duration. EFI calculates your personal correction factor so future plans are grounded in your pattern.</p>
+          <p style="color:var(--color-text-light);">Choose a common task, guess how long it will take, and compare your estimate to a typical baseline. EFI will show the delta and suggest how much to adjust your planning instinct.</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);">
             <div class="form-group">
-              <label for="tb-estimated">Estimated Minutes</label>
-              <input id="tb-estimated" class="form-control" type="number" min="1" step="1" placeholder="30">
+              <label for="tb-task">What are you estimating?</label>
+              <select id="tb-task" class="form-control">
+                <option value="">Choose a common task...</option>
+              </select>
             </div>
             <div class="form-group">
-              <label for="tb-actual">Actual Minutes</label>
-              <input id="tb-actual" class="form-control" type="number" min="1" step="1" placeholder="50">
+              <label for="tb-estimated">How long do you think this will take? (minutes)</label>
+              <input id="tb-estimated" class="form-control" type="number" min="1" step="1" placeholder="20">
             </div>
           </div>
+          <div class="notice" id="tb-benchmark-note" style="margin-top:var(--space-sm);">Choose a task to see EFI's typical time benchmark.</div>
           <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-top:var(--space-sm);">
-            <button type="button" class="btn btn--primary btn--sm" id="tb-add-entry">Add Entry</button>
+            <button type="button" class="btn btn--primary btn--sm" id="tb-add-entry">Compare My Estimate</button>
             <button type="button" class="btn btn--secondary btn--sm" id="tb-reset">Reset</button>
             <button type="button" class="btn btn--outline btn--sm" id="tb-copy-summary">Copy Summary</button>
             <button type="button" class="btn btn--outline btn--sm" id="tb-export-csv">Export CSV</button>
           </div>
-          <p id="tb-message" style="margin-top:var(--space-sm);color:var(--color-text-light);font-size:0.9rem;">No entries yet. Add 3-5 tasks for a usable baseline.</p>
+          <p id="tb-message" style="margin-top:var(--space-sm);color:var(--color-text-light);font-size:0.9rem;">No entries yet. Compare 3-5 tasks to see how your time guesses drift from a typical baseline.</p>
           <p id="tb-confidence" style="margin-top:var(--space-xs);color:var(--color-text-muted);font-size:0.85rem;">Confidence: unavailable (add entries)</p>
           <p id="tb-summary" style="margin-top:var(--space-xs);color:var(--color-text-muted);font-size:0.85rem;">Summary unavailable until entries are added.</p>
           <div class="table-wrapper" style="margin-top:var(--space-sm);">
             <table>
               <thead>
-                <tr><th>Estimated</th><th>Actual</th><th>Ratio</th></tr>
+                <tr><th>Task</th><th>Your Guess</th><th>Typical</th><th>Delta</th></tr>
               </thead>
               <tbody id="tb-entries-body">
-                <tr><td colspan="3">No rows yet</td></tr>
+                <tr><td colspan="4">No rows yet</td></tr>
               </tbody>
             </table>
           </div>
@@ -472,34 +475,19 @@
 
         <article class="card" style="border-top:4px solid var(--module-3);">
           <h3>Task Start Friction Diagnostic</h3>
-          <p style="color:var(--color-text-light);">Rate common blockers and generate an immediate start protocol that reduces delay risk for your next task.</p>
+          <p style="color:var(--color-text-light);">Think about one task you keep postponing. Rate how hard each underlying issue feels, then EFI will turn it into a start story and a first-step protocol.</p>
           <div class="form-group">
-            <label for="tf-clarity">Task Clarity (1 low to 5 high): <strong id="tf-clarity-value">3</strong></label>
-            <input id="tf-clarity" class="form-control" type="range" min="1" max="5" value="3">
+            <label for="tf-task-name">What task are you trying to start?</label>
+            <input id="tf-task-name" class="form-control" type="text" placeholder="Example: email the school counselor">
           </div>
-          <div class="form-group">
-            <label for="tf-energy">Energy Level (1 low to 5 high): <strong id="tf-energy-value">3</strong></label>
-            <input id="tf-energy" class="form-control" type="range" min="1" max="5" value="3">
-          </div>
-          <div class="form-group">
-            <label for="tf-overwhelm">Overwhelm (1 low to 5 high): <strong id="tf-overwhelm-value">3</strong></label>
-            <input id="tf-overwhelm" class="form-control" type="range" min="1" max="5" value="3">
-          </div>
-          <div class="form-group">
-            <label for="tf-environment">Environment Friction (1 low to 5 high): <strong id="tf-environment-value">3</strong></label>
-            <input id="tf-environment" class="form-control" type="range" min="1" max="5" value="3">
-          </div>
-          <div class="form-group">
-            <label for="tf-emotion">Emotional Resistance (1 low to 5 high): <strong id="tf-emotion-value">3</strong></label>
-            <input id="tf-emotion" class="form-control" type="range" min="1" max="5" value="3">
-          </div>
+          <div id="tf-guided-list" class="guided-diagnostic-list"></div>
           <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;">
-            <button type="button" class="btn btn--primary btn--sm" id="tf-run">Analyze Start Friction</button>
-            <button type="button" class="btn btn--secondary btn--sm" id="tf-reset">Reset Sliders</button>
+            <button type="button" class="btn btn--primary btn--sm" id="tf-run">Generate Start Story</button>
+            <button type="button" class="btn btn--secondary btn--sm" id="tf-reset">Reset Ratings</button>
             <button type="button" class="btn btn--outline btn--sm" id="tf-copy">Copy Protocol</button>
           </div>
           <div id="tf-result" class="notice" style="margin-top:var(--space-md);">
-            Set the sliders and run analysis to generate your next-start protocol.
+            Rate each friction layer to generate your guided start story.
           </div>
           <p id="tf-message" style="margin-top:var(--space-xs);color:var(--color-text-muted);font-size:0.85rem;">No protocol copied yet.</p>
         </article>

@@ -1,6 +1,6 @@
 # The Executive Functioning Institute
 
-An open-source, science-based Executive Function Coaching Certification program grounded in the work of Barkley, Brown, Dawson & Guare, and Ward.
+An open-source, science-based Executive Functioning Coaching Certification program grounded in the work of Barkley, Brown, Dawson & Guare, and Ward.
 
 ## Delivery Model
 
@@ -12,7 +12,7 @@ EFI is an asynchronous-first product:
 
 ## About
 
-The Executive Functioning Institute provides a rigorous six-module certification curriculum that trains professionals to become Certified Executive Function Coaches (CEFC). The program bridges the gap between theoretical neuroscience and practical coaching, training coaches to be the "external frontal lobe" their clients need.
+The Executive Functioning Institute provides a rigorous six-module certification curriculum that trains professionals to become Certified Executive Functioning Coaches (CEFC). The program bridges the gap between theoretical neuroscience and practical coaching, training coaches to be the "external frontal lobe" their clients need.
 
 ## Site Structure
 
@@ -37,6 +37,11 @@ The Executive Functioning Institute provides a rigorous six-module certification
 - **ward-360-thinking.html** — 360 Thinking and Get Ready, Do, Done hub
 - **barkley-vs-brown.html** — Comparative model analysis page
 - **teacher-to-coach.html** — Educator transition landing page + ROI calculator
+- **coaching-home.html** — Personal coaching homepage (Jacob Rozansky coaching brand within EFI)
+- **coaching-methodology.html** — Play-based neuroplasticity methodology details
+- **coaching-services.html** — Coaching services, pricing tiers, and offerings
+- **coaching-about.html** — Founder bio and coaching philosophy
+- **coaching-contact.html** — Coaching inquiry and consultation request page
 - **educator-launchpad.html** — 5-day email launchpad signup flow
 - **gap-analyzer.html** — Download gate for skills gap analyzer lead magnet
 - **launch-plan.html** — Download gate for 90-day business launch plan
@@ -80,6 +85,15 @@ Set `EFI_SUBMISSIONS_CRON_SECRET` in production and rely on `netlify/functions/p
 - `python3 scripts/check_console_logs.py` — blocks `console.log` and `debugger` in production JS.
 - `python3 scripts/release_gate.py` — consolidated deployment gate.
 - `node --test tests/ai-rubric.test.mjs` — unit tests for rubric grading utilities.
+
+## Project Progress
+
+- Canonical tracker: `docs/progress.md`
+- Archived progress history:
+  - `docs/production-readiness-todos.md`
+  - `docs/roadmap-to-perfection.md`
+  - `docs/next-10-todos.md`
+  - `docs/content-gap-audit.md`
 
 ## License
 

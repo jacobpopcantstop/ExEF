@@ -5,6 +5,7 @@
 - Set `BASE_URL`, `API_BASE_URL`, Stripe keys, certificate signing secret.
 - Set funnel API secrets: `EFI_DOWNLOAD_SIGNING_SECRET`, `EFI_CRM_WEBHOOK_URL`, `EFI_ESP_WEBHOOK_URL`.
 - Set async feedback processor secret: `EFI_SUBMISSIONS_CRON_SECRET`.
+- Set video policy env vars: `EFI_VIDEO_PROVIDER` and `EFI_VIDEO_ALLOWED_HOSTS` (must align with `data/video-library.json.policy`).
 
 ## 2) CI gates
 - Run local link checks on PR/push (`scripts/check_links.py`).

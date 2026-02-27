@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Executive Functioning Quiz: EF Profile Story | EFI</title>
+  <meta name="description" content="Take the free EF Profile Story quiz to get a narrative executive functioning profile, friction scores, and a practical 7-day experiment.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.svg">
+  <meta property="og:title" content="Free Executive Functioning Quiz: EF Profile Story | EFI">
+  <meta property="og:description" content="Get a narrative executive functioning profile with dimension scores and a 7-day experiment plan.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Executive Functioning Institute">
+  <link rel="canonical" href="https://executivefunctioninginstitute.com/ef-profile-story.html">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">EFI</div>
+        <span>Executive Functioning Institute</span>
+      </a>
+      <div class="nav__links" id="nav-links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="curriculum.html" class="nav__link">Curriculum</a>
+        <a href="certification.html" class="nav__link">Certification</a>
+        <a href="resources.html" class="nav__link">Resources</a>
+        <span class="nav__auth"></span>
+        <a href="enroll.html" class="nav__link nav__link--cta">Enroll Now</a>
+      </div>
+      <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <header class="page-header">
+      <div class="container">
+        <nav aria-label="Breadcrumb">
+          <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="resources.html">Resources</a></li>
+            <li aria-current="page">EF Profile Story</li>
+          </ol>
+        </nav>
+        <h1>Free EF Profile Story Quiz</h1>
+        <p>Rate each statement from 1 to 5 and EFI will generate a narrative executive functioning profile showing where friction shows up, what is already working, and a 7-day experiment to test this week.</p>
+        <p style="margin-top:var(--space-sm);"><a href="full-ef-profile.html" class="btn btn--sm btn--secondary">View Full Profile Across Diagnostics</a></p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container container--narrow">
+        <div class="callout" style="margin-bottom:var(--space-lg);">
+          <p class="callout__label">Scale</p>
+          <p><strong>1 = Strongly disagree</strong> and <strong>5 = Strongly agree</strong>. These statements describe friction patterns, so higher scores generally indicate more daily drag in that area.</p>
+        </div>
+
+        <form id="ef-story-form" novalidate>
+          <div class="esqr-progress fade-in" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="12" aria-label="EF profile progress">
+            <div class="esqr-progress__bar">
+              <div class="esqr-progress__fill" id="ef-story-progress-fill"></div>
+            </div>
+            <span class="esqr-progress__text" id="ef-story-progress-text">0 of 12 answered</span>
+          </div>
+
+          <div id="ef-story-questions"></div>
+
+          <p id="ef-story-error" style="color:#b42318;font-size:0.9rem;min-height:1.2rem;margin-top:var(--space-md);"></p>
+          <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;">
+            <button type="submit" class="btn btn--primary">Generate My Profile Story</button>
+            <button type="button" class="btn btn--secondary" id="ef-story-reset">Reset</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="ef-story-results" hidden>
+      <div class="container container--narrow">
+        <div class="section-header">
+          <span class="section-header__tag">Your Result</span>
+          <h2 id="ef-story-title">Profile Title</h2>
+          <p id="ef-story-lede"></p>
+        </div>
+
+        <div class="card">
+          <h3>Your Profile Narrative</h3>
+          <p id="ef-story-narrative"></p>
+        </div>
+
+        <div class="grid grid--2 stagger" style="margin-top:var(--space-lg);">
+          <div class="card">
+            <h3>Where You Get Stuck</h3>
+            <ul class="checklist" id="ef-story-stuck"></ul>
+          </div>
+          <div class="card">
+            <h3>What Already Works</h3>
+            <ul class="checklist" id="ef-story-works"></ul>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:var(--space-lg);">
+          <h3>Your 7-Day Experiment</h3>
+          <ol id="ef-story-experiment" style="padding-left:var(--space-lg);"></ol>
+        </div>
+
+        <div class="card" style="margin-top:var(--space-lg);">
+          <h3>Dimension Friction Scores</h3>
+          <div id="ef-story-dimensions"></div>
+        </div>
+
+        <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-top:var(--space-lg);">
+          <button type="button" class="btn btn--secondary btn--sm" id="ef-story-copy">Copy Summary</button>
+          <button type="button" class="btn btn--secondary btn--sm" id="ef-story-export">Export Text</button>
+        </div>
+        <p id="ef-story-message" style="margin-top:var(--space-sm);color:var(--color-text-muted);font-size:0.9rem;">Generate a profile to enable export actions.</p>
+
+        <div id="ef-story-history" class="card" style="margin-top:var(--space-xl);" hidden></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="index.html" class="nav__logo" style="color:var(--color-white);">
+            <div class="nav__logo-icon">EFI</div>
+            <span>Executive Functioning Institute</span>
+          </a>
+          <p>An open-source program providing rigorous, science-based Executive Functioning Coaching Certification grounded in neuroscience and evidence-based practice.</p>
+        </div>
+        <div>
+          <h4>Program</h4>
+          <ul class="footer__links">
+            <li><a href="curriculum.html">Curriculum</a></li>
+            <li><a href="certification.html">Certification</a></li>
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="enroll.html">Enroll</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Tools</h4>
+          <ul class="footer__links">
+            <li><a href="esqr.html">ESQ-R Assessment</a></li>
+            <li><a href="ef-profile-story.html">EF Profile Story</a></li>
+            <li><a href="resources.html#interactive-tools">Interactive Tools</a></li>
+            <li><a href="docs/quiz-outcomes-report.md">Outcome Report</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Learn More</h4>
+          <ul class="footer__links">
+            <li><a href="about.html">About EFI</a></li>
+            <li><a href="scope-of-practice.html">Scope of Practice</a></li>
+            <li><a href="privacy.html">Privacy</a></li>
+            <li><a href="terms.html">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>The Executive Functioning Institute &mdash; Open-Source Education</span>
+        <span>Built on the research of Barkley, Brown, Dawson &amp; Guare, and Ward</span>
+      </div>
+    </div>
+  </footer>
+
+  <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
+
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/ef-profile-story.js"></script>
+</body>
+</html>

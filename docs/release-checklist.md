@@ -1,6 +1,6 @@
 # Release Checklist
 
-Canonical outstanding roadmap: `docs/roadmap-to-perfection.md`
+Canonical outstanding roadmap: `docs/progress.md`
 
 1. Run consolidated gate: `python3 scripts/release_gate.py`.
 2. Confirm launch-blocker checks pass: `python3 scripts/check_launch_blockers.py`.
@@ -30,3 +30,4 @@ Canonical outstanding roadmap: `docs/roadmap-to-perfection.md`
     - `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
     - `STRIPE_WEBHOOK_SECRET`, `EFI_SUBMISSIONS_CRON_SECRET`
     - `GEMINI_API_KEY`
+    - `EFI_VIDEO_PROVIDER`, `EFI_VIDEO_ALLOWED_HOSTS`

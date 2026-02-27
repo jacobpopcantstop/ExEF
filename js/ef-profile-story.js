@@ -205,7 +205,7 @@
     var max = Number(config.scale && config.scale.max) || 5;
     var html = '';
     config.questions.forEach(function (question, idx) {
-      html += '<fieldset class="esqr-skill-group fade-in" style="margin-bottom:var(--space-md);">';
+      html += '<fieldset class="esqr-skill-group fade-in visible" style="margin-bottom:var(--space-md);">';
       html += '<legend class="esqr-skill-group__legend">Question ' + (idx + 1) + '</legend>';
       html += '<div class="esqr-item">';
       html += '<p class="esqr-item__text">' + question.prompt + '</p>';
@@ -218,6 +218,9 @@
       html += '</div></div></fieldset>';
     });
     questionsWrap.innerHTML = html;
+    questionsWrap.querySelectorAll('.fade-in').forEach(function (el) {
+      el.classList.add('visible');
+    });
   }
 
   function allAnswered() {

@@ -438,29 +438,56 @@
 
         <article class="card" style="border-top:4px solid var(--module-1);">
           <h3>Time Blindness Calibrator</h3>
-          <p style="color:var(--color-text-light);">Choose a common task, guess how long it will take, and compare your estimate to a typical baseline. EFI will show the delta and suggest how much to adjust your planning instinct.</p>
+          <p style="color:var(--color-text-light);">Pick a familiar task, trust your first guess, and then compare it with EFI's planning benchmark. This helps you spot where your internal clock runs short, runs long, or gets thrown off by certain kinds of tasks.</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);">
+            <div class="form-group">
+              <label for="tb-category">Which part of life is this from?</label>
+              <select id="tb-category" class="form-control">
+                <option value="">Choose a context...</option>
+              </select>
+            </div>
             <div class="form-group">
               <label for="tb-task">What are you estimating?</label>
               <select id="tb-task" class="form-control">
-                <option value="">Choose a common task...</option>
+                <option value="">Choose a context first...</option>
               </select>
             </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);">
             <div class="form-group">
               <label for="tb-estimated">How long do you think this will take? (minutes)</label>
               <input id="tb-estimated" class="form-control" type="number" min="1" step="1" placeholder="20">
             </div>
+            <div class="form-group">
+              <label for="tb-complexity">Compared with a typical version, this task is...</label>
+              <select id="tb-complexity" class="form-control">
+                <option value="simple">A little simpler</option>
+                <option value="typical" selected>About typical</option>
+                <option value="complex">More complex than usual</option>
+              </select>
+            </div>
           </div>
-          <div class="notice" id="tb-benchmark-note" style="margin-top:var(--space-sm);">Choose a task to see EFI's typical time benchmark.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);">
+            <div class="form-group">
+              <label for="tb-confidence-select">How sure are you about your estimate?</label>
+              <select id="tb-confidence-select" class="form-control">
+                <option value="1">Not very sure</option>
+                <option value="2" selected>Somewhat sure</option>
+                <option value="3">Very sure</option>
+              </select>
+            </div>
+          </div>
+          <div class="notice" id="tb-benchmark-note" style="margin-top:var(--space-sm);">Choose a context and task to see EFI's typical time benchmark.</div>
           <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-top:var(--space-sm);">
-            <button type="button" class="btn btn--primary btn--sm" id="tb-add-entry">Compare My Estimate</button>
+            <button type="button" class="btn btn--primary btn--sm" id="tb-add-entry">Reveal Benchmark + Save Entry</button>
             <button type="button" class="btn btn--secondary btn--sm" id="tb-reset">Reset</button>
             <button type="button" class="btn btn--outline btn--sm" id="tb-copy-summary">Copy Summary</button>
             <button type="button" class="btn btn--outline btn--sm" id="tb-export-csv">Export CSV</button>
           </div>
-          <p id="tb-message" style="margin-top:var(--space-sm);color:var(--color-text-light);font-size:0.9rem;">No entries yet. Compare 3-5 tasks to see how your time guesses drift from a typical baseline.</p>
+          <p id="tb-message" style="margin-top:var(--space-sm);color:var(--color-text-light);font-size:0.9rem;">No entries yet. Try 3 to 5 tasks and the tool will start showing you how your time instincts tend to drift.</p>
+          <p id="tb-pattern" style="margin-top:var(--space-xs);color:var(--color-text-light);font-size:0.85rem;">Your timing pattern will start to show after the first entry.</p>
           <p id="tb-confidence" style="margin-top:var(--space-xs);color:var(--color-text-muted);font-size:0.85rem;">Confidence: unavailable (add entries)</p>
-          <p id="tb-summary" style="margin-top:var(--space-xs);color:var(--color-text-muted);font-size:0.85rem;">Summary unavailable until entries are added.</p>
+          <p id="tb-summary" style="margin-top:var(--space-xs);color:var(--color-text-muted);font-size:0.85rem;">Your planning summary will appear here once you have data.</p>
           <div class="table-wrapper" style="margin-top:var(--space-sm);">
             <table>
               <thead>
@@ -475,13 +502,19 @@
 
         <article class="card" style="border-top:4px solid var(--module-3);">
           <h3>Task Start Friction Diagnostic</h3>
-          <p style="color:var(--color-text-light);">Choose a real-world situation, then rate the specific kinds of friction that show up in that story. EFI will translate it into a concrete start plan.</p>
+          <p style="color:var(--color-text-light);">Choose a real-life situation, rate the specific friction that shows up there, and EFI will turn that pattern into a concrete way to get moving.</p>
           <div class="form-group">
             <label for="tf-scenario">Choose a situation</label>
             <select id="tf-scenario" class="form-control">
               <option value="report-due">You have a report due tomorrow.</option>
+              <option value="study-test">You need to study for a test you have been putting off.</option>
+              <option value="missing-assignment">You need to deal with a missing assignment.</option>
               <option value="email-teacher">You need to email a teacher, boss, or counselor.</option>
+              <option value="proposal-start">You need to start a proposal, project plan, or presentation.</option>
+              <option value="hard-call">You need to make a call you really do not want to make.</option>
               <option value="messy-room">Your room or workspace is a mess and you need to reset it.</option>
+              <option value="pay-bill">You need to pay a bill or handle a money admin task.</option>
+              <option value="make-appointment">You need to book an appointment you have delayed.</option>
               <option value="application-form">You need to finish a form or application you have been avoiding.</option>
             </select>
           </div>
@@ -493,7 +526,7 @@
             <button type="button" class="btn btn--outline btn--sm" id="tf-copy">Copy Protocol</button>
           </div>
           <div id="tf-result" class="notice" style="margin-top:var(--space-md);">
-            Rate each friction layer to generate your guided start story.
+            Rate each friction layer and EFI will build a tailored start script for this situation.
           </div>
           <p id="tf-message" style="margin-top:var(--space-xs);color:var(--color-text-muted);font-size:0.85rem;">No protocol copied yet.</p>
         </article>

@@ -499,54 +499,141 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     var TASK_FRICTION_KEY = 'efi_task_friction_latest';
-    var TF_PROMPTS = [
+    var TF_DIMENSIONS = [
       {
         key: 'clarity',
         label: 'First-step clarity',
-        prompt: 'How fuzzy does the very first step feel right now?',
-        action: 'Write one tiny visible first move before you do anything else.'
+        defaultPrompt: 'How fuzzy does the very first step feel right now?',
+        defaultAction: 'Write one tiny visible first move before you do anything else.'
       },
       {
         key: 'energy',
         label: 'Body energy',
-        prompt: 'How much does your body feel like it wants to avoid this?',
-        action: 'Shrink the entry point to a five-minute warm start.'
+        defaultPrompt: 'How much does your body feel like it wants to avoid this?',
+        defaultAction: 'Shrink the entry point to a five-minute warm start.'
       },
       {
         key: 'overwhelm',
         label: 'Task size pressure',
-        prompt: 'How big, heavy, or endless does this task feel in your head?',
-        action: 'Break the task into three micro-steps and only commit to step one.'
+        defaultPrompt: 'How big, heavy, or endless does this task feel in your head?',
+        defaultAction: 'Break the task into three micro-steps and only commit to step one.'
       },
       {
         key: 'environment',
         label: 'Environment pull',
-        prompt: 'How likely is your space, device, or notifications to pull you away?',
-        action: 'Remove one distraction and stage only the materials for the next step.'
+        defaultPrompt: 'How likely is your space, device, or notifications to pull you away?',
+        defaultAction: 'Remove one distraction and stage only the materials for the next step.'
       },
       {
         key: 'emotion',
         label: 'Emotional resistance',
-        prompt: 'How much dread, shame, or tension is attached to starting?',
-        action: 'Name the feeling out loud, then pair the task with one low-pressure action.'
+        defaultPrompt: 'How much dread, shame, or tension is attached to starting?',
+        defaultAction: 'Name the feeling out loud, then pair the task with one low-pressure action.'
       }
     ];
+    var TF_SCENARIOS = {
+      'report-due': {
+        label: 'a report due tomorrow',
+        note: 'A deadline is close, the task matters, and you still have not started in a clean focused way.',
+        firstStep: 'Open the document, write the title, and draft the first rough sentence before you do anything else.',
+        prompts: {
+          clarity: 'How unclear does the opening move feel when the report is due tomorrow?',
+          energy: 'How much does your body want to avoid opening the document at all?',
+          overwhelm: 'How big does the whole report feel compared to the time left?',
+          environment: 'How likely are your tabs, phone, or room to pull you off track once you begin?',
+          emotion: 'How much pressure, dread, or shame is attached to this report right now?'
+        },
+        actions: {
+          clarity: 'Write a three-line outline: title, first section, first sentence.',
+          energy: 'Give yourself a five-minute “bad first draft” start instead of trying to do it well.',
+          overwhelm: 'Reduce the mission to: outline first, paragraph second, clean-up last.',
+          environment: 'Close extra tabs and keep only the source material you need for the first section.',
+          emotion: 'Say “this only needs to be started, not finished perfectly” before you type.'
+        }
+      },
+      'email-teacher': {
+        label: 'an important email you need to send',
+        note: 'The message is short, but social friction is making the task feel heavier than it should.',
+        firstStep: 'Open the email draft and write only the greeting plus one plain-language sentence about why you are writing.',
+        prompts: {
+          clarity: 'How hard is it to decide what the first sentence of the email should be?',
+          energy: 'How much does your body want to avoid opening your inbox?',
+          overwhelm: 'How much does this small task feel bigger than it should?',
+          environment: 'How likely is your inbox, phone, or notifications to distract you once you open it?',
+          emotion: 'How much awkwardness, fear, or shame is attached to sending this message?'
+        },
+        actions: {
+          clarity: 'Use a simple script: greeting, one-sentence purpose, one clear ask.',
+          energy: 'Commit to drafting only, not sending, for the first two minutes.',
+          overwhelm: 'Treat it like a three-sentence task, not a “big communication problem.”',
+          environment: 'Open a clean compose window before checking any new messages.',
+          emotion: 'Write the awkward version first; you can soften it after it exists.'
+        }
+      },
+      'messy-room': {
+        label: 'resetting a messy room or workspace',
+        note: 'The visual clutter is creating friction before the real work even begins.',
+        firstStep: 'Set a 10-minute timer and clear only the most visible surface first.',
+        prompts: {
+          clarity: 'How unclear is the first place to begin in the mess?',
+          energy: 'How much does your body resist starting a reset right now?',
+          overwhelm: 'How much does the whole room feel too big to tackle?',
+          environment: 'How much is the clutter itself making it harder to stay focused?',
+          emotion: 'How much frustration, guilt, or embarrassment is attached to the mess?'
+        },
+        actions: {
+          clarity: 'Pick one zone only: desk, bed, floor, or counter.',
+          energy: 'Start with one easy reset move like trash or dishes only.',
+          overwhelm: 'Think in zones, not “clean the whole room.”',
+          environment: 'Stage one trash bag or laundry basket before you begin.',
+          emotion: 'Talk to yourself like a reset coach, not a critic.'
+        }
+      },
+      'application-form': {
+        label: 'a form or application you have been avoiding',
+        note: 'It is finite, but uncertainty and decision fatigue are making it feel sticky.',
+        firstStep: 'Open the form and complete only the easiest factual field first.',
+        prompts: {
+          clarity: 'How unclear is the very first field or section you should tackle?',
+          energy: 'How much does your body want to put this off for later?',
+          overwhelm: 'How much does the form feel heavier than its actual size?',
+          environment: 'How likely is context switching to break your focus once you open it?',
+          emotion: 'How much anxiety or perfectionism is tied to filling this out “correctly”?'
+        },
+        actions: {
+          clarity: 'Start with the easiest factual boxes before any complex responses.',
+          energy: 'Tell yourself you are only opening and filling one field to start.',
+          overwhelm: 'Split it into sections and define “done” one chunk at a time.',
+          environment: 'Gather required info first so you are not hunting while filling it out.',
+          emotion: 'Aim for complete first, polished second.'
+        }
+      }
+    };
     var tfRun = document.getElementById('tf-run');
     var tfReset = document.getElementById('tf-reset');
     var tfCopy = document.getElementById('tf-copy');
     var tfResult = document.getElementById('tf-result');
     var tfMessage = document.getElementById('tf-message');
-    var tfTaskName = document.getElementById('tf-task-name');
+    var tfScenario = document.getElementById('tf-scenario');
+    var tfScenarioNote = document.getElementById('tf-scenario-note');
     var tfGuidedList = document.getElementById('tf-guided-list');
     var lastProtocol = '';
 
+    function getActiveScenario() {
+      var key = tfScenario && tfScenario.value ? tfScenario.value : 'report-due';
+      return TF_SCENARIOS[key] || TF_SCENARIOS['report-due'];
+    }
+
     function renderTaskFrictionPrompts() {
       if (!tfGuidedList) return;
+      var scenario = getActiveScenario();
+      if (tfScenarioNote) tfScenarioNote.textContent = scenario.note;
       var html = '';
-      TF_PROMPTS.forEach(function (item, index) {
+      TF_DIMENSIONS.forEach(function (item, index) {
+        var prompt = (scenario.prompts && scenario.prompts[item.key]) || item.defaultPrompt;
         html += '<div class="guided-diagnostic-card">';
         html += '<span class="guided-diagnostic-card__title">' + (index + 1) + '. ' + item.label + '</span>';
-        html += '<p class="guided-diagnostic-card__hint">' + item.prompt + '</p>';
+        html += '<p class="guided-diagnostic-card__hint">' + prompt + '</p>';
         html += '<div class="esqr-rating" role="radiogroup" aria-label="' + item.label + '">';
         html += '<span class="esqr-rating__label">Not at all</span>';
         for (var value = 1; value <= 5; value++) {
@@ -559,20 +646,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function getTaskFrictionScores() {
-      return TF_PROMPTS.map(function (item) {
+      var scenario = getActiveScenario();
+      return TF_DIMENSIONS.map(function (item) {
         var checked = document.querySelector('input[name="tf-' + item.key + '"]:checked');
         return {
           key: item.key,
           label: item.label,
           friction: Number(checked ? checked.value : 3),
-          action: item.action
+          action: (scenario.actions && scenario.actions[item.key]) || item.defaultAction
         };
       });
     }
 
     function runFrictionDiagnostic() {
       if (!tfResult) return;
-      var taskName = tfTaskName && tfTaskName.value ? tfTaskName.value.trim() : 'this task';
+      var scenario = getActiveScenario();
+      var taskName = scenario.label;
       var scores = getTaskFrictionScores();
 
       var total = scores.reduce(function (sum, s) { return sum + s.friction; }, 0);
@@ -580,14 +669,15 @@ document.addEventListener('DOMContentLoaded', function () {
       var ranked = scores.slice().sort(function (a, b) { return b.friction - a.friction; });
       var top = ranked.slice(0, 3);
       var riskLabel = frictionPercent >= 70 ? 'High' : (frictionPercent >= 45 ? 'Moderate' : 'Low');
-      var firstStep = 'Set a 10-minute timer, do the smallest visible action, and stop only after the timer ends.';
+      var firstStep = scenario.firstStep || 'Set a 10-minute timer, do the smallest visible action, and stop only after the timer ends.';
       lastProtocol =
-        'Starting "' + taskName + '" looks like a ' + frictionPercent + '% friction task (' + riskLabel + '). ' +
+        'Starting ' + taskName + ' looks like a ' + frictionPercent + '% friction task (' + riskLabel + '). ' +
         'The biggest drag points are ' + top[0].label + ', ' + top[1].label + ', and ' + top[2].label + '. ' +
         'Start plan: 1) ' + top[0].action + ' 2) ' + top[1].action + ' 3) ' + firstStep;
 
       localStorage.setItem(TASK_FRICTION_KEY, JSON.stringify({
         generatedAt: new Date().toISOString(),
+        scenarioKey: tfScenario && tfScenario.value ? tfScenario.value : 'report-due',
         taskName: taskName,
         frictionPercent: frictionPercent,
         riskLabel: riskLabel,
@@ -596,7 +686,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }));
 
       tfResult.innerHTML =
-        '<strong>Start story for "' + taskName + '": ' + frictionPercent + '% friction (' + riskLabel + ')</strong>' +
+        '<strong>Start story for ' + taskName + ': ' + frictionPercent + '% friction (' + riskLabel + ')</strong>' +
         '<p style="margin:var(--space-sm) 0 0;">The heaviest pressure points right now are <strong>' + top[0].label + '</strong>, <strong>' + top[1].label + '</strong>, and <strong>' + top[2].label + '</strong>.</p>' +
         '<ul style="margin:var(--space-sm) 0 0;padding-left:var(--space-lg);">' +
           '<li>' + top[0].action + '</li>' +
@@ -609,7 +699,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (tfRun) tfRun.addEventListener('click', runFrictionDiagnostic);
     if (tfReset) {
       tfReset.addEventListener('click', function () {
-        if (tfTaskName) tfTaskName.value = '';
+        if (tfScenario) tfScenario.value = 'report-due';
+        renderTaskFrictionPrompts();
         document.querySelectorAll('input[name^="tf-"]').forEach(function (input) {
           input.checked = input.value === '3';
         });
@@ -629,6 +720,16 @@ document.addEventListener('DOMContentLoaded', function () {
         copyText(lastProtocol, function () {
           if (tfMessage) tfMessage.textContent = 'Protocol copied.';
         });
+      });
+    }
+
+    if (tfScenario) {
+      tfScenario.addEventListener('change', function () {
+        renderTaskFrictionPrompts();
+        lastProtocol = '';
+        localStorage.removeItem(TASK_FRICTION_KEY);
+        if (tfResult) tfResult.textContent = 'Rate each friction layer to generate your guided start story.';
+        if (tfMessage) tfMessage.textContent = 'Scenario changed. Generate a new start story.';
       });
     }
 

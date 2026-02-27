@@ -475,11 +475,17 @@
 
         <article class="card" style="border-top:4px solid var(--module-3);">
           <h3>Task Start Friction Diagnostic</h3>
-          <p style="color:var(--color-text-light);">Think about one task you keep postponing. Rate how hard each underlying issue feels, then EFI will turn it into a start story and a first-step protocol.</p>
+          <p style="color:var(--color-text-light);">Choose a real-world situation, then rate the specific kinds of friction that show up in that story. EFI will translate it into a concrete start plan.</p>
           <div class="form-group">
-            <label for="tf-task-name">What task are you trying to start?</label>
-            <input id="tf-task-name" class="form-control" type="text" placeholder="Example: email the school counselor">
+            <label for="tf-scenario">Choose a situation</label>
+            <select id="tf-scenario" class="form-control">
+              <option value="report-due">You have a report due tomorrow.</option>
+              <option value="email-teacher">You need to email a teacher, boss, or counselor.</option>
+              <option value="messy-room">Your room or workspace is a mess and you need to reset it.</option>
+              <option value="application-form">You need to finish a form or application you have been avoiding.</option>
+            </select>
           </div>
+          <div id="tf-scenario-note" class="notice" style="margin-bottom:var(--space-md);">A deadline is close, the task matters, and you still have not started in a clean focused way.</div>
           <div id="tf-guided-list" class="guided-diagnostic-list"></div>
           <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;">
             <button type="button" class="btn btn--primary btn--sm" id="tf-run">Generate Start Story</button>

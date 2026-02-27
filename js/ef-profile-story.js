@@ -27,6 +27,38 @@
   var MAX_HISTORY = 15;
   var config = null;
   var lastResult = null;
+  var FALLBACK_CONFIG = {
+    version: '2026-02-27',
+    scale: {
+      min: 1,
+      max: 5,
+      labels: ['Strongly disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly agree']
+    },
+    dimensions: {
+      initiation_friction: 'Task initiation friction',
+      time_realism: 'Time realism',
+      overwhelm_sensitivity: 'Overwhelm sensitivity',
+      emotional_reactivity: 'Emotional reactivity',
+      environment_dependence: 'Environment dependence',
+      recovery_speed: 'Recovery speed',
+      planning_depth: 'Planning depth',
+      follow_through: 'Follow-through'
+    },
+    questions: [
+      { id: 'q1', prompt: 'I delay starting important tasks even when I know exactly what to do.', dimension: 'initiation_friction' },
+      { id: 'q2', prompt: 'I underestimate how long tasks will take.', dimension: 'time_realism' },
+      { id: 'q3', prompt: 'When a task feels large, I freeze instead of taking the first step.', dimension: 'overwhelm_sensitivity' },
+      { id: 'q4', prompt: 'If feedback feels critical, my productivity drops quickly.', dimension: 'emotional_reactivity' },
+      { id: 'q5', prompt: 'Noise, clutter, or notifications easily derail my work.', dimension: 'environment_dependence' },
+      { id: 'q6', prompt: 'After interruptions, it takes me a long time to get back on track.', dimension: 'recovery_speed' },
+      { id: 'q7', prompt: 'I start tasks before clarifying milestones or completion criteria.', dimension: 'planning_depth' },
+      { id: 'q8', prompt: 'I begin strong but lose momentum on multi-day work.', dimension: 'follow_through' },
+      { id: 'q9', prompt: 'I rely on deadline pressure to finally begin.', dimension: 'initiation_friction' },
+      { id: 'q10', prompt: 'My schedule often assumes ideal conditions instead of realistic constraints.', dimension: 'time_realism' },
+      { id: 'q11', prompt: 'When priorities shift, I feel overloaded and struggle to re-sequence tasks.', dimension: 'overwhelm_sensitivity' },
+      { id: 'q12', prompt: 'If I miss one day, it is hard to recover momentum the next day.', dimension: 'recovery_speed' }
+    ]
+  };
 
   var DIMENSION_COPY = {
     initiation_friction: {
@@ -423,20 +455,31 @@
   }
 
   function init() {
+    function bootWithConfig(cfg, usedFallback) {
+      config = cfg;
+      renderQuestions();
+      bindActions();
+      updateProgress();
+      renderHistory();
+      if (usedFallback && errorEl) {
+        errorEl.textContent = 'Using built-in quiz data because the remote config could not be loaded.';
+        errorEl.style.color = 'var(--color-text-muted)';
+      }
+    }
+
     fetch('data/ef-profile-story-config.json', { cache: 'no-store' })
       .then(function (res) {
         if (!res.ok) throw new Error('Unable to load EF Profile Story configuration.');
         return res.json();
       })
       .then(function (cfg) {
-        config = cfg;
-        renderQuestions();
-        bindActions();
-        updateProgress();
-        renderHistory();
+        if (!cfg || !Array.isArray(cfg.questions) || !cfg.questions.length) {
+          throw new Error('EF Profile Story configuration is empty.');
+        }
+        bootWithConfig(cfg, false);
       })
-      .catch(function (err) {
-        if (errorEl) errorEl.textContent = err.message || 'Unable to load this tool right now.';
+      .catch(function () {
+        bootWithConfig(FALLBACK_CONFIG, true);
       });
   }
 

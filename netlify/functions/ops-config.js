@@ -42,6 +42,8 @@ exports.handler = async function handler(event) {
     checkVar('GEMINI_API_KEY', { minLength: 16 }),
     checkVar('STRIPE_WEBHOOK_SECRET', { minLength: 16 }),
     checkVar('EFI_SUBMISSIONS_CRON_SECRET', { minLength: 16 }),
+    checkVar('EFI_VIDEO_PROVIDER', { minLength: 6 }),
+    checkVar('EFI_VIDEO_ALLOWED_HOSTS', { minLength: 16 }),
     checkVar('EFI_ADMIN_API_KEY', { minLength: 24 })
   ];
 

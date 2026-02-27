@@ -18,7 +18,7 @@ REQUIRED_FILES = [
   "netlify/functions/ops-config.js",
   "netlify/functions/community-question.js",
   "data/video-library.json",
-  "docs/roadmap-to-perfection.md",
+  "docs/progress.md",
   "docs/video-pipeline.md",
 ]
 
@@ -33,6 +33,8 @@ REQUIRED_ENV_KEYS = [
   "GEMINI_API_KEY",
   "STRIPE_WEBHOOK_SECRET",
   "EFI_SUBMISSIONS_CRON_SECRET",
+  "EFI_VIDEO_PROVIDER",
+  "EFI_VIDEO_ALLOWED_HOSTS",
 ]
 
 
@@ -70,7 +72,7 @@ def main() -> int:
   require_text("netlify.toml", "from = \"/api/*\"", failures)
   require_text("netlify.toml", "to = \"/.netlify/functions/:splat\"", failures)
   require_text("docs/release-checklist.md", "python3 scripts/release_gate.py", failures)
-  require_text("docs/roadmap-to-perfection.md", "Requires Deployment/Operator Input", failures)
+  require_text("docs/progress.md", "Requires Deployment/Operator Input", failures)
 
   if failures:
     print("Launch blocker checks failed:")

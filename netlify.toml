@@ -7,6 +7,51 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
+[[redirects]]
+  from = "/coaching"
+  to = "/coaching-home.html"
+  status = 301
+
+[[redirects]]
+  from = "/coaching/"
+  to = "/coaching-home.html"
+  status = 301
+
+[[redirects]]
+  from = "/coaching/methodology"
+  to = "/coaching-methodology.html"
+  status = 301
+
+[[redirects]]
+  from = "/coaching/services"
+  to = "/coaching-services.html"
+  status = 301
+
+[[redirects]]
+  from = "/coaching/about"
+  to = "/coaching-about.html"
+  status = 301
+
+[[redirects]]
+  from = "/coaching/contact"
+  to = "/coaching-contact.html"
+  status = 301
+
+[[redirects]]
+  from = "/methodology.html"
+  to = "/coaching-methodology.html"
+  status = 301
+
+[[redirects]]
+  from = "/services.html"
+  to = "/coaching-services.html"
+  status = 301
+
+[[redirects]]
+  from = "/contact.html"
+  to = "/coaching-contact.html"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]

@@ -164,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
       { href: 'getting-started.html', label: 'Start Here' },
       { href: 'curriculum.html', label: 'Curriculum' },
       { href: 'resources.html', label: 'Resources' },
+      { href: 'coaching-home.html', label: 'Coaching' },
       { href: 'store.html', label: 'Store' },
       { href: 'certification.html', label: 'Certification' }
     ];
@@ -337,35 +338,303 @@ document.addEventListener('DOMContentLoaded', function () {
     anchor.parentNode.insertBefore(section, anchor);
   })();
 
-  (function reduceEnrollButtons() {
-    var all = Array.prototype.slice.call(document.querySelectorAll('main a[href="enroll.html"]'));
-    if (all.length <= 1) return;
-    all.forEach(function (link, index) {
-      if (index === 0) return;
-      link.href = 'certification.html';
-      if (/\bbtn\b/.test(link.className)) {
-        link.textContent = 'View Certification';
+  (function initResourceInteractiveTools() {
+    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    if (currentPage !== 'resources.html') return;
+
+    var TIME_KEY = 'efi_time_blindness_entries';
+    var tbEstimated = document.getElementById('tb-estimated');
+    var tbActual = document.getElementById('tb-actual');
+    var tbAdd = document.getElementById('tb-add-entry');
+    var tbReset = document.getElementById('tb-reset');
+    var tbCopySummary = document.getElementById('tb-copy-summary');
+    var tbExportCsv = document.getElementById('tb-export-csv');
+    var tbBody = document.getElementById('tb-entries-body');
+    var tbMessage = document.getElementById('tb-message');
+    var tbConfidence = document.getElementById('tb-confidence');
+    var tbSummary = document.getElementById('tb-summary');
+
+    function readEntries() {
+      try { return JSON.parse(localStorage.getItem(TIME_KEY)) || []; } catch (e) { return []; }
+    }
+
+    function writeEntries(entries) {
+      localStorage.setItem(TIME_KEY, JSON.stringify(entries.slice(-25)));
+    }
+
+    function median(values) {
+      if (!values.length) return 0;
+      var sorted = values.slice().sort(function (a, b) { return a - b; });
+      var mid = Math.floor(sorted.length / 2);
+      return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+    }
+
+    function computeTimeMetrics(entries) {
+      if (!entries.length) return null;
+      var ratios = entries.map(function (entry) { return Number(entry.actual) / Number(entry.estimated); });
+      var mean = ratios.reduce(function (sum, ratio) { return sum + ratio; }, 0) / ratios.length;
+      var med = median(ratios);
+      var estimateBase = 30;
+      return {
+        entries: entries.length,
+        mean: mean,
+        median: med,
+        sampleEstimate: estimateBase,
+        correctedByMean: Math.round(estimateBase * mean),
+        correctedByMedian: Math.round(estimateBase * med)
+      };
+    }
+
+    function buildTimeSummary(metrics) {
+      if (!metrics) return 'No entries yet.';
+      return (
+        'Time Blindness Calibrator: ' +
+        metrics.entries + ' entries, ' +
+        'mean factor ' + metrics.mean.toFixed(2) + 'x, ' +
+        'median factor ' + metrics.median.toFixed(2) + 'x. ' +
+        'For a 30-minute estimate, plan about ' + metrics.correctedByMean + '-' + metrics.correctedByMedian + ' minutes.'
+      );
+    }
+
+    function confidenceLabel(count) {
+      if (count >= 8) return 'high';
+      if (count >= 3) return 'medium';
+      if (count >= 1) return 'low';
+      return 'unavailable';
+    }
+
+    function renderTimeCalibrator() {
+      var entries = readEntries();
+      if (!tbBody || !tbMessage) return;
+      if (!entries.length) {
+        tbBody.innerHTML = '<tr><td colspan="3">No rows yet</td></tr>';
+        tbMessage.textContent = 'No entries yet. Add 3-5 tasks for a usable baseline.';
+        if (tbConfidence) tbConfidence.textContent = 'Confidence: unavailable (add entries)';
+        if (tbSummary) tbSummary.textContent = 'Summary unavailable until entries are added.';
+        return;
       }
-    });
+
+      var html = '';
+      entries.forEach(function (entry) {
+        var ratio = Number(entry.actual) / Number(entry.estimated);
+        html += '<tr><td>' + Number(entry.estimated).toFixed(0) + ' min</td><td>' + Number(entry.actual).toFixed(0) + ' min</td><td>' + ratio.toFixed(2) + 'x</td></tr>';
+      });
+      tbBody.innerHTML = html;
+
+      var metrics = computeTimeMetrics(entries);
+      tbMessage.textContent =
+        'Mean factor: ' + metrics.mean.toFixed(2) + 'x. Median: ' + metrics.median.toFixed(2) + 'x. ' +
+        'Plan about ' + metrics.correctedByMean + '-' + metrics.correctedByMedian + ' min for a 30-min estimate.';
+      if (tbConfidence) tbConfidence.textContent = 'Confidence: ' + confidenceLabel(metrics.entries) + ' (' + metrics.entries + ' entries)';
+      if (tbSummary) tbSummary.textContent = buildTimeSummary(metrics);
+    }
+
+    function copyText(text, onDone) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(onDone).catch(onDone);
+      } else {
+        onDone();
+      }
+    }
+
+    function exportTimeEntriesCsv() {
+      var entries = readEntries();
+      if (!entries.length) {
+        if (tbMessage) tbMessage.textContent = 'Add at least one row before exporting CSV.';
+        return;
+      }
+      var rows = ['estimated_minutes,actual_minutes,ratio,timestamp'];
+      entries.forEach(function (entry) {
+        var ratio = (Number(entry.actual) / Number(entry.estimated)).toFixed(3);
+        rows.push(
+          [entry.estimated, entry.actual, ratio, entry.at || ''].join(',')
+        );
+      });
+      var blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'efi-time-blindness-calibrator.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      if (tbMessage) tbMessage.textContent = 'CSV exported with ' + entries.length + ' entries.';
+    }
+
+    if (tbAdd) {
+      tbAdd.addEventListener('click', function () {
+        var estimated = Number(tbEstimated && tbEstimated.value ? tbEstimated.value : 0);
+        var actual = Number(tbActual && tbActual.value ? tbActual.value : 0);
+        if (estimated <= 0 || actual <= 0) {
+          if (tbMessage) tbMessage.textContent = 'Enter positive estimated and actual minutes.';
+          return;
+        }
+        if (estimated > 2000 || actual > 2000) {
+          if (tbMessage) tbMessage.textContent = 'Use minute values below 2000 for cleaner calibration.';
+          return;
+        }
+        var entries = readEntries();
+        entries.push({ estimated: estimated, actual: actual, at: new Date().toISOString() });
+        writeEntries(entries);
+        if (tbEstimated) tbEstimated.value = '';
+        if (tbActual) tbActual.value = '';
+        renderTimeCalibrator();
+      });
+    }
+
+    if (tbReset) {
+      tbReset.addEventListener('click', function () {
+        localStorage.removeItem(TIME_KEY);
+        renderTimeCalibrator();
+      });
+    }
+
+    if (tbCopySummary) {
+      tbCopySummary.addEventListener('click', function () {
+        var summary = buildTimeSummary(computeTimeMetrics(readEntries()));
+        copyText(summary, function () {
+          if (tbMessage) tbMessage.textContent = 'Summary copied.';
+        });
+      });
+    }
+
+    if (tbExportCsv) {
+      tbExportCsv.addEventListener('click', exportTimeEntriesCsv);
+    }
+
+    var TASK_FRICTION_KEY = 'efi_task_friction_latest';
+    var tfRun = document.getElementById('tf-run');
+    var tfReset = document.getElementById('tf-reset');
+    var tfCopy = document.getElementById('tf-copy');
+    var tfResult = document.getElementById('tf-result');
+    var tfMessage = document.getElementById('tf-message');
+    var tfClarity = document.getElementById('tf-clarity');
+    var tfEnergy = document.getElementById('tf-energy');
+    var tfOverwhelm = document.getElementById('tf-overwhelm');
+    var tfEnvironment = document.getElementById('tf-environment');
+    var tfEmotion = document.getElementById('tf-emotion');
+    var tfClarityValue = document.getElementById('tf-clarity-value');
+    var tfEnergyValue = document.getElementById('tf-energy-value');
+    var tfOverwhelmValue = document.getElementById('tf-overwhelm-value');
+    var tfEnvironmentValue = document.getElementById('tf-environment-value');
+    var tfEmotionValue = document.getElementById('tf-emotion-value');
+    var lastProtocol = '';
+
+    function runFrictionDiagnostic() {
+      if (!tfResult) return;
+      var scores = [
+        {
+          key: 'clarity',
+          label: 'Task Clarity',
+          friction: Math.max(0, 6 - Number(tfClarity ? tfClarity.value : 3)),
+          action: 'Write a two-line task definition: done-state + first visible action.'
+        },
+        {
+          key: 'energy',
+          label: 'Energy',
+          friction: Math.max(0, 6 - Number(tfEnergy ? tfEnergy.value : 3)),
+          action: 'Shrink scope to a 10-minute start block and run one low-friction warm-up action.'
+        },
+        {
+          key: 'overwhelm',
+          label: 'Overwhelm',
+          friction: Number(tfOverwhelm ? tfOverwhelm.value : 3),
+          action: 'Split task into three micro-steps and commit to only step one.'
+        },
+        {
+          key: 'environment',
+          label: 'Environment',
+          friction: Number(tfEnvironment ? tfEnvironment.value : 3),
+          action: 'Remove one distraction source and stage required materials before starting.'
+        },
+        {
+          key: 'emotion',
+          label: 'Emotional Resistance',
+          friction: Number(tfEmotion ? tfEmotion.value : 3),
+          action: 'Use a two-minute reset and label resistance before starting the first action.'
+        }
+      ];
+
+      var total = scores.reduce(function (sum, s) { return sum + s.friction; }, 0);
+      var frictionPercent = Math.round((total / (scores.length * 5)) * 100);
+      var ranked = scores.slice().sort(function (a, b) { return b.friction - a.friction; });
+      var top = ranked.slice(0, 2);
+      var riskLabel = frictionPercent >= 70 ? 'High' : (frictionPercent >= 45 ? 'Moderate' : 'Low');
+      var firstStep = 'Start timer for 10 minutes and execute the first micro-action now.';
+      lastProtocol =
+        'Task Start Friction: ' + frictionPercent + '% (' + riskLabel + '). ' +
+        'Top blockers: ' + top[0].label + ', ' + top[1].label + '. ' +
+        'Actions: 1) ' + top[0].action + ' 2) ' + top[1].action + ' 3) ' + firstStep;
+
+      localStorage.setItem(TASK_FRICTION_KEY, JSON.stringify({
+        generatedAt: new Date().toISOString(),
+        frictionPercent: frictionPercent,
+        riskLabel: riskLabel,
+        topBlockers: [top[0].label, top[1].label],
+        protocol: lastProtocol
+      }));
+
+      tfResult.innerHTML =
+        '<strong>Start Friction: ' + frictionPercent + '% (' + riskLabel + ' risk)</strong>' +
+        '<p style="margin:var(--space-sm) 0 0;">Top blockers: ' + top[0].label + ' and ' + top[1].label + '.</p>' +
+        '<ul style="margin:var(--space-sm) 0 0;padding-left:var(--space-lg);">' +
+          '<li>' + top[0].action + '</li>' +
+          '<li>' + top[1].action + '</li>' +
+          '<li>' + firstStep + '</li>' +
+        '</ul>';
+      if (tfMessage) tfMessage.textContent = 'Protocol ready. Copy it into notes before starting.';
+    }
+
+    function bindRangeValue(input, output) {
+      if (!input || !output) return;
+      function sync() { output.textContent = String(input.value || '3'); }
+      input.addEventListener('input', sync);
+      sync();
+    }
+
+    if (tfRun) tfRun.addEventListener('click', runFrictionDiagnostic);
+    if (tfReset) {
+      tfReset.addEventListener('click', function () {
+        [tfClarity, tfEnergy, tfOverwhelm, tfEnvironment, tfEmotion].forEach(function (input) {
+          if (input) input.value = '3';
+        });
+        [tfClarityValue, tfEnergyValue, tfOverwhelmValue, tfEnvironmentValue, tfEmotionValue].forEach(function (out) {
+          if (out) out.textContent = '3';
+        });
+        lastProtocol = '';
+        localStorage.removeItem(TASK_FRICTION_KEY);
+        if (tfResult) tfResult.textContent = 'Set the sliders and run analysis to generate your next-start protocol.';
+        if (tfMessage) tfMessage.textContent = 'No protocol copied yet.';
+      });
+    }
+
+    if (tfCopy) {
+      tfCopy.addEventListener('click', function () {
+        if (!lastProtocol) {
+          if (tfMessage) tfMessage.textContent = 'Run analysis first, then copy the protocol.';
+          return;
+        }
+        copyText(lastProtocol, function () {
+          if (tfMessage) tfMessage.textContent = 'Protocol copied.';
+        });
+      });
+    }
+
+    bindRangeValue(tfClarity, tfClarityValue);
+    bindRangeValue(tfEnergy, tfEnergyValue);
+    bindRangeValue(tfOverwhelm, tfOverwhelmValue);
+    bindRangeValue(tfEnvironment, tfEnvironmentValue);
+    bindRangeValue(tfEmotion, tfEmotionValue);
+    renderTimeCalibrator();
+  })();
+
+  (function reduceEnrollButtons() {
+    return;
   })();
 
   (function enforceCtaGovernance() {
-    var ctaLinks = Array.prototype.slice.call(
-      document.querySelectorAll('main a.btn[href="enroll.html"], main a.btn[href="store.html"], main a.btn[href="certification.html"], main a.btn[href="checkout.html"]')
-    );
-    if (ctaLinks.length <= 2) return;
-
-    ctaLinks.forEach(function (el, index) {
-      el.classList.remove('btn--primary', 'btn--secondary', 'btn--outline', 'btn--outline-white');
-      if (index === 0) {
-        el.classList.add('btn--primary');
-      } else if (index === 1) {
-        el.classList.add('btn--secondary');
-      } else {
-        el.classList.add('btn--outline');
-        if (/enroll/i.test(el.textContent || '')) el.textContent = 'Learn About Certification';
-      }
-    });
+    return;
   })();
 
   (function injectSectionCitationFootnotes() {

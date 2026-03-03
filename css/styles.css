@@ -1511,6 +1511,10 @@ select.form-control {
   }
 
   /* Nav mobile */
+  .nav {
+    overflow: visible;
+  }
+
   .nav__links {
     display: none;
     position: absolute;

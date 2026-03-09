@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Further Sources integration across key pages."""
+"""Validate source and citation integration across key pages."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_FILES = [
     ROOT / "Further Sources",
     ROOT / "further-sources.html",
+    ROOT / "open-ef-resources-directory.html",
 ]
 
 REQUIRED_SOURCE_LINK_FRAGMENTS = [
@@ -24,12 +25,13 @@ REQUIRED_SOURCE_LINK_FRAGMENTS = [
 ]
 
 REQUIRED_PAGE_MARKERS = {
-    "module-a-neuroscience.html": "Further Sources: Module A Citations",
-    "module-c-interventions.html": "Further Sources: Module C Citations",
+    "module-a-neuroscience.html": "Legacy Module A Has Been Folded Into Module 1",
+    "module-c-interventions.html": "Legacy Module C Has Been Folded Into Module 4",
     "teacher-to-coach.html": "Further Sources: Business/Certification Citations",
     "barkley-model-guide.html": "Further Sources: Barkley Citations",
     "brown-clusters-tool.html": "Further Sources: Brown Citations",
-    "resources.html": "further-sources.html",
+    "resources.html": "open-ef-resources-directory.html#citations",
+    "further-sources.html": "open-ef-resources-directory.html#citations",
 }
 
 
@@ -40,12 +42,14 @@ def main() -> int:
         if not req.exists():
             failures.append(f"Missing required source file: {req.name}")
 
-    further_html = (ROOT / "further-sources.html")
-    if further_html.exists():
-        html = further_html.read_text(encoding="utf-8", errors="ignore")
+    directory_html = ROOT / "open-ef-resources-directory.html"
+    if directory_html.exists():
+        html = directory_html.read_text(encoding="utf-8", errors="ignore")
         for frag in REQUIRED_SOURCE_LINK_FRAGMENTS:
             if frag not in html:
-                failures.append(f"Missing expected citation/link in further-sources.html: {frag}")
+                failures.append(
+                    f"Missing expected citation/link in open-ef-resources-directory.html: {frag}"
+                )
 
     for page, marker in REQUIRED_PAGE_MARKERS.items():
         body = (ROOT / page).read_text(encoding="utf-8", errors="ignore")

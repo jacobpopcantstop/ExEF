@@ -19,6 +19,21 @@ REQUIRED_HEADERS = [
     "Content-Security-Policy",
 ]
 IGNORED_HTML = {"404.html"}
+CANONICAL_OVERRIDES = {
+    "checkout.html": CANONICAL_DOMAIN + "store.html#purchase-status",
+    "coaching-about.html": CANONICAL_DOMAIN + "coaching-home.html#practice",
+    "coaching-methodology.html": CANONICAL_DOMAIN + "coaching-home.html#method",
+    "coaching-services.html": CANONICAL_DOMAIN + "coaching-home.html#services",
+    "educator-launchpad.html": CANONICAL_DOMAIN + "teacher-to-coach.html#launchpad",
+    "educator-toolkit.html": CANONICAL_DOMAIN + "resources.html#toolkits",
+    "enroll.html": CANONICAL_DOMAIN + "store.html",
+    "further-sources.html": CANONICAL_DOMAIN + "open-ef-resources-directory.html#citations",
+    "getting-started.html": CANONICAL_DOMAIN + "index.html#start-paths",
+    "module-a-neuroscience.html": CANONICAL_DOMAIN + "module-1.html",
+    "module-b-pedagogy.html": CANONICAL_DOMAIN + "module-3.html",
+    "module-c-interventions.html": CANONICAL_DOMAIN + "module-4.html",
+    "parent-toolkit.html": CANONICAL_DOMAIN + "resources.html#toolkits",
+}
 
 
 class CanonicalParser(HTMLParser):
@@ -49,7 +64,7 @@ def check_canonical_tags() -> None:
             continue
         parser = CanonicalParser()
         parser.feed(html.read_text(encoding="utf-8", errors="ignore"))
-        expected = CANONICAL_DOMAIN + html.name
+        expected = CANONICAL_OVERRIDES.get(html.name, CANONICAL_DOMAIN + html.name)
         if parser.canonical != expected:
             failures.append(
                 f"{html.name}: expected canonical '{expected}', found '{parser.canonical}'"

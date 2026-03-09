@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Educator-to-Coach Launchpad | EFI</title>
-  <meta name="description" content="Free 5-day educator-to-coach email launchpad signup and curriculum sequence." />
-  <link rel="canonical" href="https://executivefunctioninginstitute.com/educator-launchpad.html" />
+  <title>Launchpad Moved | EFI</title>
+  <meta name="description" content="The educator-to-coach launchpad now lives inside the main teacher-to-coach page." />
+  <link rel="canonical" href="https://executivefunctioninginstitute.com/teacher-to-coach.html#launchpad" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -15,10 +15,10 @@
       <a href="index.html" class="nav__logo"><div class="nav__logo-icon">EFI</div><span>Executive Functioning Institute</span></a>
       <div class="nav__links" id="nav-links">
         <a href="index.html" class="nav__link">Home</a>
-        <a href="teacher-to-coach.html" class="nav__link">Landing</a>
-        <a href="further-sources.html" class="nav__link">Sources</a>
+        <a href="teacher-to-coach.html" class="nav__link">Educator Path</a>
+        <a href="curriculum.html" class="nav__link">Curriculum</a>
         <a href="certification.html" class="nav__link">Certification</a>
-        <a href="store.html#interest-form" class="nav__link nav__link--cta">Show Interest</a>
+        <a href="store.html" class="nav__link nav__link--cta">View Store</a>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false"></button>
     </div>
@@ -26,35 +26,20 @@
 
   <header class="page-header">
     <div class="container">
-      <h1>5-Day Educator-to-Coach Launchpad</h1>
-      <p>Join a short free sequence covering offer design, scope, messaging, and first-client outreach.</p>
+      <h1>The Launchpad Now Lives Inside The Educator Path</h1>
+      <p>EFI consolidated the separate launchpad signup page into the main teacher-to-coach page so transition content and signup live together.</p>
     </div>
   </header>
 
   <main id="main-content">
     <section class="section">
       <div class="container container--narrow">
-        <div class="tool-panel">
-          <h2>Signup</h2>
-          <form id="launchpad-form" novalidate>
-            <div class="form-group">
-              <label for="lp-name">Name</label>
-              <input id="lp-name" class="form-control" required autocomplete="name" />
-            </div>
-            <div class="form-group">
-              <label for="lp-email">Email</label>
-              <input id="lp-email" class="form-control" type="email" required autocomplete="email" />
-            </div>
-            <div class="form-group">
-              <input id="lp-consent" type="checkbox" required />
-              <label for="lp-consent">I consent to receive launch emails and agree to EFI privacy terms.</label>
-            </div>
-            <button class="btn btn--primary" type="submit" id="launchpad-submit" data-analytics-event="launchpad_submit_click">Start Free Course</button>
-          </form>
-          <p id="launchpad-output" class="notice" style="display:none;margin-top:1rem;"></p>
+        <div class="card" style="border-top:4px solid var(--module-2);">
+          <h2 style="margin-top:0;">Use The Combined Page Instead</h2>
+          <p>The combined educator transition page now includes the ROI calculator, transition framing, and the 5-day launchpad signup in one place.</p>
           <div class="journey-links">
-            <a class="btn btn--secondary btn--sm" href="gap-analyzer.html" data-analytics-event="launchpad_to_gap">Gap Analyzer</a>
-            <a class="btn btn--primary btn--sm" href="enroll.html" data-analytics-event="launchpad_to_enroll">Full Certification</a>
+            <a class="btn btn--primary btn--sm" href="teacher-to-coach.html#launchpad">Open Launchpad Section</a>
+            <a class="btn btn--secondary btn--sm" href="teacher-to-coach.html">Open Educator Path</a>
           </div>
         </div>
       </div>
@@ -63,59 +48,5 @@
 
   <footer class="footer"><div class="container"><div class="footer__bottom"><span>© 2026 Executive Functioning Institute</span></div></div></footer>
   <script src="js/main.js"></script>
-  <script>
-    (function () {
-      var form = document.getElementById('launchpad-form');
-      var out = document.getElementById('launchpad-output');
-      var submit = document.getElementById('launchpad-submit');
-
-      function setMessage(msg, ok) {
-        out.style.display = 'block';
-        out.textContent = msg;
-        out.style.borderColor = ok ? 'rgba(30, 132, 73, 0.25)' : 'rgba(192,57,43,0.4)';
-      }
-
-      form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        if (!form.reportValidity()) return;
-
-        submit.disabled = true;
-        submit.textContent = 'Submitting...';
-
-        var payload = {
-          name: document.getElementById('lp-name').value.trim(),
-          email: document.getElementById('lp-email').value.trim(),
-          consent: document.getElementById('lp-consent').checked,
-          lead_type: 'launchpad_email_course',
-          source: 'educator-launchpad.html'
-        };
-
-        try {
-          var res = await fetch('/api/leads', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          var data = await res.json();
-          if (!res.ok || !data.ok) throw new Error(data.error || 'Signup failed');
-
-          if (window.EFI && EFI.Analytics) {
-            EFI.Analytics.track('launchpad_signup_success', { lead_id: data.lead_id || '' });
-          }
-
-          setMessage('You are enrolled. Check your inbox for Day 1 and a copy of the full 5-day outline.', true);
-          form.reset();
-        } catch (err) {
-          if (window.EFI && EFI.Analytics) {
-            EFI.Analytics.track('launchpad_signup_error', { error: String(err.message || err) });
-          }
-          setMessage(err.message || 'Unable to submit right now. Please try again.', false);
-        } finally {
-          submit.disabled = false;
-          submit.textContent = 'Start Free Course';
-        }
-      });
-    })();
-  </script>
 </body>
 </html>

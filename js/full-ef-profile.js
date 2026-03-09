@@ -7,6 +7,10 @@
   var resultsSection = document.getElementById('full-profile-results');
   var titleEl = document.getElementById('full-profile-title');
   var ledeEl = document.getElementById('full-profile-lede');
+  var frameEl = document.getElementById('full-profile-frame');
+  var corePatternEl = document.getElementById('full-profile-core-pattern');
+  var leverageEl = document.getElementById('full-profile-leverage');
+  var signalsEl = document.getElementById('full-profile-signals');
   var prioritiesEl = document.getElementById('full-profile-priorities');
   var strengthsEl = document.getElementById('full-profile-strengths');
   var planEl = document.getElementById('full-profile-plan');
@@ -117,8 +121,29 @@
     return String(value || '').toLowerCase();
   }
 
+  function makeSignalMap() {
+    return {
+      planning: 0,
+      activation: 0,
+      regulation: 0,
+      environment: 0
+    };
+  }
+
+  function rankedSignals(signalMap) {
+    return Object.keys(signalMap).map(function (key) {
+      return {
+        key: key,
+        label: key.charAt(0).toUpperCase() + key.slice(1),
+        score: signalMap[key]
+      };
+    }).sort(function (a, b) {
+      return b.score - a.score;
+    });
+  }
+
   function inferSynthesis(esqr, timeMetrics, task, story, hasTimeConfidence) {
-    var signals = [];
+    var signalMap = makeSignalMap();
     var primaryTheme = 'Executive functioning load is present, but the strongest combined pattern is still coming into focus.';
     var profileFrame = 'Emerging Pattern';
     var coachingFocus = 'Reduce friction on the first visible move and keep the daily planning loop small.';
@@ -140,7 +165,7 @@
       esqrGrowth.indexOf('time') !== -1 ||
       strongTimeFactor
     ) {
-      signals.push('planning');
+      signalMap.planning += 2;
     }
 
     if (
@@ -151,7 +176,7 @@
       storyLabel.indexOf('activation') !== -1 ||
       storyProfile.indexOf('starter') !== -1
     ) {
-      signals.push('activation');
+      signalMap.activation += 2;
     }
 
     if (
@@ -160,7 +185,7 @@
       taskBlockers.indexOf('emotional resistance') !== -1 ||
       esqrGrowth.indexOf('emotional') !== -1
     ) {
-      signals.push('emotional load');
+      signalMap.regulation += 2;
     }
 
     if (
@@ -169,8 +194,27 @@
       storyLabel.indexOf('distraction') !== -1 ||
       esqrGrowth.indexOf('attention') !== -1
     ) {
-      signals.push('environment');
+      signalMap.environment += 2;
     }
+
+    if (esqrGrowth.indexOf('organization') !== -1 || esqrGrowth.indexOf('metacognition') !== -1) {
+      signalMap.planning += 1;
+    }
+    if (esqrGrowth.indexOf('task initiation') !== -1 || esqrGrowth.indexOf('goal-directed persistence') !== -1) {
+      signalMap.activation += 1;
+    }
+    if (esqrGrowth.indexOf('emotional control') !== -1 || esqrGrowth.indexOf('stress tolerance') !== -1) {
+      signalMap.regulation += 1;
+    }
+    if (taskBlockers.indexOf('environment') !== -1 || taskBlockers.indexOf('context') !== -1) {
+      signalMap.environment += 1;
+    }
+
+    var signals = rankedSignals(signalMap).filter(function (item) {
+      return item.score > 0;
+    }).map(function (item) {
+      return item.key;
+    });
 
     if (signals.indexOf('planning') !== -1 && signals.indexOf('activation') !== -1) {
       profileFrame = 'Planning-to-Action Gap';
@@ -200,7 +244,9 @@
     }
 
     return {
+      modelName: 'EFI Cross-Signal Model',
       signals: uniqueList(signals),
+      signalMap: signalMap,
       profileFrame: profileFrame,
       primaryTheme: primaryTheme,
       coachingFocus: coachingFocus,
@@ -271,11 +317,13 @@
     return {
       title: (completed.length >= 4 ? 'Complete Multi-Diagnostic EF Profile' : 'Combined EF Profile (Partial)') + ': ' + synthesis.profileFrame,
       lede: 'Diagnostics completed: ' + completed.join(', ') + '. ' + synthesis.primaryTheme,
+      modelName: synthesis.modelName,
       profileFrame: synthesis.profileFrame,
       corePattern: synthesis.primaryTheme,
       coachingFocus: synthesis.coachingFocus,
       leverage: synthesis.leverage,
       signals: synthesis.signals,
+      signalMap: synthesis.signalMap,
       priorities: priorities,
       strengths: strengths,
       plan: plan
@@ -284,7 +332,7 @@
 
   function summaryText(result) {
     var lines = [];
-    lines.push('Full Executive Functioning Profile');
+    lines.push(result.modelName || 'EFI Cross-Signal Profile');
     lines.push('Generated: ' + new Date().toLocaleString());
     lines.push('');
     lines.push(result.title);
@@ -304,6 +352,9 @@
     }
     if (Array.isArray(result.signals) && result.signals.length) {
       lines.push('Cross-Tool Signals: ' + result.signals.join(', '));
+    }
+    if (result.signalMap) {
+      lines.push('Signal Scores: planning ' + result.signalMap.planning + ', activation ' + result.signalMap.activation + ', regulation ' + result.signalMap.regulation + ', environment ' + result.signalMap.environment);
     }
     lines.push('');
     lines.push('Top Priorities:');
@@ -330,6 +381,15 @@
     ];
     statusEl.innerHTML = items.map(function (item) {
       return '<li>' + (item.ok ? 'Complete' : 'Pending') + ': ' + item.name + '</li>';
+    }).join('');
+  }
+
+  function renderSignalMap(signalMap) {
+    if (!signalsEl || !signalMap) return;
+    var ranked = rankedSignals(signalMap);
+    signalsEl.innerHTML = ranked.map(function (item) {
+      var strength = item.score >= 4 ? 'High' : (item.score >= 2 ? 'Moderate' : (item.score > 0 ? 'Light' : 'Not detected yet'));
+      return '<li><strong>' + item.label + ':</strong> ' + strength + ' signal (' + item.score + ')</li>';
     }).join('');
   }
 
@@ -360,6 +420,10 @@
     if (resultsSection) resultsSection.hidden = false;
     if (titleEl) titleEl.textContent = mergedResult.title;
     if (ledeEl) ledeEl.textContent = mergedResult.lede;
+    if (frameEl) frameEl.textContent = mergedResult.profileFrame;
+    if (corePatternEl) corePatternEl.textContent = mergedResult.corePattern;
+    if (leverageEl) leverageEl.textContent = 'Best leverage point: ' + mergedResult.leverage;
+    renderSignalMap(mergedResult.signalMap);
     if (prioritiesEl) prioritiesEl.innerHTML = mergedResult.priorities.map(function (item) { return '<li>' + item + '</li>'; }).join('');
     if (strengthsEl) strengthsEl.innerHTML = mergedResult.strengths.map(function (item) { return '<li>' + item + '</li>'; }).join('');
     if (planEl) planEl.innerHTML = mergedResult.plan.map(function (item) { return '<li>' + item + '</li>'; }).join('');

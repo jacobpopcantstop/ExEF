@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Full Executive Functioning Profile | Free EF Quizzes &amp; Tests</title>
-  <meta name="description" content="Combine your free executive functioning quiz and test results into one full profile. Merge ESQ-R, EF Profile Story, Time Blindness Calibrator, and Task Start Friction insights.">
+  <title>EFI Cross-Signal Profile | Free EF Quizzes &amp; Tests</title>
+  <meta name="description" content="Complete multiple EFI diagnostics and generate one Cross-Signal Profile that synthesizes planning, activation, regulation, and environment patterns.">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="favicon.svg">
-  <meta property="og:title" content="Full Executive Functioning Profile | Free EF Quizzes &amp; Tests">
-  <meta property="og:description" content="Complete multiple free EF diagnostics and unlock a single combined profile with priorities and next steps.">
+  <meta property="og:title" content="EFI Cross-Signal Profile | Free EF Quizzes &amp; Tests">
+  <meta property="og:description" content="Complete multiple EFI diagnostics and unlock one Cross-Signal Profile with priorities, signal strengths, and next steps.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The Executive Functioning Institute">
   <link rel="canonical" href="https://executivefunctioninginstitute.com/full-ef-profile.html">
@@ -29,7 +29,7 @@
         <a href="certification.html" class="nav__link">Certification</a>
         <a href="resources.html" class="nav__link">Resources</a>
         <span class="nav__auth"></span>
-        <a href="enroll.html" class="nav__link nav__link--cta">Enroll Now</a>
+        <a href="store.html" class="nav__link nav__link--cta">View Store</a>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
         <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -46,20 +46,30 @@
           <ol class="breadcrumb">
             <li><a href="index.html">Home</a></li>
             <li><a href="resources.html">Resources</a></li>
-            <li aria-current="page">Full EF Profile</li>
+            <li aria-current="page">Cross-Signal Profile</li>
           </ol>
         </nav>
-        <h1>Full Executive Functioning Profile</h1>
-        <p>Complete multiple free executive functioning quizzes and tests, then view a combined profile with your biggest bottlenecks, strongest assets, and practical next steps.</p>
-        <p style="margin-top:var(--space-sm);"><a href="free-executive-functioning-tests.html" class="btn btn--sm btn--secondary">Browse All Free EF Tests</a></p>
+        <h1>EFI Cross-Signal Profile</h1>
+        <p>Complete multiple EFI diagnostics, then generate one unified profile model. EFI synthesizes recurring patterns across planning, activation, regulation, and environment instead of treating each quiz as a separate island.</p>
+        <p style="margin-top:var(--space-sm);"><a href="free-executive-functioning-tests.html" class="btn btn--sm btn--secondary">Back to Assessment Hub</a></p>
       </div>
     </header>
 
     <section class="section">
       <div class="container container--narrow">
         <div class="card">
-          <h2 style="margin-top:0;">Diagnostic Completion</h2>
-          <p style="color:var(--color-text-muted);">Finish at least two diagnostics to generate a meaningful full profile.</p>
+          <h2 style="margin-top:0;">How The EFI Model Works</h2>
+          <p style="color:var(--color-text-muted);">EFI uses a named synthesis layer, not just a stitched-together dashboard. At least two diagnostics are required before the model becomes meaningful.</p>
+          <div class="grid grid--2" style="gap:var(--space-md);margin-top:var(--space-md);">
+            <div class="notice">
+              <strong>Four Cross-Signal Domains</strong><br>
+              Planning, Activation, Regulation, and Environment.
+            </div>
+            <div class="notice">
+              <strong>Output</strong><br>
+              One profile frame, one leverage point, and one 7-day action plan.
+            </div>
+          </div>
           <ul id="full-profile-status" class="checklist"></ul>
           <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-top:var(--space-sm);">
             <a href="esqr.html" class="btn btn--secondary btn--sm">Take Free ESQ-R</a>
@@ -73,12 +83,25 @@
     <section class="section section--alt" id="full-profile-results" hidden>
       <div class="container container--narrow">
         <div class="section-header">
-          <span class="section-header__tag">Combined View</span>
-          <h2 id="full-profile-title">Your Full EF Profile</h2>
+          <span class="section-header__tag">EFI Cross-Signal Model</span>
+          <h2 id="full-profile-title">Your EFI Cross-Signal Profile</h2>
           <p id="full-profile-lede"></p>
         </div>
 
         <div class="grid grid--2 stagger">
+          <div class="card">
+            <h3>Model Frame</h3>
+            <p id="full-profile-frame" style="font-size:1.05rem;font-weight:700;color:var(--color-primary);margin-bottom:var(--space-sm);"></p>
+            <p id="full-profile-core-pattern" style="color:var(--color-text-light);margin-bottom:var(--space-sm);"></p>
+            <p id="full-profile-leverage" style="margin-bottom:0;"></p>
+          </div>
+          <div class="card">
+            <h3>Signal Strengths</h3>
+            <ul id="full-profile-signals" class="checklist"></ul>
+          </div>
+        </div>
+
+        <div class="grid grid--2 stagger" style="margin-top:var(--space-lg);">
           <div class="card">
             <h3>Top Priorities</h3>
             <ul id="full-profile-priorities" class="checklist"></ul>
@@ -119,7 +142,7 @@
             <li><a href="esqr.html">ESQ-R Test</a></li>
             <li><a href="ef-profile-story.html">EF Profile Story</a></li>
             <li><a href="resources.html#interactive-tools">Interactive Tools</a></li>
-            <li><a href="full-ef-profile.html">Full Profile</a></li>
+            <li><a href="full-ef-profile.html">Cross-Signal Profile</a></li>
           </ul>
         </div>
         <div>
@@ -128,7 +151,7 @@
             <li><a href="curriculum.html">Curriculum</a></li>
             <li><a href="certification.html">Certification</a></li>
             <li><a href="resources.html">Resources</a></li>
-            <li><a href="enroll.html">Enroll</a></li>
+            <li><a href="store.html">Store</a></li>
           </ul>
         </div>
       </div>

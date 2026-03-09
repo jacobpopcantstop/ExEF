@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var primaryLinks = [
       { href: 'index.html', label: 'Home' },
-      { href: 'getting-started.html', label: 'Start Here' },
+      { href: 'about.html', label: 'About' },
       { href: 'curriculum.html', label: 'Curriculum' },
       { href: 'resources.html', label: 'Resources' },
       { href: 'coaching-home.html', label: 'Coaching' },
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
 
       html += '<span class="nav__auth">' + authHtml + '</span>';
-      html += '<a href="store.html#interest-form" class="nav__link nav__link--cta">Show Interest</a>';
+      html += '<a href="store.html" class="nav__link nav__link--cta">View Store</a>';
       links.innerHTML = html;
     });
   })();
@@ -168,30 +168,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.appendChild(cta);
   })();
 
-  /* Getting started nav link — planned feature, not yet enabled */
-
-  (function injectGettingStartedFooterLink() {
-    document.querySelectorAll('.footer__links').forEach(function (list) {
-      if (list.querySelector('a[href="getting-started.html"]')) return;
-      if (!list.querySelector('a[href="curriculum.html"]')) return;
-      var item = document.createElement('li');
-      item.innerHTML = '<a href="getting-started.html">Getting Started</a>';
-      var curriculum = list.querySelector('a[href="curriculum.html"]');
-      if (curriculum && curriculum.parentNode && curriculum.parentNode.nextSibling) {
-        list.insertBefore(item, curriculum.parentNode.nextSibling);
-      } else {
-        list.appendChild(item);
-      }
-    });
-  })();
-
   (function injectSourceAccessReminder() {
     var currentPage = window.location.pathname.split('/').pop() || 'index.html';
     var sourceHeavy = [
       'module-1.html',
-      'module-a-neuroscience.html',
-      'module-b-pedagogy.html',
-      'module-c-interventions.html',
       'module-4.html',
       'module-5.html',
       'barkley-model-guide.html',
@@ -225,9 +205,9 @@ document.addEventListener('DOMContentLoaded', function () {
     card.style.marginTop = 'var(--space-xl)';
     card.innerHTML =
       '<h3 style="margin-top:0;">New to EFI?</h3>' +
-      '<p style="color:var(--color-text-light);">Use the guided path for parents, educators, and professionals to find the right starting sequence in under 30 minutes.</p>' +
+      '<p style="color:var(--color-text-light);">Use the homepage start paths for parents, educators, and professionals to find the right starting sequence in under 30 minutes.</p>' +
       '<div class="button-group" style="margin-top:var(--space-md);">' +
-      '<a href="getting-started.html" class="btn btn--primary btn--sm">Open Getting Started Guide</a>' +
+      '<a href="index.html#start-paths" class="btn btn--primary btn--sm">Open Start Paths</a>' +
       '<a href="esqr.html" class="btn btn--secondary btn--sm">Take Free ESQ-R</a>' +
       '</div>';
     headerContainer.appendChild(card);
@@ -1507,7 +1487,7 @@ document.addEventListener('DOMContentLoaded', function () {
       '<li><strong>Assignment Preview:</strong> ' + item.assignment + '</li>' +
       '</ul>' +
       '<div class="button-group" style="margin-top:var(--space-md);">' +
-      '<a href="enroll.html" class="btn btn--primary btn--sm">Enroll to Unlock Assessments</a>' +
+      '<a href="store.html" class="btn btn--primary btn--sm">View Paid Path</a>' +
       '<a href="store.html" class="btn btn--secondary btn--sm">View Certification Pricing</a>' +
       '</div>';
     anchorSection.parentNode.insertBefore(panel, anchorSection);
@@ -1551,24 +1531,6 @@ document.addEventListener('DOMContentLoaded', function () {
         options: ['Promise diagnostic conclusions after ESQ-R review', 'Guarantee specific symptom outcomes in writing', 'Document scope boundaries, refer when risk exceeds coaching remit, and preserve consent records', 'Share full session content with parents without client agreement'],
         answer: 2,
         rationale: 'Ethical reliability depends on scope clarity, referral discipline, and documented consent/confidentiality controls.'
-      },
-      'module-a-neuroscience.html': {
-        question: 'Which statement best matches developmental neuroscience of executive function?',
-        options: ['PFC systems mature early in childhood, so adolescent EF variance is mostly motivational', 'PFC-regulated inhibition and planning networks continue maturing into young adulthood, increasing dependence on external scaffolds in adolescence', 'EF depends mostly on occipital cortex maturation', 'Emotion and EF are independent systems with minimal interaction'],
-        answer: 1,
-        rationale: 'EF regulation is developmentally prolonged, and external supports remain critical through adolescence.'
-      },
-      'module-b-pedagogy.html': {
-        question: 'Which intervention pairing most directly supports process transfer?',
-        options: ['Content reteaching + grading rubric review', 'Minimal prompt hierarchy + second-context transfer repetition', 'Longer lecture + increased homework volume', 'Open encouragement without implementation cues'],
-        answer: 2,
-        rationale: 'Transfer requires scaffolded execution plus repetition in new contexts with fading prompts.'
-      },
-      'module-c-interventions.html': {
-        question: 'In backward planning, what most improves completion reliability?',
-        options: ['Start with task list brainstorm and estimate later', 'Define done-state quality criteria, reverse-sequence milestones, then pre-commit start triggers', 'Focus only on due date reminders', 'Delay planning until motivation rises'],
-        answer: 1,
-        rationale: 'Reliability improves when end-state definition, milestone sequencing, and start-trigger commitment are linked.'
       },
       'curriculum.html': {
         question: 'What unlocks graded tests, assignment review, and credential workflows?',
@@ -1648,21 +1610,21 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!/^module-|^curriculum\.html$/.test(currentPage)) return;
     var deepDives = {
       'module-b-pedagogy.html': [
-        { match: ['planning'], text: 'Planning-first protocols reduce cognitive switching cost and make error sources visible before execution starts.', links: [{ href: 'module-c-interventions.html', label: 'Intervention Frameworks' }, { href: 'https://www.smartbutscatteredkids.com/resources/esq-r-self-report-assessment-tool/', label: 'ESQ-R Framework' }] },
+        { match: ['planning'], text: 'Planning-first protocols reduce cognitive switching cost and make error sources visible before execution starts.', links: [{ href: 'module-4.html', label: 'Applied Methods' }, { href: 'https://www.smartbutscatteredkids.com/resources/esq-r-self-report-assessment-tool/', label: 'ESQ-R Framework' }] },
         { match: ['reflection'], text: 'Prompted reflection is a metacognitive training loop: identify breakdown point, isolate friction variable, and define the next behavior test.', links: [{ href: 'module-3.html', label: 'Coaching Framework' }, { href: 'https://coachingfederation.org/credentials-and-standards/core-competencies', label: 'ICF Core Competencies' }] },
-        { match: ['transfer'], text: 'Transfer fails when success is context-bound. Second-context reps with reduced prompting are required to build independent execution.', links: [{ href: 'module-4.html', label: 'Applied Methodologies' }, { href: 'further-sources.html', label: 'Further Sources' }] },
+        { match: ['transfer'], text: 'Transfer fails when success is context-bound. Second-context reps with reduced prompting are required to build independent execution.', links: [{ href: 'module-4.html', label: 'Applied Methodologies' }, { href: 'open-ef-resources-directory.html#citations', label: 'Citations' }] },
         { match: ['template'], text: 'Session templates are decision scaffolds: fixed block timing reduces drift and preserves coaching focus on execution rather than topic drift.', links: [{ href: 'resources.html#forms', label: 'Template Library' }, { href: 'module-6.html', label: 'Professional Practice' }] },
         { match: ['implementation'], text: 'Wrapping content tutoring inside pre-plan and post-adaptation loops converts one-time compliance into repeatable self-management.', links: [{ href: 'scope-of-practice.html', label: 'Scope Guidance' }, { href: 'certification.html', label: 'Certification Standards' }] }
       ],
       'module-c-interventions.html': [
         { match: ['backward'], text: 'Backward planning improves reliability by externalizing dependency chains and exposing hidden prep work before deadline pressure spikes.', links: [{ href: 'module-4.html', label: 'Time Systems' }, { href: 'resources.html#forms', label: 'Planning Templates' }] },
-        { match: ['time blindness'], text: 'Time blindness interventions work best when elapsed time is made visible and correction factors are rehearsed against real task data.', links: [{ href: 'module-5.html', label: 'Prediction Calibration' }, { href: 'further-sources.html', label: 'Cited Sources' }] },
+        { match: ['time blindness'], text: 'Time blindness interventions work best when elapsed time is made visible and correction factors are rehearsed against real task data.', links: [{ href: 'module-5.html', label: 'Prediction Calibration' }, { href: 'open-ef-resources-directory.html#citations', label: 'Cited Sources' }] },
         { match: ['metacognitive'], text: 'Metacognitive prompts should target plan quality, derail detection, and recovery procedure rather than general encouragement.', links: [{ href: 'module-3.html', label: 'Coaching Prompts' }, { href: 'resources.html#reading', label: 'Prompt References' }] }
       ],
       'module-1.html': [
         { match: ['inhibition'], text: 'Inhibition enables temporal self-control by delaying immediate response so working memory and self-directed speech can engage.', links: [{ href: 'https://pubmed.ncbi.nlm.nih.gov/9000892/', label: 'Barkley 1997' }, { href: 'barkley-model-guide.html', label: 'Model Guide' }] },
         { match: ['time blindness'], text: 'Temporal discounting compresses future consequence salience, which is why near-term cues dominate behavior under EF strain.', links: [{ href: 'https://www.youtube.com/watch?v=wmV8HQUuPEk', label: 'Barkley Time Blindness Segment' }, { href: 'module-5.html', label: 'Applied Interventions' }] },
-        { match: ['prefrontal'], text: 'PFC development is prolonged, so environmental supports are compensatory design features, not shortcuts.', links: [{ href: 'module-a-neuroscience.html', label: 'Neuroscience Hub' }, { href: 'further-sources.html', label: 'Further Sources' }] }
+        { match: ['prefrontal'], text: 'PFC development is prolonged, so environmental supports are compensatory design features, not shortcuts.', links: [{ href: 'module-1.html', label: 'Module 1' }, { href: 'open-ef-resources-directory.html#citations', label: 'Citations' }] }
       ],
       'module-2.html': [
         { match: ['intake'], text: 'A strong intake triangulates self-report, collateral patterns, and context variance to avoid over- or under-identification.', links: [{ href: 'resources.html#assessment', label: 'Assessment Tools' }, { href: 'brown-clusters-tool.html', label: 'Brown Clusters Tool' }] },
@@ -1671,13 +1633,13 @@ document.addEventListener('DOMContentLoaded', function () {
       ],
       'module-3.html': [
         { match: ['alliance'], text: 'Alliance quality predicts adherence: collaboratively framed goals outperform directive compliance-based planning.', links: [{ href: 'scope-of-practice.html', label: 'Scope + Alliance Boundaries' }, { href: 'https://coachingfederation.org/credentials-and-standards/core-competencies', label: 'ICF Core Competencies' }] },
-        { match: ['goals'], text: 'Goal quality improves when targets are behavior-specific, time-bounded, and tied to environmental trigger design.', links: [{ href: 'module-b-pedagogy.html', label: 'Pedagogy Translation' }, { href: 'resources.html#forms', label: 'Template Forms' }] },
+        { match: ['goals'], text: 'Goal quality improves when targets are behavior-specific, time-bounded, and tied to environmental trigger design.', links: [{ href: 'teacher-to-coach.html', label: 'Educator Path' }, { href: 'resources.html#forms', label: 'Template Forms' }] },
         { match: ['ethics'], text: 'Scope-safe coaching requires explicit referral thresholds and documentation discipline in every high-risk context.', links: [{ href: 'module-6.html', label: 'Professional Practice' }, { href: 'terms.html', label: 'Terms + Delivery Model' }] }
       ],
       'module-4.html': [
         { match: ['get ready'], text: 'GDD is a prospective sequencing scaffold: define final-state fidelity first, then derive execution operations and setup constraints.', links: [{ href: 'https://www.efpractice.com/getreadydodone', label: 'Get Ready Do Done' }, { href: 'ward-360-thinking.html', label: 'Ward 360 Thinking' }] },
         { match: ['clock'], text: 'Analog visual time cues convert abstract duration into spatial volume, reducing temporal estimation error.', links: [{ href: 'module-5.html', label: 'Time Correction Practice' }, { href: 'resources.html#forms', label: 'Visual Clock Tools' }] },
-        { match: ['offload'], text: 'Cognitive offloading should be placed at point-of-performance to reduce working-memory leakage during transitions.', links: [{ href: 'module-c-interventions.html', label: 'Intervention Frameworks' }, { href: 'resources.html#forms', label: 'Offloading Templates' }] }
+        { match: ['offload'], text: 'Cognitive offloading should be placed at point-of-performance to reduce working-memory leakage during transitions.', links: [{ href: 'module-4.html', label: 'Applied Methods' }, { href: 'resources.html#forms', label: 'Offloading Templates' }] }
       ],
       'module-5.html': [
         { match: ['task initiation'], text: 'Initiation breakdown is often affective friction, so treatment should lower activation energy before demanding persistence.', links: [{ href: 'module-3.html', label: 'Coaching Framework' }, { href: 'resources.html#reading', label: 'Applied Readings' }] },
@@ -1692,25 +1654,25 @@ document.addEventListener('DOMContentLoaded', function () {
       'curriculum.html': [
         { match: ['module 1'], text: 'Module sequence is dependency-aware: theory precedes assessment, then coaching architecture, then interventions and professional operations.', links: [{ href: 'module-1.html', label: 'Module 1' }, { href: 'module-2.html', label: 'Module 2' }] },
         { match: ['assignment'], text: 'Assignments are designed as skill transfer tests, not content recitation: plan quality and execution consistency are weighted heavily.', links: [{ href: 'certification.html', label: 'Rubrics + Capstone' }, { href: 'store.html', label: 'Graded Services' }] },
-        { match: ['free'], text: 'Open information reduces access barriers, while paid layers fund grading, credential verification, and reviewed performance feedback.', links: [{ href: 'resources.html', label: 'Free Resources' }, { href: 'getting-started.html', label: 'Role-Based Start Guide' }] }
+        { match: ['free'], text: 'Open information reduces access barriers, while paid layers fund grading, credential verification, and reviewed performance feedback.', links: [{ href: 'resources.html', label: 'Free Resources' }, { href: 'index.html#start-paths', label: 'Homepage Start Paths' }] }
       ],
       'module-a-neuroscience.html': [
-        { match: ['prefrontal'], text: 'PFC-dependent regulation is highly load-sensitive, which is why performance drops under stress despite intact conceptual understanding.', links: [{ href: 'https://pubmed.ncbi.nlm.nih.gov/9000892/', label: 'Barkley 1997' }, { href: 'further-sources.html', label: 'Source Hub' }] },
+        { match: ['prefrontal'], text: 'PFC-dependent regulation is highly load-sensitive, which is why performance drops under stress despite intact conceptual understanding.', links: [{ href: 'https://pubmed.ncbi.nlm.nih.gov/9000892/', label: 'Barkley 1997' }, { href: 'open-ef-resources-directory.html#citations', label: 'Source Hub' }] },
         { match: ['inhibition'], text: 'Inhibition operates as a gating process that protects future-oriented goal models from interference by immediate cues.', links: [{ href: 'https://www.russellbarkley.org/factsheets/ADHD_EF_and_SR.pdf', label: 'Barkley EF/SR Fact Sheet' }, { href: 'barkley-model-guide.html', label: 'Barkley Guide' }] },
-        { match: ['coaching'], text: 'Coaching translates neuroscience by externalizing planning and memory demands so execution does not depend on internal load alone.', links: [{ href: 'module-b-pedagogy.html', label: 'Pedagogy Shift' }, { href: 'module-c-interventions.html', label: 'Intervention Stack' }] }
+        { match: ['coaching'], text: 'Coaching translates neuroscience by externalizing planning and memory demands so execution does not depend on internal load alone.', links: [{ href: 'module-3.html', label: 'Coaching Architecture' }, { href: 'module-4.html', label: 'Applied Methods' }] }
       ]
     };
 
     var fallback = {
       text: 'Deeper technical note: map each tactic to mechanism (inhibition, working memory, emotional regulation, or prospective sequencing) before applying it in practice.',
-      links: [{ href: 'further-sources.html', label: 'Further Sources' }, { href: 'certification.html', label: 'Rubric Standards' }]
+      links: [{ href: 'open-ef-resources-directory.html#citations', label: 'Citations' }, { href: 'certification.html', label: 'Rubric Standards' }]
     };
 
     var sectionDeepDives = {
       'module-1.html': {
         'the neurobiology of the "air traffic control" system': {
           text: 'Action step: in your next intake, ask the client to identify one recurring "air traffic jam" moment each day, then map it to a specific control-tower support (visual cue, timer, checklist, or pre-commitment).',
-          links: [{ href: 'module-a-neuroscience.html', label: 'Neuroscience Brief' }, { href: 'resources.html#forms', label: 'Implementation Forms' }]
+          links: [{ href: 'module-1.html', label: 'Module 1' }, { href: 'resources.html#forms', label: 'Implementation Forms' }]
         },
         'the barkley model: inhibition as the keystone': {
           text: 'Action step: require every intervention to name the inhibition bottleneck first ("what impulse is winning?"), then pair one external brake with one follow-through cue.',
@@ -1718,7 +1680,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         'the brown model: six clusters of cognitive management': {
           text: 'Action step: use one cluster label per week in client language (Activation, Focus, Effort, Emotion, Memory, Action) and collect one real-world example to normalize variability.',
-          links: [{ href: 'brown-clusters-tool.html', label: 'Brown Clusters Tool' }, { href: 'further-sources.html', label: 'Primary Sources' }]
+          links: [{ href: 'brown-clusters-tool.html', label: 'Brown Clusters Tool' }, { href: 'open-ef-resources-directory.html#citations', label: 'Primary Sources' }]
         },
         'module 1 assignment': {
           text: 'Action step: draft the three interventions first, then write the analysis around them. This prevents theory-only submissions and increases pass reliability.',
@@ -1736,7 +1698,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         'the "point of performance" audit': {
           text: 'Action step: photograph or sketch the real execution environment and mark friction points in order of failure frequency before assigning new skills.',
-          links: [{ href: 'module-c-interventions.html', label: 'Intervention Frameworks' }, { href: 'resources.html#forms', label: 'Audit Templates' }]
+          links: [{ href: 'module-4.html', label: 'Applied Methods' }, { href: 'resources.html#forms', label: 'Audit Templates' }]
         },
         'module 2 assignment': {
           text: 'Action step: include one discrepancy paragraph (self-report vs observer report) and the exact follow-up question you would use to resolve it.',
@@ -1746,7 +1708,7 @@ document.addEventListener('DOMContentLoaded', function () {
       'module-3.html': {
         'the two-tiered intervention logic': {
           text: 'Action step: always deploy one environment change before any motivation coaching. If behavior improves, you found a design issue not a character issue.',
-          links: [{ href: 'module-c-interventions.html', label: 'Intervention Stack' }, { href: 'resources.html#forms', label: 'Environment Tools' }]
+          links: [{ href: 'module-4.html', label: 'Applied Methods' }, { href: 'resources.html#forms', label: 'Environment Tools' }]
         },
         'the coach as "external frontal lobe"': {
           text: 'Action step: use a fade plan from day one: full prompts -> partial prompts -> self-prompt script -> independent check-in.',
@@ -1754,7 +1716,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         'the coaching cycle & smart goals': {
           text: 'Action step: every SMART goal should include a trigger ("when X happens"), a start behavior, and a recovery behavior if derailed.',
-          links: [{ href: 'resources.html#forms', label: 'Goal Templates' }, { href: 'module-b-pedagogy.html', label: 'Pedagogy Translation' }]
+          links: [{ href: 'resources.html#forms', label: 'Goal Templates' }, { href: 'teacher-to-coach.html', label: 'Educator Path' }]
         },
         'module 3 assignment': {
           text: 'Action step: include one explicit referral threshold sentence in your submission to show scope discipline under risk.',
@@ -1772,7 +1734,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         'cognitive offloading': {
           text: 'Action step: place offload tools where failure happens (doorway, desk, phone lock screen), not where planning happens.',
-          links: [{ href: 'module-c-interventions.html', label: 'Intervention Logic' }, { href: 'resources.html#forms', label: 'Offload Tools' }]
+          links: [{ href: 'module-4.html', label: 'Applied Methods' }, { href: 'resources.html#forms', label: 'Offload Tools' }]
         },
         'unit summary': {
           text: 'Action step: choose one tool from each bucket (planning, timing, offload) and run a 14-day implementation sprint with weekly review notes.',
@@ -1794,7 +1756,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         'your professional toolkit': {
           text: 'Action step: customize the launch kit docs with your actual niche and session cadence, then run one pilot client from intake to review.',
-          links: [{ href: 'curriculum.html', label: 'Launch Kit Preview' }, { href: 'enroll.html', label: 'Enrollment Path' }]
+          links: [{ href: 'curriculum.html', label: 'Launch Kit Preview' }, { href: 'store.html', label: 'Paid Path' }]
         }
       },
       'curriculum.html': {
@@ -1811,44 +1773,6 @@ document.addEventListener('DOMContentLoaded', function () {
           links: [{ href: 'barkley-vs-brown.html', label: 'Model Comparison' }, { href: 'about.html#models', label: 'Model Foundations' }]
         }
       },
-      'module-a-neuroscience.html': {
-        'on-site study briefs': {
-          text: 'Action step: after each brief, write one plain-language parent explanation and one practitioner explanation to improve translation skill.',
-          links: [{ href: 'further-sources.html', label: 'Sources Hub' }, { href: 'module-1.html', label: 'Module 1 Deep Dive' }]
-        }
-      },
-      'module-b-pedagogy.html': {
-        'from "what is the answer?" to "how will you run the process?"': {
-          text: 'This shift changes the unit of analysis from content correctness to execution reliability. You are training future independent performance, not just immediate task completion.',
-          links: [{ href: 'module-3.html', label: 'Coaching Architecture' }, { href: 'scope-of-practice.html', label: 'Scope Boundaries' }]
-        },
-        'pedagogical core moves': {
-          text: 'Core moves are operational levers: plan definition, friction monitoring, and transfer checks. Without these, coaching devolves into ad-hoc tutoring.',
-          links: [{ href: 'module-c-interventions.html', label: 'Interventions' }, { href: 'resources.html#forms', label: 'Implementation Templates' }]
-        },
-        'applied session templates': {
-          text: 'Template fidelity matters because fixed timing protects reflection and transfer windows that are often skipped when sessions drift.',
-          links: [{ href: 'module-6.html', label: 'Practice Ops' }, { href: 'certification.html', label: 'Rubric Expectations' }]
-        },
-        'module b source links': {
-          text: 'Use source links as implementation anchors: each resource should map to a concrete coaching behavior you can observe, score, and iterate.',
-          links: [{ href: 'further-sources.html', label: 'Further Sources Hub' }, { href: 'resources.html#source-access', label: 'Source Access Notes' }]
-        }
-      },
-      'module-c-interventions.html': {
-        'open intervention brief infrastructure': {
-          text: 'Intervention briefs should specify trigger conditions, start behaviors, and failure recovery rules so clients can execute without live supervision.',
-          links: [{ href: 'module-4.html', label: 'Applied Methods' }, { href: 'resources.html#forms', label: 'Downloadable Tools' }]
-        },
-        'intervention frameworks': {
-          text: 'Framework quality is determined by repeatability under stress. Build systems that survive distraction, fatigue, and low-motivation states.',
-          links: [{ href: 'module-5.html', label: 'Special Populations' }, { href: 'brown-clusters-tool.html', label: 'Cluster Mapping' }]
-        },
-        'evidence notes': {
-          text: 'Action step: map each intervention to a cited mechanism and one measurable behavior metric before using it in client plans.',
-          links: [{ href: 'further-sources.html', label: 'Citations' }, { href: 'certification.html#transparency-rubric', label: 'Grading Criteria' }]
-        }
-      },
       'module-5.html': {
         'time management: curing "time blindness"': {
           text: 'Time systems should be treated as measurement systems. Prediction error data drives correction factors that improve planning validity.',
@@ -1856,7 +1780,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         'task initiation: overcoming the "wall of awful"': {
           text: 'Initiation interventions should reduce threat and lower friction in the first 90 seconds of task contact. Start behavior beats motivation talk.',
-          links: [{ href: 'module-3.html', label: 'Coaching Scripts' }, { href: 'module-c-interventions.html', label: 'Intervention Stack' }]
+          links: [{ href: 'module-3.html', label: 'Coaching Scripts' }, { href: 'module-4.html', label: 'Applied Methods' }]
         },
         'special populations & transitions': {
           text: 'Adapt delivery surface, not core mechanism. Preserve EF principles while tuning language, structure, and sensory/context load.',
@@ -1879,14 +1803,30 @@ document.addEventListener('DOMContentLoaded', function () {
       return byPage[key] || null;
     }
 
-    function pickModel(el, pageModels, index) {
-      if (!pageModels || !pageModels.length) return fallback;
-      var text = (el.textContent || '').toLowerCase();
-      var matched = pageModels.find(function (entry) {
-        return (entry.match || []).some(function (token) { return text.indexOf(token) >= 0; });
-      });
-      return matched || pageModels[index % pageModels.length] || fallback;
+  function pickModel(el, pageModels, index) {
+    if (!pageModels || !pageModels.length) return fallback;
+    var text = (el.textContent || '').toLowerCase();
+    var matched = pageModels.find(function (entry) {
+      return (entry.match || []).some(function (token) { return text.indexOf(token) >= 0; });
+    });
+    return matched || pageModels[index % pageModels.length] || fallback;
+  }
+
+  function buildLearnMoreLabel(el, model) {
+    var localHeading = el.querySelector('h3, h4');
+    var headingText = localHeading ? String(localHeading.textContent || '').replace(/\s+/g, ' ').trim() : '';
+    if (headingText) {
+      if (headingText.length > 28) headingText = headingText.slice(0, 25).trim() + '...';
+      return 'See ' + headingText + ' Note';
     }
+    if (model && typeof model.text === 'string' && model.text.indexOf('Action step:') === 0) {
+      return 'See Action Step';
+    }
+    if (model && model.links && model.links[0] && model.links[0].label) {
+      return 'See ' + model.links[0].label;
+    }
+    return 'See Supporting Note';
+  }
 
     var targets = document.querySelectorAll('.card, .callout, .hub-card');
     var limit = 16;
@@ -1907,7 +1847,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var wrap = document.createElement('div');
       wrap.style.marginTop = 'var(--space-sm)';
       wrap.innerHTML =
-        '<button type="button" class="btn btn--secondary btn--sm learn-more-toggle" aria-expanded="false" aria-controls="' + panelId + '">Learn More</button>' +
+        '<button type="button" class="btn btn--secondary btn--sm learn-more-toggle" aria-expanded="false" aria-controls="' + panelId + '">' + buildLearnMoreLabel(el, model) + '</button>' +
         '<div id="' + panelId + '" class="notice" style="display:none;margin-top:var(--space-sm);">' +
           '<p style="margin-bottom:var(--space-sm);">' + model.text + '</p>' +
           '<p style="margin-bottom:0;font-size:0.86rem;">Sources: ' + links + '</p>' +

@@ -11,7 +11,7 @@ Canonical outstanding roadmap: `docs/progress.md`
 7. Confirm `netlify.toml` security headers are present.
 8. Smoke-test in dark mode and mobile navigation.
 9. Update `CHANGELOG.md` with release notes.
-10. Confirm `further-sources.html` and `Further Sources` are updated for any new citation additions.
+10. Confirm the directory citation section and `Further Sources` source corpus are updated for any new citation additions.
 11. Validate API endpoints on deploy preview:
     - `/api/leads`
     - `/api/sign-download`

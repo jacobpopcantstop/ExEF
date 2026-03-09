@@ -10,15 +10,43 @@
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to content</a>
-  <nav class="nav" role="navigation" aria-label="Main navigation"><div class="nav__inner"><a href="index.html" class="nav__logo"><div class="nav__logo-icon">EFI</div><span>Executive Functioning Institute</span></a><div class="nav__links" id="nav-links"><a href="index.html" class="nav__link">Home</a><a href="module-b-pedagogy.html" class="nav__link">Pedagogy</a><a href="educator-launchpad.html" class="nav__link">Email Course</a><a href="certification.html" class="nav__link">Certification</a><a href="store.html#interest-form" class="nav__link nav__link--cta">Show Interest</a></div><button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false"></button></div></nav>
+  <nav class="nav" role="navigation" aria-label="Main navigation"><div class="nav__inner"><a href="index.html" class="nav__logo"><div class="nav__logo-icon">EFI</div><span>Executive Functioning Institute</span></a><div class="nav__links" id="nav-links"><a href="index.html" class="nav__link">Home</a><a href="curriculum.html" class="nav__link">Curriculum</a><a href="teacher-to-coach.html" class="nav__link">Educator Path</a><a href="certification.html" class="nav__link">Certification</a><a href="store.html" class="nav__link nav__link--cta">View Store</a></div><button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false"></button></div></nav>
 
   <header class="page-header"><div class="container"><h1>The Special Educator's Guide to Becoming an EF Coach</h1><p>Navigate burnout, identity shifts, and income transition with an evidence-based coaching model.</p></div></header>
 
   <main id="main-content">
     <section class="section">
       <div class="container grid grid--2 gap-2xl">
-        <div class="card"><h2>Transition Realities</h2><ul class="checklist"><li>From grading compliance to building self-regulation</li><li>From district constraints to scalable private practice</li><li>From fixed salary to client-capacity planning</li></ul><div class="journey-links"><a class="btn btn--secondary btn--sm" href="educator-launchpad.html" data-analytics-event="teacher_to_coach_to_launchpad">5-Day Launchpad</a><a class="btn btn--primary btn--sm" href="gap-analyzer.html" data-analytics-event="teacher_to_coach_to_gap_analyzer">Skills Gap Analyzer</a></div></div>
+        <div class="card"><h2>Transition Realities</h2><ul class="checklist"><li>From grading compliance to building self-regulation</li><li>From district constraints to scalable private practice</li><li>From fixed salary to client-capacity planning</li></ul><div class="journey-links"><a class="btn btn--secondary btn--sm" href="#launchpad" data-analytics-event="teacher_to_coach_to_launchpad">5-Day Launchpad</a><a class="btn btn--primary btn--sm" href="gap-analyzer.html" data-analytics-event="teacher_to_coach_to_gap_analyzer">Skills Gap Analyzer</a></div></div>
         <div class="tool-panel"><h2>Coaching ROI Calculator</h2><p>Estimate weekly client load required to replace your salary at common rate points. EFI's current premium anchor is $225/hour, with discounting reserved for intentional promotional windows rather than the default offer.</p><form id="roi-form"><div class="form-group"><label for="salary">Current annual salary (USD)</label><input id="salary" class="form-control" type="number" min="1" value="70000" required></div><div class="form-group"><label for="hours">Billable hours per client per month</label><input id="hours" class="form-control" type="number" min="1" value="4" required></div><div class="form-group"><label for="rate">Target hourly rate</label><select id="rate" class="form-control"><option value="200">$200/hr</option><option value="225" selected>$225/hr</option><option value="250">$250/hr</option></select></div><button class="btn btn--primary" type="submit" data-analytics-event="roi_calculate_submit">Calculate</button></form><div id="roi-output" class="tool-output" aria-live="polite"></div><p style="font-size:0.82rem;color:var(--color-text-muted);margin-top:var(--space-sm);">Illustrative planning tool only. This is not an earnings guarantee or financial advice.</p></div>
+      </div>
+    </section>
+
+    <section class="section" id="launchpad">
+      <div class="container container--narrow">
+        <div class="tool-panel">
+          <h2>5-Day Educator-to-Coach Launchpad</h2>
+          <p>Join a short free sequence covering offer design, scope, messaging, and first-client outreach. This now lives directly inside the educator transition page instead of being split across two routes.</p>
+          <form id="launchpad-form" novalidate>
+            <div class="form-group">
+              <label for="lp-name">Name</label>
+              <input id="lp-name" class="form-control" required autocomplete="name" />
+            </div>
+            <div class="form-group">
+              <label for="lp-email">Email</label>
+              <input id="lp-email" class="form-control" type="email" required autocomplete="email" />
+            </div>
+            <div class="form-group">
+              <input id="lp-consent" type="checkbox" required />
+              <label for="lp-consent">I consent to receive launch emails and agree to EFI privacy terms.</label>
+            </div>
+            <div class="journey-links">
+              <button class="btn btn--primary btn--sm" type="submit" id="launchpad-submit" data-analytics-event="launchpad_submit_click">Start Free Course</button>
+              <a class="btn btn--secondary btn--sm" href="store.html" data-analytics-event="launchpad_to_store">View Paid Path</a>
+            </div>
+          </form>
+          <p id="launchpad-output" class="notice" style="display:none;margin-top:1rem;"></p>
+        </div>
       </div>
     </section>
 
@@ -40,7 +68,7 @@
             <li><a href="https://www.nbefc.org/executive-functioning-coach-certification/" target="_blank" rel="noopener">NBEFC executive function coach credential overview</a></li>
             <li><a href="https://www.executivefunctioncoachingacademy.com/post/certification-programs" target="_blank" rel="noopener">Certification landscape comparison source</a></li>
             <li><a href="https://www.thebusinessresearchcompany.com/report/executive-coaching-certification-global-market-report" target="_blank" rel="noopener">Executive coaching certification market report source</a></li>
-            <li><a href="further-sources.html">Open complete Further Sources hub</a></li>
+            <li><a href="open-ef-resources-directory.html#citations">Open citations and source trails</a></li>
           </ul>
         </div>
       </div>
@@ -69,6 +97,48 @@
         });
       }
     });
+
+    (function () {
+      var form = document.getElementById('launchpad-form');
+      var out = document.getElementById('launchpad-output');
+      var submit = document.getElementById('launchpad-submit');
+      if (!form || !out || !submit) return;
+
+      function setMessage(msg, ok) {
+        out.style.display = 'block';
+        out.textContent = msg;
+        out.style.borderColor = ok ? 'rgba(30, 132, 73, 0.25)' : 'rgba(192,57,43,0.4)';
+      }
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (!form.reportValidity()) return;
+        submit.disabled = true;
+        submit.textContent = 'Submitting...';
+        try {
+          var res = await fetch('/api/leads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: document.getElementById('lp-name').value.trim(),
+              email: document.getElementById('lp-email').value.trim(),
+              consent: document.getElementById('lp-consent').checked,
+              lead_type: 'launchpad_email_course',
+              source: 'teacher-to-coach.html'
+            })
+          });
+          var data = await res.json();
+          if (!res.ok || !data.ok) throw new Error(data.error || 'Signup failed');
+          setMessage('You are enrolled. Check your inbox for Day 1 and the full 5-day outline.', true);
+          form.reset();
+        } catch (err) {
+          setMessage(err.message || 'Unable to submit right now. Please try again.', false);
+        } finally {
+          submit.disabled = false;
+          submit.textContent = 'Start Free Course';
+        }
+      });
+    })();
   </script>
 </body>
 </html>

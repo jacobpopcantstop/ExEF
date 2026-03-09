@@ -1,5 +1,5 @@
 /**
- * Jacob Rozansky - Neuro-Performance Coaching
+ * EFI Coaching Practice
  * Main JavaScript File
  */
 
@@ -307,7 +307,7 @@ async function submitContactLead(form) {
         }
     };
 
-    await submitLeadForm(form, payload, 'Thanks. Your message was sent. Jacob will follow up within 24-48 hours.');
+    await submitLeadForm(form, payload, 'Thanks. Your message was sent. The EFI coaching team will follow up within 24-48 hours.');
 }
 
 async function submitCubeLead(form) {

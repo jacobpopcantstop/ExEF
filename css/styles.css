@@ -616,6 +616,14 @@ p {
   max-width: 700px;
 }
 
+.page-header__note {
+  margin-top: var(--space-sm);
+  color: rgba(255,255,255,0.82);
+  font-size: 1.02rem;
+  line-height: 1.75;
+  max-width: 760px;
+}
+
 .page-header--centered {
   text-align: center;
 }
@@ -1405,6 +1413,97 @@ select.form-control {
   font-size: 0.8rem;
   color: var(--color-text-muted);
   font-weight: 500;
+}
+
+.resources-quick-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) repeat(3, minmax(0, 1fr));
+  gap: var(--space-lg);
+}
+
+.resources-quick-card {
+  min-height: 100%;
+}
+
+.resources-quick-card--featured {
+  background: linear-gradient(180deg, rgba(13, 109, 92, 0.05), rgba(255, 255, 255, 1));
+  border-color: rgba(13, 109, 92, 0.18);
+}
+
+.resources-assessment-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+.resources-assessment-feature {
+  min-height: 100%;
+  box-shadow: var(--shadow-md);
+}
+
+.resources-assessment-stack {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.resources-role-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) repeat(2, minmax(0, 0.95fr));
+  gap: var(--space-lg);
+}
+
+.resources-role-card--primary {
+  background: linear-gradient(180deg, rgba(35, 99, 179, 0.04), rgba(255, 255, 255, 1));
+}
+
+.resources-practice-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg);
+}
+
+.resources-practice-panel {
+  min-height: 100%;
+}
+
+.resources-practice-panel--note {
+  grid-column: 1 / -1;
+  background: linear-gradient(180deg, rgba(10, 37, 64, 0.04), rgba(255, 255, 255, 1));
+}
+
+.resources-library-shell {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.35fr);
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+.resources-library-nav {
+  position: sticky;
+  top: calc(var(--nav-height, 84px) + var(--space-lg));
+}
+
+.resources-library-nav p {
+  color: var(--color-text-light);
+}
+
+.resources-library-nav .checklist li {
+  font-size: 0.92rem;
+}
+
+@media (max-width: 980px) {
+  .resources-quick-grid,
+  .resources-assessment-layout,
+  .resources-role-layout,
+  .resources-practice-layout,
+  .resources-library-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .resources-library-nav {
+    position: static;
+  }
 }
 
 /* --- Process Steps --- */

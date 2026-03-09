@@ -20,36 +20,36 @@ The Executive Functioning Institute provides a rigorous six-module certification
 - **about.html** — Mission, theoretical foundations (Barkley, Brown, Dawson & Guare), and the 360 Thinking model
 - **curriculum.html** — Complete six-module curriculum overview with units, topics, and assignments
 - **certification.html** — Certification requirements, capstone practicum, peer review, and ethics
-- **resources.html** — Open-source reading packets, assessment tools, downloadable forms, and video resources
-- **getting-started.html** — Guided onboarding for parents, educators, and professionals
-- **enroll.html** — Enrollment interest form and program information
+- **resources.html** — Curated public resource hub for assessments, toolkits, templates, and directory access
+- **getting-started.html** — Bridge page pointing to homepage start paths
+- **enroll.html** — Bridge page pointing to the unified store
 - **module-1.html** — Module 1: Neuropsychology of Self-Regulation
 - **module-2.html** — Module 2: Assessment Protocols & Intake Strategy
 - **module-3.html** — Module 3: The Coaching Architecture (Dawson & Guare Framework)
 - **module-4.html** — Module 4: Applied Methodologies (360 Thinking Model)
 - **module-5.html** — Module 5: Strategic Interventions & Special Populations
 - **module-6.html** — Module 6: Professional Ethics & Practice Management
-- **module-a-neuroscience.html** — Free module: neuroscience of executive function
-- **module-b-pedagogy.html** — Free module: coaching vs tutoring pedagogy shift
-- **module-c-interventions.html** — Free module: intervention frameworks
+- **module-a-neuroscience.html** — Legacy bridge to Module 1
+- **module-b-pedagogy.html** — Legacy bridge to Module 3
+- **module-c-interventions.html** — Legacy bridge to Module 4
 - **barkley-model-guide.html** — Definitive Barkley inhibition model hub
 - **brown-clusters-tool.html** — Brown six-cluster interactive pre-diagnostic tool
 - **ward-360-thinking.html** — 360 Thinking and Get Ready, Do, Done hub
 - **barkley-vs-brown.html** — Comparative model analysis page
 - **teacher-to-coach.html** — Educator transition landing page + ROI calculator
-- **coaching-home.html** — Personal coaching homepage (Jacob Rozansky coaching brand within EFI)
-- **coaching-methodology.html** — Play-based neuroplasticity methodology details
-- **coaching-services.html** — Coaching services, pricing tiers, and offerings
-- **coaching-about.html** — Founder bio and coaching philosophy
-- **coaching-contact.html** — Coaching inquiry and consultation request page
-- **educator-launchpad.html** — 5-day email launchpad signup flow
+- **coaching-home.html** — Unified EFI coaching practice page
+- **coaching-methodology.html** — Bridge page to coaching approach section
+- **coaching-services.html** — Bridge page to coaching services section
+- **coaching-about.html** — Bridge page to coaching practice section
+- **coaching-contact.html** — Coaching consultation request page
+- **educator-launchpad.html** — Bridge page to teacher-to-coach launchpad
 - **gap-analyzer.html** — Download gate for skills gap analyzer lead magnet
 - **launch-plan.html** — Download gate for 90-day business launch plan
 - **coach-directory.html** — Searchable certified coach directory (city/state/zip)
 - **community.html** — Community recap/forum digest hub
 - **scope-of-practice.html** — Coaching vs therapy legal/scope guidance
 - **accreditation.html** — NBEFC/ICF alignment status page
-- **further-sources.html** — Canonical citations hub mapped from the root `Further Sources` dossier
+- **further-sources.html** — Bridge page to the directory citation section
 - **Further Sources** — Root-level canonical source corpus used for citation integration
 
 ## Curriculum Modules
@@ -80,7 +80,7 @@ Set `EFI_SUBMISSIONS_CRON_SECRET` in production and rely on `netlify/functions/p
 - `python3 scripts/check_links.py` — validates local links.
 - `python3 scripts/check_accessibility.py` — static accessibility checks.
 - `python3 scripts/check_pdfs.py` — validates local linked PDFs are real PDF files.
-- `python3 scripts/check_source_hub.py` — validates Further Sources integration.
+- `python3 scripts/check_source_hub.py` — validates directory/citation hub integration.
 - `python3 scripts/check_ux_audit.py` — structural UX audit baseline.
 - `python3 scripts/check_console_logs.py` — blocks `console.log` and `debugger` in production JS.
 - `python3 scripts/release_gate.py` — consolidated deployment gate.

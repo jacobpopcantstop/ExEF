@@ -236,43 +236,9 @@ document.addEventListener('DOMContentLoaded', function () {
   (function injectSiteGuide() {
     var currentPage = window.location.pathname.split('/').pop() || 'index.html';
     if (currentPage !== 'getting-started.html') return;
-    if (document.querySelector('.site-guide')) return;
-
-    var mount = document.querySelector('.page-header .container') || document.querySelector('main .container');
-    if (!mount) return;
-
-    var guide = document.createElement('div');
-    guide.className = 'site-guide';
-    guide.innerHTML =
-      '<div class="site-guide__head">' +
-        '<p class="site-guide__title">Where should I start?</p>' +
-        '<p class="site-guide__hint">Pick your path and follow the sequence. You can always switch tracks.</p>' +
-      '</div>' +
-      '<div class="site-guide__grid">' +
-        '<article class="site-guide__card">' +
-          '<h4>Parent Path</h4>' +
-          '<p>Learn key EF concepts, run ESQ-R, then apply home interventions.</p>' +
-          '<a class="btn btn--secondary btn--sm" href="#path-parent">Follow Parent Steps</a>' +
-        '</article>' +
-        '<article class="site-guide__card">' +
-          '<h4>Educator Path</h4>' +
-          '<p>Use pedagogy + intervention modules, then move into practical toolkits.</p>' +
-          '<a class="btn btn--secondary btn--sm" href="#path-educator">Follow Educator Steps</a>' +
-        '</article>' +
-        '<article class="site-guide__card">' +
-          '<h4>Coach Path</h4>' +
-          '<p>Complete curriculum, enroll, and unlock tests, assignments, and review.</p>' +
-          '<a class="btn btn--primary btn--sm" href="#path-coach">Follow Coach Steps</a>' +
-        '</article>' +
-      '</div>' +
-      '<div class="site-guide__quicklinks">' +
-        '<a href="curriculum.html">Curriculum</a>' +
-        '<a href="esqr.html">Free ESQ-R</a>' +
-        '<a href="resources.html">Resource Hub</a>' +
-        '<a href="store.html">Store</a>' +
-        '<a href="dashboard.html">Dashboard</a>' +
-      '</div>';
-    mount.appendChild(guide);
+    // Getting Started already includes a native path selector in the page body.
+    // Avoid duplicating it in the header, which can create hover/scroll jitter.
+    return;
   })();
 
   /* Roadmap hub links — planned feature, not yet enabled */
@@ -2081,6 +2047,18 @@ document.addEventListener('DOMContentLoaded', function () {
       if (navLinks.contains(e.target) || navToggle.contains(e.target)) return;
       closeNav();
     });
+
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 900 && navLinks.classList.contains('open')) {
+        closeNav();
+      }
+    });
+
+    window.addEventListener('scroll', function () {
+      if (navLinks.classList.contains('open')) {
+        closeNav();
+      }
+    }, { passive: true });
   }
 
   (function initLogoWave() {

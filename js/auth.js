@@ -108,6 +108,7 @@ EFI.Auth = (function () {
   function getDefaultProgress() {
     return {
       modules: {},
+      moduleAssessments: {},
       esqrCompleted: false,
       submissions: {},
       capstone: { status: 'not_submitted' }
@@ -117,11 +118,75 @@ EFI.Auth = (function () {
   function normalizeProgress(progress) {
     var merged = progress || {};
     if (!merged.modules) merged.modules = {};
+    if (!merged.moduleAssessments) merged.moduleAssessments = {};
     if (!merged.submissions) merged.submissions = {};
     if (!merged.capstone) merged.capstone = { status: 'not_submitted' };
     if (!merged.capstone.status) merged.capstone.status = 'not_submitted';
     if (typeof merged.esqrCompleted !== 'boolean') merged.esqrCompleted = false;
     return merged;
+  }
+
+  function normalizeModuleId(moduleId) {
+    var raw = String(moduleId || '').trim();
+    if (!raw) return '';
+    var match = raw.match(/module-(\d+)/);
+    if (match) return match[1];
+    return raw.replace(/[^\d]/g, '');
+  }
+
+  function getModuleAssessment(moduleId, progressArg) {
+    var progress = normalizeProgress(progressArg || (getCurrentUser() && getCurrentUser().progress) || getDefaultProgress());
+    var key = normalizeModuleId(moduleId);
+    if (!key) return null;
+    return progress.moduleAssessments[key] || null;
+  }
+
+  function isModuleComplete(moduleId, progressArg) {
+    var progress = normalizeProgress(progressArg || (getCurrentUser() && getCurrentUser().progress) || getDefaultProgress());
+    var key = normalizeModuleId(moduleId);
+    if (!key) return false;
+    var assessment = progress.moduleAssessments[key];
+    if (assessment && assessment.passed) return true;
+    return !!progress.modules[key];
+  }
+
+  function recordModuleAssessment(moduleId, result) {
+    var user = getCurrentUser();
+    if (!user) {
+      return { ok: false, error: 'Please log in to save your module test result.' };
+    }
+
+    user.progress = normalizeProgress(user.progress);
+    var key = normalizeModuleId(moduleId);
+    if (!key) {
+      return { ok: false, error: 'A valid module ID is required.' };
+    }
+
+    var score = Number(result && result.score);
+    var total = Number(result && result.total);
+    var correct = Number(result && result.correct);
+    var percentage = Number.isFinite(score) ? Math.max(0, Math.min(100, Math.round(score))) : 0;
+    var passed = !!(result && result.passed);
+    var now = new Date().toISOString();
+
+    user.progress.moduleAssessments[key] = {
+      moduleId: key,
+      score: percentage,
+      correct: Number.isFinite(correct) ? correct : 0,
+      total: Number.isFinite(total) && total > 0 ? total : 0,
+      passed: passed,
+      completedAt: now,
+      savedAt: now
+    };
+    user.progress.modules[key] = passed;
+
+    updateUser({ progress: user.progress });
+    return {
+      ok: true,
+      assessment: user.progress.moduleAssessments[key],
+      progress: user.progress,
+      status: getCertificationStatus(user)
+    };
   }
 
   /* --- Auth API --- */
@@ -531,7 +596,7 @@ EFI.Auth = (function () {
 
     user.progress = normalizeProgress(user.progress);
     var moduleIds = ['1', '2', '3', '4', '5', '6'];
-    var modulesCompleted = moduleIds.filter(function (id) { return !!user.progress.modules[id]; }).length;
+    var modulesCompleted = moduleIds.filter(function (id) { return isModuleComplete(id, user.progress); }).length;
     var allModulesCompleted = modulesCompleted === moduleIds.length;
     var capstonePassed = user.progress.capstone.status === 'passed';
     var certificatePurchased = (user.purchases || []).some(function (p) {
@@ -598,7 +663,19 @@ EFI.Auth = (function () {
             feedback: submission.feedback
           };
           if (submission.feedback_available && typeof submission.score === 'number') {
-            user.progress.modules[String(submission.module_id)] = submission.score >= 75;
+            var moduleKey = String(submission.module_id);
+            var passed = submission.score >= 75;
+            user.progress.modules[moduleKey] = passed;
+            user.progress.moduleAssessments[moduleKey] = {
+              moduleId: moduleKey,
+              score: submission.score,
+              correct: null,
+              total: null,
+              passed: passed,
+              completedAt: submission.release_at || submission.submitted_at,
+              savedAt: new Date().toISOString(),
+              source: 'submission'
+            };
           }
         }
         if (submission.kind === 'capstone') {
@@ -721,7 +798,10 @@ EFI.Auth = (function () {
     getCertificationStatus: getCertificationStatus,
     submitCapstone: submitCapstone,
     runAutoGrading: runAutoGrading,
-    saveModuleSubmission: saveModuleSubmission
+    saveModuleSubmission: saveModuleSubmission,
+    recordModuleAssessment: recordModuleAssessment,
+    getModuleAssessment: getModuleAssessment,
+    isModuleComplete: isModuleComplete
     ,getRole: getRole
     ,hasRole: hasRole
     ,requireRole: requireRole

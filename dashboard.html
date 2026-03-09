@@ -177,49 +177,55 @@
   <section class="section">
     <div class="container">
       <h2>Module Progress</h2>
-      <p style="color:var(--color-text-muted);margin-bottom:var(--space-xl);">Track your progress through the six certification modules. Click to mark modules as complete.</p>
+      <p style="color:var(--color-text-muted);margin-bottom:var(--space-xl);">Track your progress through the six certification modules. Completion is saved from the module mastery tests and released grading results.</p>
       <div class="grid grid--3 stagger" id="module-progress">
-        <div class="card module-progress-card" data-module="1" style="border-left:4px solid var(--module-1);cursor:pointer;">
+        <div class="card module-progress-card" data-module="1" data-module-path="module-1.html" style="border-left:4px solid var(--module-1);cursor:pointer;">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <h4 style="margin-bottom:0;">Module 1</h4>
             <span class="progress-check">&#9744;</span>
           </div>
           <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:0;">Neuropsychology of Self-Regulation</p>
+          <p class="module-progress-status" style="font-size:0.8rem;color:var(--color-text-muted);margin:var(--space-xs) 0 0;">No saved test result yet.</p>
         </div>
-        <div class="card module-progress-card" data-module="2" style="border-left:4px solid var(--module-2);cursor:pointer;">
+        <div class="card module-progress-card" data-module="2" data-module-path="module-2.html" style="border-left:4px solid var(--module-2);cursor:pointer;">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <h4 style="margin-bottom:0;">Module 2</h4>
             <span class="progress-check">&#9744;</span>
           </div>
           <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:0;">Assessment &amp; Intake Strategy</p>
+          <p class="module-progress-status" style="font-size:0.8rem;color:var(--color-text-muted);margin:var(--space-xs) 0 0;">No saved test result yet.</p>
         </div>
-        <div class="card module-progress-card" data-module="3" style="border-left:4px solid var(--module-3);cursor:pointer;">
+        <div class="card module-progress-card" data-module="3" data-module-path="module-3.html" style="border-left:4px solid var(--module-3);cursor:pointer;">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <h4 style="margin-bottom:0;">Module 3</h4>
             <span class="progress-check">&#9744;</span>
           </div>
           <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:0;">The Coaching Architecture</p>
+          <p class="module-progress-status" style="font-size:0.8rem;color:var(--color-text-muted);margin:var(--space-xs) 0 0;">No saved test result yet.</p>
         </div>
-        <div class="card module-progress-card" data-module="4" style="border-left:4px solid var(--module-4);cursor:pointer;">
+        <div class="card module-progress-card" data-module="4" data-module-path="module-4.html" style="border-left:4px solid var(--module-4);cursor:pointer;">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <h4 style="margin-bottom:0;">Module 4</h4>
             <span class="progress-check">&#9744;</span>
           </div>
           <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:0;">Applied Methodologies</p>
+          <p class="module-progress-status" style="font-size:0.8rem;color:var(--color-text-muted);margin:var(--space-xs) 0 0;">No saved test result yet.</p>
         </div>
-        <div class="card module-progress-card" data-module="5" style="border-left:4px solid var(--module-5);cursor:pointer;">
+        <div class="card module-progress-card" data-module="5" data-module-path="module-5.html" style="border-left:4px solid var(--module-5);cursor:pointer;">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <h4 style="margin-bottom:0;">Module 5</h4>
             <span class="progress-check">&#9744;</span>
           </div>
           <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:0;">Special Populations &amp; Transitions</p>
+          <p class="module-progress-status" style="font-size:0.8rem;color:var(--color-text-muted);margin:var(--space-xs) 0 0;">No saved test result yet.</p>
         </div>
-        <div class="card module-progress-card" data-module="6" style="border-left:4px solid var(--module-6);cursor:pointer;">
+        <div class="card module-progress-card" data-module="6" data-module-path="module-6.html" style="border-left:4px solid var(--module-6);cursor:pointer;">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <h4 style="margin-bottom:0;">Module 6</h4>
             <span class="progress-check">&#9744;</span>
           </div>
           <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:0;">Professional Ethics &amp; Practice</p>
+          <p class="module-progress-status" style="font-size:0.8rem;color:var(--color-text-muted);margin:var(--space-xs) 0 0;">No saved test result yet.</p>
         </div>
       </div>
     </div>
@@ -426,7 +432,7 @@
       var progress = latestUser.progress || {};
       var submissions = progress.submissions || {};
       var moduleIds = ['1', '2', '3', '4', '5', '6'];
-      var completed = moduleIds.filter(function(id) { return !!(progress.modules && progress.modules[id]); }).length;
+      var completed = moduleIds.filter(function(id) { return EFI.Auth.isModuleComplete(id, progress); }).length;
       var completionPct = Math.round((completed / moduleIds.length) * 100);
       document.getElementById('metric-completion-trend').textContent = completed + '/6 modules passed (' + completionPct + '%)';
 
@@ -507,30 +513,31 @@
     var progress = user.progress || { modules: {} };
     document.querySelectorAll('.module-progress-card').forEach(function(card) {
       var mod = card.getAttribute('data-module');
+      var path = card.getAttribute('data-module-path');
       var check = card.querySelector('.progress-check');
-      if (progress.modules && progress.modules[mod]) {
+      var statusText = card.querySelector('.module-progress-status');
+      var assessment = EFI.Auth.getModuleAssessment(mod, progress);
+      var isComplete = EFI.Auth.isModuleComplete(mod, progress);
+      if (isComplete) {
         check.textContent = '\u2611';
         check.style.color = 'var(--color-accent)';
         check.style.fontSize = '1.5rem';
+      } else {
+        check.textContent = '\u2610';
+        check.style.color = '';
+        check.style.fontSize = '';
+      }
+      if (statusText) {
+        if (assessment && typeof assessment.score === 'number') {
+          var completedAt = assessment.completedAt ? new Date(assessment.completedAt).toLocaleDateString() : 'today';
+          statusText.textContent = (assessment.passed ? 'Passed' : 'Needs retake') + ' - Score: ' + assessment.score + '% - Saved ' + completedAt + '.';
+        } else {
+          statusText.textContent = 'No saved test result yet.';
+        }
       }
 
       card.addEventListener('click', function() {
-        var u = EFI.Auth.getCurrentUser();
-        if (!u.progress) u.progress = { modules: {} };
-        if (!u.progress.modules) u.progress.modules = {};
-        u.progress.modules[mod] = !u.progress.modules[mod];
-        EFI.Auth.updateUser({ progress: u.progress });
-        if (u.progress.modules[mod]) {
-          check.textContent = '\u2611';
-          check.style.color = 'var(--color-accent)';
-          check.style.fontSize = '1.5rem';
-        } else {
-          check.textContent = '\u2610';
-          check.style.color = '';
-          check.style.fontSize = '';
-        }
-        renderCertificationReadiness();
-        renderOutcomeMetrics();
+        window.location.href = path || ('module-' + mod + '.html');
       });
     });
 

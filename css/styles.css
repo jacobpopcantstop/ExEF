@@ -550,6 +550,11 @@ p {
   letter-spacing: 0.03em;
 }
 
+.hero__eyebrow {
+  display: inline-flex;
+  margin-bottom: var(--space-md);
+}
+
 .hero__title {
   font-size: 3.25rem;
   font-weight: 800;
@@ -687,6 +692,14 @@ p {
 
 .card p {
   color: var(--color-text-light);
+  font-size: 0.95rem;
+}
+
+.route-step__title {
+  font-size: 1.1rem;
+}
+
+.route-step p {
   font-size: 0.95rem;
 }
 
@@ -1162,6 +1175,11 @@ blockquote cite {
   margin-top: 2px;
 }
 
+.section-header__tag--light {
+  background: rgba(255,255,255,0.1);
+  color: var(--color-accent-light);
+}
+
 /* --- Skill Tags --- */
 .skill-tags {
   display: flex;
@@ -1275,6 +1293,47 @@ blockquote cite {
   gap: var(--space-md);
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.open-knowledge-grid {
+  align-items: center;
+}
+
+.open-knowledge-title {
+  margin-top: var(--space-md);
+}
+
+.open-knowledge-list {
+  margin-top: var(--space-lg);
+}
+
+.open-knowledge-list li {
+  color: rgba(255,255,255,0.85);
+}
+
+.open-knowledge-quote-wrap {
+  text-align: center;
+}
+
+.open-knowledge-quote-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-3xl);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.open-knowledge-quote {
+  border-left-color: var(--color-accent-light);
+  color: rgba(255,255,255,0.9);
+  font-size: 1.1rem;
+}
+
+.open-knowledge-quote cite {
+  color: var(--color-accent-light);
+}
+
+.footer__logo {
+  color: var(--color-white);
 }
 
 /* --- Model Comparison --- */

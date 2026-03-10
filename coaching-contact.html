@@ -6,12 +6,23 @@
     <meta name="description" content="Contact the EFI Coaching Practice for executive functioning coaching, workshops, or school-support services in San Diego.">
     <title>Contact | EFI Coaching Practice</title>
     <link rel="canonical" href="https://executivefunctioninginstitute.com/coaching-contact.html" />
+    <link rel="icon" href="favicon.svg">
+    <script>
+        (function () {
+            try {
+                var savedTheme = localStorage.getItem('efi_theme');
+                if (savedTheme) {
+                    document.documentElement.setAttribute('data-theme', savedTheme);
+                }
+            } catch (err) {}
+        })();
+    </script>
     <link rel="stylesheet" href="css/coaching.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="page-coaching-contact">
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -29,6 +40,7 @@
                 <li class="nav-item--mobile-hide"><a href="certification.html">Certification</a></li>
                 <li><a href="coaching-contact.html" class="btn-nav active">Consultation</a></li>
             </ul>
+            <button class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>
             <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
                 <span></span>
                 <span></span>
@@ -39,18 +51,34 @@
 
     <main id="main-content">
     <!-- Page Header -->
-    <section class="page-header contact-header">
+    <section class="page-header contact-header consultation-masthead">
         <div class="container">
-            <h1>Let's Talk</h1>
-            <p class="page-subtitle">Whether you're ready to start coaching, ask about certification, or request a professional review, the EFI team can route you to the right next step.</p>
+            <div class="consultation-masthead__grid">
+                <div>
+                    <h1>Consultation &amp; Intake Desk</h1>
+                    <p class="page-subtitle">Whether you're ready to start coaching, ask about certification, or request a professional review, EFI can route you to the right next step without making you decode the service menu first.</p>
+                </div>
+                <aside class="consultation-masthead__panel">
+                    <p class="consultation-masthead__label">Before You Reach Out</p>
+                    <ul class="consultation-masthead__list">
+                        <li>The first conversation is for fit, not pressure</li>
+                        <li>Coaching, workshops, and school-support requests are routed differently</li>
+                        <li>Most messages get a direct reply within 24-48 hours</li>
+                    </ul>
+                </aside>
+            </div>
         </div>
     </section>
 
     <!-- Contact Options -->
-    <section class="contact-options">
+    <section class="contact-options consultation-routing">
         <div class="container">
-            <div class="options-grid">
-                <div class="option-card primary-option">
+            <div class="consultation-routing__header">
+                <h2>Choose the Right Entry Point</h2>
+                <p>The cleanest intake starts by matching the request to the right lane instead of treating everything like a generic contact form.</p>
+            </div>
+            <div class="options-grid consultation-routing__grid">
+                <div class="option-card primary-option consultation-routing__card consultation-routing__card--primary">
                     <div class="option-icon"></div>
                     <h3>Free Consultation Call</h3>
                     <p>The best way to start. A 20-minute call to review your goals and decide whether coaching, certification, or a professional review is the right fit.</p>
@@ -63,28 +91,42 @@
                     <a href="#booking" class="btn btn-primary">Book Your Free Call</a>
                 </div>
 
-                <div class="option-card">
+                <div class="option-card consultation-routing__card">
                     <div class="option-icon"></div>
                     <h3>Send a Message</h3>
                     <p>Have a quick question or prefer to communicate in writing? Use the form below and EFI will follow up within 24-48 hours.</p>
                 </div>
 
-                <div class="option-card">
+                <div class="option-card consultation-routing__card">
                     <div class="option-icon"></div>
                     <h3>Workshop Registration</h3>
                     <p>Want to sign up for a Saturday Brain Games workshop? Use the form to request upcoming dates and reserve a spot.</p>
                 </div>
             </div>
+            <div class="service-note consultation-routing__note">
+                <strong>Routing rule</strong>
+                <span>If you are unsure, choose the consultation call. It is the fastest way to figure out whether the right next step is 1:1 coaching, a workshop format, school-support help, or something else.</span>
+            </div>
         </div>
     </section>
 
     <!-- Contact Form Section -->
-    <section class="contact-form-section" id="contact-form">
+    <section class="contact-form-section consultation-form-section" id="contact-form">
         <div class="container">
-            <div class="form-container">
+            <div class="consultation-form-layout">
+                <aside class="consultation-form-layout__rail">
+                    <p class="consultation-masthead__label">What Helps Most</p>
+                    <ul class="consultation-form-layout__list">
+                        <li>Student age or grade</li>
+                        <li>The main friction point right now</li>
+                        <li>What you have already tried</li>
+                        <li>Whether you need coaching, workshop info, or school translation</li>
+                    </ul>
+                </aside>
+                <div class="form-container consultation-form-layout__card">
                 <div class="form-header">
                     <h2>Send a Message</h2>
-                    <p>Tell us a bit about your situation and the support you are looking for.</p>
+                    <p>Tell EFI a bit about your situation and the support you are looking for. This form works best when the goal is clarity, not a perfect writeup.</p>
                 </div>
 
                 <form class="contact-form" id="main-contact-form">
@@ -160,16 +202,20 @@
                 <div class="form-note">
                     <p>Every message is reviewed directly. Expect a reply within 24-48 hours, often sooner during business hours.</p>
                 </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Booking Calendar Section -->
-    <section class="booking-section" id="booking">
+    <section class="booking-section consultation-booking" id="booking">
         <div class="container">
+            <div class="consultation-booking__header">
+                <h2>Book a Free Consultation</h2>
+                <p>The consultation is short by design. It should tell you whether EFI is a fit, what service lane makes sense, and what the next step would actually look like.</p>
+            </div>
             <div class="booking-container">
-                <div class="booking-info">
-                    <h2>Book a Free Consultation</h2>
+                <div class="booking-info consultation-booking__info">
                     <p>Choose a time that works for you. These calls are 20 minutes, enough time to review your child's challenges and determine whether the practice is a good fit.</p>
 
                     <div class="booking-details">
@@ -186,7 +232,7 @@
                     </div>
                 </div>
 
-                <div class="booking-calendar">
+                <div class="booking-calendar consultation-booking__calendar">
                     <!-- Placeholder for calendar embed -->
                     <div class="calendar-placeholder">
                         <div class="calendar-icon"></div>
@@ -201,8 +247,12 @@
     </section>
 
     <!-- Quick Contact Info -->
-    <section class="quick-contact">
+    <section class="quick-contact consultation-logistics">
         <div class="container">
+            <div class="consultation-routing__header">
+                <h2>Consultation Logistics</h2>
+                <p>The page should answer the practical questions quickly: where, how fast, and how to reach EFI directly.</p>
+            </div>
             <div class="quick-contact-grid">
                 <div class="quick-item">
                     <div class="quick-icon"></div>
@@ -228,9 +278,12 @@
     </section>
 
     <!-- FAQ Section -->
-    <section class="contact-faq">
+    <section class="contact-faq consultation-faq">
         <div class="container">
-            <h2>Quick Questions</h2>
+            <div class="consultation-routing__header">
+                <h2>Quick Questions</h2>
+                <p>These are the objections and logistics families usually want clarified before they book.</p>
+            </div>
 
             <div class="faq-compact">
                 <div class="faq-item">

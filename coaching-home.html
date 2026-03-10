@@ -7,12 +7,23 @@
     <meta name="keywords" content="ADHD coaching San Diego, Executive Functioning coaching, Improv for ADHD, Chess tutor ADHD, Special Education advocate SD, neurodivergent coaching">
     <title>EFI Coaching Practice | Executive Functioning Support San Diego</title>
     <link rel="canonical" href="https://executivefunctioninginstitute.com/coaching-home.html" />
+    <link rel="icon" href="favicon.svg">
+    <script>
+        (function () {
+            try {
+                var savedTheme = localStorage.getItem('efi_theme');
+                if (savedTheme) {
+                    document.documentElement.setAttribute('data-theme', savedTheme);
+                }
+            } catch (err) {}
+        })();
+    </script>
     <link rel="stylesheet" href="css/coaching.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="page-coaching-home">
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -30,6 +41,7 @@
                 <li class="nav-item--mobile-hide"><a href="certification.html">Certification</a></li>
                 <li><a href="coaching-contact.html" class="btn-nav">Consultation</a></li>
             </ul>
+            <button class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>
             <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
                 <span></span>
                 <span></span>
@@ -40,66 +52,86 @@
 
     <main id="main-content">
     <!-- Hero Section - Parent View -->
-    <section class="hero" id="hero-parent">
-        <div class="hero-content">
-            <div class="hero-badge">EFI Coaching | San Diego</div>
-            <h1>Executive Functioning Coaching That <span class="highlight">Actually Engages</span> Your Child</h1>
-            <p class="hero-subtitle">EFI combines executive functioning expertise, school-system fluency, and play-based training tools to build focus, flexibility, and self-regulation through methods students actually engage with.</p>
-            <div class="hero-cta">
-                <a href="coaching-contact.html" class="btn btn-primary">Schedule a Consultation</a>
-                <a href="#method" class="btn btn-secondary">See the Approach</a>
-                <a href="#services" class="btn btn-secondary">See Services</a>
-            </div>
-            <div class="hero-credentials">
-                <div class="credential">
-                    <span class="credential-icon"></span>
-                    <span>Special Education Background</span>
+    <section class="hero coaching-masthead" id="hero-parent">
+        <div class="container coaching-masthead__grid">
+            <div class="hero-content">
+                <div class="hero-badge">EFI Coaching | San Diego</div>
+                <h1>Executive Functioning Coaching That <span class="highlight">Actually Engages</span> Your Child</h1>
+                <p class="hero-subtitle">EFI combines executive functioning expertise, school-system fluency, and play-based training tools to build focus, flexibility, and self-regulation through methods students actually engage with.</p>
+                <div class="hero-cta">
+                    <a href="coaching-contact.html" class="btn btn-primary">Schedule a Consultation</a>
+                    <a href="#method" class="btn btn-secondary">See the Approach</a>
+                    <a href="#services" class="btn btn-secondary">See Services</a>
                 </div>
-                <div class="credential">
-                    <span class="credential-icon"></span>
-                    <span>Improv & Comedy Trained</span>
-                </div>
-                <div class="credential">
-                    <span class="credential-icon"></span>
-                    <span>Chess & Cubing Specialist</span>
+                <div class="hero-credentials">
+                    <div class="credential">
+                        <span class="credential-icon"></span>
+                        <span>Special Education Background</span>
+                    </div>
+                    <div class="credential">
+                        <span class="credential-icon"></span>
+                        <span>Improv & Comedy Trained</span>
+                    </div>
+                    <div class="credential">
+                        <span class="credential-icon"></span>
+                        <span>Chess & Cubing Specialist</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="hero-visual">
-            <div class="brain-graphic">
-                <div class="brain-node node-1" data-label="Focus"></div>
-                <div class="brain-node node-2" data-label="Flexibility"></div>
-                <div class="brain-node node-3" data-label="Planning"></div>
-                <div class="brain-node node-4" data-label="Memory"></div>
-            </div>
+            <aside class="hero-visual coaching-dossier">
+                <div class="coaching-dossier__sheet">
+                    <p class="coaching-dossier__label">Practice Snapshot</p>
+                    <ul class="coaching-dossier__facts">
+                        <li><span>Primary Client Base</span><strong>Neurodivergent students, families, and school-transition cases</strong></li>
+                        <li><span>Working Style</span><strong>Play-based drills, practical planning, and school-context translation</strong></li>
+                        <li><span>Local Footprint</span><strong>San Diego sessions, workshops, and parent support around district friction points</strong></li>
+                    </ul>
+                </div>
+                <div class="coaching-dossier__fit">
+                    <p class="coaching-dossier__label">Good Fit Indicators</p>
+                    <ul class="coaching-dossier__list">
+                        <li>Smart student, inconsistent execution</li>
+                        <li>Tutoring has become another fight</li>
+                        <li>Family needs school-system translation</li>
+                        <li>Engagement matters as much as rigor</li>
+                    </ul>
+                </div>
+            </aside>
         </div>
     </section>
 
     <!-- Problem Section -->
-    <section class="problem-section" id="problem-parent">
+    <section class="problem-section coaching-intake" id="problem-parent">
         <div class="container">
-            <h2>Sound Familiar?</h2>
-            <div class="problem-grid">
-                <div class="problem-card">
+            <div class="coaching-intake__header">
+                <h2>What Families Usually Bring to the First Call</h2>
+                <p>The issue is rarely raw intelligence. It is the gap between what a student clearly can do and what consistently happens at home, in class, and under stress.</p>
+            </div>
+            <div class="problem-grid coaching-intake__grid">
+                <div class="problem-card coaching-intake__card">
                     <div class="problem-icon"></div>
                     <h3>"They're so smart, but..."</h3>
                     <p>Your child aces tests when engaged but "forgets" to turn in homework. Their potential is obvious—so why isn't it showing up?</p>
                 </div>
-                <div class="problem-card">
+                <div class="problem-card coaching-intake__card">
                     <div class="problem-icon"></div>
                     <h3>Tutoring feels like punishment</h3>
                     <p>You've tried tutors, but sitting through more "school after school" creates resistance, not results.</p>
                 </div>
-                <div class="problem-card">
+                <div class="problem-card coaching-intake__card">
                     <div class="problem-icon"></div>
                     <h3>The IEP maze is overwhelming</h3>
                     <p>"Preferential seating" and "extended time" sound helpful—but you're not sure your child is getting what they actually need.</p>
                 </div>
-                <div class="problem-card">
+                <div class="problem-card coaching-intake__card">
                     <div class="problem-icon"></div>
                     <h3>Executive Functioning is the missing piece</h3>
                     <p>It's not about being smarter. It's about planning, prioritizing, and following through—skills that can be trained.</p>
                 </div>
+            </div>
+            <div class="service-note coaching-intake__note">
+                <strong>What EFI is solving for</strong>
+                <span>Not just better grades, but better initiation, less conflict, clearer systems, and more realistic support around the way a student actually functions.</span>
             </div>
         </div>
     </section>
@@ -164,7 +196,7 @@
                     <form class="challenge-form" id="cube-form">
                         <input type="email" placeholder="Parent's Email" required>
                         <input type="text" placeholder="Child's First Name" required>
-                        <label class="checkbox-label" style="font-size:0.9rem;line-height:1.4;">
+                        <label class="checkbox-label challenge-form__consent">
                             <input type="checkbox" name="consent" required>
                             <span>I agree to be contacted about coaching services and resources.</span>
                         </label>
@@ -186,37 +218,53 @@
     </section>
 
     <!-- Practice Credibility -->
-    <section class="why-jacob" id="practice">
+    <section class="why-jacob coaching-practice" id="practice">
         <div class="container">
-            <h2>Why Families Choose EFI Coaching</h2>
-            <div class="why-grid">
-                <div class="why-card">
-                    <h3>School-System Fluency</h3>
-                    <p>The practice is built by an educator who understands IEPs, 504s, and how to help families prepare for school conversations and identify accommodations that actually work instead of default checkbox language.</p>
+            <div class="coaching-practice__header">
+                <h2>Why Families Choose EFI Coaching</h2>
+                <p>This practice should feel like a serious local operator with a clear methodology, not a generic coaching page with nicer copy.</p>
+            </div>
+            <div class="coaching-practice__grid">
+                <div class="coaching-practice__profile">
+                    <p class="coaching-practice__label">Practice Position</p>
+                    <p>EFI sits between academic support, executive functioning coaching, and school-navigation consulting. That combination matters because many families do not need three separate providers; they need one practitioner who can connect the dots.</p>
+                    <ul class="coaching-practice__list">
+                        <li>Coaching sessions tied to real school and life load</li>
+                        <li>Parent-facing translation around accommodations and meetings</li>
+                        <li>Engagement tools chosen for actual executive-function fit</li>
+                    </ul>
                 </div>
-                <div class="why-card">
-                    <h3>Students Actually Like Sessions</h3>
-                    <p>EFI uses improv, strategy games, and structured play to build buy-in. Sessions are designed to feel active and collaborative, not punitive.</p>
-                </div>
-                <div class="why-card">
-                    <h3>Local, But Professional</h3>
-                    <p>EFI is rooted in San Diego and understands local districts, private schools, and regional referral networks without reading like a one-person side project.</p>
-                </div>
-                <div class="why-card">
-                    <h3>Evidence-Based, Not Boring</h3>
-                    <p>Every game and activity is anchored in executive function and neuroplasticity research. Fun is not fluff here; it is part of the intervention design.</p>
+                <div class="why-grid coaching-practice__cards">
+                    <div class="why-card coaching-practice__card">
+                        <h3>School-System Fluency</h3>
+                        <p>The practice is built by an educator who understands IEPs, 504s, and how to help families prepare for school conversations and identify accommodations that actually work instead of default checkbox language.</p>
+                    </div>
+                    <div class="why-card coaching-practice__card">
+                        <h3>Students Actually Like Sessions</h3>
+                        <p>EFI uses improv, strategy games, and structured play to build buy-in. Sessions are designed to feel active and collaborative, not punitive.</p>
+                    </div>
+                    <div class="why-card coaching-practice__card">
+                        <h3>Local, But Professional</h3>
+                        <p>EFI is rooted in San Diego and understands local districts, private schools, and regional referral networks without reading like a one-person side project.</p>
+                    </div>
+                    <div class="why-card coaching-practice__card">
+                        <h3>Evidence-Based, Not Boring</h3>
+                        <p>Every game and activity is anchored in executive function and neuroplasticity research. Fun is not fluff here; it is part of the intervention design.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Services Preview -->
-    <section class="services-preview" id="services">
+    <section class="services-preview coaching-services" id="services">
         <div class="container">
-            <h2>How to Work Together</h2>
-            <p class="events-intro" style="max-width:760px;margin:0 auto var(--space-xl);">Standard pricing stays premium year-round. Promotional weeks usually appear in late summer, early January, and late spring, with extra short windows around report cards, school breaks, and selected educator or student events.</p>
-            <div class="services-showcase">
-                <article class="service-feature">
+            <div class="coaching-services__header">
+                <h2>How to Work Together</h2>
+                <p class="events-intro coaching-services__intro">Standard pricing stays premium year-round. Promotional weeks usually appear in late summer, early January, and late spring, with extra short windows around report cards, school breaks, and selected educator or student events.</p>
+            </div>
+            <div class="services-showcase coaching-services__showcase">
+                <article class="service-feature coaching-services__feature">
                     <div class="tier-label">Most Popular</div>
                     <h3>1:1 EF Coaching</h3>
                     <p class="price">$225<span>/hour</span></p>
@@ -239,53 +287,60 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="button-group" style="margin-top:var(--space-lg);">
+                    <div class="coaching-services__actions">
                         <a href="#services" class="btn btn-primary">Review Coaching Details</a>
                         <a href="coaching-contact.html" class="btn btn-outline">Schedule a Consultation</a>
                     </div>
                 </article>
-                <div class="service-rail">
-                    <article class="service-snapshot">
+                <div class="service-rail coaching-services__rail">
+                    <article class="service-snapshot coaching-services__snapshot">
                         <div class="tier-label">Try It Out</div>
                         <h3>Saturday Brain Games</h3>
                         <p class="price">$40<span>/session</span></p>
                         <p>A lower-commitment entry point built for parent trial, peer interaction, and visible skill-building through games.</p>
                         <a href="#services" class="btn btn-outline">View Workshop Details</a>
                     </article>
-                    <article class="service-snapshot service-snapshot--support">
+                    <article class="service-snapshot service-snapshot--support coaching-services__snapshot">
                         <div class="tier-label">For Parents</div>
                         <h3>IEP Translation</h3>
                         <p class="price">$250+<span>/meeting</span></p>
                         <p>Meeting attendance, district-language translation, and document review for families who need practical school-system support.</p>
                         <a href="#services" class="btn btn-outline">See IEP Support</a>
                     </article>
+                    <div class="service-note coaching-services__note">
+                        <strong>Service logic</strong>
+                        <span>Families usually enter through one of three lanes: ongoing coaching, lower-commitment workshops, or school-support translation.</span>
+                    </div>
                 </div>
             </div>
-            <div class="button-group button-group--center" style="margin-top:var(--space-xl);">
+            <div class="coaching-services__footer">
                 <a href="store.html" class="btn btn-secondary">View Sale Calendar</a>
             </div>
         </div>
     </section>
 
     <!-- Testimonials -->
-    <section class="testimonials">
+    <section class="testimonials coaching-field-notes">
         <div class="container">
-            <h2>What Families Say</h2>
-            <div class="testimonial-grid">
-                <div class="testimonial-card">
+            <div class="coaching-field-notes__header">
+                <h2>Signals From the Field</h2>
+                <p>What families tend to notice first is not a dramatic speech. It is that sessions feel usable, and school friction starts becoming easier to interpret.</p>
+            </div>
+            <div class="testimonial-grid coaching-field-notes__grid">
+                <div class="testimonial-card coaching-field-notes__card">
                     <div class="quote-mark">"</div>
                     <p>"For the first time, my son actually looks forward to coaching. The EFI approach connects with him in a way traditional tutoring never did."</p>
                     <div class="testimonial-author">
                         <span class="author-name">— Parent, La Jolla</span>
                     </div>
                 </div>
-                <div class="testimonial-card">
+                <div class="testimonial-card coaching-field-notes__card">
                     <p>"EFI helped us understand our daughter's IEP and focus on accommodations that actually addressed her needs, not just paperwork."</p>
                     <div class="testimonial-author">
                         <span class="author-name">— Parent, Del Mar</span>
                     </div>
                 </div>
-                <div class="testimonial-card">
+                <div class="testimonial-card coaching-field-notes__card">
                     <p>"The chess sessions taught my son to pause and think before acting, which had been a challenge for years."</p>
                     <div class="testimonial-author">
                         <span class="author-name">— Parent, Pacific Beach</span>
@@ -296,12 +351,14 @@
     </section>
 
     <!-- Local Events -->
-    <section class="local-events">
+    <section class="local-events coaching-local" id="community">
         <div class="container">
-            <h2>San Diego Events</h2>
-            <p class="events-intro">Join our local community of neurodivergent families.</p>
-            <div class="events-showcase">
-                <article class="event-feature">
+            <div class="coaching-local__header">
+                <h2>San Diego Community Calendar</h2>
+                <p class="events-intro">EFI should look visibly local here: recurring touchpoints, public-facing entry formats, and support windows tied to the school-year rhythm.</p>
+            </div>
+            <div class="events-showcase coaching-local__showcase">
+                <article class="event-feature coaching-local__feature">
                     <div class="event-feature__header">
                         <div class="event-date">
                             <span class="month">Monthly</span>
@@ -318,7 +375,7 @@
                         <div><strong>Value</strong><span>Lets families experience the tone of the practice before committing to services</span></div>
                     </div>
                 </article>
-                <div class="event-rail">
+                <div class="event-rail coaching-local__rail">
                     <article class="event-mini">
                         <h3>Improv for EF Workshop</h3>
                         <p>Weekly group work for teens who need flexibility, confidence, and social-cognitive reps in a structured format.</p>
@@ -331,16 +388,21 @@
                     </article>
                 </div>
             </div>
-            <a href="coaching-contact.html" class="btn btn-secondary">Get Event Updates</a>
+            <a href="coaching-contact.html" class="btn btn-secondary coaching-local__cta">Get Event Updates</a>
         </div>
     </section>
 
     <!-- Final CTA -->
-    <section class="final-cta">
-        <div class="container">
-            <h2>Ready to Try a Different Approach?</h2>
-                    <p>Book a consultation call to review your student's needs, your goals, and whether EFI coaching is the right fit.</p>
-            <a href="coaching-contact.html" class="btn btn-primary btn-large">Schedule a Consultation</a>
+    <section class="final-cta coaching-cta">
+        <div class="container coaching-cta__inner">
+            <div>
+                <p class="coaching-cta__label">Next Step</p>
+                <h2>Ready to Try a Different Approach?</h2>
+            </div>
+            <div class="coaching-cta__copy">
+                <p>Book a consultation call to review your student's needs, your goals, and whether EFI coaching is the right fit.</p>
+                <a href="coaching-contact.html" class="btn btn-primary btn-large">Schedule a Consultation</a>
+            </div>
         </div>
     </section>
 

@@ -6,6 +6,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     replaceLegacyGlyphIcons();
     injectInstituteCommerceLinks();
+    initThemeToggle();
     initMobileMenu();
     initSmoothScroll();
     initFormHandling();
@@ -15,6 +16,31 @@ document.addEventListener('DOMContentLoaded', function () {
         title: document.title
     });
 });
+
+function initThemeToggle() {
+    var THEME_KEY = 'efi_theme';
+    var themeToggle = document.querySelector('.theme-toggle');
+    if (!themeToggle) return;
+
+    function syncThemeButton() {
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        themeToggle.textContent = isDark ? '\u2600' : '\u263E';
+        themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+        themeToggle.title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+    }
+
+    syncThemeButton();
+
+    themeToggle.addEventListener('click', function () {
+        var current = document.documentElement.getAttribute('data-theme');
+        var next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try {
+            localStorage.setItem(THEME_KEY, next);
+        } catch (err) {}
+        syncThemeButton();
+    });
+}
 
 function injectInstituteCommerceLinks() {
     var currentPage = window.location.pathname.split('/').pop() || 'coaching-home.html';
@@ -330,7 +356,7 @@ async function submitLeadForm(form, payload, successMessage) {
             page: payload.metadata && payload.metadata.page
         });
 
-        form.innerHTML = '<div class="form-success" style="background:#10b981;color:#fff;padding:1rem;border-radius:8px;margin-top:1rem;text-align:center;">' + successMessage + '</div>';
+        form.innerHTML = '<div class="form-success">' + successMessage + '</div>';
     } catch (err) {
         showInlineError(form, err.message || 'Submission failed. Please try again.');
         submitBtn.textContent = originalText;
@@ -342,7 +368,6 @@ function showInlineError(form, message) {
     clearInlineNotice(form);
     var errorDiv = document.createElement('div');
     errorDiv.className = 'form-error';
-    errorDiv.style.cssText = 'background:#b91c1c;color:#fff;padding:0.75rem;border-radius:8px;margin-top:1rem;text-align:center;';
     errorDiv.textContent = message;
     form.appendChild(errorDiv);
 }

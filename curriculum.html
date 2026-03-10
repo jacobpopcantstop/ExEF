@@ -70,7 +70,7 @@
     }
   </script>
 </head>
-<body>
+<body class="page-curriculum">
 
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -84,7 +84,7 @@
       <div class="nav__links" id="nav-links">
         <a href="index.html" class="nav__link">Home</a>
         <a href="about.html" class="nav__link">About</a>
-        <a href="curriculum.html" class="nav__link">Curriculum</a>
+        <a href="curriculum.html" class="nav__link nav__link--active">Curriculum</a>
         <a href="resources.html" class="nav__link">Resources</a>
         <a href="coaching-home.html" class="nav__link">Coaching</a>
         <a href="store.html" class="nav__link">Store</a>
@@ -103,28 +103,66 @@
   <main id="main-content">
 
   <!-- Page Header -->
-  <header class="page-header page-header--centered">
+  <header class="page-header curriculum-masthead">
     <div class="container">
-      <nav aria-label="Breadcrumb" style="justify-content:center;"><ol class="breadcrumb"><li><a href="index.html">Home</a></li> <li aria-current="page">Curriculum</li></ol></nav>
-      <h1>The Certification Curriculum</h1>
-      <p>Six rigorous modules moving from theoretical abstraction to clinical application. Each integrates readings, case studies, and practical assignments.</p>
+      <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li> <li aria-current="page">Curriculum</li></ol></nav>
+      <div class="curriculum-masthead__grid">
+        <div class="curriculum-masthead__intro">
+          <p class="curriculum-kicker">Program File</p>
+          <h1>The Certification Curriculum</h1>
+          <p>Six rigorous modules moving from theoretical abstraction to clinical application. The sequence is built to teach named models, applied tools, and professional boundaries in an order that mirrors real coaching formation.</p>
+          <p class="page-header__note">This page is intentionally syllabus-like. It shows what is taught, how assignments escalate, and where the free reading boundary ends and the paid credential workflow begins.</p>
+          <div class="curriculum-masthead__actions">
+            <a href="certification.html#transparency-rubric" class="btn btn--primary">Inspect Grading Rubric</a>
+            <a href="store.html" class="btn btn--secondary">View Paid Path</a>
+          </div>
+        </div>
+        <aside class="curriculum-dossier" aria-label="Curriculum dossier">
+          <p class="curriculum-dossier__label">Curriculum Dossier</p>
+          <ul class="curriculum-facts">
+            <li><span>Format</span><strong>Asynchronous study + applied assignments</strong></li>
+            <li><span>Access</span><strong>Open curriculum pages, paid scoring and credential operations</strong></li>
+            <li><span>Sequence</span><strong>Theory, assessment, coaching architecture, interventions, practice launch</strong></li>
+            <li><span>Capstone</span><strong>Launch kit, competency review, rubric-based evaluation</strong></li>
+          </ul>
+        </aside>
+      </div>
+      <div class="curriculum-sequence" aria-label="Module sequence">
+        <a href="#module-1" class="curriculum-sequence__item"><span class="curriculum-sequence__num">1</span><span>Neuropsychology</span></a>
+        <a href="#module-2" class="curriculum-sequence__item"><span class="curriculum-sequence__num">2</span><span>Assessment</span></a>
+        <a href="#module-3" class="curriculum-sequence__item"><span class="curriculum-sequence__num">3</span><span>Coaching Architecture</span></a>
+        <a href="#module-4" class="curriculum-sequence__item"><span class="curriculum-sequence__num">4</span><span>Applied Methods</span></a>
+        <a href="#module-5" class="curriculum-sequence__item"><span class="curriculum-sequence__num">5</span><span>Interventions</span></a>
+        <a href="#module-6" class="curriculum-sequence__item"><span class="curriculum-sequence__num">6</span><span>Professional Practice</span></a>
+      </div>
     </div>
   </header>
 
   <!-- Curriculum Philosophy -->
   <section class="section">
-    <div class="container container--narrow">
-      <div class="fade-in text-center mb-3xl">
-        <h2>From Theory to Practice</h2>
-        <p class="lead">The curriculum rejects the notion of EF issues as "behavioral choices" or "character flaws," instead grounding all instruction in the neuroanatomy of the prefrontal cortex and the developmental trajectory of self-regulation.</p>
-      </div>
-      <div class="callout callout--accent fade-in" style="margin-bottom:var(--space-xl);">
-        <p class="callout__label">Free vs Paid Boundary</p>
-        <p><strong>Free:</strong> all reading, theory pages, source links, and public tools. <strong>Paid:</strong> graded tests/assignments, rubric feedback, certification processing, and alumni directory pathway.</p>
-      </div>
-      <div class="callout fade-in">
-        <p class="callout__label">Guiding Principle</p>
-        <p>"Executive function deficits are disorders of the <strong>point of performance</strong>. The role of the coach is to be present at that point &mdash; to act as an external scaffold while training the client's own neural circuits to eventually assume command."</p>
+    <div class="container">
+      <div class="curriculum-philosophy">
+        <div class="curriculum-philosophy__main fade-in">
+          <p class="curriculum-kicker">Teaching Logic</p>
+          <h2>From mechanism to method to professional judgment</h2>
+          <p class="lead">The curriculum rejects the idea that EF breakdowns are character flaws. It starts with mechanism, moves into assessment and intervention design, then ends with the ethical and operational realities of practice.</p>
+          <ul class="curriculum-principles">
+            <li>Theory comes first so coaching choices can be defended against named research frameworks.</li>
+            <li>Assessment follows before intervention so goals are built from functional data, not vibes.</li>
+            <li>Applied methods arrive after architecture so tools are selected for fit instead of novelty.</li>
+            <li>Professional practice closes the sequence so graduates understand scope, documentation, and launch readiness.</li>
+          </ul>
+        </div>
+        <aside class="curriculum-philosophy__rail fade-in">
+          <div class="callout callout--accent curriculum-note">
+            <p class="callout__label">Free vs Paid Boundary</p>
+            <p><strong>Free:</strong> reading pages, theory summaries, source links, and public tools. <strong>Paid:</strong> graded tests and assignments, rubric feedback, certification processing, and alumni directory workflow.</p>
+          </div>
+          <div class="callout curriculum-note">
+            <p class="callout__label">Guiding Principle</p>
+            <p>"Executive function deficits are disorders of the <strong>point of performance</strong>. The coach acts as an external scaffold while training the client to internalize the sequence."</p>
+          </div>
+        </aside>
       </div>
     </div>
   </section>
@@ -132,21 +170,26 @@
   <!-- Module Detailed Breakdown -->
   <section class="section section--alt">
     <div class="container">
-      <div class="section-header fade-in">
+      <div class="section-header section-header--left fade-in">
         <span class="section-header__tag">Six Modules</span>
-        <h2>Complete Curriculum Overview</h2>
+        <h2>Module-by-Module Syllabus</h2>
+        <p>Each module keeps the same review structure: teaching units, key concepts, and a concrete assignment that proves transfer.</p>
       </div>
 
       <!-- Module 1 -->
-      <div class="card fade-in mb-2xl" id="module-1" style="border-left:4px solid var(--module-1);">
-        <div style="display:flex;gap:var(--space-sm);align-items:center;margin-bottom:var(--space-lg);">
-          <span class="module-card__number" style="background:var(--module-1);">1</span>
+      <article class="syllabus-module syllabus-module--1 fade-in mb-2xl" id="module-1">
+        <div class="syllabus-module__header">
+          <span class="module-card__number">1</span>
           <div>
-            <h3 style="margin-bottom:0;">Neuropsychology of Self-Regulation</h3>
-            <p style="margin-bottom:0;font-size:0.9rem;color:var(--color-text-muted);">The intellectual baseline for the certification</p>
+            <p class="syllabus-module__eyebrow">The intellectual baseline for the certification</p>
+            <h3>Neuropsychology of Self-Regulation</h3>
           </div>
         </div>
-        <p>This module requires trainees to synthesize competing yet complementary theories of executive dysfunction to form a cohesive coaching philosophy.</p>
+        <p class="syllabus-module__summary">This module requires trainees to synthesize competing yet complementary theories of executive dysfunction to form a cohesive coaching philosophy.</p>
+        <ul class="syllabus-module__meta">
+          <li>Barkley, Brown, and developmental neuropsychology</li>
+          <li>Primary output: temporal horizon analysis</li>
+        </ul>
 
         <div class="tabs">
           <div class="tabs__list">
@@ -179,21 +222,25 @@
             </div>
           </div>
         </div>
-        <div style="margin-top:var(--space-lg);">
+        <div class="syllabus-module__footer">
           <a href="module-1.html" class="btn btn--sm btn--secondary">View Full Module Details</a>
         </div>
-      </div>
+      </article>
 
       <!-- Module 2 -->
-      <div class="card fade-in mb-2xl" id="module-2" style="border-left:4px solid var(--module-2);">
-        <div style="display:flex;gap:var(--space-sm);align-items:center;margin-bottom:var(--space-lg);">
-          <span class="module-card__number" style="background:var(--module-2);">2</span>
+      <article class="syllabus-module syllabus-module--2 fade-in mb-2xl" id="module-2">
+        <div class="syllabus-module__header">
+          <span class="module-card__number">2</span>
           <div>
-            <h3 style="margin-bottom:0;">Assessment Protocols &amp; Intake Strategy</h3>
-            <p style="margin-bottom:0;font-size:0.9rem;color:var(--color-text-muted);">From theory to diagnostics</p>
+            <p class="syllabus-module__eyebrow">From theory to diagnostics</p>
+            <h3>Assessment Protocols &amp; Intake Strategy</h3>
           </div>
         </div>
-        <p>While coaches do not diagnose pathology, they must assess functional impairment to tailor interventions. This module relies heavily on the work of Dawson and Guare.</p>
+        <p class="syllabus-module__summary">While coaches do not diagnose pathology, they must assess functional impairment to tailor interventions. This module relies heavily on the work of Dawson and Guare.</p>
+        <ul class="syllabus-module__meta">
+          <li>ESQ-R, BRIEF-2, Brown Scales, intake scripting</li>
+          <li>Primary output: structured client profile report</li>
+        </ul>
 
         <div class="tabs">
           <div class="tabs__list">
@@ -226,21 +273,25 @@
             </div>
           </div>
         </div>
-        <div style="margin-top:var(--space-lg);">
+        <div class="syllabus-module__footer">
           <a href="module-2.html" class="btn btn--sm btn--secondary">View Full Module Details</a>
         </div>
-      </div>
+      </article>
 
       <!-- Module 3 -->
-      <div class="card fade-in mb-2xl" id="module-3" style="border-left:4px solid var(--module-3);">
-        <div style="display:flex;gap:var(--space-sm);align-items:center;margin-bottom:var(--space-lg);">
-          <span class="module-card__number" style="background:var(--module-3);">3</span>
+      <article class="syllabus-module syllabus-module--3 fade-in mb-2xl" id="module-3">
+        <div class="syllabus-module__header">
+          <span class="module-card__number">3</span>
           <div>
-            <h3 style="margin-bottom:0;">The Coaching Architecture</h3>
-            <p style="margin-bottom:0;font-size:0.9rem;color:var(--color-text-muted);">Dawson &amp; Guare Framework</p>
+            <p class="syllabus-module__eyebrow">Dawson &amp; Guare framework</p>
+            <h3>The Coaching Architecture</h3>
           </div>
         </div>
-        <p>This module operationalizes the intervention process, distinguishing EF coaching from tutoring and therapy, framing coaching as "skill acquisition" and "environmental modification."</p>
+        <p class="syllabus-module__summary">This module operationalizes the intervention process, distinguishing EF coaching from tutoring and therapy, framing coaching as "skill acquisition" and "environmental modification."</p>
+        <ul class="syllabus-module__meta">
+          <li>Environmental modification, coaching cycle, ethics</li>
+          <li>Primary output: competency and ethics portfolio</li>
+        </ul>
 
         <div class="tabs">
           <div class="tabs__list">
@@ -273,21 +324,25 @@
             </div>
           </div>
         </div>
-        <div style="margin-top:var(--space-lg);">
+        <div class="syllabus-module__footer">
           <a href="module-3.html" class="btn btn--sm btn--secondary">View Full Module Details</a>
         </div>
-      </div>
+      </article>
 
       <!-- Module 4 -->
-      <div class="card fade-in mb-2xl" id="module-4" style="border-left:4px solid var(--module-4);">
-        <div style="display:flex;gap:var(--space-sm);align-items:center;margin-bottom:var(--space-lg);">
-          <span class="module-card__number" style="background:var(--module-4);">4</span>
+      <article class="syllabus-module syllabus-module--4 fade-in mb-2xl" id="module-4">
+        <div class="syllabus-module__header">
+          <span class="module-card__number">4</span>
           <div>
-            <h3 style="margin-bottom:0;">Applied Methodologies</h3>
-            <p style="margin-bottom:0;font-size:0.9rem;color:var(--color-text-muted);">The "360 Thinking" Model &amp; Practical Tools</p>
+            <p class="syllabus-module__eyebrow">The "360 Thinking" model and practical tools</p>
+            <h3>Applied Methodologies</h3>
           </div>
         </div>
-        <p>This module provides concrete tools for time and task management, incorporating the "360 Thinking" model and moving beyond general advice to specific visual-spatial strategies.</p>
+        <p class="syllabus-module__summary">This module provides concrete tools for time and task management, incorporating the "360 Thinking" model and moving beyond general advice to specific visual-spatial strategies.</p>
+        <ul class="syllabus-module__meta">
+          <li>Ward model, time tools, cognitive offloading</li>
+          <li>Primary output: methods applied inside intervention design</li>
+        </ul>
 
         <div class="tabs">
           <div class="tabs__list">
@@ -318,21 +373,25 @@
             </div>
           </div>
         </div>
-        <div style="margin-top:var(--space-lg);">
+        <div class="syllabus-module__footer">
           <a href="module-4.html" class="btn btn--sm btn--secondary">View Full Module Details</a>
         </div>
-      </div>
+      </article>
 
       <!-- Module 5 -->
-      <div class="card fade-in mb-2xl" id="module-5" style="border-left:4px solid var(--module-5);">
-        <div style="display:flex;gap:var(--space-sm);align-items:center;margin-bottom:var(--space-lg);">
-          <span class="module-card__number" style="background:var(--module-5);">5</span>
+      <article class="syllabus-module syllabus-module--5 fade-in mb-2xl" id="module-5">
+        <div class="syllabus-module__header">
+          <span class="module-card__number">5</span>
           <div>
-            <h3 style="margin-bottom:0;">Strategic Interventions &amp; Special Populations</h3>
-            <p style="margin-bottom:0;font-size:0.9rem;color:var(--color-text-muted);">Environmental Engineering &amp; the Intervention Toolkit</p>
+            <p class="syllabus-module__eyebrow">Environmental engineering and the intervention toolkit</p>
+            <h3>Strategic Interventions &amp; Special Populations</h3>
           </div>
         </div>
-        <p>This module constitutes the "toolkit" of the practitioner, transitioning from theory to specific "how-to" strategies. It also addresses the nuances of ADHD, ASD, and critical life transitions.</p>
+        <p class="syllabus-module__summary">This module constitutes the "toolkit" of the practitioner, transitioning from theory to specific "how-to" strategies. It also addresses the nuances of ADHD, ASD, and critical life transitions.</p>
+        <ul class="syllabus-module__meta">
+          <li>ADHD, ASD, transitions, environmental design</li>
+          <li>Primary output: intervention design project</li>
+        </ul>
 
         <div class="tabs">
           <div class="tabs__list">
@@ -367,21 +426,25 @@
             </div>
           </div>
         </div>
-        <div style="margin-top:var(--space-lg);">
+        <div class="syllabus-module__footer">
           <a href="module-5.html" class="btn btn--sm btn--secondary">View Full Module Details</a>
         </div>
-      </div>
+      </article>
 
       <!-- Module 6 -->
-      <div class="card fade-in" id="module-6" style="border-left:4px solid var(--module-6);">
-        <div style="display:flex;gap:var(--space-sm);align-items:center;margin-bottom:var(--space-lg);">
-          <span class="module-card__number" style="background:var(--module-6);">6</span>
+      <article class="syllabus-module syllabus-module--6 fade-in" id="module-6">
+        <div class="syllabus-module__header">
+          <span class="module-card__number">6</span>
           <div>
-            <h3 style="margin-bottom:0;">Professional Ethics &amp; Practice Management</h3>
-            <p style="margin-bottom:0;font-size:0.9rem;color:var(--color-text-muted);">Building your coaching business</p>
+            <p class="syllabus-module__eyebrow">Building your coaching business</p>
+            <h3>Professional Ethics &amp; Practice Management</h3>
           </div>
         </div>
-        <p>The final module ensures graduates operate within legal and ethical boundaries and can build a sustainable practice. Even the most skilled coach cannot help clients if they cannot attract them or manage the business logistics.</p>
+        <p class="syllabus-module__summary">The final module ensures graduates operate within legal and ethical boundaries and can build a sustainable practice. Even the most skilled coach cannot help clients if they cannot attract them or manage the business logistics.</p>
+        <ul class="syllabus-module__meta">
+          <li>Scope, launch systems, documentation, professional identity</li>
+          <li>Primary output: launch kit capstone</li>
+        </ul>
 
         <div class="tabs">
           <div class="tabs__list">
@@ -414,26 +477,26 @@
             </div>
           </div>
         </div>
-        <div style="margin-top:var(--space-lg);">
+        <div class="syllabus-module__footer">
           <a href="module-6.html" class="btn btn--sm btn--secondary">View Full Module Details</a>
         </div>
-      </div>
+      </article>
     </div>
   </section>
 
   <section class="section section--alt">
     <div class="container">
-      <div class="section-header fade-in">
-        <span class="section-header__tag">Launch Kit Preview</span>
-        <h2>What You Actually Receive In The Launch Kit</h2>
+      <div class="section-header section-header--left fade-in">
+        <span class="section-header__tag">Capstone File Room</span>
+        <h2>What the launch kit actually contains</h2>
         <p>A concrete preview of the implementation files used in Module 6 and capstone preparation.</p>
       </div>
-      <div class="grid grid--2 fade-in" style="gap:var(--space-2xl);align-items:center;">
-        <figure class="infographic" style="margin:0;">
+      <div class="launch-room fade-in">
+        <figure class="infographic launch-room__figure">
           <img src="images/launch-kit-preview.svg" alt="Launch Kit folder preview showing contract, intake, scope, rubric, and dashboard files" loading="lazy">
           <figcaption>Representative file stack used in the asynchronous certification workflow.</figcaption>
         </figure>
-        <div class="card">
+        <div class="card launch-room__card">
           <h3>Sample File Inventory</h3>
           <ul class="checklist">
             <li><code>Client_Service_Agreement_Template.docx</code></li>
@@ -443,7 +506,7 @@
             <li><code>Capstone_Submission_Checklist.pdf</code></li>
             <li><code>Credential_Verification_Workflow.md</code></li>
           </ul>
-          <p style="font-size:0.9rem;color:var(--color-text-light);margin-top:var(--space-md);">The curriculum is free to study. Paid services cover rubric scoring, formal feedback, credential operations, and alumni listing support.</p>
+          <p class="launch-room__note">The curriculum is free to study. Paid services cover rubric scoring, formal feedback, credential operations, and alumni listing support.</p>
         </div>
       </div>
     </div>
@@ -509,7 +572,7 @@
     <div class="container">
       <h2>Ready to Start?</h2>
       <p>Start the CEFC path with clear milestones, graded work, and feedback at each stage.</p>
-      <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
+      <div class="cta-section__actions">
         <a href="store.html" class="btn btn--primary btn--lg">View Paid Path</a>
         <a href="certification.html" class="btn btn--outline-white btn--lg">View Certification Requirements</a>
       </div>

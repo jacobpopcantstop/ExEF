@@ -34,7 +34,7 @@
   }
   </script>
 </head>
-<body>
+<body class="page-home">
 
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -46,7 +46,7 @@
         <span>Executive Functioning Institute</span>
       </a>
       <div class="nav__links" id="nav-links">
-        <a href="index.html" class="nav__link">Home</a>
+        <a href="index.html" class="nav__link nav__link--active">Home</a>
         <a href="about.html" class="nav__link">About</a>
         <a href="curriculum.html" class="nav__link">Curriculum</a>
         <a href="resources.html" class="nav__link">Resources</a>
@@ -69,101 +69,135 @@
   <!-- Hero Section -->
   <section class="hero">
     <div class="container">
-      <div class="hero__content">
-        <h1 class="hero__title">
-          Build <span>Executive Function Expertise</span>
-        </h1>
-        <p class="section-header__tag hero__eyebrow">Free, Rigorous, Open-Source Education</p>
-        <p class="hero__subtitle">
-          Learn executive function through a clear, science-based sequence built for parents, educators, and coaches.
-        </p>
-        <div class="hero__actions">
-          <a href="#start-paths" class="btn btn--primary btn--lg">Choose Your Path</a>
-          <a href="esqr.html" class="btn btn--outline-white btn--lg">Take the Free ESQ-R Quiz</a>
-          <a href="curriculum.html" class="btn btn--outline-white btn--lg">View Full Curriculum</a>
+      <div class="hero__grid">
+        <div class="hero__content">
+          <p class="hero__badge">Open Institute Material</p>
+          <h1 class="hero__title">
+            Build <span>Executive Function Expertise</span>
+          </h1>
+          <p class="hero__subtitle">
+            Study executive function through a real teaching system: six modules, applied tools, and an internal certification pathway grounded in Barkley, Brown, Dawson &amp; Guare, and Sarah Ward.
+          </p>
+          <div class="hero__actions">
+            <a href="curriculum.html" class="btn btn--primary btn--lg">Review Curriculum</a>
+            <a href="#start-paths" class="btn btn--outline-white btn--lg">Choose a Start Path</a>
+          </div>
+          <div class="hero__evidence" aria-label="Program evidence">
+            <article class="hero__evidence-item">
+              <span class="hero__evidence-label">Frameworks Taught</span>
+              <span class="hero__evidence-title">Barkley, Brown, Dawson &amp; Guare, Ward</span>
+              <p class="hero__evidence-text">The curriculum is organized around named models rather than generic productivity advice.</p>
+            </article>
+            <article class="hero__evidence-item">
+              <span class="hero__evidence-label">What You Can Inspect</span>
+              <span class="hero__evidence-title">Modules, tools, and open resources</span>
+              <p class="hero__evidence-text">Visitors can review the actual learning structure, applied exercises, and free EF materials before buying anything.</p>
+            </article>
+            <article class="hero__evidence-item">
+              <span class="hero__evidence-label">Standards</span>
+              <span class="hero__evidence-title">Capstone and transparency rubric</span>
+              <p class="hero__evidence-text">EFI publishes how its internal credential is scoped, assessed, and bounded in practice.</p>
+            </article>
+          </div>
         </div>
-      </div>
-      <div class="hero__stats">
-        <div>
-          <span class="hero__stat-number">6</span>
-          <span class="hero__stat-label">Comprehensive Modules</span>
-        </div>
-        <div>
-          <span class="hero__stat-number">3</span>
-          <span class="hero__stat-label">Foundational Models</span>
-        </div>
-        <div>
-          <span class="hero__stat-number">12</span>
-          <span class="hero__stat-label">Executive Skills Covered</span>
-        </div>
+        <aside class="hero__artifact" aria-label="Proof artifacts">
+          <section class="hero-sheet">
+            <p class="hero-sheet__label">Program Evidence</p>
+            <h2 class="hero-sheet__title">Inspect the actual scaffolding before you commit</h2>
+            <ul class="hero-sheet__list">
+              <li>Six public module pages with named models and assignments</li>
+              <li>Free tools including ESQ-R, guides, and resource directories</li>
+              <li>Published capstone expectations and credential boundaries</li>
+            </ul>
+          </section>
+          <section class="hero-sheet hero-sheet--accent">
+            <p class="hero-sheet__label">Fastest Entry Points</p>
+            <div class="hero-sheet__links">
+              <a href="coaching-home.html">Parent support and local coaching</a>
+              <a href="teacher-to-coach.html">Educator-to-coach transition</a>
+              <a href="certification.html">Certification standards and reviewed path</a>
+            </div>
+          </section>
+        </aside>
       </div>
     </div>
   </section>
 
-  <section class="section section--alt">
+  <section class="section section--alt home-routing" id="start-paths">
     <div class="container">
-      <div class="section-header fade-in">
-        <span class="section-header__tag">Guided Route</span>
-        <h2>Start in Order</h2>
-        <p>Use this four-step route to move from foundations to real practice without getting lost in the full library.</p>
-      </div>
-      <div class="grid grid--4 stagger">
-        <article class="card route-step">
-          <h3 class="route-step__title">Step 1</h3>
-          <p>Read the foundations first so terms like inhibition, activation, and time blindness are clear.</p>
-          <a href="module-1.html" class="btn btn--secondary btn--sm">Open Module 1</a>
+      <div class="home-routing__grid">
+        <article class="route-sheet fade-in">
+          <p class="curriculum-kicker">Guided Route</p>
+          <h2>Start in order, then branch by role</h2>
+          <p class="route-sheet__intro">If you are new to executive function coaching, EFI works best as a sequence. Learn the model language first, use the tools second, then inspect standards before deciding whether the paid path is relevant.</p>
+          <ol class="route-sheet__steps">
+            <li class="route-step">
+              <span class="route-step__num">1</span>
+              <div>
+                <h3>Learn the vocabulary</h3>
+                <p>Read the foundations first so terms like inhibition, activation, and time blindness are clear.</p>
+                <a href="module-1.html">Open Module 1</a>
+              </div>
+            </li>
+            <li class="route-step">
+              <span class="route-step__num">2</span>
+              <div>
+                <h3>Use a real tool</h3>
+                <p>Map strengths and deficits with ESQ-R, then review intervention examples by domain.</p>
+                <a href="esqr.html">Take the ESQ-R</a>
+              </div>
+            </li>
+            <li class="route-step">
+              <span class="route-step__num">3</span>
+              <div>
+                <h3>Inspect the standard</h3>
+                <p>Review how the curriculum maps to competencies, grading criteria, and scope of practice.</p>
+                <a href="certification.html#transparency-rubric">Review standards</a>
+              </div>
+            </li>
+            <li class="route-step">
+              <span class="route-step__num">4</span>
+              <div>
+                <h3>Decide on next steps</h3>
+                <p>Only after the free material is clear should you look at scored work, certification services, or coaching support.</p>
+                <a href="store.html">View the paid path</a>
+              </div>
+            </li>
+          </ol>
         </article>
-        <article class="card route-step">
-          <h3 class="route-step__title">Step 2</h3>
-          <p>Map strengths and deficits with the ESQ-R, then review intervention examples by domain.</p>
-          <a href="esqr.html" class="btn btn--secondary btn--sm">Take ESQ-R</a>
-        </article>
-        <article class="card route-step">
-          <h3 class="route-step__title">Step 3</h3>
-          <p>See how the curriculum maps to coaching standards and professional competencies.</p>
-          <a href="certification.html#transparency-rubric" class="btn btn--secondary btn--sm">Review Standards</a>
-        </article>
-        <article class="card route-step">
-          <h3 class="route-step__title">Step 4</h3>
-          <p>Confirm understanding with end-of-module checks, then choose your next step.</p>
-          <a href="store.html" class="btn btn--primary btn--sm">View Paid Path</a>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="start-paths">
-    <div class="container">
-      <div class="section-header fade-in">
-        <span class="section-header__tag">Start Paths</span>
-        <h2>Pick the path that matches your role</h2>
-        <p>Each route starts with free material and points you to a practical next action.</p>
-      </div>
-      <div class="content-hub-grid">
-        <article class="hub-card hub-card--stable">
-          <h3>For Parents</h3>
-          <p>Understand what executive function challenges look like at home, then use practical support tools and assessments.</p>
-          <div class="button-group">
-            <a class="btn btn--secondary btn--sm" href="coaching-home.html">Parent Support Options</a>
-            <a class="btn btn--secondary btn--sm" href="resources.html#assessments">Start With Assessments</a>
+        <div class="role-router fade-in">
+          <div class="section-header section-header--left">
+            <span class="section-header__tag">Start Paths</span>
+            <h2>Choose the route that matches your work</h2>
+            <p>Each route starts with free material first, then points to the next meaningful step instead of sending you into the full site at random.</p>
           </div>
-        </article>
-        <article class="hub-card hub-card--stable">
-          <h3>For Educators</h3>
-          <p>Shift from content delivery to process coaching, then use the educator transition path if you are considering a broader practice move.</p>
-          <div class="button-group">
-            <a class="btn btn--secondary btn--sm" href="teacher-to-coach.html">Educator-to-Coach Path</a>
-            <a class="btn btn--secondary btn--sm" href="resources.html#assessments">Open Educator Resources</a>
+          <div class="role-router__cards">
+            <article class="role-card">
+              <h3>For Parents</h3>
+              <p>Understand what executive function challenges look like at home, then use practical support tools and assessments.</p>
+              <div class="button-group">
+                <a class="btn btn--secondary btn--sm" href="coaching-home.html">View Parent Support</a>
+                <a class="btn btn--secondary btn--sm" href="resources.html#assessments">Start With Assessments</a>
+              </div>
+            </article>
+            <article class="role-card">
+              <h3>For Educators</h3>
+              <p>Shift from content delivery to process coaching, then use the educator transition path if you are considering a broader practice move.</p>
+              <div class="button-group">
+                <a class="btn btn--secondary btn--sm" href="teacher-to-coach.html">Educator-To-Coach Path</a>
+                <a class="btn btn--secondary btn--sm" href="resources.html#assessments">Open Educator Resources</a>
+              </div>
+            </article>
+            <article class="role-card">
+              <h3>For Professionals</h3>
+              <p>Explore model rigor, public scoring standards, and the certification route into reviewed coaching practice.</p>
+              <div class="button-group">
+                <a class="btn btn--secondary btn--sm" href="certification.html">View Certification</a>
+                <a class="btn btn--primary btn--sm" href="store.html">Review Pricing</a>
+              </div>
+            </article>
           </div>
-        </article>
-        <article class="hub-card hub-card--stable">
-          <h3>For Professionals</h3>
-          <p>Explore model rigor, public scoring standards, and the certification route into reviewed coaching practice.</p>
-          <div class="button-group">
-            <a class="btn btn--secondary btn--sm" href="certification.html">View Certification</a>
-            <a class="btn btn--primary btn--sm" href="store.html">Review Pricing</a>
-          </div>
-        </article>
+        </div>
       </div>
     </div>
   </section>
@@ -323,21 +357,21 @@
   <!-- Open Source Philosophy -->
   <section class="section section--dark">
     <div class="container">
-      <div class="grid grid--2 open-knowledge-grid">
+      <div class="archive-panel">
         <div class="fade-in">
-          <span class="section-header__tag section-header__tag--light">Open Source</span>
-          <h2 class="open-knowledge-title">Built on Open Knowledge, for Everyone</h2>
+          <p class="archive-panel__kicker">Open Knowledge Policy</p>
+          <h2>Built on inspectable material, not locked curriculum mystique</h2>
           <p>The Executive Functioning Institute is committed to making high-quality EF coaching education accessible. Our curriculum is built entirely on publicly available, peer-reviewed research and free resources.</p>
-          <ul class="checklist open-knowledge-list">
-            <li>All reading packets come from free, open-source PDFs and asynchronous briefs</li>
-            <li>Curriculum standards are based on peer-reviewed neuroscience</li>
-            <li>Assessment tools are available without proprietary licensing</li>
-            <li>Community feedback continuously improves curriculum quality</li>
+          <ul class="checklist checklist--light archive-panel__list">
+            <li>All reading packets come from free, open-source PDFs and asynchronous briefs.</li>
+            <li>The curriculum is grounded in peer-reviewed neuroscience research.</li>
+            <li>Assessment tools are available without proprietary licensing barriers.</li>
+            <li>The curriculum can improve publicly instead of hiding behind black-box branding.</li>
           </ul>
         </div>
-        <div class="fade-in open-knowledge-quote-wrap">
-          <div class="open-knowledge-quote-card">
-            <blockquote class="open-knowledge-quote">
+        <div class="fade-in archive-panel__quote">
+          <div class="archive-panel__quote-box">
+            <blockquote class="archive-panel__blockquote">
               "Executive function deficits are rarely deficits of knowing; they are deficits of doing."
               <cite>Dr. Russell Barkley</cite>
             </blockquote>
@@ -352,7 +386,7 @@
     <div class="container">
       <h2>Start Learning Today</h2>
       <p>All six modules, the ESQ-R assessment, and every resource on this site are free. Dive in and build your executive functioning expertise.</p>
-      <div class="cta-actions">
+      <div class="cta-section__actions">
         <a href="module-1.html" class="btn btn--primary btn--lg">Start Module 1</a>
         <a href="esqr.html" class="btn btn--outline-white btn--lg">Take the Free ESQ-R</a>
         <a href="resources.html" class="btn btn--outline-white btn--lg">Browse Free Resources</a>
@@ -367,7 +401,7 @@
     <div class="container">
       <div class="footer__grid">
         <div class="footer__brand">
-          <a href="index.html" class="nav__logo footer__logo">
+          <a href="index.html" class="nav__logo" style="color:var(--color-white);">
             <div class="nav__logo-icon">EFI</div>
             <span>Executive Functioning Institute</span>
           </a>

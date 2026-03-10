@@ -13,7 +13,7 @@
   <meta property="og:site_name" content="The Executive Functioning Institute">
   <link rel="canonical" href="https://executivefunctioninginstitute.com/about.html" />
 </head>
-<body>
+<body class="page-about">
 
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -26,7 +26,7 @@
       </a>
       <div class="nav__links" id="nav-links">
         <a href="index.html" class="nav__link">Home</a>
-        <a href="about.html" class="nav__link">About</a>
+        <a href="about.html" class="nav__link nav__link--active">About</a>
         <a href="curriculum.html" class="nav__link">Curriculum</a>
         <a href="certification.html" class="nav__link">Certification</a>
         <a href="resources.html" class="nav__link">Resources</a>
@@ -44,31 +44,45 @@
   <main id="main-content">
 
   <!-- Page Header -->
-  <header class="page-header">
+  <header class="page-header about-masthead">
     <div class="container">
       <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li> <li aria-current="page">About</li></ol></nav>
-      <h1>About the Executive Functioning Institute</h1>
-      <p>Bridging the gap between neuroscience research and practical coaching through rigorous, accessible education.</p>
+      <div class="about-masthead__grid">
+        <div class="about-masthead__intro">
+          <p class="curriculum-kicker">Institute Profile</p>
+          <h1>About the Executive Functioning Institute</h1>
+          <p>Bridging the gap between neuroscience research and practical coaching through rigorous, accessible education.</p>
+          <p class="page-header__note">EFI is structured as an inspectable institute rather than a vague coaching brand: open curriculum, visible standards, and a clear boundary between public learning material and paid review workflows.</p>
+        </div>
+        <aside class="about-masthead__dossier" aria-label="Institute dossier">
+          <p class="about-masthead__label">At A Glance</p>
+          <ul class="about-masthead__facts">
+            <li><span>Model</span><strong>Open education with paid competency review</strong></li>
+            <li><span>Orientation</span><strong>Research-literate, ethically bounded, practice-facing</strong></li>
+            <li><span>Leadership</span><strong>Founder-led with public rubric and crosswalk artifacts</strong></li>
+          </ul>
+        </aside>
+      </div>
     </div>
   </header>
 
   <!-- Mission -->
   <section class="section">
     <div class="container">
-      <div class="grid grid--2" style="align-items:center;gap:var(--space-3xl);">
-        <div class="fade-in">
+      <div class="about-story">
+        <div class="fade-in about-story__main">
           <span class="section-header__tag">Our Mission</span>
-          <h2 style="margin-top:var(--space-md);">Training Coaches to Be the "External Frontal Lobe"</h2>
+          <h2 class="about-story__title">Training coaches to be the external frontal lobe</h2>
           <p class="lead">The Executive Functioning Institute sits at the intersection of education, coaching practice, and applied executive-function support.</p>
           <p>As awareness of neurodiverse profiles &mdash; specifically ADHD and Autism Spectrum Disorder &mdash; expands beyond diagnosis into mainstream educational and workplace contexts, the demand for specialized executive-function support has grown sharply. Yet the field remains largely unregulated, with a significant gap between the quality of available research and the rigor of practitioner training.</p>
           <p>Our internal certification pathway is built on the synthesis of multiple theoretical models into a single, actionable coaching framework &mdash; one designed to be research-literate, ethically bounded, and practically useful.</p>
         </div>
-        <div class="fade-in">
-          <div class="callout">
+        <div class="fade-in about-story__rail">
+          <div class="callout about-story__note">
             <p class="callout__label">Core Philosophy</p>
-            <p style="font-size:1.1rem;font-style:italic;">"Executive function deficits are rarely deficits of knowing; they are deficits of doing. The role of the coach is not merely to teach a client how to use a planner, but to act as an external scaffold &mdash; a surrogate frontal lobe &mdash; while training the client's own neural circuits to eventually assume command."</p>
+            <p class="about-story__quote">"Executive function deficits are rarely deficits of knowing; they are deficits of doing. The role of the coach is not merely to teach a client how to use a planner, but to act as an external scaffold while training the client's own neural circuits to eventually assume command."</p>
           </div>
-          <div class="callout callout--accent" style="margin-top:var(--space-lg);">
+          <div class="callout callout--accent about-story__note">
             <p class="callout__label">What Makes Us Different</p>
             <p>Unlike generic life coaching programs, our curriculum rejects the notion of EF issues as "behavioral choices" or "character flaws," instead grounding all instruction in the neuroanatomy of the prefrontal cortex and the developmental trajectory of self-regulation.</p>
           </div>
@@ -84,7 +98,7 @@
         <h2>Who Built This Program</h2>
         <p>EFI is currently founder-led with transparent ownership and public accountability.</p>
       </div>
-      <div class="card fade-in" style="border-left:4px solid var(--module-6);">
+      <div class="card fade-in about-leadership-card">
         <h3>Jacob Rozansky, Educator</h3>
         <p>Founder and curriculum lead for The Executive Functioning Institute. EFI's model combines open educational access with paid competency review, credential verification, and alumni pathway infrastructure.</p>
         <ul class="checklist">
@@ -99,39 +113,39 @@
   <!-- Theoretical Models -->
   <section class="section section--alt" id="models">
     <div class="container">
-      <div class="section-header fade-in">
+      <div class="section-header section-header--left fade-in">
         <span class="section-header__tag">Theoretical Foundations</span>
         <h2>The Science Behind Our Curriculum</h2>
-        <p>Our program combines three major executive function models into one practical coaching framework.</p>
+        <p>Our program combines three major executive function models into one practical coaching framework, and each model is used for a different kind of judgment.</p>
       </div>
 
       <!-- Barkley -->
-      <div class="card fade-in mb-2xl" style="border-left:4px solid var(--module-1);">
-        <div style="display:flex;gap:var(--space-lg);align-items:flex-start;">
-          <div class="card__icon" style="background:var(--module-1);flex-shrink:0;">B</div>
+      <div class="card fade-in mb-2xl about-model-card about-model-card--barkley">
+        <div class="about-model-card__stack">
+          <div class="card__icon about-model-card__icon">B</div>
           <div>
             <h3>The Barkley Model: Inhibition as the Keystone</h3>
             <p>Dr. Russell Barkley's theory constitutes the primary pedagogical framework for understanding the <em>mechanism</em> of EF deficits. EF is not a suite of skills but a single, unified system of "self-regulation" &mdash; defined as any action directed at oneself to change behavior toward the future.</p>
             <p>Response Inhibition is the foundational prerequisite for all other executive capacities. Without the ability to "pause" (inhibit the prepotent response), the brain cannot engage the four dependent functions:</p>
-            <div class="grid grid--2" style="margin-top:var(--space-lg);gap:var(--space-md);">
-              <div style="padding:var(--space-md);background:var(--color-bg-alt);border-radius:var(--border-radius);">
+            <div class="about-model-card__grid about-model-card__grid--2">
+              <div class="about-model-tile">
                 <h5>Nonverbal Working Memory</h5>
-                <p style="font-size:0.9rem;margin-bottom:0;">The "Mind's Eye" &mdash; holding events in mind and re-visualizing them. Clients with EF deficits are "time blind" because they cannot visualize the future.</p>
+                <p>The "Mind's Eye" &mdash; holding events in mind and re-visualizing them. Clients with EF deficits are "time blind" because they cannot visualize the future.</p>
               </div>
-              <div style="padding:var(--space-md);background:var(--color-bg-alt);border-radius:var(--border-radius);">
+              <div class="about-model-tile">
                 <h5>Verbal Working Memory</h5>
-                <p style="font-size:0.9rem;margin-bottom:0;">The "Mind's Voice" &mdash; internalized speech. How "self-talk" evolves from external instruction to internal governance.</p>
+                <p>The "Mind's Voice" &mdash; internalized speech. How "self-talk" evolves from external instruction to internal governance.</p>
               </div>
-              <div style="padding:var(--space-md);background:var(--color-bg-alt);border-radius:var(--border-radius);">
+              <div class="about-model-tile">
                 <h5>Emotional Self-Regulation</h5>
-                <p style="font-size:0.9rem;margin-bottom:0;">The "Mind's Heart" &mdash; moderating emotional states to sustain goal-directed action. Emotion is not separate from cognition.</p>
+                <p>The "Mind's Heart" &mdash; moderating emotional states to sustain goal-directed action. Emotion is not separate from cognition.</p>
               </div>
-              <div style="padding:var(--space-md);background:var(--color-bg-alt);border-radius:var(--border-radius);">
+              <div class="about-model-tile">
                 <h5>Reconstitution</h5>
-                <p style="font-size:0.9rem;margin-bottom:0;">The "Mind's Playground" &mdash; the capacity for analysis and synthesis, breaking down behaviors and recombining them into novel solutions.</p>
+                <p>The "Mind's Playground" &mdash; the capacity for analysis and synthesis, breaking down behaviors and recombining them into novel solutions.</p>
               </div>
             </div>
-            <div class="callout callout--warm" style="margin-top:var(--space-lg);">
+            <div class="callout callout--warm about-model-card__callout">
               <p class="callout__label">The Extended Phenotype</p>
               <p>Barkley's concept views EF not just as brain activity, but as a system that extends into the physical environment. This helps explain why external tools like timers, planners, and checklists can function as legitimate supports rather than signs of weakness.</p>
             </div>
@@ -140,37 +154,37 @@
       </div>
 
       <!-- Brown -->
-      <div class="card fade-in mb-2xl" style="border-left:4px solid var(--color-primary-light);">
-        <div style="display:flex;gap:var(--space-lg);align-items:flex-start;">
-          <div class="card__icon" style="background:var(--color-primary-light);flex-shrink:0;">Br</div>
+      <div class="card fade-in mb-2xl about-model-card about-model-card--brown">
+        <div class="about-model-card__stack">
+          <div class="card__icon about-model-card__icon">Br</div>
           <div>
             <h3>The Brown Model: Six Clusters of Cognitive Management</h3>
             <p>Dr. Thomas Brown's model provides a more granular vocabulary for describing the daily manifestations of EF deficits. These functions operate like a symphony orchestra &mdash; integrated clusters, not discrete items.</p>
             <p>This model is essential for explaining <strong>Situational Variability</strong> &mdash; why a client can focus intensely on a video game (high stimulation) but cannot sustain attention on a textbook (low stimulation). EF impairments are chemically modulated, not willful choices.</p>
-            <div class="grid grid--3" style="margin-top:var(--space-lg);gap:var(--space-md);">
-              <div style="padding:var(--space-md);background:var(--color-bg-alt);border-radius:var(--border-radius);text-align:center;">
+            <div class="about-cluster-grid">
+              <div class="about-cluster-tile">
                 <h5>Activation</h5>
-                <p style="font-size:0.85rem;margin-bottom:0;">Organizing, prioritizing, and getting started on tasks</p>
+                <p>Organizing, prioritizing, and getting started on tasks</p>
               </div>
-              <div style="padding:var(--space-md);background:var(--color-bg-alt);border-radius:var(--border-radius);text-align:center;">
+              <div class="about-cluster-tile">
                 <h5>Focus</h5>
-                <p style="font-size:0.85rem;margin-bottom:0;">Sustaining and shifting attention to task</p>
+                <p>Sustaining and shifting attention to task</p>
               </div>
-              <div style="padding:var(--space-md);background:var(--color-bg-alt);border-radius:var(--border-radius);text-align:center;">
+              <div class="about-cluster-tile">
                 <h5>Effort</h5>
-                <p style="font-size:0.85rem;margin-bottom:0;">Regulating alertness, sustaining effort, processing speed</p>
+                <p>Regulating alertness, sustaining effort, processing speed</p>
               </div>
-              <div style="padding:var(--space-md);background:var(--color-bg-alt);border-radius:var(--border-radius);text-align:center;">
+              <div class="about-cluster-tile">
                 <h5>Emotion</h5>
-                <p style="font-size:0.85rem;margin-bottom:0;">Managing frustration and modulating emotions</p>
+                <p>Managing frustration and modulating emotions</p>
               </div>
-              <div style="padding:var(--space-md);background:var(--color-bg-alt);border-radius:var(--border-radius);text-align:center;">
+              <div class="about-cluster-tile">
                 <h5>Memory</h5>
-                <p style="font-size:0.85rem;margin-bottom:0;">Utilizing working memory and accessing recall</p>
+                <p>Utilizing working memory and accessing recall</p>
               </div>
-              <div style="padding:var(--space-md);background:var(--color-bg-alt);border-radius:var(--border-radius);text-align:center;">
+              <div class="about-cluster-tile">
                 <h5>Action</h5>
-                <p style="font-size:0.85rem;margin-bottom:0;">Monitoring and self-regulating action</p>
+                <p>Monitoring and self-regulating action</p>
               </div>
             </div>
           </div>
@@ -178,16 +192,16 @@
       </div>
 
       <!-- Dawson & Guare -->
-      <div class="card fade-in" style="border-left:4px solid var(--module-6);">
-        <div style="display:flex;gap:var(--space-lg);align-items:flex-start;">
-          <div class="card__icon" style="background:var(--module-6);flex-shrink:0;">DG</div>
+      <div class="card fade-in about-model-card about-model-card--dg">
+        <div class="about-model-card__stack">
+          <div class="card__icon about-model-card__icon">DG</div>
           <div>
             <h3>The Dawson &amp; Guare Model: 12 Skills for Coaching</h3>
             <p>Drs. Peg Dawson and Richard Guare offer the most practical, skills-based framework for coaching. They categorize executive function into 12 distinct skills, separated into two domains: "Thinking" (Cognition) and "Doing" (Behavior).</p>
             <p>This separation is crucial &mdash; a client may possess high-level cognitive EF (able to plan a complex project) but suffer from severe behavioral EF deficits (unable to initiate the first step).</p>
-            <div class="grid grid--2" style="margin-top:var(--space-lg);gap:var(--space-xl);">
+            <div class="about-model-card__grid about-model-card__grid--2">
               <div>
-                <h4 style="color:var(--color-primary-light);">Thinking Skills (Cognition)</h4>
+                <h4 class="about-model-subhead about-model-subhead--thinking">Thinking Skills (Cognition)</h4>
                 <div class="skill-tags">
                   <span class="skill-tag skill-tag--thinking">Working Memory</span>
                   <span class="skill-tag skill-tag--thinking">Planning</span>
@@ -197,7 +211,7 @@
                 </div>
               </div>
               <div>
-                <h4 style="color:var(--color-accent);">Doing Skills (Behavior)</h4>
+                <h4 class="about-model-subhead about-model-subhead--doing">Doing Skills (Behavior)</h4>
                 <div class="skill-tags">
                   <span class="skill-tag skill-tag--doing">Response Inhibition</span>
                   <span class="skill-tag skill-tag--doing">Emotional Control</span>
@@ -218,31 +232,31 @@
   <!-- Supporting Methodology -->
   <section class="section">
     <div class="container">
-      <div class="section-header fade-in">
+      <div class="section-header section-header--left fade-in">
         <span class="section-header__tag">Applied Framework</span>
         <h2>The 360 Thinking Model</h2>
         <p>Sarah Ward and Kristen Jacobsen's methodology provides concrete visual-spatial strategies for time and task management.</p>
       </div>
-      <div class="grid grid--3 stagger">
-        <div class="card" style="border-top:4px solid var(--color-accent);text-align:center;">
-          <div style="margin-bottom:var(--space-md);color:var(--color-accent);">
+      <div class="about-360-grid stagger">
+        <div class="card about-360-card about-360-card--done">
+          <div class="about-360-card__icon">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16"/><path d="M7 7h10v10H7z"/><path d="M9 9h6v6H9z"/></svg>
           </div>
-          <h3 style="color:var(--color-accent);">Done</h3>
+          <h3>Done</h3>
           <p>Visualize the final outcome first: "What will it look like when I am finished?" This utilizes nonverbal working memory (visual imagery) identified by Barkley.</p>
         </div>
-        <div class="card" style="border-top:4px solid var(--color-warm);text-align:center;">
-          <div style="margin-bottom:var(--space-md);color:var(--color-warm);">
+        <div class="card about-360-card about-360-card--do">
+          <div class="about-360-card__icon">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M2 12h3"/><path d="M19 12h3"/><path d="M4.8 4.8l2.2 2.2"/><path d="M17 17l2.2 2.2"/><path d="M4.8 19.2L7 17"/><path d="M17 7l2.2-2.2"/></svg>
           </div>
-          <h3 style="color:var(--color-warm);">Do</h3>
+          <h3>Do</h3>
           <p>Once the end state is visualized, identify the specific action steps required. Map the work backward from the finished product to the present moment.</p>
         </div>
-        <div class="card" style="border-top:4px solid var(--module-5);text-align:center;">
-          <div style="margin-bottom:var(--space-md);color:var(--module-5);">
+        <div class="card about-360-card about-360-card--ready">
+          <div class="about-360-card__icon">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h5"/></svg>
           </div>
-          <h3 style="color:var(--module-5);">Get Ready</h3>
+          <h3>Get Ready</h3>
           <p>Finally, determine what materials are needed to start. This reverses the typical impulsive approach of grabbing materials without a plan.</p>
         </div>
       </div>
@@ -252,14 +266,14 @@
   <!-- Open Source -->
   <section class="section section--alt">
     <div class="container">
-      <div class="section-header fade-in">
+      <div class="section-header section-header--left fade-in">
         <span class="section-header__tag">Open Source</span>
         <h2>Our Commitment to Accessible Education</h2>
       </div>
-      <div class="grid grid--2 fade-in" style="gap:var(--space-3xl);align-items:center;">
+      <div class="about-open-source fade-in">
         <div>
           <p class="lead">The "open source" nature of this curriculum implies a commitment to lifelong learning &mdash; constantly seeking out new research, new tools, and new perspectives.</p>
-          <ul class="checklist" style="margin-top:var(--space-lg);">
+          <ul class="checklist about-open-source__list">
             <li>Curriculum built on publicly available, peer-reviewed research</li>
             <li>Uses free and affordable open-source tools rather than proprietary software</li>
             <li>Emphasizes data sovereignty and community ownership</li>
@@ -270,7 +284,7 @@
         </div>
         <div>
           <h3>Cited Research Authorities</h3>
-          <div class="accordion" style="margin-top:var(--space-lg);">
+          <div class="accordion about-open-source__accordion">
             <div class="accordion__item">
               <button type="button" class="accordion__header">
                 Dr. Russell Barkley
@@ -337,7 +351,7 @@
     <div class="container">
       <h2>Ready to Get Started?</h2>
       <p>Explore our six-module curriculum and build coaching skills you can apply in sessions, schools, and family support.</p>
-      <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
+      <div class="cta-section__actions">
         <a href="curriculum.html" class="btn btn--primary btn--lg">View the Curriculum</a>
         <a href="store.html" class="btn btn--outline-white btn--lg">View Store</a>
       </div>

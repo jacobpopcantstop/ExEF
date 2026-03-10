@@ -13,7 +13,7 @@
   <meta property="og:site_name" content="The Executive Functioning Institute">
   <link rel="canonical" href="https://executivefunctioninginstitute.com/resources.html">
 </head>
-<body>
+<body class="page-resources">
 
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -27,7 +27,7 @@
         <a href="index.html" class="nav__link">Home</a>
         <a href="about.html" class="nav__link">About</a>
         <a href="curriculum.html" class="nav__link">Curriculum</a>
-        <a href="resources.html" class="nav__link">Resources</a>
+        <a href="resources.html" class="nav__link nav__link--active">Resources</a>
         <a href="coaching-home.html" class="nav__link">Coaching</a>
         <a href="store.html" class="nav__link">Store</a>
         <a href="certification.html" class="nav__link">Certification</a>
@@ -44,48 +44,73 @@
 
   <main id="main-content">
 
-  <header class="page-header">
+  <header class="page-header resources-masthead">
     <div class="container">
       <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li> <li aria-current="page">Resources</li></ol></nav>
-      <h1>Executive Functioning Resource Hub</h1>
-      <p>The old resources page tried to be a full library. This version is built to help you find the right tool fast, then go deeper only if you need to.</p>
+      <div class="resources-masthead__grid">
+        <div class="resources-masthead__intro">
+          <p class="curriculum-kicker">Resource Desk</p>
+          <h1>Executive Functioning Resource Hub</h1>
+          <p>The old resources page tried to be a full library. This version is built to help you find the right tool fast, then go deeper only if you need to.</p>
+          <p class="page-header__note">This page works best as a sorting surface: quick tools first, role-based kits second, deeper archive last.</p>
+        </div>
+        <aside class="resources-masthead__panel" aria-label="Resource overview">
+          <p class="resources-masthead__label">Best Uses</p>
+          <ul class="resources-masthead__facts">
+            <li><span>Fastest Start</span><strong>Assessments and guided tools</strong></li>
+            <li><span>Implementation</span><strong>Parent, educator, and practitioner kits</strong></li>
+            <li><span>Deep Archive</span><strong>Reading packs, forms, directories, and citations</strong></li>
+          </ul>
+        </aside>
+      </div>
     </div>
   </header>
 
-  <section class="section" style="padding-bottom:0;">
-    <div class="container container--narrow">
-      <div class="section-header text-center">
-        <span class="section-header__tag">Start Fast</span>
-        <h2>What do you need right now?</h2>
-      </div>
-      <div class="button-group button-group--center">
-        <a href="#assessments" class="btn btn--primary">Take an Assessment</a>
-        <a href="#toolkits" class="btn btn--secondary">Find a Toolkit</a>
-        <a href="#library" class="btn btn--secondary">Browse the Library</a>
-        <a href="open-ef-resources-directory.html" class="btn btn--secondary">Open Full Directory</a>
+  <section class="section resources-intake">
+    <div class="container">
+      <div class="resources-intake__grid">
+        <article class="resources-intake__prompt">
+          <p class="curriculum-kicker">Start Fast</p>
+          <h2>What do you need right now?</h2>
+          <p>Choose the lane that matches your task instead of browsing the whole archive at random.</p>
+          <div class="button-group">
+            <a href="#assessments" class="btn btn--primary">Take an Assessment</a>
+            <a href="#toolkits" class="btn btn--secondary">Find a Toolkit</a>
+            <a href="#library" class="btn btn--secondary">Browse the Library</a>
+            <a href="open-ef-resources-directory.html" class="btn btn--secondary">Open Full Directory</a>
+          </div>
+        </article>
+        <aside class="resources-intake__note">
+          <h3>How To Use This Page</h3>
+          <ul class="checklist">
+            <li>Use assessments when you need a quick picture of friction or strengths.</li>
+            <li>Use toolkits when you already know your role and need implementation help.</li>
+            <li>Use the library when you want the broader archive, not the fastest answer.</li>
+          </ul>
+        </aside>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="resources-quick-grid">
-        <article class="card resources-quick-card resources-quick-card--featured">
+      <div class="resources-quick-grid resources-quick-grid--desk">
+        <article class="card resources-quick-card resources-quick-card--featured resources-quick-card--desk">
           <h3>Assess Yourself</h3>
           <p>Start with one of EFI's free tools if you want a quick picture of strengths, friction, or planning blind spots.</p>
           <a href="#assessments" class="btn btn--secondary btn--sm">Go to Assessments</a>
         </article>
-        <article class="card resources-quick-card">
+        <article class="card resources-quick-card resources-quick-card--desk">
           <h3>Support a Student</h3>
           <p>Use the parent and educator packs if you need immediately usable scripts, accommodations, and planning supports.</p>
           <a href="#toolkits" class="btn btn--secondary btn--sm">Open Toolkits</a>
         </article>
-        <article class="card resources-quick-card">
+        <article class="card resources-quick-card resources-quick-card--desk">
           <h3>Build a Practice</h3>
           <p>Use the forms, launch templates, and certification standards if you are moving toward coaching work.</p>
           <a href="#practice" class="btn btn--secondary btn--sm">Practice Resources</a>
         </article>
-        <article class="card resources-quick-card">
+        <article class="card resources-quick-card resources-quick-card--desk">
           <h3>Go Deeper</h3>
           <p>Use the reading packs, asynchronous study briefs, and open directory if you want the broader knowledge base.</p>
           <a href="#library" class="btn btn--secondary btn--sm">Browse Library</a>
@@ -96,18 +121,18 @@
 
   <section class="section section--alt" id="assessments">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header section-header--left">
         <span class="section-header__tag">Assessments</span>
         <h2>Most-Used EFI Tools</h2>
         <p>These are the fastest starting points for users who want action, not browsing.</p>
       </div>
       <div id="assessment" class="resources-assessment-layout">
         <article class="resource-card resources-assessment-feature">
-          <div class="resource-card__icon" style="background:var(--module-2);color:var(--color-white);">1</div>
+          <div class="resource-card__icon resources-card__icon resources-card__icon--module2">1</div>
           <div>
             <h4>ESQ-R Assessment</h4>
             <p>The main EFI intake tool for mapping executive skills across the Thinking and Doing domains. Use this first if you want the clearest overview of executive skill strain.</p>
-            <div class="resource-card__meta">Best first step for: adults, educators, and coaching intake.</div>
+            <div class="resource-card__meta">Best first step for adults, educators, and coaching intake.</div>
             <div class="button-group">
               <a href="esqr.html" class="btn btn--sm btn--primary">Take ESQ-R</a>
               <a href="Conv17-305-dawson-executive-skills-questionnaire.pdf" class="btn btn--sm btn--secondary" target="_blank" rel="noopener">Download PDF</a>
@@ -116,7 +141,7 @@
         </article>
         <div id="interactive-tools" class="resources-assessment-stack">
           <article class="resource-card">
-            <div class="resource-card__icon" style="background:var(--module-6);color:var(--color-white);">2</div>
+            <div class="resource-card__icon resources-card__icon resources-card__icon--module6">2</div>
             <div>
               <h4>EF Profile Story</h4>
               <p>A narrative-style tool for identifying high-friction dimensions and generating a short experiment plan.</p>
@@ -127,7 +152,7 @@
             </div>
           </article>
           <article class="resource-card">
-            <div class="resource-card__icon" style="background:var(--module-1);color:var(--color-white);">3</div>
+            <div class="resource-card__icon resources-card__icon resources-card__icon--module1">3</div>
             <div>
               <h4>Time Blindness Calibrator</h4>
               <p>Compare your instinctive time estimates with realistic planning benchmarks to spot timing drift.</p>
@@ -135,7 +160,7 @@
             </div>
           </article>
           <article class="resource-card">
-            <div class="resource-card__icon" style="background:var(--module-3);color:var(--color-white);">4</div>
+            <div class="resource-card__icon resources-card__icon resources-card__icon--module3">4</div>
             <div>
               <h4>Task Start Friction Diagnostic</h4>
               <p>Turn procrastination and start resistance into a concrete start protocol for a real task.</p>
@@ -149,23 +174,23 @@
 
   <section class="section" id="toolkits">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header section-header--left">
         <span class="section-header__tag">Toolkits</span>
         <h2>Choose by Role</h2>
         <p>If you are here for implementation, pick the lane that matches your job.</p>
       </div>
       <div class="resources-role-layout">
-        <article class="card resources-role-card resources-role-card--primary" style="border-top:4px solid var(--module-5);">
+        <article class="card resources-role-card resources-role-card--primary resources-role-card--parents">
           <h3>Parents</h3>
           <p>Home routines, activation scripts, time-blindness supports, and guidance on when to seek more formal help.</p>
           <a href="coaching-home.html" class="btn btn--primary btn--sm">View Parent Support Options</a>
         </article>
-        <article class="card resources-role-card" style="border-top:4px solid var(--module-2);">
+        <article class="card resources-role-card resources-role-card--educators">
           <h3>Educators</h3>
           <p>Accommodation ideas, assignment chunking, classroom observation prompts, and support scripts.</p>
           <a href="teacher-to-coach.html" class="btn btn--primary btn--sm">Open Educator Path</a>
         </article>
-        <article class="card resources-role-card" style="border-top:4px solid var(--module-6);">
+        <article class="card resources-role-card resources-role-card--professionals">
           <h3>Coaches and Professionals</h3>
           <p>Certification standards, intake forms, launch templates, and reusable practice-management tools.</p>
           <a href="store.html#paid-path" class="btn btn--primary btn--sm">Review Paid Path</a>
@@ -176,13 +201,13 @@
 
   <section class="section section--alt" id="practice">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header section-header--left">
         <span class="section-header__tag">Practice Resources</span>
         <h2>For Coaches, Counselors, and EF Practitioners</h2>
         <p>The core practice-facing assets are grouped here instead of being scattered down the page.</p>
       </div>
       <div id="forms" class="resources-practice-layout">
-        <article class="card resources-practice-panel" style="border-left:4px solid var(--module-2);">
+        <article class="card resources-practice-panel resources-practice-panel--intake">
           <h3>Assessment + Intake</h3>
           <ul class="checklist">
             <li>ESQ-R assessment workflow</li>
@@ -195,7 +220,7 @@
             <a href="Executive Function Coaching Intake Form.pdf" class="btn btn--secondary btn--sm" target="_blank" rel="noopener">Intake Form PDF</a>
           </div>
         </article>
-        <article class="card resources-practice-panel" style="border-left:4px solid var(--module-6);">
+        <article class="card resources-practice-panel resources-practice-panel--ops">
           <h3>Launch + Operations</h3>
           <ul class="checklist">
             <li>Practice launch templates</li>
@@ -222,14 +247,15 @@
 
   <section class="section" id="library">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header section-header--left">
         <span class="section-header__tag">Library</span>
         <h2>Deep Library, Organized More Simply</h2>
         <p>Use these grouped sections when you want the deeper archive rather than the quick-start tools above.</p>
       </div>
       <div class="resources-library-shell">
         <aside class="card resources-library-nav">
-          <h3>Library Guide</h3>
+          <p class="resources-library-nav__label">Library Guide</p>
+          <h3>Browse by archive type</h3>
           <p>Pick the bucket that matches what you are trying to do. This is for deliberate browsing, not quick-start action.</p>
           <ul class="checklist">
             <li id="reading">Core reading packs and theory references</li>
@@ -240,84 +266,83 @@
             <li id="video">Study briefs and cited explainer resources</li>
           </ul>
         </aside>
-        <div class="accordion">
-        <div class="accordion__item">
-          <button type="button" class="accordion__header">
-            Core Reading Packs
-            <span class="accordion__icon">+</span>
-          </button>
-          <div class="accordion__body">
-            <div class="accordion__content">
-              <ul class="checklist">
-                <li>Module-based reading packets covering Barkley, Brown, Dawson &amp; Guare, Ward, ethics, and practice management.</li>
-                <li>Essential books list for theory, client education, and student coaching.</li>
-                <li>Public-facing summaries that help you read in the right order instead of by random article discovery.</li>
-              </ul>
-              <div class="button-group">
-                <a href="curriculum.html" class="btn btn--secondary btn--sm">Open Curriculum</a>
-                <a href="open-ef-resources-directory.html#citations" class="btn btn--secondary btn--sm">Open Citations</a>
+        <div class="accordion resources-library-panels">
+          <div class="accordion__item">
+            <button type="button" class="accordion__header">
+              Core Reading Packs
+              <span class="accordion__icon">+</span>
+            </button>
+            <div class="accordion__body">
+              <div class="accordion__content">
+                <ul class="checklist">
+                  <li>Module-based reading packets covering Barkley, Brown, Dawson &amp; Guare, Ward, ethics, and practice management.</li>
+                  <li>Essential books list for theory, client education, and student coaching.</li>
+                  <li>Public-facing summaries that help you read in the right order instead of by random article discovery.</li>
+                </ul>
+                <div class="button-group">
+                  <a href="curriculum.html" class="btn btn--secondary btn--sm">Open Curriculum</a>
+                  <a href="open-ef-resources-directory.html#citations" class="btn btn--secondary btn--sm">Open Citations</a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="accordion__item">
-          <button type="button" class="accordion__header">
-            Assessment and Screening Tools
-            <span class="accordion__icon">+</span>
-          </button>
-          <div class="accordion__body">
-            <div class="accordion__content">
-              <ul class="checklist">
-                <li>Open-access EFI tools: ESQ-R, EF Profile Story, time blindness, and task-start friction.</li>
-                <li>Referenced clinical tools: BRIEF-2 and Brown EF/A Scales, with clear notes on licensure boundaries.</li>
-                <li>Source-access notes for what is open, what is referenced, and what requires formal purchase or qualification.</li>
-              </ul>
-              <div class="button-group">
-                <a href="free-executive-functioning-tests.html" class="btn btn--secondary btn--sm">Free Test Hub</a>
-                <a href="esqr.html" class="btn btn--secondary btn--sm">ESQ-R</a>
+          <div class="accordion__item">
+            <button type="button" class="accordion__header">
+              Assessment and Screening Tools
+              <span class="accordion__icon">+</span>
+            </button>
+            <div class="accordion__body">
+              <div class="accordion__content">
+                <ul class="checklist">
+                  <li>Open-access EFI tools: ESQ-R, EF Profile Story, time blindness, and task-start friction.</li>
+                  <li>Referenced clinical tools: BRIEF-2 and Brown EF/A Scales, with clear notes on licensure boundaries.</li>
+                  <li>Source-access notes for what is open, what is referenced, and what requires formal purchase or qualification.</li>
+                </ul>
+                <div class="button-group">
+                  <a href="free-executive-functioning-tests.html" class="btn btn--secondary btn--sm">Free Test Hub</a>
+                  <a href="esqr.html" class="btn btn--secondary btn--sm">ESQ-R</a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="accordion__item">
-          <button type="button" class="accordion__header">
-            Templates, Forms, and Planning Tools
-            <span class="accordion__icon">+</span>
-          </button>
-          <div class="accordion__body">
-            <div class="accordion__content">
-              <ul class="checklist">
-                <li>Reproducible forms, intake scripts, planning mats, and session-note templates.</li>
-                <li>Time horizon visualizers and task-initiation reset worksheets.</li>
-                <li>Practice launch templates and coach dashboard systems for real-world case management.</li>
-              </ul>
-              <div class="button-group">
-                <a href="launch-plan.html" class="btn btn--secondary btn--sm">90-Day Launch Plan</a>
-                <a href="gap-analyzer.html" class="btn btn--secondary btn--sm">Skills Gap Analyzer PDF</a>
+          <div class="accordion__item">
+            <button type="button" class="accordion__header">
+              Templates, Forms, and Planning Tools
+              <span class="accordion__icon">+</span>
+            </button>
+            <div class="accordion__body">
+              <div class="accordion__content">
+                <ul class="checklist">
+                  <li>Reproducible forms, intake scripts, planning mats, and session-note templates.</li>
+                  <li>Time horizon visualizers and task-initiation reset worksheets.</li>
+                  <li>Practice launch templates and coach dashboard systems for real-world case management.</li>
+                </ul>
+                <div class="button-group">
+                  <a href="launch-plan.html" class="btn btn--secondary btn--sm">90-Day Launch Plan</a>
+                  <a href="gap-analyzer.html" class="btn btn--secondary btn--sm">Skills Gap Analyzer PDF</a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="accordion__item">
-          <button type="button" class="accordion__header">
-            External and Open-Source Directory
-            <span class="accordion__icon">+</span>
-          </button>
-          <div class="accordion__body">
-            <div class="accordion__content">
-              <ul class="checklist">
-                <li>Institutional support models from higher education and public support systems.</li>
-                <li>Open digital prosthetics and practical external tools like Goblin Tools and NeuroFlow.</li>
-                <li>Family, educator, and workplace guides that extend EF support beyond coaching sessions.</li>
-              </ul>
-              <div class="button-group">
-                <a href="open-ef-resources-directory.html" class="btn btn--primary btn--sm">Open EF Directory</a>
-                <a href="open-ef-resources-directory.html#citations" class="btn btn--secondary btn--sm">Open Citations</a>
+          <div class="accordion__item">
+            <button type="button" class="accordion__header">
+              External and Open-Source Directory
+              <span class="accordion__icon">+</span>
+            </button>
+            <div class="accordion__body">
+              <div class="accordion__content">
+                <ul class="checklist">
+                  <li>Institutional support models from higher education and public support systems.</li>
+                  <li>Open digital prosthetics and practical external tools like Goblin Tools and NeuroFlow.</li>
+                  <li>Family, educator, and workplace guides that extend EF support beyond coaching sessions.</li>
+                </ul>
+                <div class="button-group">
+                  <a href="open-ef-resources-directory.html" class="btn btn--primary btn--sm">Open EF Directory</a>
+                  <a href="open-ef-resources-directory.html#citations" class="btn btn--secondary btn--sm">Open Citations</a>
+                </div>
               </div>
             </div>
           </div>
-          </div>
-        </div>
         </div>
       </div>
     </div>
@@ -327,7 +352,7 @@
     <div class="container">
       <h2>Need the reviewed pathway, not just the free tools?</h2>
       <p>Use the store to compare enrollment access, capstone review, and professional analysis. Use the curriculum if you want to stay in the free learning track.</p>
-      <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
+      <div class="cta-section__actions">
         <a href="store.html" class="btn btn--primary btn--lg">View Store</a>
         <a href="curriculum.html" class="btn btn--outline-white btn--lg">View Curriculum</a>
       </div>

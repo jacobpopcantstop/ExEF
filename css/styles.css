@@ -4118,9 +4118,105 @@ body.has-topic-clusters.has-topic-clusters-plain main {
   color: #f5f8ff;
 }
 
+[data-theme="dark"] .hero-sheet {
+  background: rgba(26, 35, 50, 0.88);
+  border-color: rgba(159, 178, 203, 0.2);
+  box-shadow: none;
+}
+
+[data-theme="dark"] .hero-sheet--accent {
+  background: rgba(10, 15, 26, 0.96);
+  border-color: rgba(159, 178, 203, 0.16);
+}
+
+[data-theme="dark"] .hero-sheet__label,
+[data-theme="dark"] .curriculum-dossier__label,
+[data-theme="dark"] .about-masthead__label,
+[data-theme="dark"] .resources-masthead__label,
+[data-theme="dark"] .certification-masthead__label {
+  color: #b9cbe1;
+}
+
+[data-theme="dark"] .hero-sheet__title,
+[data-theme="dark"] .curriculum-facts strong,
+[data-theme="dark"] .about-masthead__facts strong,
+[data-theme="dark"] .resources-masthead__facts strong,
+[data-theme="dark"] .certification-masthead__facts strong {
+  color: #f5f8ff;
+}
+
+[data-theme="dark"] .hero-sheet__list li,
+[data-theme="dark"] .curriculum-facts li,
+[data-theme="dark"] .about-masthead__facts li,
+[data-theme="dark"] .resources-masthead__facts li,
+[data-theme="dark"] .certification-masthead__facts li {
+  color: #d7e3ec;
+  border-bottom-color: rgba(159, 178, 203, 0.14);
+}
+
+[data-theme="dark"] .curriculum-facts span,
+[data-theme="dark"] .about-masthead__facts span,
+[data-theme="dark"] .resources-masthead__facts span,
+[data-theme="dark"] .certification-masthead__facts span {
+  color: #9fb2cb;
+}
+
+[data-theme="dark"] .route-sheet,
+[data-theme="dark"] .role-card,
+[data-theme="dark"] .curriculum-dossier,
+[data-theme="dark"] .about-masthead__dossier,
+[data-theme="dark"] .resources-masthead__panel,
+[data-theme="dark"] .resources-intake__note,
+[data-theme="dark"] .certification-masthead__panel,
+[data-theme="dark"] .certification-requirements__ledger,
+[data-theme="dark"] .certification-status-card {
+  background: rgba(26, 35, 50, 0.9);
+  border-color: rgba(159, 178, 203, 0.18);
+  box-shadow: none;
+}
+
+[data-theme="dark"] .route-sheet,
+[data-theme="dark"] .archive-panel__quote-box {
+  background: rgba(26, 35, 50, 0.88);
+}
+
+[data-theme="dark"] .route-sheet__intro,
+[data-theme="dark"] .route-step p,
+[data-theme="dark"] .role-card p {
+  color: #c2d0de;
+}
+
+[data-theme="dark"] .archive-panel__kicker {
+  color: rgba(245, 248, 255, 0.6);
+}
+
+[data-theme="dark"] .archive-panel__quote-box {
+  border-color: rgba(159, 178, 203, 0.14);
+}
+
+[data-theme="dark"] .curriculum-note,
+[data-theme="dark"] .page-header__note,
+[data-theme="dark"] .resources-intake__note,
+[data-theme="dark"] .certification-note-text {
+  color: #b9cbe1;
+}
+
 [data-theme="dark"] .hero__actions .btn--outline-white {
   color: #f5f8ff;
   border-color: rgba(245, 248, 255, 0.28);
+}
+
+[data-theme="dark"] .btn--primary {
+  background: #7fc0ff;
+  border-color: #7fc0ff;
+  color: #0a0f1a;
+}
+
+[data-theme="dark"] .btn--primary:hover {
+  background: #9ad0ff;
+  border-color: #9ad0ff;
+  color: #0a0f1a;
+  box-shadow: 0 0 0 3px rgba(127, 192, 255, 0.18);
 }
 
 [data-theme="dark"] .hero__actions .btn--outline-white:hover {

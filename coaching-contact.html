@@ -12,16 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Mode Toggle -->
-    <div class="mode-toggle-container">
-        <span class="mode-label" id="parent-label">For Parents</span>
-        <label class="mode-toggle">
-            <input type="checkbox" id="mode-switch">
-            <span class="slider"></span>
-        </label>
-        <span class="mode-label" id="student-label">For Students</span>
-    </div>
-
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -30,14 +20,16 @@
                 <span class="logo-text">EFI<span class="logo-accent">Coaching</span></span>
             </a>
             <ul class="nav-links">
-                <li><a href="coaching-home.html">Home</a></li>
-                <li><a href="coaching-home.html#method">Approach</a></li>
-                <li><a href="coaching-home.html#services">Services</a></li>
-                <li><a href="coaching-home.html#practice">Practice</a></li>
-                <li><a href="index.html">EFI Home</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li class="nav-item--mobile-hide"><a href="about.html">About</a></li>
+                <li class="nav-item--mobile-hide"><a href="curriculum.html">Curriculum</a></li>
+                <li class="nav-item--mobile-hide"><a href="resources.html">Resources</a></li>
+                <li><a href="coaching-home.html">Coaching</a></li>
+                <li><a href="store.html">Store</a></li>
+                <li class="nav-item--mobile-hide"><a href="certification.html">Certification</a></li>
                 <li><a href="coaching-contact.html" class="btn-nav active">Consultation</a></li>
             </ul>
-            <button class="mobile-menu-btn" aria-label="Toggle menu">
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -50,7 +42,7 @@
     <section class="page-header contact-header">
         <div class="container">
             <h1>Let's Talk</h1>
-            <p class="page-subtitle">Whether you're ready to start coaching or just have questions, the EFI team can route you to the right next step.</p>
+            <p class="page-subtitle">Whether you're ready to start coaching, ask about certification, or request a professional review, the EFI team can route you to the right next step.</p>
         </div>
     </section>
 
@@ -61,11 +53,11 @@
                 <div class="option-card primary-option">
                     <div class="option-icon"></div>
                     <h3>Free Consultation Call</h3>
-                    <p>The best way to start. A 20-minute call to review your child's challenges and decide whether the EFI coaching model is the right fit.</p>
+                    <p>The best way to start. A 20-minute call to review your goals and decide whether coaching, certification, or a professional review is the right fit.</p>
                     <ul class="option-details">
                         <li>No cost, no obligation</li>
-                        <li>Learn how the EFI coaching model works</li>
-                        <li>Ask any questions you have</li>
+                        <li>Learn how the EFI coaching or certification path works</li>
+                        <li>Ask questions about pricing, fit, and timing</li>
                         <li>Get a recommendation on next steps</li>
                     </ul>
                     <a href="#booking" class="btn btn-primary">Book Your Free Call</a>
@@ -123,6 +115,7 @@
                         <select id="interest" name="interest" required>
                             <option value="">Select an option...</option>
                             <option value="consultation">Free Consultation Call</option>
+                            <option value="certification">CEFC Enrollment / Certification Inquiry</option>
                             <option value="coaching">1:1 Executive Functioning Coaching</option>
                             <option value="workshop">Saturday Brain Games Workshop</option>
                             <option value="iep">IEP Translation & Advocacy</option>
@@ -277,20 +270,21 @@
                     <p>EFI's coaching practice for executive function support in San Diego. Built for students, families, and school-facing coordination.</p>
                 </div>
                 <div class="footer-links">
-                    <h4>Quick Links</h4>
+                    <h4>EFI Navigation</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="resources.html">Resources</a></li>
+                        <li><a href="store.html">Store</a></li>
+                        <li><a href="certification.html">Certification</a></li>
+                    </ul>
+                </div>
+                <div class="footer-services">
+                    <h4>Coaching Sections</h4>
                     <ul>
                         <li><a href="coaching-home.html#method">Approach</a></li>
                         <li><a href="coaching-home.html#services">Services</a></li>
                         <li><a href="coaching-home.html#practice">Practice</a></li>
-                        <li><a href="coaching-contact.html">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-services">
-                    <h4>Services</h4>
-                    <ul>
-                        <li><a href="coaching-home.html#services">1:1 EF Coaching</a></li>
-                        <li><a href="coaching-home.html#services">Brain Games Workshops</a></li>
-                        <li><a href="coaching-home.html#services">IEP Translation</a></li>
+                        <li><a href="coaching-contact.html">Consultation</a></li>
                     </ul>
                 </div>
                 <div class="footer-contact">
@@ -300,7 +294,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Executive Functioning Institute Coaching Practice. All rights reserved.</p>
+                <p>&copy; 2026 Executive Functioning Institute Coaching Practice. Part of the Executive Functioning Institute.</p>
             </div>
         </div>
     </footer>

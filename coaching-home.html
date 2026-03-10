@@ -13,16 +13,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Mode Toggle -->
-    <div class="mode-toggle-container">
-        <span class="mode-label" id="parent-label">For Parents</span>
-        <label class="mode-toggle">
-            <input type="checkbox" id="mode-switch">
-            <span class="slider"></span>
-        </label>
-        <span class="mode-label" id="student-label">For Students</span>
-    </div>
-
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -31,14 +21,16 @@
                 <span class="logo-text">EFI<span class="logo-accent">Coaching</span></span>
             </a>
             <ul class="nav-links">
-                <li><a href="coaching-home.html" class="active">Home</a></li>
-                <li><a href="#method">Approach</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#practice">Practice</a></li>
-                <li><a href="index.html">EFI Home</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li class="nav-item--mobile-hide"><a href="about.html">About</a></li>
+                <li class="nav-item--mobile-hide"><a href="curriculum.html">Curriculum</a></li>
+                <li class="nav-item--mobile-hide"><a href="resources.html">Resources</a></li>
+                <li><a href="coaching-home.html" class="active">Coaching</a></li>
+                <li><a href="store.html">Store</a></li>
+                <li class="nav-item--mobile-hide"><a href="certification.html">Certification</a></li>
                 <li><a href="coaching-contact.html" class="btn-nav">Consultation</a></li>
             </ul>
-            <button class="mobile-menu-btn" aria-label="Toggle menu">
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -50,13 +42,13 @@
     <!-- Hero Section - Parent View -->
     <section class="hero" id="hero-parent">
         <div class="hero-content">
-            <div class="hero-badge">EFI Coaching Practice | San Diego</div>
+            <div class="hero-badge">EFI Coaching | San Diego</div>
             <h1>Executive Functioning Coaching That <span class="highlight">Actually Engages</span> Your Child</h1>
             <p class="hero-subtitle">EFI combines executive functioning expertise, school-system fluency, and play-based training tools to build focus, flexibility, and self-regulation through methods students actually engage with.</p>
             <div class="hero-cta">
                 <a href="coaching-contact.html" class="btn btn-primary">Schedule a Consultation</a>
                 <a href="#method" class="btn btn-secondary">See the Approach</a>
-                <a href="store.html" class="btn btn-secondary">View EFI Store</a>
+                <a href="#services" class="btn btn-secondary">See Services</a>
             </div>
             <div class="hero-credentials">
                 <div class="credential">
@@ -79,33 +71,6 @@
                 <div class="brain-node node-2" data-label="Flexibility"></div>
                 <div class="brain-node node-3" data-label="Planning"></div>
                 <div class="brain-node node-4" data-label="Memory"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Hero Section - Student View (Hidden by default) -->
-    <section class="hero hero-student" id="hero-student" style="display: none;">
-        <div class="hero-content">
-            <div class="hero-badge student-badge">Level Up Your Brain</div>
-            <h1>Learn to <span class="highlight-student">Hack Your Own Brain</span></h1>
-            <p class="hero-subtitle">Forget boring tutoring. EFI coaching uses chess, cubing, and improv to train focus, planning, and follow-through without making it feel like more school.</p>
-            <div class="hero-cta">
-                <a href="coaching-contact.html" class="btn btn-primary-student">Let's Go</a>
-                <a href="#cube-challenge" class="btn btn-secondary-student">Free Cube Challenge</a>
-            </div>
-            <div class="hero-stats">
-                <div class="stat">
-                    <span class="stat-number"></span>
-                    <span class="stat-label">Chess Puzzles</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number"></span>
-                    <span class="stat-label">Brain Games</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number"></span>
-                    <span class="stat-label">Improv Skills</span>
-                </div>
             </div>
         </div>
     </section>
@@ -220,14 +185,14 @@
         </div>
     </section>
 
-    <!-- Why Jacob Section -->
+    <!-- Practice Credibility -->
     <section class="why-jacob" id="practice">
         <div class="container">
             <h2>Why Families Choose EFI Coaching</h2>
             <div class="why-grid">
                 <div class="why-card">
                     <h3>School-System Fluency</h3>
-                    <p>The practice is built by an educator who understands IEPs, 504s, and how to identify accommodations that actually work instead of default checkbox language.</p>
+                    <p>The practice is built by an educator who understands IEPs, 504s, and how to help families prepare for school conversations and identify accommodations that actually work instead of default checkbox language.</p>
                 </div>
                 <div class="why-card">
                     <h3>Students Actually Like Sessions</h3>
@@ -393,20 +358,21 @@
                     <p>EFI's coaching practice for executive function support in San Diego. Play-based, school-aware, and built for long-term skill development.</p>
                 </div>
                 <div class="footer-links">
-                    <h4>Quick Links</h4>
+                    <h4>EFI Navigation</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="resources.html">Resources</a></li>
+                        <li><a href="store.html">Store</a></li>
+                        <li><a href="certification.html">Certification</a></li>
+                    </ul>
+                </div>
+                <div class="footer-services">
+                    <h4>Coaching Sections</h4>
                     <ul>
                         <li><a href="#method">Approach</a></li>
                         <li><a href="#services">Services</a></li>
                         <li><a href="#practice">Practice</a></li>
-                        <li><a href="coaching-contact.html">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-services">
-                    <h4>Services</h4>
-                    <ul>
-                        <li><a href="#services">1:1 EF Coaching</a></li>
-                        <li><a href="#services">Brain Games Workshops</a></li>
-                        <li><a href="#services">IEP Translation</a></li>
+                        <li><a href="coaching-contact.html">Consultation</a></li>
                     </ul>
                 </div>
                 <div class="footer-contact">
@@ -416,7 +382,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Executive Functioning Institute Coaching Practice. All rights reserved.</p>
+                <p>&copy; 2026 Executive Functioning Institute Coaching Practice. Part of the Executive Functioning Institute.</p>
             </div>
         </div>
     </footer>

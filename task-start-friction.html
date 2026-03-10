@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Start Friction Diagnostic | EFI</title>
+  <meta name="description" content="Use EFI's free Task Start Friction Diagnostic to identify what blocks task initiation and generate a start protocol for a real situation.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.svg">
+  <meta property="og:title" content="Task Start Friction Diagnostic | EFI">
+  <meta property="og:description" content="A free EFI diagnostic for turning start resistance into a concrete, low-friction first-step protocol.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Executive Functioning Institute">
+  <link rel="canonical" href="https://executivefunctioninginstitute.com/task-start-friction.html">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">EFI</div>
+        <span>Executive Functioning Institute</span>
+      </a>
+      <div class="nav__links" id="nav-links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="curriculum.html" class="nav__link">Curriculum</a>
+        <a href="resources.html" class="nav__link">Resources</a>
+        <a href="coaching-home.html" class="nav__link">Coaching</a>
+        <a href="store.html" class="nav__link">Store</a>
+        <a href="certification.html" class="nav__link">Certification</a>
+        <span class="nav__auth"></span>
+        <a href="store.html" class="nav__link nav__link--cta">View Store</a>
+      </div>
+      <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <header class="page-header">
+      <div class="container">
+        <nav aria-label="Breadcrumb">
+          <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="free-executive-functioning-tests.html">Assessment Hub</a></li>
+            <li aria-current="page">Task Start Friction</li>
+          </ol>
+        </nav>
+        <h1>Task Start Friction Diagnostic</h1>
+        <p>Pick a real situation, rate the friction layers that are getting in the way, and EFI will build a tailored start script you can use immediately.</p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container container--narrow">
+        <div class="callout" style="margin-bottom:var(--space-lg);">
+          <p class="callout__label">Best Use</p>
+          <p>Use this when the problem is not knowing what matters, but actually starting. The diagnostic works best when you apply it to one real task, not a vague category.</p>
+        </div>
+
+        <div class="card">
+          <h2 style="margin-top:0;">Choose A Situation</h2>
+          <div class="form-group">
+            <label for="tf-scenario">Scenario</label>
+            <select id="tf-scenario" class="form-control">
+              <option value="report-due">A report due tomorrow</option>
+              <option value="study-test">Studying for a test you have been putting off</option>
+              <option value="missing-assignment">Dealing with a missing assignment</option>
+              <option value="email-teacher">An important email you need to send</option>
+              <option value="proposal-start">Starting a proposal, project plan, or presentation</option>
+              <option value="hard-call">Making a call you do not want to make</option>
+              <option value="messy-room">Resetting a messy room or workspace</option>
+              <option value="pay-bill">Paying a bill or handling a money admin task</option>
+              <option value="make-appointment">Booking an appointment you have delayed</option>
+              <option value="application-form">A form or application you have been avoiding</option>
+            </select>
+          </div>
+          <p id="tf-scenario-note" class="notice" style="margin-top:var(--space-md);">Choose a real scenario and EFI will tailor the friction prompts and first-step protocol.</p>
+        </div>
+
+        <div class="card" style="margin-top:var(--space-lg);">
+          <h3>Rate The Friction Layers</h3>
+          <div id="tf-guided-list"></div>
+          <div class="button-group" style="margin-top:var(--space-lg);">
+            <button type="button" class="btn btn--primary btn--sm" id="tf-run">Build Start Script</button>
+            <button type="button" class="btn btn--secondary btn--sm" id="tf-reset">Reset</button>
+            <button type="button" class="btn btn--secondary btn--sm" id="tf-copy">Copy Protocol</button>
+          </div>
+          <p id="tf-message" style="margin-top:var(--space-md);color:var(--color-text-muted);">No protocol copied yet.</p>
+        </div>
+
+        <div class="card" style="margin-top:var(--space-lg);">
+          <h3>Your Start Protocol</h3>
+          <div id="tf-result">Rate each friction layer and EFI will build a tailored start script for this situation.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt">
+      <div class="container container--narrow">
+        <div class="card">
+          <h2 style="margin-top:0;">Next Step In The Assessment Sequence</h2>
+          <p>Pair this start-friction result with ESQ-R, EF Profile Story, or Time Blindness data when you want EFI to name the bigger pattern instead of a single moment.</p>
+          <div class="button-group">
+            <a href="time-blindness-calibrator.html" class="btn btn--primary btn--sm">Open Time Blindness Calibrator</a>
+            <a href="full-ef-profile.html" class="btn btn--secondary btn--sm">Open Cross-Signal Model</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom">
+        <span>&copy; 2026 The Executive Functioning Institute</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/nav-auth.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

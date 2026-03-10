@@ -6,7 +6,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     replaceLegacyGlyphIcons();
     injectInstituteCommerceLinks();
-    initModeToggle();
     initMobileMenu();
     initSmoothScroll();
     initFormHandling();
@@ -156,50 +155,6 @@ function svgIcon(name) {
     }
 }
 
-function initModeToggle() {
-    var modeSwitch = document.getElementById('mode-switch');
-    var parentLabel = document.getElementById('parent-label');
-    var studentLabel = document.getElementById('student-label');
-    var heroParent = document.getElementById('hero-parent');
-    var heroStudent = document.getElementById('hero-student');
-
-    if (!modeSwitch) return;
-
-    var savedMode = localStorage.getItem('siteMode');
-    if (savedMode === 'student') {
-        modeSwitch.checked = true;
-        activateStudentMode();
-    } else {
-        activateParentMode();
-    }
-
-    modeSwitch.addEventListener('change', function () {
-        if (this.checked) {
-            activateStudentMode();
-            localStorage.setItem('siteMode', 'student');
-        } else {
-            activateParentMode();
-            localStorage.setItem('siteMode', 'parent');
-        }
-    });
-
-    function activateParentMode() {
-        document.body.classList.remove('student-mode');
-        if (parentLabel) parentLabel.classList.add('active');
-        if (studentLabel) studentLabel.classList.remove('active');
-        if (heroParent) heroParent.style.display = 'flex';
-        if (heroStudent) heroStudent.style.display = 'none';
-    }
-
-    function activateStudentMode() {
-        document.body.classList.add('student-mode');
-        if (studentLabel) studentLabel.classList.add('active');
-        if (parentLabel) parentLabel.classList.remove('active');
-        if (heroParent) heroParent.style.display = 'none';
-        if (heroStudent) heroStudent.style.display = 'flex';
-    }
-}
-
 function initMobileMenu() {
     var mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     var navLinks = document.querySelector('.nav-links');
@@ -209,6 +164,7 @@ function initMobileMenu() {
     mobileMenuBtn.addEventListener('click', function () {
         navLinks.classList.toggle('active');
         this.classList.toggle('active');
+        this.setAttribute('aria-expanded', this.classList.contains('active') ? 'true' : 'false');
 
         var spans = this.querySelectorAll('span');
         if (this.classList.contains('active')) {
@@ -220,6 +176,19 @@ function initMobileMenu() {
             spans[1].style.opacity = '1';
             spans[2].style.transform = 'none';
         }
+    });
+
+    navLinks.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+            navLinks.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+
+            var spans = mobileMenuBtn.querySelectorAll('span');
+            spans[0].style.transform = 'none';
+            spans[1].style.opacity = '1';
+            spans[2].style.transform = 'none';
+        });
     });
 
     navLinks.querySelectorAll('a').forEach(function (link) {
@@ -411,9 +380,12 @@ function initAnimations() {
         observer.observe(el);
     });
 
-    var style = document.createElement('style');
-    style.textContent = '.animate-in { opacity: 1 !important; transform: translateY(0) !important; }';
-    document.head.appendChild(style);
+    if (!document.getElementById('coaching-animate-style')) {
+        var style = document.createElement('style');
+        style.id = 'coaching-animate-style';
+        style.textContent = '.animate-in { opacity: 1 !important; transform: translateY(0) !important; }';
+        document.head.appendChild(style);
+    }
 
     var navbar = document.querySelector('.navbar');
     if (navbar) {
@@ -423,12 +395,13 @@ function initAnimations() {
             } else {
                 navbar.style.boxShadow = 'none';
             }
-        });
+        }, { passive: true });
     }
 }
 
 function trackEvent(eventName, properties) {
     if (!window.fetch) return;
+    if (/github\.io$/i.test(window.location.hostname)) return;
     fetch('/api/track-event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

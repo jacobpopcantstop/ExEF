@@ -1,5 +1,5 @@
 /* ========================================
-   Jacob Rozansky - Neuro-Performance Coaching
+   EFI Coaching Practice
    Main Stylesheet
    ======================================== */
 
@@ -14,11 +14,6 @@
     --secondary: #1a2a3a;
     --accent: #1e8449;
     --accent-light: #27ae60;
-
-    /* Student mode colors - still differentiated, but inside EFI palette */
-    --student-primary: #148f77;
-    --student-secondary: #d35400;
-    --student-accent: #2471a3;
 
     /* Neutrals */
     --white: #ffffff;
@@ -83,16 +78,9 @@ html {
 body {
     font-family: var(--font-body);
     color: var(--gray-800);
-    background-color: var(--white);
-    line-height: 1.6;
+    background-color: var(--gray-50);
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
-}
-
-body.student-mode {
-    --primary: var(--student-primary);
-    --primary-dark: #0f6d5b;
-    --primary-light: #17a589;
-    --accent: var(--student-secondary);
 }
 
 img {
@@ -142,83 +130,6 @@ p {
 
 section {
     padding: var(--space-4xl) 0;
-}
-
-/* ----------------------------------------
-   Mode Toggle
-   ---------------------------------------- */
-.mode-toggle-container {
-    position: fixed;
-    top: var(--space-md);
-    right: var(--space-lg);
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    z-index: 1001;
-    background: rgba(255, 255, 255, 0.95);
-    padding: var(--space-sm) var(--space-md);
-    border-radius: var(--radius-full);
-    box-shadow: var(--shadow-md);
-    border: 1px solid rgba(26, 82, 118, 0.12);
-}
-
-.mode-label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--gray-500);
-    transition: color var(--transition-fast);
-}
-
-#parent-label.active {
-    color: var(--primary);
-}
-
-#student-label.active {
-    color: var(--student-primary);
-}
-
-.mode-toggle {
-    position: relative;
-    width: 48px;
-    height: 24px;
-}
-
-.mode-toggle input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--primary);
-    transition: var(--transition-base);
-    border-radius: var(--radius-full);
-}
-
-.slider::before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: var(--transition-base);
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background-color: var(--student-primary);
-}
-
-input:checked + .slider::before {
-    transform: translateX(24px);
 }
 
 /* ----------------------------------------
@@ -312,13 +223,20 @@ input:checked + .slider::before {
 .nav-links {
     display: flex;
     align-items: center;
-    gap: var(--space-xl);
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .nav-links a {
     font-weight: 500;
     color: var(--gray-700);
+    font-size: 0.95rem;
     transition: color var(--transition-fast);
+}
+
+.nav-item--mobile-hide {
+    display: list-item;
 }
 
 .nav-links a:hover,
@@ -329,7 +247,7 @@ input:checked + .slider::before {
 .btn-nav {
     background: var(--accent);
     color: var(--white) !important;
-    padding: var(--space-sm) var(--space-lg);
+    padding: 0.65rem 1rem;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
     transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
@@ -427,17 +345,6 @@ input:checked + .slider::before {
 }
 
 /* Student mode buttons */
-.btn-primary-student {
-    background: linear-gradient(135deg, var(--student-primary), var(--student-accent));
-    color: var(--white);
-}
-
-.btn-secondary-student {
-    background: rgba(20, 143, 119, 0.12);
-    color: var(--student-primary);
-    border: 1px solid rgba(20, 143, 119, 0.18);
-}
-
 /* ----------------------------------------
    Hero Section
    ---------------------------------------- */
@@ -475,12 +382,6 @@ input:checked + .slider::before {
     margin-bottom: var(--space-lg);
 }
 
-.student-badge {
-    background: rgba(20, 143, 119, 0.12);
-    border-color: rgba(20, 143, 119, 0.18);
-    color: var(--student-primary);
-}
-
 .hero h1 {
     margin-bottom: var(--space-lg);
 }
@@ -488,13 +389,6 @@ input:checked + .slider::before {
 .highlight {
     color: var(--primary);
     position: relative;
-}
-
-.highlight-student {
-    background: linear-gradient(135deg, var(--student-primary), var(--student-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
 }
 
 .hero-subtitle {
@@ -566,27 +460,6 @@ input:checked + .slider::before {
 @keyframes pulse {
     0%, 100% { transform: scale(1); opacity: 0.8; }
     50% { transform: scale(1.1); opacity: 1; }
-}
-
-/* Student Hero Stats */
-.hero-stats {
-    display: flex;
-    gap: var(--space-xl);
-    margin-top: var(--space-xl);
-}
-
-.stat {
-    text-align: center;
-}
-
-.stat-number {
-    font-size: 2rem;
-    display: block;
-}
-
-.stat-label {
-    font-size: 0.875rem;
-    color: var(--gray-500);
 }
 
 /* ----------------------------------------
@@ -911,7 +784,7 @@ input:checked + .slider::before {
 }
 
 /* ----------------------------------------
-   Why Jacob Section
+   Practice Credibility
    ---------------------------------------- */
 .why-jacob {
     background: var(--gray-50);
@@ -2928,20 +2801,22 @@ input:checked + .slider::before {
         flex-direction: column;
         padding: var(--space-lg);
         box-shadow: var(--shadow-lg);
+        gap: var(--space-md);
+        max-height: calc(100vh - 88px);
+        overflow-y: auto;
+        border-bottom: 1px solid rgba(26, 82, 118, 0.12);
     }
 
     .nav-links.active {
         display: flex;
     }
 
-    .mobile-menu-btn {
-        display: flex;
+    .nav-item--mobile-hide {
+        display: none;
     }
 
-    .mode-toggle-container {
-        top: auto;
-        bottom: var(--space-md);
-        right: var(--space-md);
+    .mobile-menu-btn {
+        display: flex;
     }
 
     .footer-grid {

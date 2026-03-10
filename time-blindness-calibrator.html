@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Blindness Calibrator | EFI</title>
+  <meta name="description" content="Use EFI's free Time Blindness Calibrator to compare instinctive estimates against realistic benchmarks and generate a planning correction factor.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.svg">
+  <meta property="og:title" content="Time Blindness Calibrator | EFI">
+  <meta property="og:description" content="A free EFI diagnostic for spotting timing drift and building more realistic planning estimates.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Executive Functioning Institute">
+  <link rel="canonical" href="https://executivefunctioninginstitute.com/time-blindness-calibrator.html">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">EFI</div>
+        <span>Executive Functioning Institute</span>
+      </a>
+      <div class="nav__links" id="nav-links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="curriculum.html" class="nav__link">Curriculum</a>
+        <a href="resources.html" class="nav__link">Resources</a>
+        <a href="coaching-home.html" class="nav__link">Coaching</a>
+        <a href="store.html" class="nav__link">Store</a>
+        <a href="certification.html" class="nav__link">Certification</a>
+        <span class="nav__auth"></span>
+        <a href="store.html" class="nav__link nav__link--cta">View Store</a>
+      </div>
+      <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <header class="page-header">
+      <div class="container">
+        <nav aria-label="Breadcrumb">
+          <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="free-executive-functioning-tests.html">Assessment Hub</a></li>
+            <li aria-current="page">Time Blindness Calibrator</li>
+          </ol>
+        </nav>
+        <h1>Time Blindness Calibrator</h1>
+        <p>Compare your first-draft time estimates against realistic EFI planning benchmarks. After a few entries, the tool calculates your timing drift, confidence band, and a correction factor you can reuse this week.</p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container container--narrow">
+        <div class="callout" style="margin-bottom:var(--space-lg);">
+          <p class="callout__label">Best Use</p>
+          <p>Use this after ESQ-R or alongside it if planning and time realism are major friction points. Add at least three entries for a usable pattern.</p>
+        </div>
+
+        <div class="card">
+          <h2 style="margin-top:0;">Add A Benchmark Check</h2>
+          <div class="grid grid--2" style="gap:var(--space-md);">
+            <div class="form-group">
+              <label for="tb-category">Context</label>
+              <select id="tb-category" class="form-control">
+                <option value="">Choose a context...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="tb-task">Task</label>
+              <select id="tb-task" class="form-control">
+                <option value="">Choose a context first...</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="tb-estimated">Your Estimate (minutes)</label>
+              <input id="tb-estimated" class="form-control" type="number" min="1" step="1" placeholder="45">
+            </div>
+            <div class="form-group">
+              <label for="tb-complexity">Task Complexity</label>
+              <select id="tb-complexity" class="form-control">
+                <option value="easy">Easier than usual</option>
+                <option value="typical" selected>About typical</option>
+                <option value="hard">Harder than usual</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid--2" style="gap:var(--space-md);margin-top:var(--space-md);">
+            <div class="form-group">
+              <label for="tb-confidence-select">How confident are you in that estimate?</label>
+              <select id="tb-confidence-select" class="form-control">
+                <option value="1">Low confidence</option>
+                <option value="2" selected>Moderate confidence</option>
+                <option value="3">High confidence</option>
+              </select>
+            </div>
+            <div class="notice" style="align-self:end;">
+              <strong>EFI Benchmark Note</strong><br>
+              <span id="tb-benchmark-note">Choose a context and task to see EFI's typical time benchmark.</span>
+            </div>
+          </div>
+          <div class="button-group" style="margin-top:var(--space-lg);">
+            <button type="button" class="btn btn--primary btn--sm" id="tb-add-entry">Save Entry</button>
+            <button type="button" class="btn btn--secondary btn--sm" id="tb-reset">Reset Tool</button>
+            <button type="button" class="btn btn--secondary btn--sm" id="tb-copy-summary">Copy Summary</button>
+            <button type="button" class="btn btn--secondary btn--sm" id="tb-export-csv">Export CSV</button>
+          </div>
+          <p id="tb-message" style="margin-top:var(--space-md);color:var(--color-text-muted);">No entries yet. Try 3 to 5 tasks and the tool will start showing how your internal timing tends to drift.</p>
+        </div>
+
+        <div class="grid grid--2 stagger" style="margin-top:var(--space-lg);">
+          <div class="card">
+            <h3>Pattern Summary</h3>
+            <p id="tb-pattern">Your timing pattern will start to show after the first entry.</p>
+            <p id="tb-confidence" style="color:var(--color-text-muted);margin-bottom:0;">Confidence: unavailable (add entries)</p>
+          </div>
+          <div class="card">
+            <h3>Reusable Planning Summary</h3>
+            <p id="tb-summary" style="margin-bottom:0;">Your planning summary will appear here once you have data.</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:var(--space-lg);">
+          <h3>Saved Entries</h3>
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th style="text-align:left;padding:0.75rem;">Task</th>
+                  <th style="text-align:left;padding:0.75rem;">Your Estimate</th>
+                  <th style="text-align:left;padding:0.75rem;">EFI Benchmark</th>
+                  <th style="text-align:left;padding:0.75rem;">Drift</th>
+                </tr>
+              </thead>
+              <tbody id="tb-entries-body">
+                <tr><td colspan="4" style="padding:0.75rem;">No rows yet</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt">
+      <div class="container container--narrow">
+        <div class="card">
+          <h2 style="margin-top:0;">Next Step In The Assessment Sequence</h2>
+          <p>Once you have timing data, pair it with ESQ-R, EF Profile Story, or Task Start Friction to unlock a stronger Cross-Signal Profile.</p>
+          <div class="button-group">
+            <a href="task-start-friction.html" class="btn btn--primary btn--sm">Run Task Start Friction</a>
+            <a href="full-ef-profile.html" class="btn btn--secondary btn--sm">Open Cross-Signal Model</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom">
+        <span>&copy; 2026 The Executive Functioning Institute</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/nav-auth.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

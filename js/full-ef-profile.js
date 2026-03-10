@@ -221,7 +221,7 @@
       primaryTheme = 'Your combined results point to a gap between knowing what matters and getting traction quickly enough to follow through.';
       coachingFocus = 'Translate plans into smaller visible starts and give every estimate a built-in buffer.';
       leverage = 'Pair one start ritual with one timing correction rule so planning and action reinforce each other.';
-    } else if (signals.indexOf('emotional load') !== -1 && signals.indexOf('activation') !== -1) {
+    } else if (signals.indexOf('regulation') !== -1 && signals.indexOf('activation') !== -1) {
       profileFrame = 'Pressure-Sensitive Activation Pattern';
       primaryTheme = 'Once a task carries pressure or evaluation, your system is more likely to freeze, delay, or over-prepare instead of simply beginning.';
       coachingFocus = 'Lower task threat first, then ask for a very small visible action.';
@@ -370,8 +370,8 @@
 
   function renderStatus(completion, timeMetrics) {
     var timeLabel = 'Time Blindness Calibrator (3+ entries recommended)';
-    if (timeMetrics && timeMetrics.count) {
-      timeLabel += ' - current entries: ' + timeMetrics.count;
+    if (timeMetrics && timeMetrics.entries) {
+      timeLabel += ' - current entries: ' + timeMetrics.entries;
     }
     var items = [
       { name: 'ESQ-R free test', ok: completion.hasEsqr },

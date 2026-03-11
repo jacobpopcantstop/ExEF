@@ -518,6 +518,54 @@ section {
     line-height: 1.5;
 }
 
+.coaching-visual-slot {
+    margin: 0;
+}
+
+.coaching-visual-slot__frame {
+    min-height: 240px;
+    display: grid;
+    align-content: end;
+    gap: var(--space-sm);
+    padding: var(--space-xl);
+    border-radius: var(--radius-xl);
+    border: 1px dashed rgba(26, 82, 118, 0.28);
+    background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(240, 247, 251, 0.9)),
+        repeating-linear-gradient(
+            135deg,
+            rgba(26, 82, 118, 0.06) 0,
+            rgba(26, 82, 118, 0.06) 14px,
+            transparent 14px,
+            transparent 28px
+        );
+}
+
+.coaching-visual-slot__eyebrow {
+    margin: 0;
+    color: var(--gray-500);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.coaching-visual-slot h3 {
+    margin-bottom: 0;
+    color: var(--gray-900);
+}
+
+.coaching-visual-slot p,
+.coaching-visual-slot figcaption {
+    margin-bottom: 0;
+    color: var(--gray-600);
+}
+
+.coaching-visual-slot figcaption {
+    margin-top: var(--space-sm);
+    font-size: 0.84rem;
+}
+
 .coaching-dossier__list,
 .coaching-practice__list {
     display: grid;

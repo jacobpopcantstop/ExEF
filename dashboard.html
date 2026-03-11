@@ -234,7 +234,7 @@
   <section class="section section--alt">
     <div class="container">
       <h2>Submission &amp; Grading Pipeline</h2>
-      <p style="color:var(--color-text-muted);margin-bottom:var(--space-lg);">Submit assignment evidence for asynchronous AI rubric review and faculty-style feedback release. Results are intentionally delayed 24 hours before dashboard release and notification email.</p>
+      <p style="color:var(--color-text-muted);margin-bottom:var(--space-lg);">Submit assignment evidence for asynchronous rubric-engine review. Results are processed automatically, then intentionally held for 24 hours before dashboard release and notification email.</p>
       <div class="card" style="border-left:4px solid var(--module-4);margin-bottom:var(--space-lg);">
         <label for="submission-url" style="display:block;font-weight:600;margin-bottom:var(--space-xs);">Module evidence URL</label>
         <input id="submission-url" class="form-control" type="url" placeholder="https://...your assignment or case study link">
@@ -251,10 +251,10 @@
       </div>
       <div class="card" style="border-left:4px solid var(--module-6);margin-bottom:var(--space-lg);">
         <h3 style="margin-bottom:var(--space-sm);">Capstone Practicum</h3>
-        <p style="color:var(--color-text-muted);margin-bottom:var(--space-md);">When your capstone packet is ready, submit the evidence link and run grading. If you have not purchased capstone review, status will remain <em>awaiting payment</em>.</p>
+        <p style="color:var(--color-text-muted);margin-bottom:var(--space-md);">When your capstone packet is ready, submit the evidence link and refresh grading status after the release window. Certificate eligibility still depends on capstone passing status and any required purchases.</p>
         <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;">
           <button type="button" class="btn btn--secondary" id="submit-capstone-btn">Submit Capstone</button>
-          <button type="button" class="btn btn--primary" id="run-grading-btn">Run Automated Grading</button>
+          <button type="button" class="btn btn--primary" id="run-grading-btn">Refresh Grading Status</button>
           <a href="store.html" class="btn btn--outline">Purchase Missing Services</a>
         </div>
         <p id="grading-message" style="margin:var(--space-md) 0 0;color:var(--color-text-muted);"></p>
@@ -549,7 +549,7 @@
         var moduleId = this.getAttribute('data-submit-module');
         Promise.resolve(EFI.Auth.saveModuleSubmission(moduleId, url, notes)).then(function (result) {
           msg.textContent = result.ok
-            ? ('Module ' + moduleId + ' submitted. AI review is completed and scheduled for release after 24 hours (' + new Date(result.release_at).toLocaleString() + ').')
+            ? ('Module ' + moduleId + ' submitted. Rubric-engine feedback is queued for release after 24 hours (' + new Date(result.release_at).toLocaleString() + ').')
             : result.error;
         });
       });
@@ -560,7 +560,7 @@
       var notes = document.getElementById('submission-notes').value;
       Promise.resolve(EFI.Auth.submitCapstone(url, notes)).then(function (result) {
         document.getElementById('grading-message').textContent = result.ok
-          ? ('Capstone submitted. AI rubric review will unlock in dashboard after 24 hours (' + new Date(result.release_at).toLocaleString() + ').')
+          ? ('Capstone submitted. Rubric-engine feedback will unlock in dashboard after 24 hours (' + new Date(result.release_at).toLocaleString() + ').')
           : result.error;
         renderCertificationReadiness();
         renderOutcomeMetrics();

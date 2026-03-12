@@ -5,13 +5,27 @@
 
 /* Apply saved theme immediately to prevent flash */
 (function () {
-  var saved = localStorage.getItem('efi_theme');
+  var saved = null;
+  try {
+    saved = localStorage.getItem('efi_theme');
+  } catch (e) {
+    saved = null;
+  }
   if (saved) document.documentElement.setAttribute('data-theme', saved);
 })();
 
 document.addEventListener('DOMContentLoaded', function () {
   var host = window.location.hostname || '';
   var TRACKING_ENABLED = !/github\.io$/i.test(host) && !/^(localhost|127\.0\.0\.1)$/i.test(host) && window.location.protocol !== 'file:';
+
+  function safeSetLocalStorage(key, value) {
+    try {
+      localStorage.setItem(key, value);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
   function canPostTracking() {
     return TRACKING_ENABLED && !!window.fetch;
@@ -50,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
       try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; }
     }
     function write(list) {
-      localStorage.setItem(KEY, JSON.stringify(list.slice(-50)));
+      safeSetLocalStorage(KEY, JSON.stringify(list.slice(-50)));
     }
     function log(type, payload) {
       var list = read();
@@ -95,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function writeAssessmentEvents(events) {
-      localStorage.setItem(ASSESSMENT_EVENTS_KEY, JSON.stringify((events || []).slice(-300)));
+      safeSetLocalStorage(ASSESSMENT_EVENTS_KEY, JSON.stringify((events || []).slice(-300)));
     }
 
     function storeAssessmentEvent(payload) {
@@ -158,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function writePlans(plans) {
-      localStorage.setItem(ACTION_PLAN_KEY, JSON.stringify((plans || []).slice(-50)));
+      safeSetLocalStorage(ACTION_PLAN_KEY, JSON.stringify((plans || []).slice(-50)));
     }
 
     function readReflections() {
@@ -897,7 +911,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var current = document.documentElement.getAttribute('data-theme');
         var next = current === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem(THEME_KEY, next);
+        safeSetLocalStorage(THEME_KEY, next);
         btn.textContent = next === 'dark' ? '\u2600' : '\u263E';
         btn.title = next === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
       });
@@ -996,7 +1010,7 @@ document.addEventListener('DOMContentLoaded', function () {
       wave.style.setProperty('--wave-y', centerY + 'px');
       var savedDir = localStorage.getItem('efi_wave_direction');
       var direction = savedDir === '-1' ? -1 : 1;
-      localStorage.setItem('efi_wave_direction', String(direction));
+      safeSetLocalStorage('efi_wave_direction', String(direction));
       var count = 20;
       var baseRadius = 10;
       var travel = 56;

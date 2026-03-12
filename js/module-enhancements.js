@@ -21,7 +21,7 @@
         'time systems': 'Citations: Barkley time blindness education segments and temporal discounting literature.'
       },
       'module-5.html': {
-        'time management: curing "time blindness"': 'Citations: Barkley temporal model, Ward visual time strategies.',
+        'time management across populations': 'Citations: Barkley temporal model, Ward visual time strategies, population-specific adaptation literature.',
         'task initiation: overcoming the "wall of awful"': 'Citations: initiation-friction coaching literature and applied ADHD practice frameworks.'
       },
       'module-6.html': {
@@ -506,6 +506,10 @@
 
     var sectionDeepDives = {
       'module-1.html': {
+        'the theoretical foundation': {
+          text: 'Action step: before reading further, write one sentence describing what you currently believe executive functioning IS. Revisit it after finishing this module to measure how your understanding shifted.',
+          links: [{ href: 'about.html#models', label: 'Model Foundations' }, { href: 'resources.html#reading', label: 'Reading Packets' }]
+        },
         'the neurobiology of the "air traffic control" system': {
           text: 'Action step: in your next intake, ask the client to identify one recurring "air traffic jam" moment each day, then map it to a specific control-tower support (visual cue, timer, checklist, or pre-commitment).',
           links: [{ href: 'module-1.html', label: 'Module 1' }, { href: 'resources.html#forms', label: 'Implementation Forms' }]
@@ -514,16 +518,36 @@
           text: 'Action step: require every intervention to name the inhibition bottleneck first ("what impulse is winning?"), then pair one external brake with one follow-through cue.',
           links: [{ href: 'barkley-model-guide.html', label: 'Barkley Guide' }, { href: 'certification.html#transparency-rubric', label: 'Rubric Standards' }]
         },
+        'from deficit model to cognitive accessibility': {
+          text: 'Action step: audit one client environment (classroom, office, or home workspace) for unnecessary cognitive load, then propose two UDL-aligned modifications that reduce EF demand for everyone, not just the client.',
+          links: [{ href: 'module-3.html', label: 'Environment Modifications' }, { href: 'open-ef-resources-directory.html', label: 'Open Resources' }]
+        },
         'the brown model: six clusters of cognitive management': {
           text: 'Action step: use one cluster label per week in client language (Activation, Focus, Effort, Emotion, Memory, Action) and collect one real-world example to normalize variability.',
           links: [{ href: 'brown-clusters-tool.html', label: 'Brown Clusters Tool' }, { href: 'open-ef-resources-directory.html#citations', label: 'Primary Sources' }]
         },
+        'the evolutionary perspective: public to private': {
+          text: 'Action step: observe one child or adolescent client for signs of "public self-regulation" (talking through steps aloud, counting on fingers) and frame these as developmental strengths rather than immature behaviors.',
+          links: [{ href: 'module-5.html', label: 'Special Populations' }, { href: 'about.html#models', label: 'Theoretical Models' }]
+        },
+        'unit summary': {
+          text: 'Action step: write a one-paragraph "elevator pitch" that explains executive functioning to a skeptical parent using language from at least two of the four models covered in this module.',
+          links: [{ href: 'module-2.html', label: 'Next: Assessment' }, { href: 'curriculum.html', label: 'Full Curriculum' }]
+        },
         'module 1 assignment': {
           text: 'Action step: draft the three interventions first, then write the analysis around them. This prevents theory-only submissions and increases pass reliability.',
           links: [{ href: 'certification.html#transparency-rubric', label: 'Pass Criteria' }, { href: 'resources.html#forms', label: 'Templates' }]
+        },
+        'go deeper with free foundational sources': {
+          text: 'Action step: read at least one primary source from Barkley and one from Brown before starting Module 2. Primary sources build assessment credibility that summaries alone cannot.',
+          links: [{ href: 'further-sources.html', label: 'Full Source Directory' }, { href: 'open-ef-resources-directory.html', label: 'Open Resources' }]
         }
       },
       'module-2.html': {
+        'module overview': {
+          text: 'Action step: before learning intake tools, list three assumptions you currently make about new clients in the first 10 minutes. This module will challenge whether those assumptions are data-grounded.',
+          links: [{ href: 'module-1.html', label: 'Prerequisites: Module 1' }, { href: 'curriculum.html', label: 'Full Curriculum' }]
+        },
         'the intake architecture': {
           text: 'Action step: run intake in three passes: (1) presenting pain point, (2) context map by setting/time, (3) first 2-week behavior target with observable completion criteria.',
           links: [{ href: 'resources.html#assessment', label: 'Assessment Toolkit' }, { href: 'module-3.html', label: 'Coaching Architecture' }]
@@ -536,12 +560,24 @@
           text: 'Action step: photograph or sketch the real execution environment and mark friction points in order of failure frequency before assigning new skills.',
           links: [{ href: 'module-4.html', label: 'Applied Methods' }, { href: 'resources.html#forms', label: 'Audit Templates' }]
         },
+        'assessment across real support environments': {
+          text: 'Action step: compare your client\u2019s performance data across at least two environments (home vs. work, or classroom vs. after-school) to identify context-dependent strengths that pure self-report misses.',
+          links: [{ href: 'brown-clusters-tool.html', label: 'Cluster Analysis' }, { href: 'free-executive-functioning-tests.html', label: 'Assessment Hub' }]
+        },
         'module 2 assignment': {
           text: 'Action step: include one discrepancy paragraph (self-report vs observer report) and the exact follow-up question you would use to resolve it.',
           links: [{ href: 'certification.html#transparency-rubric', label: 'Rubric Expectations' }, { href: 'scope-of-practice.html', label: 'Scope Guardrails' }]
+        },
+        'required readings & viewings': {
+          text: 'Action step: while reading, highlight one passage per source that you could quote verbatim to a parent or teacher to explain an assessment finding. Building a citation habit strengthens professional credibility.',
+          links: [{ href: 'further-sources.html', label: 'Source Directory' }, { href: 'open-ef-resources-directory.html', label: 'Open Resources' }]
         }
       },
       'module-3.html': {
+        'module overview': {
+          text: 'Action step: before reading, write down how you currently structure a coaching session. After finishing this module, compare your process to the Dawson & Guare architecture and note what you would change.',
+          links: [{ href: 'module-2.html', label: 'Prerequisites: Assessment' }, { href: 'curriculum.html', label: 'Full Curriculum' }]
+        },
         'the two-tiered intervention logic': {
           text: 'Action step: always deploy one environment change before any motivation coaching. If behavior improves, you found a design issue not a character issue.',
           links: [{ href: 'module-4.html', label: 'Applied Methods' }, { href: 'resources.html#forms', label: 'Environment Tools' }]
@@ -550,6 +586,14 @@
           text: 'Action step: use a fade plan from day one: full prompts -> partial prompts -> self-prompt script -> independent check-in.',
           links: [{ href: 'module-6.html', label: 'Practice Ops' }, { href: 'certification.html', label: 'Certification Workflow' }]
         },
+        'icf core competencies in the ef context': {
+          text: 'Action step: record one session (with consent) and score yourself against three ICF competencies. Identify the one where EF-specific demands differ most from general life coaching.',
+          links: [{ href: 'accreditation.html', label: 'Standards Alignment' }, { href: 'scope-of-practice.html', label: 'Scope Policy' }]
+        },
+        'how the coaching architecture shows up in real systems': {
+          text: 'Action step: interview one professional who uses structured coaching (school counselor, behavior specialist, or occupational therapist) about their session flow and compare it to the EFI architecture.',
+          links: [{ href: 'coach-directory.html', label: 'Coach Directory' }, { href: 'community.html', label: 'Community Hub' }]
+        },
         'the coaching cycle & smart goals': {
           text: 'Action step: every SMART goal should include a trigger ("when X happens"), a start behavior, and a recovery behavior if derailed.',
           links: [{ href: 'resources.html#forms', label: 'Goal Templates' }, { href: 'teacher-to-coach.html', label: 'Educator Path' }]
@@ -557,9 +601,17 @@
         'module 3 assignment': {
           text: 'Action step: include one explicit referral threshold sentence in your submission to show scope discipline under risk.',
           links: [{ href: 'scope-of-practice.html', label: 'Referral Boundaries' }, { href: 'terms.html', label: 'Service Terms' }]
+        },
+        'implementation models and coaching systems': {
+          text: 'Action step: pick one real implementation model from this section and draft a one-page adaptation plan for your specific coaching context (school, private practice, or organizational).',
+          links: [{ href: 'teacher-to-coach.html', label: 'Educator Path' }, { href: 'module-6.html', label: 'Practice Management' }]
         }
       },
       'module-4.html': {
+        'module overview': {
+          text: 'Action step: list three tasks your client failed at last week. For each, identify whether the breakdown was in planning (Get Ready), execution (Do), or completion verification (Done).',
+          links: [{ href: 'module-3.html', label: 'Coaching Architecture' }, { href: 'curriculum.html', label: 'Full Curriculum' }]
+        },
         '360 thinking: "get ready, do, done"': {
           text: 'Action step: require clients to show the "Done" artifact first (photo, checklist, sample output) before planning steps.',
           links: [{ href: 'ward-360-thinking.html', label: '360 Thinking Hub' }, { href: 'resources.html#forms', label: 'Planning Mats' }]
@@ -572,12 +624,24 @@
           text: 'Action step: place offload tools where failure happens (doorway, desk, phone lock screen), not where planning happens.',
           links: [{ href: 'module-4.html', label: 'Applied Methods' }, { href: 'resources.html#forms', label: 'Offload Tools' }]
         },
+        'from technique to daily operating system': {
+          text: 'Action step: take one technique from this module and embed it into your client\u2019s existing daily routine (morning alarm, lunch break, bedtime) rather than adding a new standalone habit.',
+          links: [{ href: 'module-5.html', label: 'Population Adaptations' }, { href: 'resources.html#forms', label: 'Routine Templates' }]
+        },
         'unit summary': {
           text: 'Action step: choose one tool from each bucket (planning, timing, offload) and run a 14-day implementation sprint with weekly review notes.',
           links: [{ href: 'dashboard.html', label: 'Track Outcomes' }, { href: 'certification.html', label: 'Submission Pipeline' }]
+        },
+        'practical tools for planning and offloading': {
+          text: 'Action step: download or bookmark two tools from this section and test them on your own task management for one week before introducing them to a client.',
+          links: [{ href: 'resources.html#forms', label: 'Tool Library' }, { href: 'ward-360-thinking.html', label: '360 Thinking Hub' }]
         }
       },
       'module-6.html': {
+        'module overview': {
+          text: 'Action step: write down your three biggest anxieties about starting a coaching practice. This module addresses each one with systems, not reassurance.',
+          links: [{ href: 'module-5.html', label: 'Prerequisites: Interventions' }, { href: 'curriculum.html', label: 'Full Curriculum' }]
+        },
         'professional ethics & scope of practice': {
           text: 'Action step: include a standing script for "this is outside coaching scope" and document referral pathways before client load grows.',
           links: [{ href: 'scope-of-practice.html', label: 'Scope Policy' }, { href: 'accreditation.html', label: 'Standards Status' }]
@@ -586,6 +650,10 @@
           text: 'Action step: separate service delivery SOPs from sales SOPs so quality controls are not compromised by revenue pressure.',
           links: [{ href: 'teacher-to-coach.html', label: 'Business Path' }, { href: 'store.html', label: 'Service Structure' }]
         },
+        'open digital prosthetics and assistive tools': {
+          text: 'Action step: test three free digital tools from this section on your own workflow for one week. Recommending tools you have not personally used undermines coaching credibility.',
+          links: [{ href: 'resources.html', label: 'Resource Hub' }, { href: 'open-ef-resources-directory.html', label: 'Open Directory' }]
+        },
         'legal & administrative infrastructure': {
           text: 'Action step: finalize refund language, consent capture, and documentation retention workflow before onboarding paid clients.',
           links: [{ href: 'terms.html', label: 'Terms' }, { href: 'privacy.html', label: 'Privacy' }]
@@ -593,6 +661,14 @@
         'your professional toolkit': {
           text: 'Action step: customize the launch kit docs with your actual niche and session cadence, then run one pilot client from intake to review.',
           links: [{ href: 'curriculum.html', label: 'Launch Kit Preview' }, { href: 'store.html', label: 'Paid Path' }]
+        },
+        'modern tooling and open practice infrastructure': {
+          text: 'Action step: set up one practice management tool (scheduling, invoicing, or session notes) this week. Infrastructure debt compounds once clients start booking.',
+          links: [{ href: 'launch-plan.html', label: '90-Day Launch Plan' }, { href: 'store.html', label: 'Pricing Reference' }]
+        },
+        'module 6 assignment': {
+          text: 'Action step: build your Launch Kit using real business details, not hypothetical ones. Graders score higher when niche language, pricing, and service terms reflect genuine market research.',
+          links: [{ href: 'certification.html#transparency-rubric', label: 'Capstone Rubric' }, { href: 'gap-analyzer.html', label: 'Skills Gap Analyzer' }]
         }
       },
       'curriculum.html': {
@@ -610,17 +686,37 @@
         }
       },
       'module-5.html': {
-        'time management: curing "time blindness"': {
-          text: 'Time systems should be treated as measurement systems. Prediction error data drives correction factors that improve planning validity.',
-          links: [{ href: 'images/time-correction-chart.svg', label: 'Time Correction Chart' }, { href: 'resources.html#forms', label: 'Time Tools' }]
+        'module overview': {
+          text: 'Action step: identify one client or case where a standard intervention failed. As you read this module, look for the population-specific adaptation that would have changed the outcome.',
+          links: [{ href: 'module-4.html', label: 'Prerequisites: Methods' }, { href: 'curriculum.html', label: 'Full Curriculum' }]
+        },
+        'time management across populations': {
+          text: 'Action step: match each population in this section to the time tool from Module 4 that fits best, then note one adaptation you would make to account for age, context, or shame sensitivity.',
+          links: [{ href: 'images/time-correction-chart.svg', label: 'Time Correction Chart' }, { href: 'time-blindness-calibrator.html', label: 'Time Calibrator' }]
         },
         'task initiation: overcoming the "wall of awful"': {
-          text: 'Initiation interventions should reduce threat and lower friction in the first 90 seconds of task contact. Start behavior beats motivation talk.',
-          links: [{ href: 'module-3.html', label: 'Coaching Scripts' }, { href: 'module-4.html', label: 'Applied Methods' }]
+          text: 'Action step: design a 90-second "launch sequence" for one specific client task that lowers activation energy through environmental priming rather than willpower appeals.',
+          links: [{ href: 'task-start-friction.html', label: 'Friction Patterns' }, { href: 'module-4.html', label: 'Applied Methods' }]
+        },
+        'organization & working memory: offloading the brain': {
+          text: 'Action step: audit your client\u2019s current offloading system (phone, paper, nothing?) and design one upgrade that places the tool at the exact point of failure, not at the planning desk.',
+          links: [{ href: 'module-4.html', label: 'Cognitive Offloading' }, { href: 'resources.html#forms', label: 'Offload Templates' }]
+        },
+        'emotional regulation: the "hard times" protocol': {
+          text: 'Action step: practice the Hard Times protocol on yourself during a low-stakes frustration this week. Coaches who have felt the protocol firsthand teach it with more credibility and nuance.',
+          links: [{ href: 'module-1.html', label: 'Emotional Self-Regulation Theory' }, { href: 'scope-of-practice.html', label: 'Therapy vs. Coaching Boundary' }]
         },
         'special populations & transitions': {
-          text: 'Adapt delivery surface, not core mechanism. Preserve EF principles while tuning language, structure, and sensory/context load.',
+          text: 'Action step: pick the population closest to your target niche and write three sentences explaining how standard EF coaching must be adapted for that group. Use this as the opening of your capstone rationale.',
           links: [{ href: 'scope-of-practice.html', label: 'Scope & Referral' }, { href: 'resources.html', label: 'Resource Hub' }]
+        },
+        'family, school, and workplace support guides': {
+          text: 'Action step: share one resource from this section with a parent, teacher, or HR contact this week and note their reaction. Real-world feedback sharpens your ability to match resources to audiences.',
+          links: [{ href: 'resources.html#toolkits', label: 'Role-Based Toolkits' }, { href: 'coaching-home.html', label: 'Coaching Practice' }]
+        },
+        'module 5 assignment': {
+          text: 'Action step: start with the population profile before writing the intervention plan. Graders look for evidence that your tool choices were driven by population-specific reasoning, not generic best practices.',
+          links: [{ href: 'certification.html#transparency-rubric', label: 'Rubric Criteria' }, { href: 'resources.html#forms', label: 'Assignment Templates' }]
         }
       }
     };

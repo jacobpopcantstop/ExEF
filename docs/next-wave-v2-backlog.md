@@ -43,4 +43,6 @@
 
 ## Execution Update
 - ✅ Implemented item #2: **One-click recheck CTA inside reminder rows** in `js/main.js` with a new dashboard reminder action (`Start Recheck Now`) that records start state and emits `practice_plan_started` from the reminder context.
-- ⏭️ Next recommended implementation: item #1 (near-mastery guidance state) to improve conversion from recheck/check-in completion to mastery verification.
+- ✅ Implemented item #1: **Near-mastery guidance state** in `dashboard.html` — detects three states (all modules done/capstone missing, 5/6 modules done, 4+ modules with near-pass) and renders differentiated guidance cards with direct action links.
+- ✅ Implemented item #6: **Cross-tool queue effort estimates** — added time/effort badges (~10 min, ~45 min/module, Browse, ~2 min) to dashboard quick-action cards.
+- ⏭️ Next recommended implementation: item #3 (reflection prompt prefills from plan focus/history) to improve transfer from check-in completion to behavior change.

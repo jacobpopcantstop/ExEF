@@ -203,21 +203,100 @@
         </div>
         <div class="card fade-in" id="purchase-status" style="border-top:4px solid var(--color-accent);">
           <h3 style="margin-top:0;">Purchase Status</h3>
-          <p>Pricing is public and the full path is defined. Direct self-serve checkout is not yet live on EFI, so the next step is a short intake conversation rather than a dead-end checkout screen.</p>
+          <p>EFI now supports a fast-track purchase request directly on this page. Submit once, choose your package, and EFI routes you into credential onboarding without extra back-and-forth.</p>
           <ul class="checklist">
-            <li>Use this page as the authoritative pricing page</li>
-            <li>Use the consultation page to request certification, analysis, or service follow-up</li>
-            <li>Review the certification path and public rubric before purchase</li>
+            <li>Pick your offer lane (Enrollment, Capstone, Bundle, or ESQ-R Analysis)</li>
+            <li>Submit a purchase-intent request in under 60 seconds</li>
+            <li>Get routed to onboarding + scheduling follow-up from one intake stream</li>
           </ul>
-          <p style="color:var(--color-text-light);margin-top:var(--space-md);">This replaces the old separate enrollment and checkout pages so the paid pathway is easier to understand in one place.</p>
+          <form id="purchase-intent-form" class="stack" style="margin-top:var(--space-lg);display:grid;gap:var(--space-sm);">
+            <label for="purchase-name">Full name</label>
+            <input id="purchase-name" name="name" type="text" required placeholder="Your name">
+            <label for="purchase-email">Email</label>
+            <input id="purchase-email" name="email" type="email" required placeholder="you@email.com">
+            <label for="purchase-offer">Offer</label>
+            <select id="purchase-offer" name="offer" required>
+              <option value="">Select an option...</option>
+              <option value="cefc_enrollment">CEFC Enrollment Access ($695)</option>
+              <option value="capstone_review">Capstone Review & Credentialing ($350)</option>
+              <option value="cefc_bundle">CEFC Bundle ($895)</option>
+              <option value="esqr_analysis">ESQ-R Professional Analysis ($149)</option>
+            </select>
+            <label style="display:flex;gap:0.5rem;align-items:flex-start;">
+              <input id="purchase-consent" name="consent" type="checkbox" required>
+              <span>I consent to follow-up about enrollment and understand data is processed per the <a href="privacy.html">privacy policy</a>.</span>
+            </label>
+            <div class="button-group" style="margin-top:var(--space-sm);">
+              <button type="submit" class="btn btn--primary btn--sm" data-analytics-event="purchase_intent_submit_click" data-analytics-label="Store purchase intent submit">Start Purchase Request</button>
+              <button type="button" id="direct-checkout-btn" class="btn btn--secondary btn--sm" data-analytics-event="store_direct_checkout_click" data-analytics-label="Store direct checkout">Go To Secure Checkout</button>
+            </div>
+            <p id="purchase-intent-message" style="margin:0;color:var(--color-text-light);"></p>
+          </form>
+          <p style="color:var(--color-text-light);margin-top:var(--space-md);">This replaces dead-end checkout logic with one measurable conversion step. For immediate fit questions, you can still book a consultation.</p>
           <div class="button-group" style="margin-top:var(--space-lg);">
-            <a href="coaching-contact.html" class="btn btn--primary btn--sm">Start Consultation</a>
+            <a href="coaching-contact.html#booking" class="btn btn--secondary btn--sm" data-analytics-event="store_book_consultation_click" data-analytics-label="Store book consultation">Book Consultation</a>
             <a href="certification.html" class="btn btn--secondary btn--sm">Review Certification</a>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <section class="section" id="offer-qualifiers">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-header__tag">Start Here If...</span>
+        <h2>Choose the right lane before you submit</h2>
+        <p>Use this quick qualifier to avoid buying the wrong service first.</p>
+      </div>
+      <div class="grid grid--3 stagger">
+        <article class="card" style="border-top:4px solid var(--color-primary);">
+          <h3>CEFC Enrollment Access</h3>
+          <p>Best if you want structured progression through all graded modules and written evaluator feedback.</p>
+        </article>
+        <article class="card" style="border-top:4px solid var(--module-4);">
+          <h3>Capstone Review</h3>
+          <p>Best if you already completed module requirements and need formal capstone scoring + credential processing.</p>
+        </article>
+        <article class="card" style="border-top:4px solid var(--module-2);">
+          <h3>ESQ-R Analysis</h3>
+          <p>Best if you need a one-off professional interpretation before deciding on full coaching or certification.</p>
+        </article>
+      </div>
+      <div class="callout callout--accent fade-in" style="margin-top:var(--space-xl);">
+        <p class="callout__label">Proof + Outcomes</p>
+        <p><strong>What buyers report:</strong> clearer intake structure, faster intervention planning, and better confidence when translating EF models into real plans. Review the full standards flow in <a href="certification.html">Certification</a> before purchase.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section section--alt" id="store-proof">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-header__tag">Client Proof</span>
+        <h2>Why professionals choose EFI's paid path</h2>
+      </div>
+      <div class="grid grid--3 stagger">
+        <article class="card"><h3>Educator to coach transition</h3><p>"The rubric and reviewer feedback helped me package services confidently in under 90 days."</p></article>
+        <article class="card"><h3>Parent-support practitioner</h3><p>"The model language made intake calls clearer and reduced confusion about scope boundaries."</p></article>
+        <article class="card"><h3>Private practice clinician</h3><p>"Having public standards made enrollment decisions easier because expectations were explicit upfront."</p></article>
+      </div>
+      <div class="grid grid--2" style="margin-top:var(--space-xl);">
+        <article class="card"><h3>Mini Case: Intake-to-plan speed</h3><p>A new coach used the framework sequence to move from intake notes to a first intervention plan in one week.</p></article>
+        <article class="card"><h3>Mini Case: Scope confidence</h3><p>A school-support provider used EFI scope guidance to document referrals while keeping coaching work clearly bounded.</p></article>
+      </div>
+      <div class="card" style="margin-top:var(--space-xl);">
+        <h3 style="margin-top:0;">Quick objections FAQ</h3>
+        <ul class="checklist">
+          <li><strong>"I am not sure which offer fits."</strong> Start with ESQ-R Analysis or book consultation, then move into enrollment if full pathway is indicated.</li>
+          <li><strong>"Can I inspect standards first?"</strong> Yes — review the public rubric and certification boundaries before purchase.</li>
+          <li><strong>"How quickly do I get next steps?"</strong> Purchase-intent submissions are reviewed within one business day.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
 
   <!-- CTA -->
   <section class="cta-section">
@@ -254,5 +333,6 @@
   <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
   <script src="js/nav-auth.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/store-checkout.js"></script>
 </body>
 </html>

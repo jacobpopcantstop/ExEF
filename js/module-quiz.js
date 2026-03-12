@@ -7,6 +7,8 @@
   'use strict';
 
   var PASSING_SCORE = 80;
+  var ACTION_PLAN_STORAGE_KEY = 'efi_action_plans_v1';
+  var REFLECTION_STORAGE_KEY = 'efi_reflections_v1';
   var currentQuiz = null;
   var userAnswers = {};
   var quizData = null;
@@ -29,6 +31,385 @@
       .catch(function(error) {
         console.warn('[Module Quiz] Could not load quiz data:', error);
       });
+  }
+
+  function trackAssessmentEvent(eventName, properties) {
+    if (window.EFI && window.EFI.Analytics && typeof window.EFI.Analytics.track === 'function') {
+      window.EFI.Analytics.track(eventName, properties || {});
+    }
+  }
+
+  function readActionPlans() {
+    try {
+      return JSON.parse(localStorage.getItem(ACTION_PLAN_STORAGE_KEY)) || [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function writeActionPlans(plans) {
+    localStorage.setItem(ACTION_PLAN_STORAGE_KEY, JSON.stringify((plans || []).slice(-50)));
+  }
+
+  function updatePlanStatus(planId, status) {
+    var plans = readActionPlans();
+    var updated = false;
+    plans.forEach(function(plan) {
+      if (plan && plan.plan_id === planId) {
+        plan.state = plan.state || {};
+        plan.state.status = status;
+        plan.state.updated_at = new Date().toISOString();
+        updated = true;
+      }
+    });
+    if (updated) writeActionPlans(plans);
+  }
+
+  function completePlanCheckin(planId, payload) {
+    var plans = readActionPlans();
+    var updated = false;
+    var checkinAt = new Date().toISOString();
+    plans.forEach(function(plan) {
+      if (plan && plan.plan_id === planId) {
+        plan.state = plan.state || {};
+        plan.state.checkins = Array.isArray(plan.state.checkins) ? plan.state.checkins : [];
+        plan.state.checkins.push({
+          at: checkinAt,
+          self_rating: payload.self_rating,
+          metric_label: payload.metric_label,
+          metric_value: payload.metric_value
+        });
+        plan.state.last_checkin_at = checkinAt;
+        plan.state.status = 'checkin_completed';
+        plan.state.updated_at = checkinAt;
+        updated = true;
+      }
+    });
+    if (updated) writeActionPlans(plans);
+    return checkinAt;
+  }
+
+  function getTopMisconceptionTag(missedQuestions, remediationMap) {
+    if (!missedQuestions || !missedQuestions.length) {
+      if (remediationMap.planning_without_transfer) return 'planning_without_transfer';
+      var fallbackKeys = Object.keys(remediationMap || {});
+      return fallbackKeys.length ? fallbackKeys[0] : '';
+    }
+
+    var counts = {};
+    missedQuestions.forEach(function(question) {
+      var key = question.misconception_primary || question.misconception_secondary;
+      if (!key) return;
+      counts[key] = (counts[key] || 0) + 1;
+    });
+
+    var ranked = Object.keys(counts).sort(function(a, b) { return counts[b] - counts[a]; });
+    return ranked.length ? ranked[0] : '';
+  }
+
+  function buildActionPlanPayload(summary) {
+    var remediationMap = (quizData && quizData.remediation_map) ? quizData.remediation_map : {};
+    var missedQuestions = currentQuiz.data.questions.filter(function(question) {
+      return userAnswers[question.id] !== question.correct;
+    });
+    var focusKey = getTopMisconceptionTag(missedQuestions, remediationMap);
+    var remediation = remediationMap[focusKey] || {
+      title: summary.passed ? 'Retention and Transfer Reinforcement' : 'Concept Reinforcement Plan',
+      summary: summary.passed
+        ? 'You passed. Use this short plan to reinforce and transfer mastery into real tasks.'
+        : 'Use this plan to reinforce weak concepts and retest with better transfer.',
+      default_actions: [
+        'Review one concept summary and convert it into one practical behavior for this week.',
+        'Run one short recheck after implementation and log what changed.'
+      ],
+      module_targets: [{ module: currentQuiz.id, label: 'Review this module', href: currentQuiz.id + '.html' }]
+    };
+
+    var planId = 'plan_' + String(currentQuiz.id || 'module') + '_' + Date.now();
+    var now = new Date();
+    var cadence = summary.passed ? '7d' : '72h';
+    var dueMs = summary.passed ? (7 * 24 * 60 * 60 * 1000) : (72 * 60 * 60 * 1000);
+
+    return {
+      schema_version: '1.0',
+      plan_id: planId,
+      source_tool: 'module_quiz',
+      source_context: {
+        module_id: currentQuiz.id,
+        question_ids: missedQuestions.map(function(question) { return question.id; }),
+        misconception_primary: focusKey,
+        misconception_secondary: missedQuestions.length && missedQuestions[0] ? missedQuestions[0].misconception_secondary || '' : ''
+      },
+      focus: {
+        title: remediation.title,
+        summary: remediation.summary,
+        confidence: missedQuestions.length >= 3 ? 'high' : (missedQuestions.length >= 1 ? 'medium' : 'low')
+      },
+      actions: {
+        today: [String((remediation.default_actions || [])[0] || 'Review one missed concept and rehearse one practical step.')],
+        this_week: [String((remediation.default_actions || [])[1] || 'Complete one recheck and record what improved.')],
+        evidence_prompt: 'What changed in your ability to execute this concept in a real task this week?'
+      },
+      recheck: {
+        cadence: cadence,
+        due_at: new Date(now.getTime() + dueMs).toISOString(),
+        metric_type: 'score_delta',
+        success_threshold: {
+          type: 'numeric_or_state',
+          value: summary.passed ? 0 : 1
+        }
+      },
+      remediation_links: (remediation.module_targets || []).map(function(target) {
+        return { label: target.label, href: target.href };
+      }).slice(0, 3),
+      analytics: {
+        plan_generated_event: 'practice_plan_generated',
+        plan_started_event: 'practice_plan_started',
+        checkin_completed_event: 'practice_checkin_completed'
+      },
+      state: {
+        status: 'generated',
+        created_at: now.toISOString(),
+        updated_at: now.toISOString()
+      }
+    };
+  }
+
+  function renderActionPlanCard(container, plan) {
+    if (!container || !plan) return;
+
+    var card = document.createElement('section');
+    card.className = 'card';
+    card.style.marginTop = 'var(--space-lg)';
+    card.style.borderLeft = '4px solid var(--color-primary)';
+
+    var dueLabel = plan.recheck && plan.recheck.due_at ? new Date(plan.recheck.due_at).toLocaleString() : 'upcoming';
+    var linksHtml = (plan.remediation_links || []).map(function(link) {
+      return '<li><a href="' + link.href + '">' + link.label + '</a></li>';
+    }).join('');
+
+    card.innerHTML =
+      '<h5 style="margin-top:0;">Next Action Plan</h5>' +
+      '<p style="margin-bottom:var(--space-sm);"><strong>' + plan.focus.title + '</strong></p>' +
+      '<p style="margin-top:0;color:var(--color-text-light);">' + plan.focus.summary + '</p>' +
+      '<p><strong>Do today:</strong> ' + (plan.actions.today[0] || '') + '</p>' +
+      '<p><strong>Do this week:</strong> ' + (plan.actions.this_week[0] || '') + '</p>' +
+      '<p><strong>Re-check:</strong> ' + dueLabel + ' (' + plan.recheck.cadence + ')</p>' +
+      '<p style="color:var(--color-text-light);"><strong>Evidence prompt:</strong> ' + plan.actions.evidence_prompt + '</p>' +
+      (linksHtml ? '<p style="margin-bottom:var(--space-xs);"><strong>Targeted review links</strong></p><ul class="checklist" style="margin-top:0;">' + linksHtml + '</ul>' : '');
+
+    var buttonRow = document.createElement('div');
+    buttonRow.className = 'button-group';
+    buttonRow.style.marginTop = 'var(--space-md)';
+
+    var startBtn = document.createElement('button');
+    startBtn.type = 'button';
+    startBtn.className = 'btn btn--primary btn--sm';
+    startBtn.textContent = 'Start Plan';
+
+    var copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    copyBtn.className = 'btn btn--secondary btn--sm';
+    copyBtn.textContent = 'Copy Plan';
+
+    var status = document.createElement('p');
+    status.style.marginTop = 'var(--space-sm)';
+    status.style.color = 'var(--color-text-light)';
+    status.style.fontSize = '0.9rem';
+
+    var checkinWrap = document.createElement('div');
+    checkinWrap.style.marginTop = 'var(--space-sm)';
+    checkinWrap.innerHTML =
+      '<p style="margin:0 0 var(--space-xs) 0;"><strong>Quick check-in</strong> (captures transfer evidence)</p>' +
+      '<div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:end;">' +
+      '<label style="display:flex;flex-direction:column;gap:4px;min-width:140px;">Self-rating (1-5)<select class="quiz-plan-checkin-rating"><option value="">Select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label>' +
+      '<label style="display:flex;flex-direction:column;gap:4px;min-width:220px;">Observable metric<input class="quiz-plan-checkin-metric" type="text" placeholder="ex: started within 10 min 3/4 days"></label>' +
+      '</div>';
+    var checkinBtn = document.createElement('button');
+    checkinBtn.type = 'button';
+    checkinBtn.className = 'btn btn--secondary btn--sm';
+    checkinBtn.style.marginTop = 'var(--space-xs)';
+    checkinBtn.textContent = 'Complete Check-In';
+
+    startBtn.addEventListener('click', function() {
+      if (startBtn.disabled) return;
+      startBtn.disabled = true;
+      startBtn.textContent = 'Plan Started';
+      status.textContent = 'Plan started. Recheck is scheduled and will appear in your learning flow.';
+      updatePlanStatus(plan.plan_id, 'started');
+      trackAssessmentEvent('practice_plan_started', {
+        plan_id: plan.plan_id,
+        source_tool: 'module_quiz',
+        module_id: currentQuiz.id,
+        started_at: new Date().toISOString()
+      });
+    });
+
+    copyBtn.addEventListener('click', function() {
+      var text = 'Focus: ' + plan.focus.title + '\n' +
+        'Do today: ' + (plan.actions.today[0] || '') + '\n' +
+        'Do this week: ' + (plan.actions.this_week[0] || '') + '\n' +
+        'Re-check: ' + dueLabel;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          status.textContent = 'Plan copied.';
+        }).catch(function() {
+          status.textContent = 'Copy unavailable on this browser.';
+        });
+      } else {
+        status.textContent = 'Copy unavailable on this browser.';
+      }
+    });
+
+    checkinBtn.addEventListener('click', function() {
+      var ratingEl = checkinWrap.querySelector('.quiz-plan-checkin-rating');
+      var metricEl = checkinWrap.querySelector('.quiz-plan-checkin-metric');
+      var rating = Number(ratingEl && ratingEl.value ? ratingEl.value : 0);
+      var metric = String(metricEl && metricEl.value || '').trim();
+      if (!rating || !metric) {
+        status.textContent = 'Add a 1-5 rating and one observable metric to complete the check-in.';
+        return;
+      }
+      var checkinAt = completePlanCheckin(plan.plan_id, {
+        self_rating: rating,
+        metric_label: plan.recheck && plan.recheck.metric_type ? plan.recheck.metric_type : 'self_report',
+        metric_value: metric
+      });
+      status.textContent = 'Check-in saved. Keep iterating and recheck on schedule.';
+      trackAssessmentEvent('practice_checkin_completed', {
+        plan_id: plan.plan_id,
+        source_tool: 'module_quiz',
+        module_id: currentQuiz.id,
+        self_rating: rating,
+        metric_label: plan.recheck && plan.recheck.metric_type ? plan.recheck.metric_type : 'self_report',
+        metric_value: metric,
+        completed_at: checkinAt
+      });
+    });
+
+    buttonRow.appendChild(startBtn);
+    buttonRow.appendChild(copyBtn);
+    card.appendChild(buttonRow);
+    card.appendChild(checkinWrap);
+    card.appendChild(checkinBtn);
+    card.appendChild(status);
+    container.appendChild(card);
+  }
+
+
+  function renderGroupedRemediation(container) {
+    if (!container || !currentQuiz || !quizData || !quizData.remediation_map) return;
+
+    var missedQuestions = currentQuiz.data.questions.filter(function(question) {
+      return userAnswers[question.id] !== question.correct;
+    });
+    if (!missedQuestions.length) return;
+
+    var remediationMap = quizData.remediation_map || {};
+    var grouped = {};
+
+    missedQuestions.forEach(function(question) {
+      var key = question.misconception_primary || question.misconception_secondary;
+      if (!key || !remediationMap[key]) return;
+      if (!grouped[key]) {
+        grouped[key] = {
+          count: 0,
+          sampleQuestion: question,
+          remediation: remediationMap[key]
+        };
+      }
+      grouped[key].count += 1;
+    });
+
+    var rankedKeys = Object.keys(grouped).sort(function(a, b) {
+      return grouped[b].count - grouped[a].count;
+    });
+    if (!rankedKeys.length) return;
+
+    var wrap = document.createElement('section');
+    wrap.className = 'card';
+    wrap.style.marginTop = 'var(--space-lg)';
+    wrap.style.borderLeft = '4px solid var(--color-accent)';
+
+    var html = '<h5 style="margin-top:0;">Targeted Remediation</h5>' +
+      '<p style="color:var(--color-text-light);">Your missed items cluster around the patterns below. Review these first, then retake.</p>';
+
+    rankedKeys.slice(0, 2).forEach(function(key) {
+      var item = grouped[key];
+      var rem = item.remediation;
+      var actions = rem.default_actions || [];
+      var links = (rem.module_targets || []).slice(0, 2).map(function(target) {
+        return '<li><a href="' + target.href + '">' + target.label + '</a></li>';
+      }).join('');
+
+      html += '<div style="margin-top:var(--space-md);padding-top:var(--space-sm);border-top:1px solid var(--color-border);">' +
+        '<p style="margin:0 0 var(--space-xs) 0;"><strong>' + rem.title + '</strong> <span style="color:var(--color-text-muted);font-size:0.9rem;">(' + item.count + ' missed)</span></p>' +
+        '<p style="margin:0 0 var(--space-xs) 0;color:var(--color-text-light);">' + rem.summary + '</p>' +
+        (actions[0] ? '<p style="margin:0 0 var(--space-xs) 0;"><strong>Try next:</strong> ' + actions[0] + '</p>' : '') +
+        (links ? '<ul class="checklist" style="margin-top:0;">' + links + '</ul>' : '') +
+      '</div>';
+    });
+
+    wrap.innerHTML = html;
+    container.appendChild(wrap);
+  }
+
+
+  function saveReflectionEntry(entry) {
+    var items = [];
+    try { items = JSON.parse(localStorage.getItem(REFLECTION_STORAGE_KEY)) || []; } catch (e) { items = []; }
+    items.push(entry);
+    localStorage.setItem(REFLECTION_STORAGE_KEY, JSON.stringify(items.slice(-100)));
+  }
+
+  function renderReflectionPrompt(container, context) {
+    if (!container || !context) return;
+    var card = document.createElement('section');
+    card.className = 'card';
+    card.style.marginTop = 'var(--space-md)';
+    card.style.borderLeft = '4px solid var(--color-accent)';
+
+    var html =
+      '<h5 style="margin-top:0;">48-Hour Reflection Prompt</h5>' +
+      '<p style="color:var(--color-text-light);">What will you test in the next 48 hours?</p>' +
+      '<textarea id="quiz-reflection-input" rows="3" style="width:100%;padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--border-radius);"></textarea>' +
+      '<div class="button-group" style="margin-top:var(--space-sm);">' +
+      '<button type="button" id="quiz-reflection-save" class="btn btn--secondary btn--sm">Save Reflection</button>' +
+      '</div>' +
+      '<p id="quiz-reflection-status" style="margin-top:var(--space-xs);font-size:0.9rem;color:var(--color-text-light);"></p>';
+    card.innerHTML = html;
+    container.appendChild(card);
+
+    var input = card.querySelector('#quiz-reflection-input');
+    var saveBtn = card.querySelector('#quiz-reflection-save');
+    var status = card.querySelector('#quiz-reflection-status');
+    if (!input || !saveBtn || !status) return;
+
+    saveBtn.addEventListener('click', function () {
+      var text = String(input.value || '').trim();
+      if (!text) {
+        status.textContent = 'Write one testable action before saving.';
+        return;
+      }
+      var payload = {
+        id: 'refl_' + Date.now(),
+        source_tool: context.source_tool,
+        plan_id: context.plan_id,
+        module_id: context.module_id || '',
+        reflection_48h: text,
+        at: new Date().toISOString()
+      };
+      saveReflectionEntry(payload);
+      trackAssessmentEvent('behavior_transfer_logged', {
+        plan_id: context.plan_id,
+        source_tool: context.source_tool,
+        module_id: context.module_id || '',
+        transfer_type: 'self_report',
+        transfer_value: text,
+        logged_at: payload.at
+      });
+      status.textContent = 'Reflection saved.';
+    });
   }
 
   function getModuleIdFromPage() {
@@ -390,6 +771,34 @@
       note.textContent = 'This result was not saved because you are not logged in. Log in and retake the test to store progress.';
     }
     resultsDiv.appendChild(note);
+
+    renderGroupedRemediation(resultsDiv);
+
+    var plan = buildActionPlanPayload({
+      moduleId: currentQuiz.id,
+      correct: correct,
+      total: total,
+      score: percentage,
+      passed: passed
+    });
+    var plans = readActionPlans();
+    plans.push(plan);
+    writeActionPlans(plans);
+    trackAssessmentEvent('practice_plan_generated', {
+      plan_id: plan.plan_id,
+      source_tool: 'module_quiz',
+      module_id: currentQuiz.id,
+      source_context: plan.source_context,
+      focus_key: plan.source_context.misconception_primary || 'general_reinforcement',
+      cadence: plan.recheck.cadence,
+      generated_at: plan.state.created_at
+    });
+    renderActionPlanCard(resultsDiv, plan);
+    renderReflectionPrompt(resultsDiv, {
+      source_tool: 'module_quiz',
+      plan_id: plan.plan_id,
+      module_id: currentQuiz.id
+    });
 
     var resetBtn = document.createElement('button');
     resetBtn.type = 'button';

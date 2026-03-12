@@ -166,51 +166,184 @@
     var currentPage = window.location.pathname.split('/').pop() || 'index.html';
     var checks = {
       'module-1.html': {
-        question: 'A learner can explain a plan but fails under time pressure and emotional friction. Which mechanism is MOST likely failing first in Barkley\'s sequence?',
-        options: ['Lexical retrieval', 'Response inhibition under load', 'Long-term semantic memory', 'Phonological decoding'],
-        answer: 1,
-        rationale: 'In Barkley\'s model, inhibition failure under load prevents downstream use of self-talk, future simulation, and emotional modulation.'
+        items: [
+          {
+            type: 'Recall',
+            question: 'A learner can explain a plan but fails under time pressure and emotional friction. Which mechanism is MOST likely failing first in Barkley\'s sequence?',
+            options: ['Lexical retrieval', 'Response inhibition under load', 'Long-term semantic memory', 'Phonological decoding'],
+            answer: 1,
+            rationale: 'In Barkley\'s model, inhibition failure under load prevents downstream use of self-talk, future simulation, and emotional modulation.'
+          },
+          {
+            type: 'Apply',
+            question: 'Which coaching move best externalizes the inhibition bottleneck?',
+            options: ['Ask for higher confidence only', 'Add one external brake (timer/cue) before high-friction starts', 'Increase lecture time on neuroscience', 'Delay planning until motivation improves'],
+            answer: 1,
+            rationale: 'External brakes reduce reliance on internal inhibition and make starts more executable under load.'
+          },
+          {
+            type: 'Discriminate',
+            question: 'Which interpretation fits EF science best?',
+            options: ['Inconsistent execution usually means low character', 'Execution variance can reflect regulation-load mismatch despite intact knowledge', 'If insight is present, performance must follow', 'Emotion is unrelated to EF'],
+            answer: 1,
+            rationale: 'Knowledge and execution can diverge when regulation systems are overloaded.'
+          }
+        ]
       },
       'module-2.html': {
-        question: 'Which intake interpretation best distinguishes skill deficit from performance variability?',
-        options: ['One low homework grade proves a global skill deficit', 'High-interest success with low-interest collapse suggests context-dependent performance failure', 'High IQ eliminates EF concerns', 'Parent report alone should override all other data'],
-        answer: 1,
-        rationale: 'Performance swings by context indicate regulation/load mismatch, not necessarily absent underlying skill knowledge.'
+        items: [
+          {
+            type: 'Recall',
+            question: 'Which intake interpretation best distinguishes skill deficit from performance variability?',
+            options: ['One low homework grade proves a global skill deficit', 'High-interest success with low-interest collapse suggests context-dependent performance failure', 'High IQ eliminates EF concerns', 'Parent report alone should override all other data'],
+            answer: 1,
+            rationale: 'Performance swings by context indicate regulation/load mismatch, not necessarily absent underlying skill knowledge.'
+          },
+          {
+            type: 'Apply',
+            question: 'Which intake note stays within coaching scope?',
+            options: ['Likely ADHD diagnosis confirmed', 'Observed initiation breakdown across low-interest contexts; recommend coaching plan and referral if risk escalates', 'No need for collateral report', 'Diagnosis deferred until module completion'],
+            answer: 1,
+            rationale: 'Scope-safe notes describe observable patterns and referral logic without diagnostic claims.'
+          },
+          {
+            type: 'Discriminate',
+            question: 'What best represents Goodness of Fit?',
+            options: ['Use the same intervention sequence for all clients', 'Match intervention to profile, values, and context constraints', 'Prioritize coach preference to maintain consistency', 'Focus only on deficits'],
+            answer: 1,
+            rationale: 'Goodness of Fit requires individualized alignment, not generic protocol application.'
+          }
+        ]
       },
       'module-3.html': {
-        question: 'Which session design best reflects EF coaching rather than tutoring?',
-        options: ['Content reteach -> worksheet correction -> score review', 'Goal definition -> execution plan -> friction review -> transfer rep in a second context', 'Lecture on motivation -> homework reminder', 'Open discussion with no measurable next action'],
-        answer: 2,
-        rationale: 'Coaching architecture emphasizes execution systems, monitoring, and transfer, not only content accuracy.'
+        items: [
+          {
+            type: 'Recall',
+            question: 'Which session design best reflects EF coaching rather than tutoring?',
+            options: ['Content reteach -> worksheet correction -> score review', 'Goal definition -> execution plan -> friction review -> transfer rep in a second context', 'Lecture on motivation -> homework reminder', 'Open discussion with no measurable next action'],
+            answer: 1,
+            rationale: 'Coaching architecture emphasizes execution systems, monitoring, and transfer, not only content accuracy.'
+          },
+          {
+            type: 'Apply',
+            question: 'Which follow-up assignment best supports transfer?',
+            options: ['Read one article and summarize', 'Run the same execution protocol in a second context and report outcome', 'Wait for confidence before trying', 'Repeat discussion notes only'],
+            answer: 1,
+            rationale: 'Transfer requires applying the protocol outside the original context and comparing outcomes.'
+          },
+          {
+            type: 'Discriminate',
+            question: 'Which statement best separates role boundaries?',
+            options: ['Coach owns client implementation outcomes', 'Coach structures process; client owns execution between sessions', 'Coach should override values if strategy is effective', 'Coaching should avoid measurable next actions'],
+            answer: 1,
+            rationale: 'Clear role ownership supports alliance quality and accountability without dependency.'
+          }
+        ]
       },
       'module-4.html': {
-        question: 'In Ward\'s framework, which sequence produces stronger prospective planning accuracy?',
-        options: ['Get Ready -> Do -> Done', 'Do -> Done -> Reflect', 'Done -> Do -> Get Ready', 'Do -> Get Ready -> Done'],
-        answer: 1,
-        rationale: 'Done-first planning forces future-state representation before task sequencing and material prep.'
+        items: [
+          {
+            type: 'Recall',
+            question: 'In Ward\'s framework, which sequence produces stronger prospective planning accuracy?',
+            options: ['Get Ready -> Do -> Done', 'Done -> Do -> Get Ready', 'Do -> Done -> Reflect', 'Do -> Get Ready -> Done'],
+            answer: 1,
+            rationale: 'Done-first planning forces future-state representation before task sequencing and material prep.'
+          },
+          {
+            type: 'Apply',
+            question: 'Which intervention most directly lowers initiation friction?',
+            options: ['Ask for stronger effort language', 'Break task into first visible action plus external cue', 'Add more reading before action', 'Delay start until ideal mood'],
+            answer: 1,
+            rationale: 'Initiation improves when activation energy is reduced via micro-steps and external supports.'
+          },
+          {
+            type: 'Discriminate',
+            question: 'Which planning move best supports execution transfer?',
+            options: ['Longer plan documents', 'Explicit done-state + checkpoints + review loop', 'More reminders without plan changes', 'One-time motivation talk'],
+            answer: 1,
+            rationale: 'Transfer depends on clear done criteria and repeatable monitoring, not plan length alone.'
+          }
+        ]
       },
       'module-5.html': {
-        question: 'A client underestimates task duration by ~2.5x across four weeks. What is the strongest intervention next step?',
-        options: ['Ask for more effort and confidence', 'Apply a personalized correction factor to planning and validate with timed reps', 'Remove all timers to reduce anxiety', 'Switch goals weekly to maintain novelty'],
-        answer: 1,
-        rationale: 'Prediction-vs-actual data should directly calibrate future planning via correction multipliers and repeated measurement.'
+        items: [
+          {
+            type: 'Recall',
+            question: 'A client underestimates task duration by ~2.5x across four weeks. What is the strongest intervention next step?',
+            options: ['Ask for more effort and confidence', 'Apply a personalized correction factor to planning and validate with timed reps', 'Remove all timers to reduce anxiety', 'Switch goals weekly to maintain novelty'],
+            answer: 1,
+            rationale: 'Prediction-vs-actual data should directly calibrate future planning via correction multipliers and repeated measurement.'
+          },
+          {
+            type: 'Apply',
+            question: 'Which immediate protocol best supports task start?',
+            options: ['Wait for motivation to rise naturally', 'Name blocker, pick first step, run 10-minute start sprint', 'Add penalty for non-completion first', 'Rewrite goals weekly'],
+            answer: 1,
+            rationale: 'A concrete start protocol converts friction insight into immediate behavior.'
+          },
+          {
+            type: 'Discriminate',
+            question: 'What indicates calibration is improving?',
+            options: ['Higher confidence scores only', 'Reduced estimate-vs-actual drift over repeated entries', 'Fewer planned tasks per week', 'Longer planning sessions'],
+            answer: 1,
+            rationale: 'Improvement is measured by drift reduction in repeated timing data.'
+          }
+        ]
       },
       'module-6.html': {
-        question: 'Which practice is most defensible in an ethics audit?',
-        options: ['Promise diagnostic conclusions after ESQ-R review', 'Guarantee specific symptom outcomes in writing', 'Document scope boundaries, refer when risk exceeds coaching remit, and preserve consent records', 'Share full session content with parents without client agreement'],
-        answer: 2,
-        rationale: 'Ethical reliability depends on scope clarity, referral discipline, and documented consent/confidentiality controls.'
+        items: [
+          {
+            type: 'Recall',
+            question: 'Which practice is most defensible in an ethics audit?',
+            options: ['Promise diagnostic conclusions after ESQ-R review', 'Guarantee specific symptom outcomes in writing', 'Document scope boundaries, refer when risk exceeds coaching remit, and preserve consent records', 'Share full session content with parents without client agreement'],
+            answer: 2,
+            rationale: 'Ethical reliability depends on scope clarity, referral discipline, and documented consent/confidentiality controls.'
+          },
+          {
+            type: 'Apply',
+            question: 'A client discloses active safety risk. What is the best coaching response?',
+            options: ['Continue normal session flow only', 'Pause coaching protocol and follow referral/escalation policy immediately', 'Collect more informal details before deciding', 'Keep disclosure fully confidential regardless risk'],
+            answer: 1,
+            rationale: 'Safety risk requires escalation/referral process, not routine coaching continuation.'
+          },
+          {
+            type: 'Discriminate',
+            question: 'Which claim is scope-safe marketing language?',
+            options: ['Guaranteed symptom elimination', 'Non-diagnostic executive function coaching with evidence-informed implementation support', 'Clinical diagnosis included', 'Therapy replacement for all clients'],
+            answer: 1,
+            rationale: 'Scope-safe language avoids diagnosis/treatment claims while describing coaching value clearly.'
+          }
+        ]
       },
       'curriculum.html': {
-        question: 'What unlocks graded tests, assignment review, and credential workflows?',
-        options: ['Reading a single free article', 'Paid enrollment in certification services', 'Visiting the home page twice', 'Creating a community comment'],
-        answer: 1,
-        rationale: 'Core information is open, while graded assessments and credential review are part of paid certification services.'
+        items: [
+          {
+            type: 'Recall',
+            question: 'What unlocks graded tests, assignment review, and credential workflows?',
+            options: ['Reading a single free article', 'Paid enrollment in certification services', 'Visiting the home page twice', 'Creating a community comment'],
+            answer: 1,
+            rationale: 'Core information is open, while graded assessments and credential review are part of paid certification services.'
+          },
+          {
+            type: 'Apply',
+            question: 'What is the best next step after finishing free curriculum content?',
+            options: ['Assume competency is fully verified', 'Choose whether to continue self-study or enroll for graded implementation feedback', 'Skip module sequencing and jump to capstone claim', 'Ignore assignment rubrics'],
+            answer: 1,
+            rationale: 'The graded path adds verification and evaluator feedback beyond open study.'
+          },
+          {
+            type: 'Discriminate',
+            question: 'Which statement best describes EFI\'s model?',
+            options: ['All value is behind paywall', 'Core learning is open; paid layer funds grading/credential workflows', 'No free resources exist', 'Credentialing is automatic after browsing'],
+            answer: 1,
+            rationale: 'EFI keeps core content open while charging for reviewed assessment and credential operations.'
+          }
+        ]
       }
     };
 
     var check = checks[currentPage];
-    if (!check || document.getElementById('module-knowledge-check')) return;
+    if (!check || !check.items || !check.items.length || document.getElementById('module-knowledge-check')) return;
 
     var anchor = document.getElementById('module-knowledge-check-anchor') || document.getElementById('module-assessment-preview');
     if (!anchor) {
@@ -225,28 +358,38 @@
     wrap.id = 'module-knowledge-check';
     wrap.className = 'card module-quiz';
 
-    var optionsHtml = '';
-    check.options.forEach(function (option, index) {
-      optionsHtml +=
-        '<label class="module-quiz__option">' +
-          '<input type="radio" name="knowledge-check" value="' + index + '">' +
-          '<span>' + option + '</span>' +
-        '</label>';
+    var html =
+      '<div class="module-reading-highlight__title">' +
+        '<h3 style="margin-bottom:0;">Quick Knowledge Drill</h3>' +
+        '<span class="module-reading-highlight__badge">3 Questions</span>' +
+      '</div>' +
+      '<p style="color:var(--color-text-light);">Mixed recall, apply, and discriminate prompts. Answer all three to see your score and rationale.</p>';
+
+    check.items.forEach(function(item, idx) {
+      var optionsHtml = '';
+      item.options.forEach(function(option, optionIndex) {
+        optionsHtml +=
+          '<label class="module-quiz__option">' +
+            '<input type="radio" name="knowledge-check-' + idx + '" value="' + optionIndex + '">' +
+            '<span>' + option + '</span>' +
+          '</label>';
+      });
+
+      html +=
+        '<div class="module-quiz__question-group" style="margin-top:var(--space-md);">' +
+          '<p class="module-quiz__question"><strong>' + (idx + 1) + '. ' + item.type + ':</strong> ' + item.question + '</p>' +
+          '<div class="module-quiz__options">' + optionsHtml + '</div>' +
+        '</div>';
     });
 
-    wrap.innerHTML =
-      '<div class="module-reading-highlight__title">' +
-        '<h3 style="margin-bottom:0;">Quick Knowledge Check</h3>' +
-        '<span class="module-reading-highlight__badge">1 Question</span>' +
-      '</div>' +
-      '<p class="module-quiz__question">' + check.question + '</p>' +
-      '<div class="module-quiz__options">' + optionsHtml + '</div>' +
+    html +=
       '<div class="button-group" style="margin-top:var(--space-md);">' +
-        '<button type="button" class="btn btn--secondary btn--sm" id="knowledge-check-submit">Check Answer</button>' +
+        '<button type="button" class="btn btn--secondary btn--sm" id="knowledge-check-submit">Check Answers</button>' +
         '<a href="store.html" class="btn btn--primary btn--sm">View Graded Path</a>' +
       '</div>' +
       '<div id="knowledge-check-result" aria-live="polite"></div>';
 
+    wrap.innerHTML = html;
     anchor.parentNode.insertBefore(wrap, anchor);
 
     var submit = document.getElementById('knowledge-check-submit');
@@ -254,20 +397,44 @@
     if (!submit || !result) return;
 
     submit.addEventListener('click', function () {
-      var selected = wrap.querySelector('input[name="knowledge-check"]:checked');
-      if (!selected) {
+      var unanswered = [];
+      var correctCount = 0;
+      var feedbackHtml = '<div style="margin-top:var(--space-sm);">';
+
+      check.items.forEach(function(item, idx) {
+        var selected = wrap.querySelector('input[name="knowledge-check-' + idx + '"]:checked');
+        if (!selected) {
+          unanswered.push(idx + 1);
+          return;
+        }
+        var chosen = Number(selected.value);
+        var correct = chosen === item.answer;
+        if (correct) correctCount += 1;
+        feedbackHtml +=
+          '<p style="margin:0 0 var(--space-xs) 0;"><strong>Q' + (idx + 1) + ':</strong> ' +
+          (correct ? '✅ Correct. ' : '❌ Not quite. ') + item.rationale + '</p>';
+      });
+
+      if (unanswered.length) {
         result.className = 'module-quiz__result module-quiz__result--no';
-        result.textContent = 'Choose an option first, then submit.';
+        result.textContent = 'Answer all three questions before submitting. Missing: ' + unanswered.join(', ') + '.';
         return;
       }
-      var chosen = Number(selected.value);
-      var correct = chosen === check.answer;
-      result.className = 'module-quiz__result ' + (correct ? 'module-quiz__result--ok' : 'module-quiz__result--no');
-      result.textContent = (correct ? 'Correct. ' : 'Not quite. ') + check.rationale;
+
+      var scorePct = Math.round((correctCount / check.items.length) * 100);
+      var passed = correctCount >= 2;
+      result.className = 'module-quiz__result ' + (passed ? 'module-quiz__result--ok' : 'module-quiz__result--no');
+      result.innerHTML =
+        '<p style="margin:0 0 var(--space-xs) 0;"><strong>Score:</strong> ' + correctCount + ' / ' + check.items.length + ' (' + scorePct + '%)</p>' +
+        '<p style="margin:0 0 var(--space-sm) 0;">' + (passed ? 'Strong understanding. Continue to applied assignments.' : 'Review module highlights, then retake this drill.') + '</p>' +
+        feedbackHtml + '</div>';
+
       try {
         localStorage.setItem('efi_quiz_' + currentPage, JSON.stringify({
-          correct: correct,
-          selected: chosen,
+          correct: correctCount,
+          total: check.items.length,
+          score: scorePct,
+          passed: passed,
           at: new Date().toISOString()
         }));
       } catch (e) {}

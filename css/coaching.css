@@ -880,6 +880,86 @@ section {
     margin-bottom: 0;
 }
 
+
+.outcomes-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-md);
+    margin: var(--space-xl) 0 var(--space-2xl);
+}
+
+.outcome-chip {
+    background: rgba(26, 82, 118, 0.06);
+    border: 1px solid rgba(26, 82, 118, 0.2);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    font-size: 0.92rem;
+    color: var(--gray-700);
+    margin-bottom: 0;
+}
+
+.outcome-chip span {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.method-case {
+    margin-top: var(--space-md);
+    margin-bottom: 0;
+    padding: var(--space-md);
+    border-left: 3px solid var(--accent);
+    background: var(--gray-50);
+    color: var(--gray-700);
+    font-size: 0.92rem;
+}
+
+.not-fit-box {
+    margin-top: var(--space-xl);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    border: 1px solid #f0c4c4;
+    background: #fff7f7;
+}
+
+.not-fit-box h4 {
+    margin-bottom: var(--space-sm);
+}
+
+.not-fit-box ul {
+    list-style: disc;
+    padding-left: 1.2rem;
+    color: var(--gray-700);
+}
+
+.not-fit-box li + li {
+    margin-top: var(--space-xs);
+}
+
+.fit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
+}
+
+.fit-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.fit-card h4 {
+    font-size: 1.05rem;
+    margin-bottom: var(--space-sm);
+}
+
+.fit-card p {
+    color: var(--gray-700);
+    margin-bottom: 0;
+}
+
 /* ----------------------------------------
    Cube Challenge Section
    ---------------------------------------- */

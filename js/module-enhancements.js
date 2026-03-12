@@ -763,12 +763,26 @@
     var targets = document.querySelectorAll('.card, .callout, .hub-card');
     var limit = 16;
     var count = 0;
+    var usedSections = {};
     targets.forEach(function (el) {
       if (count >= limit) return;
       if (el.querySelector('.learn-more-toggle')) return;
       if ((el.textContent || '').trim().length < 140) return;
+
+      var section = el.closest ? el.closest('section') : null;
+      var sectionKey = '';
+      if (section) {
+        var headingEl = section.querySelector('h2, h3');
+        sectionKey = normalizeHeading(headingEl ? headingEl.textContent : '');
+      }
+
+      var sectionModel = pickSectionModel(el, currentPage);
+      if (sectionModel && sectionKey && usedSections[sectionKey]) return;
+
       count += 1;
-      var model = pickSectionModel(el, currentPage) || pickModel(el, deepDives[currentPage], count);
+      var model = sectionModel || pickModel(el, deepDives[currentPage], count);
+
+      if (sectionKey) usedSections[sectionKey] = true;
 
       var panelId = 'learn-more-' + Math.random().toString(36).slice(2, 8);
       var links = model.links.map(function (item) {

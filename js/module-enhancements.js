@@ -803,11 +803,14 @@
       var toggle = wrap.querySelector('.learn-more-toggle');
       var panel = wrap.querySelector('#' + panelId);
       if (!toggle || !panel) return;
-      toggle.addEventListener('click', function () {
-        var open = panel.style.display !== 'none';
-        panel.style.display = open ? 'none' : 'block';
-        toggle.setAttribute('aria-expanded', open ? 'false' : 'true');
-      });
+
+      (function bindLearnMoreToggle(localToggle, localPanel) {
+        localToggle.addEventListener('click', function () {
+          var open = localPanel.style.display !== 'none';
+          localPanel.style.display = open ? 'none' : 'block';
+          localToggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+        });
+      })(toggle, panel);
     });
   })();
 

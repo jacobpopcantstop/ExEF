@@ -4,6 +4,8 @@
     if (!hasTimeTool && !hasTaskTool) return;
 
     var TIME_KEY = 'efi_time_blindness_entries';
+    var ACTION_PLAN_STORAGE_KEY = 'efi_action_plans_v1';
+    var REFLECTION_STORAGE_KEY = 'efi_reflections_v1';
     var TIME_BENCHMARKS = [
       {
         key: 'school',
@@ -233,6 +235,38 @@
       return 'unavailable';
     }
 
+    function renderTimeBeforeAfterPanel(entries) {
+      if (!tbSummary) return;
+      var existing = document.getElementById('time-before-after-panel');
+      if (existing) existing.remove();
+      if (!Array.isArray(entries) || entries.length < 2) return;
+
+      var midpoint = Math.floor(entries.length / 2);
+      if (midpoint < 1 || entries.length - midpoint < 1) return;
+
+      var early = computeTimeMetrics(entries.slice(0, midpoint));
+      var recent = computeTimeMetrics(entries.slice(midpoint));
+      if (!early || !recent) return;
+
+      var earlyAbs = Math.abs(early.meanDelta);
+      var recentAbs = Math.abs(recent.meanDelta);
+      var improvement = Math.round(earlyAbs - recentAbs);
+      var direction = improvement > 0 ? 'improved' : (improvement < 0 ? 'drifted' : 'held steady');
+
+      var card = document.createElement('section');
+      card.id = 'time-before-after-panel';
+      card.className = 'card';
+      card.style.marginTop = 'var(--space-md)';
+      card.style.borderLeft = '4px solid var(--color-accent)';
+      card.innerHTML =
+        '<h5 style="margin-top:0;">What Changed (Before/After)</h5>' +
+        '<p style="margin:0 0 var(--space-xs) 0;">Early entries (first ' + midpoint + ') were off by about <strong>' + Math.round(earlyAbs) + ' min</strong>. ' +
+        'Recent entries (last ' + (entries.length - midpoint) + ') are off by about <strong>' + Math.round(recentAbs) + ' min</strong>.</p>' +
+        '<p style="margin:0;color:var(--color-text-light);">Interpretation: your timing accuracy has <strong>' + direction + '</strong>' +
+        (improvement !== 0 ? ' by about ' + Math.abs(improvement) + ' minutes.' : '.') + '</p>';
+      tbSummary.insertAdjacentElement('afterend', card);
+    }
+
     function renderTimeCalibrator() {
       var entries = readEntries();
       if (!tbBody || !tbMessage) return;
@@ -242,6 +276,7 @@
         if (tbPattern) tbPattern.textContent = 'Your timing pattern will start to show after the first entry.';
         if (tbConfidence) tbConfidence.textContent = 'Confidence: unavailable (add entries)';
         if (tbSummary) tbSummary.textContent = 'Your planning summary will appear here once you have data.';
+        renderTimeBeforeAfterPanel([]);
         return;
       }
 
@@ -265,6 +300,7 @@
         if (tbPattern) tbPattern.textContent = 'A usable pattern needs at least one valid benchmark entry.';
         if (tbConfidence) tbConfidence.textContent = 'Confidence: unavailable (add valid entries)';
         if (tbSummary) tbSummary.textContent = 'Your planning summary will return once valid entries are saved.';
+        renderTimeBeforeAfterPanel([]);
         return;
       }
       var latestEntry = entries[entries.length - 1];
@@ -294,6 +330,326 @@
         tbConfidence.textContent = confidenceText;
       }
       if (tbSummary) tbSummary.textContent = buildTimeSummary(metrics);
+      renderTimeBeforeAfterPanel(entries);
+    }
+
+
+
+    function saveReflectionEntry(entry) {
+      var items = [];
+      try { items = JSON.parse(localStorage.getItem(REFLECTION_STORAGE_KEY)) || []; } catch (e) { items = []; }
+      items.push(entry);
+      localStorage.setItem(REFLECTION_STORAGE_KEY, JSON.stringify(items.slice(-100)));
+    }
+
+    function trackAssessmentEvent(eventName, properties) {
+      if (window.EFI && window.EFI.Analytics && typeof window.EFI.Analytics.track === 'function') {
+        window.EFI.Analytics.track(eventName, properties || {});
+      }
+    }
+
+    function readActionPlans() {
+      try { return JSON.parse(localStorage.getItem(ACTION_PLAN_STORAGE_KEY)) || []; } catch (e) { return []; }
+    }
+
+    function writeActionPlans(plans) {
+      localStorage.setItem(ACTION_PLAN_STORAGE_KEY, JSON.stringify((plans || []).slice(-50)));
+    }
+
+    function updateActionPlanStatus(planId, status) {
+      var plans = readActionPlans();
+      var updated = false;
+      plans.forEach(function (plan) {
+        if (plan && plan.plan_id === planId) {
+          plan.state = plan.state || {};
+          plan.state.status = status;
+          plan.state.updated_at = new Date().toISOString();
+          updated = true;
+        }
+      });
+      if (updated) writeActionPlans(plans);
+    }
+
+    function completeActionPlanCheckin(planId, payload) {
+      var plans = readActionPlans();
+      var updated = false;
+      var checkinAt = new Date().toISOString();
+      plans.forEach(function (plan) {
+        if (plan && plan.plan_id === planId) {
+          plan.state = plan.state || {};
+          plan.state.checkins = Array.isArray(plan.state.checkins) ? plan.state.checkins : [];
+          plan.state.checkins.push({
+            at: checkinAt,
+            self_rating: payload.self_rating,
+            metric_label: payload.metric_label,
+            metric_value: payload.metric_value
+          });
+          plan.state.last_checkin_at = checkinAt;
+          plan.state.status = 'checkin_completed';
+          plan.state.updated_at = checkinAt;
+          updated = true;
+        }
+      });
+      if (updated) writeActionPlans(plans);
+      return checkinAt;
+    }
+
+    function renderActionPlanCard(anchorEl, plan, sourceLabel) {
+      if (!anchorEl || !plan) return;
+      var existing = document.getElementById('assessment-action-plan-' + sourceLabel);
+      if (existing) existing.remove();
+
+      var card = document.createElement('section');
+      card.id = 'assessment-action-plan-' + sourceLabel;
+      card.className = 'card';
+      card.style.marginTop = 'var(--space-md)';
+      card.style.borderLeft = '4px solid var(--color-primary)';
+
+      var dueLabel = plan.recheck && plan.recheck.due_at ? new Date(plan.recheck.due_at).toLocaleString() : 'upcoming';
+      var linksHtml = (plan.remediation_links || []).map(function (link) {
+        return '<li><a href="' + link.href + '">' + link.label + '</a></li>';
+      }).join('');
+
+      card.innerHTML =
+        '<h5 style="margin-top:0;">Action Plan</h5>' +
+        '<p style="margin-bottom:var(--space-xs);"><strong>' + plan.focus.title + '</strong></p>' +
+        '<p style="color:var(--color-text-light);">' + plan.focus.summary + '</p>' +
+        '<p><strong>Do today:</strong> ' + (plan.actions.today[0] || '') + '</p>' +
+        '<p><strong>Do this week:</strong> ' + (plan.actions.this_week[0] || '') + '</p>' +
+        '<p><strong>Re-check by:</strong> ' + dueLabel + ' (' + plan.recheck.cadence + ')</p>' +
+        '<p style="color:var(--color-text-light);"><strong>Evidence prompt:</strong> ' + plan.actions.evidence_prompt + '</p>' +
+        (linksHtml ? '<ul class="checklist">' + linksHtml + '</ul>' : '') +
+        '<p style="margin-top:var(--space-sm);"><strong>48-hour reflection:</strong> What will you test in the next 48 hours?</p>' +
+        '<textarea class="assessment-reflection-input" rows="2" style="width:100%;padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--border-radius);"></textarea>';
+
+      var row = document.createElement('div');
+      row.className = 'button-group';
+      row.style.marginTop = 'var(--space-sm)';
+
+      var startBtn = document.createElement('button');
+      startBtn.type = 'button';
+      startBtn.className = 'btn btn--primary btn--sm';
+      startBtn.textContent = 'Start Plan';
+
+      var copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'btn btn--secondary btn--sm';
+      copyBtn.textContent = 'Copy Plan';
+
+      var status = document.createElement('p');
+      status.style.marginTop = 'var(--space-xs)';
+      status.style.fontSize = '0.9rem';
+      status.style.color = 'var(--color-text-light)';
+
+      var reflectionInput = card.querySelector('.assessment-reflection-input');
+      var reflectionBtn = document.createElement('button');
+      reflectionBtn.type = 'button';
+      reflectionBtn.className = 'btn btn--secondary btn--sm';
+      reflectionBtn.textContent = 'Save Reflection';
+
+      var checkinWrap = document.createElement('div');
+      checkinWrap.style.marginTop = 'var(--space-sm)';
+      checkinWrap.innerHTML =
+        '<p style="margin:0 0 var(--space-xs) 0;"><strong>Quick check-in</strong> (capture transfer evidence)</p>' +
+        '<div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:end;">' +
+        '<label style="display:flex;flex-direction:column;gap:4px;min-width:140px;">Self-rating (1-5)<select class="assessment-plan-checkin-rating"><option value="">Select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label>' +
+        '<label style="display:flex;flex-direction:column;gap:4px;min-width:220px;">Observable metric<input class="assessment-plan-checkin-metric" type="text" placeholder="ex: started within 5 min on 2/3 tries"></label>' +
+        '</div>';
+      var checkinBtn = document.createElement('button');
+      checkinBtn.type = 'button';
+      checkinBtn.className = 'btn btn--secondary btn--sm';
+      checkinBtn.textContent = 'Complete Check-In';
+
+      startBtn.addEventListener('click', function () {
+        if (startBtn.disabled) return;
+        startBtn.disabled = true;
+        startBtn.textContent = 'Plan Started';
+        updateActionPlanStatus(plan.plan_id, 'started');
+        status.textContent = 'Plan started. Recheck reminder is queued.';
+        trackAssessmentEvent('practice_plan_started', {
+          plan_id: plan.plan_id,
+          source_tool: sourceLabel,
+          started_at: new Date().toISOString()
+        });
+      });
+
+      copyBtn.addEventListener('click', function () {
+        var text = 'Focus: ' + plan.focus.title + '\n' +
+          'Do today: ' + (plan.actions.today[0] || '') + '\n' +
+          'Do this week: ' + (plan.actions.this_week[0] || '') + '\n' +
+          'Re-check by: ' + dueLabel;
+        copyText(text, function () {
+          status.textContent = 'Plan copied.';
+        });
+      });
+
+      reflectionBtn.addEventListener('click', function () {
+        var reflection = String(reflectionInput && reflectionInput.value || '').trim();
+        if (!reflection) {
+          status.textContent = 'Write one testable action before saving.';
+          return;
+        }
+        var payload = {
+          id: 'refl_' + Date.now(),
+          source_tool: sourceLabel,
+          plan_id: plan.plan_id,
+          module_id: plan.source_context && plan.source_context.module_id ? plan.source_context.module_id : sourceLabel,
+          reflection_48h: reflection,
+          at: new Date().toISOString()
+        };
+        saveReflectionEntry(payload);
+        trackAssessmentEvent('behavior_transfer_logged', {
+          plan_id: plan.plan_id,
+          source_tool: sourceLabel,
+          module_id: payload.module_id,
+          transfer_type: 'self_report',
+          transfer_value: reflection,
+          logged_at: payload.at
+        });
+        status.textContent = 'Reflection saved.';
+      });
+
+      checkinBtn.addEventListener('click', function () {
+        var ratingEl = checkinWrap.querySelector('.assessment-plan-checkin-rating');
+        var metricEl = checkinWrap.querySelector('.assessment-plan-checkin-metric');
+        var rating = Number(ratingEl && ratingEl.value ? ratingEl.value : 0);
+        var metric = String(metricEl && metricEl.value || '').trim();
+        if (!rating || !metric) {
+          status.textContent = 'Add a 1-5 rating and one observable metric to complete the check-in.';
+          return;
+        }
+        var checkinAt = completeActionPlanCheckin(plan.plan_id, {
+          self_rating: rating,
+          metric_label: plan.recheck && plan.recheck.metric_type ? plan.recheck.metric_type : 'self_report',
+          metric_value: metric
+        });
+        status.textContent = 'Check-in saved. Keep iterating and compare progress next cycle.';
+        trackAssessmentEvent('practice_checkin_completed', {
+          plan_id: plan.plan_id,
+          source_tool: sourceLabel,
+          module_id: plan.source_context && plan.source_context.module_id ? plan.source_context.module_id : sourceLabel,
+          self_rating: rating,
+          metric_label: plan.recheck && plan.recheck.metric_type ? plan.recheck.metric_type : 'self_report',
+          metric_value: metric,
+          completed_at: checkinAt
+        });
+      });
+
+      row.appendChild(startBtn);
+      row.appendChild(copyBtn);
+      row.appendChild(reflectionBtn);
+      card.appendChild(row);
+      card.appendChild(checkinWrap);
+      card.appendChild(checkinBtn);
+      card.appendChild(status);
+      anchorEl.insertAdjacentElement('afterend', card);
+    }
+
+    function persistAndEmitActionPlan(plan, sourceTool) {
+      if (!plan) return;
+      var plans = readActionPlans();
+      plans.push(plan);
+      writeActionPlans(plans);
+      trackAssessmentEvent('practice_plan_generated', {
+        plan_id: plan.plan_id,
+        source_tool: sourceTool,
+        source_context: plan.source_context,
+        focus_key: plan.source_context.misconception_primary || 'general_reinforcement',
+        cadence: plan.recheck.cadence,
+        generated_at: plan.state.created_at
+      });
+    }
+
+    function buildTimeCalibratorPlan(metrics, latestEntry) {
+      if (!metrics || !latestEntry) return null;
+      var now = new Date();
+      return {
+        schema_version: '1.0',
+        plan_id: 'plan_time_' + Date.now(),
+        source_tool: 'time_calibrator',
+        source_context: {
+          module_id: 'time-calibrator',
+          question_ids: [],
+          misconception_primary: 'planning_without_transfer',
+          misconception_secondary: 'willpower_over_protocol'
+        },
+        focus: {
+          title: 'Time Calibration Reinforcement',
+          summary: 'Use your correction factor to turn estimates into realistic plans this week.',
+          confidence: metrics.entries >= 8 ? 'high' : (metrics.entries >= 3 ? 'medium' : 'low')
+        },
+        actions: {
+          today: ['Apply a ' + metrics.correctionFactor.toFixed(2) + 'x correction to your next two estimates.'],
+          this_week: ['Log at least 3 new estimate-vs-benchmark entries and compare drift.'],
+          evidence_prompt: 'How much did your average delta change after using the correction factor?'
+        },
+        recheck: {
+          cadence: '7d',
+          due_at: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          metric_type: 'score_delta',
+          success_threshold: { type: 'numeric_or_state', value: 1 }
+        },
+        remediation_links: [
+          { label: 'Time Blindness Calibrator', href: 'time-blindness-calibrator.html' },
+          { label: 'Module 5 interventions', href: 'module-5.html' }
+        ],
+        analytics: {
+          plan_generated_event: 'practice_plan_generated',
+          plan_started_event: 'practice_plan_started',
+          checkin_completed_event: 'practice_checkin_completed'
+        },
+        state: {
+          status: 'generated',
+          created_at: now.toISOString(),
+          updated_at: now.toISOString()
+        }
+      };
+    }
+
+    function buildTaskFrictionPlan(latestResult) {
+      if (!latestResult) return null;
+      var now = new Date();
+      return {
+        schema_version: '1.0',
+        plan_id: 'plan_task_' + Date.now(),
+        source_tool: 'task_friction',
+        source_context: {
+          module_id: 'task-friction',
+          question_ids: [],
+          misconception_primary: 'willpower_over_protocol',
+          misconception_secondary: 'planning_without_transfer'
+        },
+        focus: {
+          title: 'Task Start Friction Reduction',
+          summary: 'Run your start script repeatedly to reduce startup resistance and improve consistency.',
+          confidence: latestResult.frictionPercent >= 70 ? 'high' : 'medium'
+        },
+        actions: {
+          today: ['Run your first 10-minute start script once in the next hour.'],
+          this_week: ['Repeat the same start script for 3 sessions and log completion.'],
+          evidence_prompt: 'Did startup delay shrink after repeated use of the script?'
+        },
+        recheck: {
+          cadence: '72h',
+          due_at: new Date(now.getTime() + 72 * 60 * 60 * 1000).toISOString(),
+          metric_type: 'self_rating',
+          success_threshold: { type: 'numeric_or_state', value: 1 }
+        },
+        remediation_links: [
+          { label: 'Task Start Friction tool', href: 'task-start-friction.html' },
+          { label: 'Module 3 coaching architecture', href: 'module-3.html' }
+        ],
+        analytics: {
+          plan_generated_event: 'practice_plan_generated',
+          plan_started_event: 'practice_plan_started',
+          checkin_completed_event: 'practice_checkin_completed'
+        },
+        state: {
+          status: 'generated',
+          created_at: now.toISOString(),
+          updated_at: now.toISOString()
+        }
+      };
     }
 
     function copyText(text, onDone) {
@@ -383,6 +739,13 @@
             (delta === 0 ? 'right on target.' : (delta > 0 ? 'running long by ' + Math.abs(Math.round(delta)) + ' minutes.' : 'running short by ' + Math.abs(Math.round(delta)) + ' minutes.'));
         }
         renderTimeCalibrator();
+        var metrics = computeTimeMetrics(readEntries());
+        var latest = readEntries().slice(-1)[0];
+        var timePlan = buildTimeCalibratorPlan(metrics, latest);
+        if (timePlan) {
+          persistAndEmitActionPlan(timePlan, 'time_calibrator');
+          if (tbSummary) renderActionPlanCard(tbSummary, timePlan, 'time_calibrator');
+        }
       });
     }
 
@@ -942,6 +1305,48 @@
       return 'Across your last ' + history.length + ' start stories, the same friction theme keeps returning: ' + topArchetype + '.';
     }
 
+    function renderTaskFrictionBeforeAfterPanel(history) {
+      if (!tfResult) return;
+      var existing = document.getElementById('task-friction-before-after-panel');
+      if (existing) existing.remove();
+      if (!Array.isArray(history) || history.length < 2) return;
+
+      var withScores = history.filter(function (entry) {
+        return entry && Number.isFinite(Number(entry.frictionPercent));
+      });
+      if (withScores.length < 2) return;
+
+      var midpoint = Math.floor(withScores.length / 2);
+      if (midpoint < 1 || withScores.length - midpoint < 1) return;
+
+      function avg(list) {
+        if (!list.length) return 0;
+        return list.reduce(function (sum, item) { return sum + Number(item.frictionPercent || 0); }, 0) / list.length;
+      }
+
+      var earlyAvg = avg(withScores.slice(0, midpoint));
+      var recentAvg = avg(withScores.slice(midpoint));
+      var delta = Math.round(earlyAvg - recentAvg);
+      var direction = delta > 0 ? 'improved' : (delta < 0 ? 'increased' : 'held steady');
+
+      var earlyTheme = withScores[0] && withScores[0].archetype ? withScores[0].archetype : 'N/A';
+      var recentTheme = withScores[withScores.length - 1] && withScores[withScores.length - 1].archetype ? withScores[withScores.length - 1].archetype : 'N/A';
+
+      var card = document.createElement('section');
+      card.id = 'task-friction-before-after-panel';
+      card.className = 'card';
+      card.style.marginTop = 'var(--space-md)';
+      card.style.borderLeft = '4px solid var(--color-accent)';
+      card.innerHTML =
+        '<h5 style="margin-top:0;">What Changed (Before/After)</h5>' +
+        '<p style="margin:0 0 var(--space-xs) 0;">Early friction average: <strong>' + Math.round(earlyAvg) + '%</strong>. ' +
+        'Recent friction average: <strong>' + Math.round(recentAvg) + '%</strong>.</p>' +
+        '<p style="margin:0 0 var(--space-xs) 0;color:var(--color-text-light);">Interpretation: start friction has <strong>' + direction + '</strong>' +
+        (delta !== 0 ? ' by about ' + Math.abs(delta) + ' percentage points.' : '.') + '</p>' +
+        '<p style="margin:0;color:var(--color-text-light);">Theme shift: <strong>' + earlyTheme + '</strong> → <strong>' + recentTheme + '</strong>.</p>';
+      tfResult.insertAdjacentElement('afterend', card);
+    }
+
     function runFrictionDiagnostic() {
       if (!tfResult) return;
       var scenario = getActiveScenario();
@@ -983,10 +1388,13 @@
         generatedAt: latestResult.generatedAt,
         scenarioKey: scenarioKey,
         archetype: archetype.title,
-        topBlocker: top[0].label
+        topBlocker: top[0].label,
+        frictionPercent: frictionPercent,
+        riskLabel: riskLabel
       });
       writeTaskHistory(history);
-      recurringTheme = buildRecurringTheme(readTaskHistory());
+      var savedHistory = readTaskHistory();
+      recurringTheme = buildRecurringTheme(savedHistory);
       if (recurringTheme && latestResult.recurringTheme !== recurringTheme) {
         latestResult.recurringTheme = recurringTheme;
         latestResult.protocol = lastProtocol + ' ' + recurringTheme;
@@ -1008,7 +1416,14 @@
       if (recurringTheme) {
         tfResult.innerHTML += '<p style="margin:var(--space-sm) 0 0;"><strong>Recurring pattern:</strong> ' + recurringTheme + '</p>';
       }
+      renderTaskFrictionBeforeAfterPanel(savedHistory);
       if (tfMessage) tfMessage.textContent = 'Your start script is ready. Copy it if you want it beside you while you begin.';
+
+      var frictionPlan = buildTaskFrictionPlan(latestResult);
+      if (frictionPlan) {
+        persistAndEmitActionPlan(frictionPlan, 'task_friction');
+        if (tfResult) renderActionPlanCard(tfResult, frictionPlan, 'task_friction');
+      }
     }
 
     if (tfRun) tfRun.addEventListener('click', runFrictionDiagnostic);
@@ -1022,6 +1437,7 @@
         lastProtocol = '';
         localStorage.removeItem(TASK_FRICTION_KEY);
         if (tfResult) tfResult.textContent = 'Rate each friction layer and EFI will build a tailored start script for this situation.';
+        renderTaskFrictionBeforeAfterPanel([]);
         if (tfMessage) tfMessage.textContent = 'No protocol copied yet.';
       });
     }
@@ -1044,6 +1460,7 @@
         lastProtocol = '';
         localStorage.removeItem(TASK_FRICTION_KEY);
         if (tfResult) tfResult.textContent = 'Rate each friction layer and EFI will build a tailored start script for this situation.';
+        renderTaskFrictionBeforeAfterPanel([]);
         if (tfMessage) tfMessage.textContent = 'Situation updated. Run the tool again to get a new start script.';
       });
     }

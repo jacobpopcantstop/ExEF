@@ -28,6 +28,8 @@
   var STRATEGIES = {};
   var totalQuestions = 36;
   var lastResultsPayload = null;
+  var ACTION_PLAN_STORAGE_KEY = 'efi_action_plans_v1';
+  var REFLECTION_STORAGE_KEY = 'efi_reflections_v1';
 
   function setShareStatus(message) {
     if (shareStatus) shareStatus.textContent = message;
@@ -54,6 +56,297 @@
       focus: selected.focus,
       discountPercent: 40
     };
+  }
+
+
+  function trackAssessmentEvent(eventName, properties) {
+    if (window.EFI && window.EFI.Analytics && typeof window.EFI.Analytics.track === 'function') {
+      window.EFI.Analytics.track(eventName, properties || {});
+    }
+  }
+
+  function readActionPlans() {
+    try { return JSON.parse(localStorage.getItem(ACTION_PLAN_STORAGE_KEY)) || []; } catch (e) { return []; }
+  }
+
+  function writeActionPlans(plans) {
+    localStorage.setItem(ACTION_PLAN_STORAGE_KEY, JSON.stringify((plans || []).slice(-50)));
+  }
+
+  function updatePlanStatus(planId, status) {
+    var plans = readActionPlans();
+    var changed = false;
+    plans.forEach(function (plan) {
+      if (plan && plan.plan_id === planId) {
+        plan.state = plan.state || {};
+        plan.state.status = status;
+        plan.state.updated_at = new Date().toISOString();
+        changed = true;
+      }
+    });
+    if (changed) writeActionPlans(plans);
+  }
+
+  function completePlanCheckin(planId, payload) {
+    var plans = readActionPlans();
+    var changed = false;
+    var checkinAt = new Date().toISOString();
+    plans.forEach(function (plan) {
+      if (plan && plan.plan_id === planId) {
+        plan.state = plan.state || {};
+        plan.state.checkins = Array.isArray(plan.state.checkins) ? plan.state.checkins : [];
+        plan.state.checkins.push({
+          at: checkinAt,
+          self_rating: payload.self_rating,
+          metric_label: payload.metric_label,
+          metric_value: payload.metric_value
+        });
+        plan.state.last_checkin_at = checkinAt;
+        plan.state.status = 'checkin_completed';
+        plan.state.updated_at = checkinAt;
+        changed = true;
+      }
+    });
+    if (changed) writeActionPlans(plans);
+    return checkinAt;
+  }
+
+  function buildEsqrActionPlan(payload) {
+    if (!payload) return null;
+    var growth = Array.isArray(payload.growthAreas) ? payload.growthAreas : [];
+    var focus = growth.length ? growth[0] : { id: 'general', name: 'General EF reinforcement', score: 0 };
+    var offerFocus = payload.offer && payload.offer.focus ? payload.offer.focus : 'executive function consistency';
+    var now = new Date();
+    var dueAt = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000)).toISOString();
+    var planId = 'plan_esqr_' + Date.now();
+
+    return {
+      schema_version: '1.0',
+      plan_id: planId,
+      source_tool: 'esqr',
+      source_context: {
+        module_id: 'esqr',
+        question_ids: [],
+        misconception_primary: focus.id || 'general_reinforcement',
+        misconception_secondary: ''
+      },
+      focus: {
+        title: 'ESQ-R Growth Focus: ' + (focus.name || 'Executive skills'),
+        summary: 'Prioritize one growth area this week and apply a repeatable strategy in real contexts.',
+        confidence: 'medium'
+      },
+      actions: {
+        today: ['Choose one high-friction context and apply one support for ' + offerFocus + '.'],
+        this_week: ['Run the same support at least 3 times and log what changed in execution consistency.'],
+        evidence_prompt: 'What measurable shift did you observe in this growth area over the week?'
+      },
+      recheck: {
+        cadence: '7d',
+        due_at: dueAt,
+        metric_type: 'self_rating',
+        success_threshold: { type: 'numeric_or_state', value: 1 }
+      },
+      remediation_links: [
+        { label: 'Revisit growth strategies', href: 'esqr.html#esqr-results' },
+        { label: 'Run task-start diagnostic', href: 'task-start-friction.html' },
+        { label: 'Calibrate planning realism', href: 'time-blindness-calibrator.html' }
+      ],
+      analytics: {
+        plan_generated_event: 'practice_plan_generated',
+        plan_started_event: 'practice_plan_started',
+        checkin_completed_event: 'practice_checkin_completed'
+      },
+      state: {
+        status: 'generated',
+        created_at: now.toISOString(),
+        updated_at: now.toISOString()
+      }
+    };
+  }
+
+  function renderEsqrActionPlanCard(plan) {
+    if (!resultsSection || !plan) return;
+    var existing = document.getElementById('esqr-action-plan-card');
+    if (existing) existing.remove();
+
+    var card = document.createElement('section');
+    card.id = 'esqr-action-plan-card';
+    card.className = 'card';
+    card.style.marginTop = 'var(--space-lg)';
+    card.style.borderLeft = '4px solid var(--color-primary)';
+
+    var dueLabel = plan.recheck && plan.recheck.due_at ? new Date(plan.recheck.due_at).toLocaleString() : 'upcoming';
+    var links = (plan.remediation_links || []).map(function (link) {
+      return '<li><a href="' + link.href + '">' + link.label + '</a></li>';
+    }).join('');
+
+    card.innerHTML =
+      '<h4 style="margin-top:0;">Your 7-Day Action Plan</h4>' +
+      '<p style="margin-bottom:var(--space-sm);"><strong>' + plan.focus.title + '</strong></p>' +
+      '<p style="color:var(--color-text-light);">' + plan.focus.summary + '</p>' +
+      '<p><strong>Do today:</strong> ' + (plan.actions.today[0] || '') + '</p>' +
+      '<p><strong>Do this week:</strong> ' + (plan.actions.this_week[0] || '') + '</p>' +
+      '<p><strong>Re-check by:</strong> ' + dueLabel + ' (' + plan.recheck.cadence + ')</p>' +
+      '<p style="color:var(--color-text-light);"><strong>Evidence prompt:</strong> ' + plan.actions.evidence_prompt + '</p>' +
+      (links ? '<ul class="checklist">' + links + '</ul>' : '');
+
+    var row = document.createElement('div');
+    row.className = 'button-group';
+    row.style.marginTop = 'var(--space-md)';
+
+    var startBtn = document.createElement('button');
+    startBtn.type = 'button';
+    startBtn.className = 'btn btn--primary btn--sm';
+    startBtn.textContent = 'Start Plan';
+
+    var copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    copyBtn.className = 'btn btn--secondary btn--sm';
+    copyBtn.textContent = 'Copy Plan';
+
+    var status = document.createElement('p');
+    status.style.marginTop = 'var(--space-sm)';
+    status.style.fontSize = '0.9rem';
+    status.style.color = 'var(--color-text-light)';
+
+    var checkinWrap = document.createElement('div');
+    checkinWrap.style.marginTop = 'var(--space-sm)';
+    checkinWrap.innerHTML =
+      '<p style="margin:0 0 var(--space-xs) 0;"><strong>Quick check-in</strong> (capture transfer evidence)</p>' +
+      '<div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:end;">' +
+      '<label style="display:flex;flex-direction:column;gap:4px;min-width:140px;">Self-rating (1-5)<select class="esqr-plan-checkin-rating"><option value="">Select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label>' +
+      '<label style="display:flex;flex-direction:column;gap:4px;min-width:220px;">Observable metric<input class="esqr-plan-checkin-metric" type="text" placeholder="ex: used support 3/5 days"></label>' +
+      '</div>';
+    var checkinBtn = document.createElement('button');
+    checkinBtn.type = 'button';
+    checkinBtn.className = 'btn btn--secondary btn--sm';
+    checkinBtn.style.marginTop = 'var(--space-xs)';
+    checkinBtn.textContent = 'Complete Check-In';
+
+    startBtn.addEventListener('click', function () {
+      if (startBtn.disabled) return;
+      startBtn.disabled = true;
+      startBtn.textContent = 'Plan Started';
+      status.textContent = 'Plan started. Recheck reminder has been queued.';
+      updatePlanStatus(plan.plan_id, 'started');
+      trackAssessmentEvent('practice_plan_started', {
+        plan_id: plan.plan_id,
+        source_tool: 'esqr',
+        module_id: 'esqr',
+        started_at: new Date().toISOString()
+      });
+    });
+
+    copyBtn.addEventListener('click', function () {
+      var text = 'Focus: ' + plan.focus.title + '\n' +
+        'Do today: ' + (plan.actions.today[0] || '') + '\n' +
+        'Do this week: ' + (plan.actions.this_week[0] || '') + '\n' +
+        'Re-check by: ' + dueLabel;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          status.textContent = 'Plan copied.';
+        }).catch(function () {
+          status.textContent = 'Copy unavailable on this browser.';
+        });
+      } else {
+        status.textContent = 'Copy unavailable on this browser.';
+      }
+    });
+
+    checkinBtn.addEventListener('click', function () {
+      var ratingEl = checkinWrap.querySelector('.esqr-plan-checkin-rating');
+      var metricEl = checkinWrap.querySelector('.esqr-plan-checkin-metric');
+      var rating = Number(ratingEl && ratingEl.value ? ratingEl.value : 0);
+      var metric = String(metricEl && metricEl.value || '').trim();
+      if (!rating || !metric) {
+        status.textContent = 'Add a 1-5 rating and one observable metric to complete the check-in.';
+        return;
+      }
+      var checkinAt = completePlanCheckin(plan.plan_id, {
+        self_rating: rating,
+        metric_label: plan.recheck && plan.recheck.metric_type ? plan.recheck.metric_type : 'self_report',
+        metric_value: metric
+      });
+      status.textContent = 'Check-in saved. Keep running this support and recheck next week.';
+      trackAssessmentEvent('practice_checkin_completed', {
+        plan_id: plan.plan_id,
+        source_tool: 'esqr',
+        module_id: 'esqr',
+        self_rating: rating,
+        metric_label: plan.recheck && plan.recheck.metric_type ? plan.recheck.metric_type : 'self_report',
+        metric_value: metric,
+        completed_at: checkinAt
+      });
+    });
+
+    row.appendChild(startBtn);
+    row.appendChild(copyBtn);
+    card.appendChild(row);
+    card.appendChild(checkinWrap);
+    card.appendChild(checkinBtn);
+    card.appendChild(status);
+    resultsSection.appendChild(card);
+  }
+
+
+  function saveReflectionEntry(entry) {
+    var list = [];
+    try { list = JSON.parse(localStorage.getItem(REFLECTION_STORAGE_KEY)) || []; } catch (e) { list = []; }
+    list.push(entry);
+    localStorage.setItem(REFLECTION_STORAGE_KEY, JSON.stringify(list.slice(-100)));
+  }
+
+  function renderEsqrReflectionPrompt(plan) {
+    if (!resultsSection || !plan) return;
+    var existing = document.getElementById('esqr-reflection-card');
+    if (existing) existing.remove();
+
+    var card = document.createElement('section');
+    card.id = 'esqr-reflection-card';
+    card.className = 'card';
+    card.style.marginTop = 'var(--space-md)';
+    card.style.borderLeft = '4px solid var(--color-accent)';
+    card.innerHTML =
+      '<h4 style="margin-top:0;">48-Hour Reflection Prompt</h4>' +
+      '<p style="color:var(--color-text-light);">What will you test in the next 48 hours to improve this ESQ-R growth area?</p>' +
+      '<textarea id="esqr-reflection-input" rows="3" style="width:100%;padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--border-radius);"></textarea>' +
+      '<div class="button-group" style="margin-top:var(--space-sm);">' +
+      '<button type="button" id="esqr-reflection-save" class="btn btn--secondary btn--sm">Save Reflection</button>' +
+      '</div>' +
+      '<p id="esqr-reflection-status" style="margin-top:var(--space-xs);font-size:0.9rem;color:var(--color-text-light);"></p>';
+
+    resultsSection.appendChild(card);
+
+    var input = card.querySelector('#esqr-reflection-input');
+    var save = card.querySelector('#esqr-reflection-save');
+    var status = card.querySelector('#esqr-reflection-status');
+    if (!input || !save || !status) return;
+
+    save.addEventListener('click', function () {
+      var text = String(input.value || '').trim();
+      if (!text) {
+        status.textContent = 'Write one testable action before saving.';
+        return;
+      }
+      var payload = {
+        id: 'refl_' + Date.now(),
+        source_tool: 'esqr',
+        plan_id: plan.plan_id,
+        module_id: 'esqr',
+        reflection_48h: text,
+        at: new Date().toISOString()
+      };
+      saveReflectionEntry(payload);
+      trackAssessmentEvent('behavior_transfer_logged', {
+        plan_id: plan.plan_id,
+        source_tool: 'esqr',
+        module_id: 'esqr',
+        transfer_type: 'self_report',
+        transfer_value: text,
+        logged_at: payload.at
+      });
+      status.textContent = 'Reflection saved.';
+    });
   }
 
   function loadScript(src) {
@@ -248,6 +541,24 @@
     if (leadOfferPreview) {
       leadOfferPreview.hidden = false;
       leadOfferPreview.textContent = 'Recommended offer: ' + lastResultsPayload.offer.code + ' (' + lastResultsPayload.offer.discountPercent + '% off) for ' + lastResultsPayload.offer.focus + '. Enter your email below and we will send the details.';
+    }
+
+    var plan = buildEsqrActionPlan(lastResultsPayload);
+    if (plan) {
+      var plans = readActionPlans();
+      plans.push(plan);
+      writeActionPlans(plans);
+      trackAssessmentEvent('practice_plan_generated', {
+        plan_id: plan.plan_id,
+        source_tool: 'esqr',
+        module_id: 'esqr',
+        source_context: plan.source_context,
+        focus_key: plan.source_context.misconception_primary || 'general_reinforcement',
+        cadence: plan.recheck.cadence,
+        generated_at: plan.state.created_at
+      });
+      renderEsqrActionPlanCard(plan);
+      renderEsqrReflectionPrompt(plan);
     }
 
     localStorage.setItem(RESULT_KEY, JSON.stringify(lastResultsPayload));

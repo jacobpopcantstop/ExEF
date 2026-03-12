@@ -77,6 +77,8 @@ document.addEventListener('DOMContentLoaded', function () {
   })();
 
   (function initAnalytics() {
+    var ASSESSMENT_EVENTS_KEY = 'efi_assessment_events_v1';
+
     function post(payload) {
       if (!canPostTracking()) return Promise.resolve();
       return fetch('/api/track-event', {
@@ -87,20 +89,44 @@ document.addEventListener('DOMContentLoaded', function () {
       }).catch(function () {});
     }
 
+    function readAssessmentEvents() {
+      try { return JSON.parse(localStorage.getItem(ASSESSMENT_EVENTS_KEY)) || []; } catch (e) { return []; }
+    }
+
+    function writeAssessmentEvents(events) {
+      localStorage.setItem(ASSESSMENT_EVENTS_KEY, JSON.stringify((events || []).slice(-300)));
+    }
+
+    function storeAssessmentEvent(payload) {
+      if (!payload || !payload.event_name) return;
+      var list = readAssessmentEvents();
+      list.push({
+        event_name: payload.event_name,
+        page: payload.page,
+        source: payload.source,
+        properties: payload.properties || {},
+        recorded_at: new Date().toISOString()
+      });
+      writeAssessmentEvents(list);
+    }
+
     function track(eventName, properties) {
       var page = window.location.pathname.split('/').pop() || 'index.html';
       var params = new URLSearchParams(window.location.search || '');
       var source = params.get('utm_source') || params.get('source') || document.referrer || 'direct';
-      return post({
+      var payload = {
         event_name: eventName,
         page: page,
         source: source,
         properties: properties || {}
-      });
+      };
+      storeAssessmentEvent(payload);
+      return post(payload);
     }
 
     window.EFI.Analytics = {
-      track: track
+      track: track,
+      getAssessmentEvents: readAssessmentEvents
     };
 
     track('page_view', {
@@ -114,6 +140,536 @@ document.addEventListener('DOMContentLoaded', function () {
         label: el.getAttribute('data-analytics-label') || el.textContent.trim().slice(0, 80)
       });
     });
+  })();
+
+
+  (function initSpacedRecheckEngine() {
+    var ACTION_PLAN_KEY = 'efi_action_plans_v1';
+
+    function track(eventName, properties) {
+      if (window.EFI && window.EFI.Analytics && typeof window.EFI.Analytics.track === 'function') {
+        window.EFI.Analytics.track(eventName, properties || {});
+      }
+    }
+
+    function readPlans() {
+      try { return JSON.parse(localStorage.getItem(ACTION_PLAN_KEY)) || []; } catch (e) { return []; }
+    }
+
+    function writePlans(plans) {
+      localStorage.setItem(ACTION_PLAN_KEY, JSON.stringify((plans || []).slice(-50)));
+    }
+
+    function readReflections() {
+      try { return JSON.parse(localStorage.getItem('efi_reflections_v1')) || []; } catch (e) { return []; }
+    }
+
+    function readAssessmentEvents() {
+      if (window.EFI && window.EFI.Analytics && typeof window.EFI.Analytics.getAssessmentEvents === 'function') {
+        return window.EFI.Analytics.getAssessmentEvents();
+      }
+      try { return JSON.parse(localStorage.getItem('efi_assessment_events_v1')) || []; } catch (e) { return []; }
+    }
+
+    function isDue(plan) {
+      if (!plan || !plan.recheck || !plan.recheck.due_at) return false;
+      var due = Date.parse(plan.recheck.due_at);
+      if (!Number.isFinite(due)) return false;
+      var status = plan.state && plan.state.status ? plan.state.status : 'generated';
+      if (status === 'completed' || status === 'expired') return false;
+      return Date.now() >= due;
+    }
+
+    function processDueLifecycle() {
+      var plans = readPlans();
+      var changed = false;
+      plans.forEach(function(plan) {
+        if (!isDue(plan)) return;
+        plan.state = plan.state || {};
+        if (!plan.state.recheck_due_emitted_at) {
+          plan.state.recheck_due_emitted_at = new Date().toISOString();
+          plan.state.updated_at = plan.state.recheck_due_emitted_at;
+          changed = true;
+          track('spaced_recheck_due', {
+            plan_id: plan.plan_id,
+            source_tool: plan.source_tool || 'unknown',
+            cadence: plan.recheck && plan.recheck.cadence ? plan.recheck.cadence : '',
+            due_at: plan.recheck && plan.recheck.due_at ? plan.recheck.due_at : ''
+          });
+        }
+      });
+      if (changed) writePlans(plans);
+      return plans;
+    }
+
+    function renderDashboardRecheckCard(plans) {
+      var page = window.location.pathname.split('/').pop() || 'index.html';
+      if (page !== 'dashboard.html') return;
+      var duePlans = (plans || []).filter(isDue);
+      if (!duePlans.length) return;
+
+      var anchor = document.querySelector('main .container') || document.querySelector('main');
+      if (!anchor || document.getElementById('dashboard-recheck-reminders')) return;
+
+      var card = document.createElement('section');
+      card.id = 'dashboard-recheck-reminders';
+      card.className = 'card';
+      card.style.borderLeft = '4px solid var(--color-accent)';
+      card.style.marginBottom = 'var(--space-lg)';
+
+      var listHtml = '';
+      duePlans.slice(0, 5).forEach(function(plan, idx) {
+        var dueLabel = plan.recheck && plan.recheck.due_at ? new Date(plan.recheck.due_at).toLocaleString() : 'due now';
+        var focus = plan.focus && plan.focus.title ? plan.focus.title : 'Practice recheck';
+        var completeId = 'recheck-complete-' + idx;
+        var startId = 'recheck-start-' + idx;
+        listHtml +=
+          '<div style="padding:var(--space-sm) 0;border-top:1px solid var(--color-border);">' +
+            '<p style="margin:0 0 var(--space-xs) 0;"><strong>' + focus + '</strong></p>' +
+            '<p style="margin:0 0 var(--space-xs) 0;color:var(--color-text-light);">Source: ' + (plan.source_tool || 'assessment') + ' · Due: ' + dueLabel + '</p>' +
+            '<div style="display:flex;gap:var(--space-xs);flex-wrap:wrap;">' +
+              '<button type="button" class="btn btn--primary btn--sm" data-recheck-start-plan-id="' + plan.plan_id + '" id="' + startId + '">Start Recheck Now</button>' +
+              '<button type="button" class="btn btn--secondary btn--sm" data-recheck-complete-plan-id="' + plan.plan_id + '" id="' + completeId + '">Mark Recheck Complete</button>' +
+            '</div>' +
+          '</div>';
+      });
+
+      card.innerHTML =
+        '<h3 style="margin-top:0;">Recheck Reminders</h3>' +
+        '<p style="color:var(--color-text-light);">You have spaced rechecks due. Complete them to keep your learning loop active.</p>' +
+        listHtml +
+        '<p id="dashboard-recheck-status" style="margin-top:var(--space-sm);font-size:0.9rem;color:var(--color-text-light);"></p>';
+
+      anchor.insertAdjacentElement('afterbegin', card);
+
+      var status = document.getElementById('dashboard-recheck-status');
+
+      card.querySelectorAll('button[data-recheck-start-plan-id]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var planId = btn.getAttribute('data-recheck-start-plan-id');
+          if (!planId) return;
+          var allPlans = readPlans();
+          var plan = allPlans.find(function(item) { return item && item.plan_id === planId; });
+          if (!plan) return;
+          plan.state = plan.state || {};
+          var startedAt = new Date().toISOString();
+          if (!plan.state.started_at) plan.state.started_at = startedAt;
+          plan.state.recheck_started_at = startedAt;
+          if (plan.state.status === 'generated' || plan.state.status === 'checkin_completed') {
+            plan.state.status = 'started';
+          }
+          plan.state.updated_at = startedAt;
+          writePlans(allPlans);
+          btn.disabled = true;
+          btn.textContent = 'Recheck Started';
+          if (status) status.textContent = 'Recheck started. Complete it when finished.';
+          track('practice_plan_started', {
+            plan_id: planId,
+            source_tool: plan.source_tool || 'unknown',
+            started_at: startedAt,
+            started_from: 'dashboard_recheck_reminder'
+          });
+        });
+      });
+
+      card.querySelectorAll('button[data-recheck-complete-plan-id]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var planId = btn.getAttribute('data-recheck-complete-plan-id');
+          if (!planId) return;
+          var allPlans = readPlans();
+          var plan = allPlans.find(function(item) { return item && item.plan_id === planId; });
+          if (!plan) return;
+          plan.state = plan.state || {};
+          plan.state.status = 'completed';
+          plan.state.recheck_completed_at = new Date().toISOString();
+          plan.state.updated_at = plan.state.recheck_completed_at;
+          writePlans(allPlans);
+          btn.disabled = true;
+          btn.textContent = 'Recheck Completed';
+          if (status) status.textContent = 'Recheck completion saved.';
+          track('spaced_recheck_completed', {
+            plan_id: planId,
+            source_tool: plan.source_tool || 'unknown',
+            completed_at: plan.state.recheck_completed_at,
+            score_before: null,
+            score_after: null,
+            retention_delta: null
+          });
+        });
+      });
+    }
+
+
+    function toDayKey(iso) {
+      var d = iso ? new Date(iso) : null;
+      if (!d || Number.isNaN(d.getTime())) return '';
+      return d.toISOString().slice(0, 10);
+    }
+
+    function dayDiff(aDayKey, bDayKey) {
+      if (!aDayKey || !bDayKey) return 999;
+      var a = Date.parse(aDayKey + 'T00:00:00Z');
+      var b = Date.parse(bDayKey + 'T00:00:00Z');
+      if (!Number.isFinite(a) || !Number.isFinite(b)) return 999;
+      return Math.round((a - b) / 86400000);
+    }
+
+    function computePracticeAdherence(plans) {
+      var list = Array.isArray(plans) ? plans : [];
+      var active = list.filter(function(plan) {
+        if (!plan) return false;
+        var status = plan.state && plan.state.status ? plan.state.status : 'generated';
+        return status !== 'expired';
+      });
+      if (!active.length) {
+        return {
+          activePlans: 0,
+          engagedPlans: 0,
+          adherenceRate: 0,
+          recentCheckins: 0,
+          streakDays: 0,
+          stateLabel: 'Not started',
+          recoveryPrompt: 'Generate your first plan and complete one quick check-in to begin your streak.'
+        };
+      }
+
+      var engagedPlans = active.filter(function(plan) {
+        var status = plan.state && plan.state.status ? plan.state.status : 'generated';
+        return status === 'started' || status === 'checkin_completed' || status === 'completed';
+      }).length;
+
+      var now = Date.now();
+      var checkinDates = [];
+      active.forEach(function(plan) {
+        var checkins = plan.state && Array.isArray(plan.state.checkins) ? plan.state.checkins : [];
+        checkins.forEach(function(item) {
+          if (!item || !item.at) return;
+          checkinDates.push(item.at);
+        });
+      });
+
+      var recentCheckins = checkinDates.filter(function(iso) {
+        var t = Date.parse(iso);
+        if (!Number.isFinite(t)) return false;
+        return (now - t) <= (7 * 24 * 60 * 60 * 1000);
+      }).length;
+
+      var uniqueDays = Array.from(new Set(checkinDates.map(toDayKey).filter(Boolean))).sort().reverse();
+      var streakDays = 0;
+      if (uniqueDays.length) {
+        var todayKey = new Date().toISOString().slice(0, 10);
+        var firstGap = dayDiff(todayKey, uniqueDays[0]);
+        if (firstGap === 0 || firstGap === 1) {
+          streakDays = 1;
+          for (var i = 1; i < uniqueDays.length; i++) {
+            var gap = dayDiff(uniqueDays[i - 1], uniqueDays[i]);
+            if (gap === 1) streakDays += 1;
+            else break;
+          }
+        }
+      }
+
+      var adherenceRate = engagedPlans / active.length;
+      var stateLabel = adherenceRate >= 0.8 ? 'Strong adherence' : (adherenceRate >= 0.5 ? 'Building consistency' : 'Needs support');
+      var recoveryPrompt = adherenceRate >= 0.5
+        ? 'Keep momentum: complete one more check-in before your next recheck due date.'
+        : 'Recovery move: pick one active plan and log a 2-minute check-in today to restart consistency.';
+
+      return {
+        activePlans: active.length,
+        engagedPlans: engagedPlans,
+        adherenceRate: adherenceRate,
+        recentCheckins: recentCheckins,
+        streakDays: streakDays,
+        stateLabel: stateLabel,
+        recoveryPrompt: recoveryPrompt
+      };
+    }
+
+    function renderDashboardPracticeCard(plans) {
+      var page = window.location.pathname.split('/').pop() || 'index.html';
+      if (page !== 'dashboard.html') return;
+      var anchor = document.querySelector('main .container') || document.querySelector('main');
+      if (!anchor) return;
+      var existing = document.getElementById('dashboard-practice-adherence');
+      if (existing) existing.remove();
+
+      var summary = computePracticeAdherence(plans);
+      var adherencePercent = Math.round(summary.adherenceRate * 100);
+
+      var card = document.createElement('section');
+      card.id = 'dashboard-practice-adherence';
+      card.className = 'card';
+      card.style.borderLeft = '4px solid var(--color-primary)';
+      card.style.marginBottom = 'var(--space-lg)';
+      card.innerHTML =
+        '<h3 style="margin-top:0;">Practice Adherence</h3>' +
+        '<p style="color:var(--color-text-light);">Track consistency across active plans and recover quickly when momentum drops.</p>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:var(--space-md);">' +
+          '<p style="margin:0;"><strong>Streak:</strong> ' + summary.streakDays + ' day' + (summary.streakDays === 1 ? '' : 's') + '</p>' +
+          '<p style="margin:0;"><strong>Adherence:</strong> ' + adherencePercent + '% (' + summary.engagedPlans + '/' + summary.activePlans + ' active plans)</p>' +
+          '<p style="margin:0;"><strong>Last 7 days check-ins:</strong> ' + summary.recentCheckins + '</p>' +
+        '</div>' +
+        '<p style="margin:var(--space-sm) 0 0;"><strong>Status:</strong> ' + summary.stateLabel + '</p>' +
+        '<p style="margin:var(--space-xs) 0 0;color:var(--color-text-light);"><strong>Recovery prompt:</strong> ' + summary.recoveryPrompt + '</p>';
+
+      anchor.insertAdjacentElement('afterbegin', card);
+    }
+
+    function summarizeEducationKpis(plans, events, reflections) {
+      var planList = Array.isArray(plans) ? plans : [];
+      var eventList = Array.isArray(events) ? events : [];
+      var reflectionList = Array.isArray(reflections) ? reflections : [];
+
+      var generatedCount = eventList.filter(function(evt) { return evt && evt.event_name === 'practice_plan_generated'; }).length;
+      var startedCount = eventList.filter(function(evt) { return evt && evt.event_name === 'practice_plan_started'; }).length;
+      var recheckCompletedCount = eventList.filter(function(evt) { return evt && evt.event_name === 'spaced_recheck_completed'; }).length;
+      var checkinCount = eventList.filter(function(evt) { return evt && evt.event_name === 'practice_checkin_completed'; }).length;
+      var transferCount = eventList.filter(function(evt) { return evt && evt.event_name === 'behavior_transfer_logged'; }).length;
+      var masteryEvents = eventList.filter(function(evt) { return evt && evt.event_name === 'mastery_verified'; });
+      var masteryEventPlanIds = new Set(masteryEvents.map(function(evt) {
+        return evt && evt.properties && evt.properties.plan_id ? evt.properties.plan_id : '';
+      }).filter(Boolean));
+
+      var masteryPlans = planList.filter(function(plan) {
+        if (!plan || !plan.plan_id) return false;
+        return masteryEventPlanIds.has(plan.plan_id) || !!(plan.state && plan.state.mastery_verified_at);
+      });
+
+      var activePlans = planList.filter(function(plan) {
+        if (!plan) return false;
+        var status = plan.state && plan.state.status ? plan.state.status : 'generated';
+        return status !== 'expired';
+      });
+
+      var retentionDue = activePlans.filter(function(plan) {
+        return plan && plan.recheck && plan.recheck.due_at;
+      }).length;
+
+      var reflectionPlanIds = new Set(reflectionList.map(function(item) {
+        return item && item.plan_id ? item.plan_id : '';
+      }).filter(Boolean));
+      var transferPlanCount = new Set(Array.from(reflectionPlanIds)).size;
+
+      return {
+        generatedCount: generatedCount,
+        activationRate: generatedCount ? (startedCount / generatedCount) : 0,
+        adherenceRate: startedCount ? (checkinCount / startedCount) : 0,
+        retentionRate: retentionDue ? (recheckCompletedCount / retentionDue) : 0,
+        transferRate: activePlans.length ? (transferPlanCount / activePlans.length) : 0,
+        masteryQualityRate: startedCount ? (masteryPlans.length / startedCount) : 0,
+        masteryVerifiedPlans: masteryPlans.length
+      };
+    }
+
+    function renderEducationKpiCard(plans, reflections) {
+      var page = window.location.pathname.split('/').pop() || 'index.html';
+      if (page !== 'dashboard.html') return;
+
+      var anchor = document.querySelector('main .container') || document.querySelector('main');
+      if (!anchor) return;
+
+      var existing = document.getElementById('dashboard-education-kpis');
+      if (existing) existing.remove();
+
+      var events = readAssessmentEvents();
+      var summary = summarizeEducationKpis(plans, events, reflections);
+      var sampleSize = summary.generatedCount;
+      var sampleNote = sampleSize ? ('Sample: ' + sampleSize + ' generated plans') : 'Sample: no tracked plans yet';
+
+      var card = document.createElement('section');
+      card.id = 'dashboard-education-kpis';
+      card.className = 'card';
+      card.style.borderLeft = '4px solid var(--module-6)';
+      card.style.marginBottom = 'var(--space-lg)';
+      card.innerHTML =
+        '<h3 style="margin-top:0;">Education KPI Snapshot</h3>' +
+        '<p style="color:var(--color-text-light);">Activation, adherence, retention, transfer, and mastery quality from the v1 assessment loop.</p>' +
+        '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-sm);">' +
+          '<p style="margin:0;"><strong>Activation:</strong> ' + Math.round(summary.activationRate * 100) + '%</p>' +
+          '<p style="margin:0;"><strong>Adherence:</strong> ' + Math.round(summary.adherenceRate * 100) + '%</p>' +
+          '<p style="margin:0;"><strong>Retention:</strong> ' + Math.round(summary.retentionRate * 100) + '%</p>' +
+          '<p style="margin:0;"><strong>Transfer:</strong> ' + Math.round(summary.transferRate * 100) + '%</p>' +
+          '<p style="margin:0;"><strong>Mastery quality:</strong> ' + Math.round(summary.masteryQualityRate * 100) + '%</p>' +
+        '</div>' +
+        '<p style="margin:var(--space-sm) 0 0;color:var(--color-text-light);">' + sampleNote + ' · Mastery verified plans: ' + summary.masteryVerifiedPlans + '.</p>';
+
+      anchor.insertAdjacentElement('afterbegin', card);
+    }
+
+    function buildLearningQueue(plans) {
+      var list = Array.isArray(plans) ? plans : [];
+      var now = Date.now();
+      return list.map(function(plan) {
+        if (!plan) return null;
+        var status = plan.state && plan.state.status ? plan.state.status : 'generated';
+        if (status === 'completed' || status === 'expired') return null;
+
+        var dueAt = plan.recheck && plan.recheck.due_at ? Date.parse(plan.recheck.due_at) : NaN;
+        var isPlanDue = Number.isFinite(dueAt) ? dueAt <= now : false;
+        var priority = 10;
+        var reason = 'Keep momentum with your active plan.';
+
+        if (isPlanDue) {
+          priority += 100;
+          reason = 'Recheck is due now.';
+        }
+        if (status === 'generated') {
+          priority += 60;
+          reason = 'Plan is generated but not started yet.';
+        } else if (status === 'started') {
+          priority += 45;
+          reason = 'Plan is started; complete a check-in to lock transfer evidence.';
+        } else if (status === 'checkin_completed') {
+          priority += 25;
+          reason = 'Check-in logged; finish recheck cycle to verify retention.';
+        }
+
+        var checkins = plan.state && Array.isArray(plan.state.checkins) ? plan.state.checkins : [];
+        if (!checkins.length && status !== 'generated') priority += 10;
+
+        var recencyPenalty = 0;
+        if (checkins.length) {
+          var latest = Date.parse(checkins[checkins.length - 1].at || '');
+          if (Number.isFinite(latest)) {
+            var days = (now - latest) / 86400000;
+            recencyPenalty = Math.max(0, 7 - Math.round(days));
+          }
+        }
+
+        var focus = plan.focus && plan.focus.title ? plan.focus.title : 'Active learning plan';
+        var source = plan.source_tool || 'assessment';
+        var dueLabel = Number.isFinite(dueAt) ? new Date(dueAt).toLocaleString() : 'no due date';
+
+        return {
+          planId: plan.plan_id,
+          focus: focus,
+          source: source,
+          status: status,
+          dueLabel: dueLabel,
+          reason: reason,
+          priority: priority - recencyPenalty
+        };
+      }).filter(Boolean).sort(function(a, b) { return b.priority - a.priority; });
+    }
+
+    function verifyMasteryLifecycle(plans) {
+      var list = Array.isArray(plans) ? plans : [];
+      var reflections = readReflections();
+      var changed = false;
+
+      list.forEach(function(plan) {
+        if (!plan) return;
+        plan.state = plan.state || {};
+        if (plan.state.mastery_verified_at) return;
+
+        var hasCompletedRecheck = !!plan.state.recheck_completed_at;
+        var hasCheckin = Array.isArray(plan.state.checkins) && plan.state.checkins.length > 0;
+        var hasTransferEvidence = reflections.some(function(item) {
+          return item && item.plan_id && plan.plan_id && item.plan_id === plan.plan_id && item.reflection_48h;
+        });
+
+        var criteriaMet = hasCompletedRecheck && hasCheckin && hasTransferEvidence;
+        if (!criteriaMet) return;
+
+        var verifiedAt = new Date().toISOString();
+        plan.state.mastery_verified_at = verifiedAt;
+        plan.state.mastery_rule = 'v1_knowledge_recheck_transfer';
+        plan.state.updated_at = verifiedAt;
+        changed = true;
+
+        track('mastery_verified', {
+          plan_id: plan.plan_id,
+          source_tool: plan.source_tool || 'unknown',
+          verified_at: verifiedAt,
+          verification_rule: 'v1_knowledge_recheck_transfer',
+          has_checkin: true,
+          has_transfer_evidence: true,
+          has_recheck_completion: true
+        });
+      });
+
+      if (changed) writePlans(list);
+      return list;
+    }
+
+    function renderDashboardMasteryCard(plans) {
+      var page = window.location.pathname.split('/').pop() || 'index.html';
+      if (page !== 'dashboard.html') return;
+      var anchor = document.querySelector('main .container') || document.querySelector('main');
+      if (!anchor) return;
+      var existing = document.getElementById('dashboard-mastery-verification');
+      if (existing) existing.remove();
+
+      var list = Array.isArray(plans) ? plans : [];
+      var active = list.filter(function(plan) {
+        if (!plan) return false;
+        var status = plan.state && plan.state.status ? plan.state.status : 'generated';
+        return status !== 'expired';
+      });
+      var verified = active.filter(function(plan) {
+        return !!(plan.state && plan.state.mastery_verified_at);
+      });
+      var pending = active.length - verified.length;
+
+      var card = document.createElement('section');
+      card.id = 'dashboard-mastery-verification';
+      card.className = 'card';
+      card.style.borderLeft = '4px solid var(--module-6)';
+      card.style.marginBottom = 'var(--space-lg)';
+      card.innerHTML =
+        '<h3 style="margin-top:0;">Mastery Verification</h3>' +
+        '<p style="color:var(--color-text-light);">Mastery is verified when practice includes check-in evidence, delayed recheck completion, and transfer reflection.</p>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:var(--space-md);">' +
+          '<p style="margin:0;"><strong>Verified:</strong> ' + verified.length + '</p>' +
+          '<p style="margin:0;"><strong>Pending:</strong> ' + pending + '</p>' +
+        '</div>' +
+        '<p style="margin:var(--space-sm) 0 0;color:var(--color-text-light);"><strong>Rule:</strong> v1_knowledge_recheck_transfer</p>';
+
+      anchor.insertAdjacentElement('afterbegin', card);
+    }
+
+    function renderDashboardLearningQueue(plans) {
+      var page = window.location.pathname.split('/').pop() || 'index.html';
+      if (page !== 'dashboard.html') return;
+      var anchor = document.querySelector('main .container') || document.querySelector('main');
+      if (!anchor) return;
+      var existing = document.getElementById('dashboard-learning-queue');
+      if (existing) existing.remove();
+
+      var queue = buildLearningQueue(plans);
+      var card = document.createElement('section');
+      card.id = 'dashboard-learning-queue';
+      card.className = 'card';
+      card.style.borderLeft = '4px solid var(--color-accent)';
+      card.style.marginBottom = 'var(--space-lg)';
+
+      var itemsHtml = queue.slice(0, 5).map(function(item, index) {
+        return '<li style="margin-bottom:var(--space-sm);">' +
+          '<strong>#' + (index + 1) + ' ' + item.focus + '</strong> ' +
+          '<span style="color:var(--color-text-muted);">(' + item.source + ' · ' + item.status + ')</span>' +
+          '<br><span style="color:var(--color-text-light);">' + item.reason + ' Due: ' + item.dueLabel + '.</span>' +
+        '</li>';
+      }).join('');
+
+      card.innerHTML =
+        '<h3 style="margin-top:0;">Learning Queue</h3>' +
+        '<p style="color:var(--color-text-light);">Ranked next-best actions across all active tools.</p>' +
+        (itemsHtml
+          ? '<ol style="margin:0;padding-left:var(--space-lg);">' + itemsHtml + '</ol>'
+          : '<p style="margin:0;color:var(--color-text-light);">No active plans yet. Generate a plan from any assessment to start your queue.</p>');
+
+      anchor.insertAdjacentElement('afterbegin', card);
+    }
+
+    var updatedPlans = processDueLifecycle();
+    updatedPlans = verifyMasteryLifecycle(updatedPlans);
+    var reflections = readReflections();
+    renderEducationKpiCard(updatedPlans, reflections);
+    renderDashboardMasteryCard(updatedPlans);
+    renderDashboardLearningQueue(updatedPlans);
+    renderDashboardPracticeCard(updatedPlans);
+    renderDashboardRecheckCard(updatedPlans);
   })();
 
   (function injectFooterLegalLinks() {

@@ -10,7 +10,8 @@
 })();
 
 document.addEventListener('DOMContentLoaded', function () {
-  var TRACKING_ENABLED = !/github\.io$/i.test(window.location.hostname);
+  var host = window.location.hostname || '';
+  var TRACKING_ENABLED = !/github\.io$/i.test(host) && !/^(localhost|127\.0\.0\.1)$/i.test(host) && window.location.protocol !== 'file:';
 
   function canPostTracking() {
     return TRACKING_ENABLED && !!window.fetch;

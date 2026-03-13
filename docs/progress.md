@@ -7,6 +7,8 @@ This is the single source of truth for **active needed changes**. Roadmaps/audit
 ## 1) Launch blockers (do first)
 
 ### Platform/operator
+Requires Deployment/Operator Input
+
 - [ ] Set production Netlify env vars:
   - `EFI_CRM_WEBHOOK_URL`
   - `EFI_ESP_WEBHOOK_URL`

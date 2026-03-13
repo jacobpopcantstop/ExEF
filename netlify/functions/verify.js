@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const { json, parseBody, requiredEnv } = require('./_common');
+const { getActor } = require('./_authz');
 const db = require('./_db');
 
 function b64urlEncode(input) {
@@ -56,9 +57,89 @@ function makeCredentialId(email) {
   return 'EFI-CEFC-' + Math.abs(h).toString(36).toUpperCase().substring(0, 8);
 }
 
-async function issuePurchase(body) {
+function getClientIp(event) {
+  const forwarded = String((event.headers && event.headers['x-forwarded-for']) || '').trim();
+  if (forwarded) return forwarded.split(',')[0].trim();
+  return String((event.headers && (event.headers['client-ip'] || event.headers['x-nf-client-connection-ip'])) || '').trim() || null;
+}
+
+function resolveAuditActor(actor, email, fallbackRole) {
+  return {
+    actor_role: (actor && actor.role && actor.role !== 'guest') ? actor.role : (fallbackRole || 'public'),
+    actor_email: (actor && actor.email) || email || null
+  };
+}
+
+async function saveAudit(entry) {
+  return db.saveAuditLog(entry).catch(() => null);
+}
+
+function csrfSecret() {
+  return requiredEnv('EFI_CSRF_SIGNING_SECRET') || 'efi-dev-csrf-secret';
+}
+
+function signCsrfPayload(raw) {
+  return crypto.createHmac('sha256', csrfSecret()).update(raw).digest('hex');
+}
+
+function decodeBase64Url(value) {
+  return Buffer.from(String(value || ''), 'base64url').toString('utf8');
+}
+
+function verifyCsrfToken(token, actor) {
+  const parts = String(token || '').split('.');
+  if (parts.length !== 2) return false;
+  const encoded = parts[0];
+  const providedSig = parts[1];
+  const expectedSig = signCsrfPayload(encoded);
+  if (providedSig !== expectedSig) return false;
+
+  let payload = null;
+  try {
+    payload = JSON.parse(decodeBase64Url(encoded));
+  } catch (err) {
+    return false;
+  }
+  const now = Math.floor(Date.now() / 1000);
+  if (!payload || !payload.exp || payload.exp < now) return false;
+  if (String(payload.role || '') !== String(actor.role || '')) return false;
+  if (payload.email && actor.email && String(payload.email).toLowerCase() !== String(actor.email).toLowerCase()) return false;
+  return true;
+}
+
+function isPrivilegedRole(role) {
+  return role === 'admin' || role === 'reviewer';
+}
+
+function normalizePurchaseForQueue(purchase) {
+  const items = Array.isArray(purchase.items) ? purchase.items : [];
+  const hasCertificate = items.some((item) => String(item.id || '') === 'certificate');
+  const hasFramed = items.some((item) => String(item.id || '') === 'certificate-frame');
+  return {
+    id: purchase.id,
+    email: purchase.email || null,
+    date: purchase.date,
+    total: Number(purchase.total || 0),
+    items,
+    receipt: purchase.receipt || null,
+    credentialId: purchase.credentialId || null,
+    hasCertificate,
+    hasFramed,
+    verificationMode: purchase.verification && purchase.verification.mode ? purchase.verification.mode : null,
+    reviewerDecision: purchase.reviewerDecision || null,
+    reviewerNotes: purchase.reviewerNotes || null,
+    reviewedAt: purchase.reviewedAt || null,
+    reviewedBy: purchase.reviewedBy || null
+  };
+}
+
+async function issuePurchase(body, event) {
   const email = String(body.email || '').trim().toLowerCase();
   const items = Array.isArray(body.items) ? body.items : [];
+  const actor = await getActor(event).catch(() => ({ role: 'guest', email: null }));
+  const auditActor = resolveAuditActor(actor, email, 'learner');
+  const ip = getClientIp(event);
+  const userAgent = event.headers['user-agent'] || null;
   if (!email || !email.includes('@')) return json(400, { ok: false, error: 'Valid email is required' });
   if (!items.length) return json(400, { ok: false, error: 'At least one item is required' });
 
@@ -104,6 +185,22 @@ async function issuePurchase(body) {
     const allModulesPassed = requiredModuleIds.every((id) => modulePassByProgress[id] || modulePassBySubmissions[id]);
     const capstonePassed = (String(capstone.status || '').toLowerCase() === 'passed') || capstonePassedFromSubmissions;
     if (!allModulesPassed || !capstonePassed) {
+      await saveAudit({
+        ...auditActor,
+        action: 'purchase.issue_denied',
+        target_type: 'purchase_request',
+        target_id: email,
+        ip,
+        user_agent: userAgent,
+        metadata: {
+          requested_item_ids: requestedIds,
+          reason: 'certificate_requirements_not_met',
+          eligibility: {
+            all_modules_passed: allModulesPassed,
+            capstone_passed: capstonePassed
+          }
+        }
+      });
       return json(403, {
         ok: false,
         error: 'Certificate products require all six modules passed and capstone passed.',
@@ -120,7 +217,7 @@ async function issuePurchase(body) {
     id: 'ord_' + crypto.randomBytes(6).toString('hex'),
     date: now,
     total,
-    items: items,
+    items,
     verification: {
       mode: process.env.EFI_STRIPE_ENFORCE === 'true' ? 'stripe_required' : 'server_signed'
     }
@@ -160,6 +257,22 @@ async function issuePurchase(body) {
     credentialId: receiptPayload.credential_id
   }).catch(() => {});
 
+  await saveAudit({
+    ...auditActor,
+    action: 'purchase.issued',
+    target_type: 'purchase',
+    target_id: purchase.id,
+    ip,
+    user_agent: userAgent,
+    metadata: {
+      email,
+      requested_item_ids: requestedIds,
+      total,
+      verification_mode: purchase.verification.mode,
+      credential_id: receiptPayload.credential_id
+    }
+  });
+
   return json(200, {
     ok: true,
     purchase,
@@ -168,31 +281,173 @@ async function issuePurchase(body) {
   });
 }
 
+async function reviewCertificate(body, event) {
+  const actor = await getActor(event).catch(() => ({ role: 'guest', email: null }));
+  if (!isPrivilegedRole(actor.role)) return json(403, { ok: false, error: 'Privileged role required' });
+  const csrfToken = event.headers['x-efi-csrf'] || event.headers['X-EFI-CSRF'] || '';
+  if (!verifyCsrfToken(csrfToken, actor)) return json(403, { ok: false, error: 'CSRF validation failed' });
+
+  const email = String(body.email || '').trim().toLowerCase();
+  const credentialId = String(body.credential_id || '').trim().toUpperCase();
+  const decision = String(body.decision || '').trim().toLowerCase();
+  const reviewerNotes = String(body.reviewer_notes || '').trim();
+
+  if (!email || !email.includes('@')) return json(400, { ok: false, error: 'Valid email is required' });
+  if (!['approve_release', 'hold', 'reject'].includes(decision)) {
+    return json(400, { ok: false, error: 'decision must be approve_release, hold, or reject' });
+  }
+  if (reviewerNotes.length < 8) return json(400, { ok: false, error: 'reviewer_notes must explain the certificate decision' });
+
+  const purchasesRow = await db.listPurchases(email).catch(() => ({ purchases: [] }));
+  const certificatePurchase = (purchasesRow.purchases || []).find((purchase) => {
+    const hasCertificate = (purchase.items || []).some((item) => String(item.id || '') === 'certificate');
+    if (!hasCertificate) return false;
+    if (!credentialId) return true;
+    return String(purchase.credentialId || '').toUpperCase() === credentialId;
+  });
+
+  if (!certificatePurchase) {
+    return json(404, { ok: false, error: 'Certificate purchase record not found for this learner' });
+  }
+
+  const resolvedCredentialId = String(certificatePurchase.credentialId || credentialId || '').toUpperCase() || null;
+  const reviewedAt = new Date().toISOString();
+  const reviewedBy = actor.email || actor.role || null;
+  const persisted = await db.updatePurchaseReview(email, certificatePurchase.id, {
+    reviewerDecision: decision,
+    reviewerNotes,
+    reviewedAt,
+    reviewedBy
+  });
+  await saveAudit({
+    actor_role: actor.role,
+    actor_email: actor.email || null,
+    action: 'certificate.reviewer_decision',
+    target_type: 'credential',
+    target_id: resolvedCredentialId || certificatePurchase.id,
+    ip: getClientIp(event),
+    user_agent: event.headers['user-agent'] || null,
+    metadata: {
+      email,
+      decision,
+      reviewer_notes: reviewerNotes,
+      purchase_id: certificatePurchase.id,
+      credential_id: resolvedCredentialId
+    }
+  });
+
+  return json(200, {
+    ok: true,
+    decision,
+    purchase_id: certificatePurchase.id,
+    credential_id: resolvedCredentialId,
+    purchase: normalizePurchaseForQueue((persisted && persisted.purchase) || {
+      ...certificatePurchase,
+      email,
+      reviewerDecision: decision,
+      reviewerNotes,
+      reviewedAt,
+      reviewedBy
+    }),
+    message: 'Certificate reviewer decision recorded.'
+  });
+}
+
+async function listCertificateQueue(query, event) {
+  const actor = await getActor(event).catch(() => ({ role: 'guest', email: null }));
+  if (!isPrivilegedRole(actor.role)) return json(403, { ok: false, error: 'Privileged role required' });
+
+  const email = String(query.email || '').trim().toLowerCase();
+  const limit = Math.max(1, Math.min(200, parseInt(String(query.limit || '100'), 10) || 100));
+  const includeFramed = String(query.include_framed || '').trim() === '1';
+
+  const purchasesRow = await db.listAllPurchases({
+    email,
+    itemId: includeFramed ? '' : 'certificate',
+    limit
+  });
+
+  let purchases = (purchasesRow.purchases || []).map(normalizePurchaseForQueue);
+  if (!includeFramed) purchases = purchases.filter((purchase) => purchase.hasCertificate);
+
+  return json(200, {
+    ok: true,
+    storage: purchasesRow.storage,
+    count: purchases.length,
+    purchases
+  });
+}
+
 exports.handler = async function (event) {
   if (event.httpMethod === 'POST') {
     const body = await parseBody(event);
     if (!body) return json(400, { ok: false, error: 'Invalid JSON body' });
     if (body.action === 'issue_purchase') {
-      return issuePurchase(body);
+      return issuePurchase(body, event);
+    }
+    if (body.action === 'review_certificate') {
+      return reviewCertificate(body, event);
     }
     return json(400, { ok: false, error: 'Unsupported action' });
   }
 
   if (event.httpMethod === 'GET') {
-    const receiptToken = String((event.queryStringParameters || {}).receipt || '').trim();
-    const productId = String((event.queryStringParameters || {}).product || '').trim();
-    const credentialId = String((event.queryStringParameters || {}).credential_id || '').trim().toUpperCase();
+    const query = event.queryStringParameters || {};
+    if (String(query.review_queue || '').trim() === '1') {
+      return listCertificateQueue(query, event);
+    }
+
+    const receiptToken = String(query.receipt || '').trim();
+    const productId = String(query.product || '').trim();
+    const credentialId = String(query.credential_id || '').trim().toUpperCase();
+    const actor = await getActor(event).catch(() => ({ role: 'guest', email: null }));
+    const ip = getClientIp(event);
+    const userAgent = event.headers['user-agent'] || null;
 
     const checked = verifyReceiptToken(receiptToken);
-    if (!checked.ok) return json(403, { ok: false, error: checked.error });
+    if (!checked.ok) {
+      await saveAudit({
+        ...resolveAuditActor(actor, null, 'public'),
+        action: 'verification.check_failed',
+        target_type: 'receipt_token',
+        target_id: credentialId || productId || 'unknown',
+        ip,
+        user_agent: userAgent,
+        metadata: {
+          product_id: productId || null,
+          credential_id: credentialId || null,
+          error: checked.error
+        }
+      });
+      return json(403, { ok: false, error: checked.error });
+    }
 
     const receipt = checked.receipt;
     const hasProduct = !productId || (Array.isArray(receipt.items) && receipt.items.indexOf(productId) !== -1);
     const credentialMatches = !credentialId || String(receipt.credential_id || '').toUpperCase() === credentialId;
+    const verified = hasProduct && credentialMatches;
+
+    await saveAudit({
+      ...resolveAuditActor(actor, receipt.email || null, 'public'),
+      action: verified ? 'verification.check_passed' : 'verification.check_failed',
+      target_type: 'credential',
+      target_id: receipt.credential_id || receipt.purchase_id || 'unknown',
+      ip,
+      user_agent: userAgent,
+      metadata: {
+        purchase_id: receipt.purchase_id || null,
+        product_id: productId || null,
+        credential_id: credentialId || receipt.credential_id || null,
+        checks: {
+          product: hasProduct,
+          credential: credentialMatches
+        }
+      }
+    });
 
     return json(200, {
-      ok: hasProduct && credentialMatches,
-      verified: hasProduct && credentialMatches,
+      ok: verified,
+      verified,
       receipt: {
         purchase_id: receipt.purchase_id,
         issued_at: receipt.issued_at,

@@ -13,9 +13,19 @@ create table if not exists public.efi_user_purchases (
   total numeric(10,2) not null default 0,
   items jsonb not null default '[]'::jsonb,
   receipt text,
-  credential_id text
+  credential_id text,
+  reviewer_decision text,
+  reviewer_notes text,
+  reviewed_at timestamptz,
+  reviewed_by text
 );
 create index if not exists idx_efi_user_purchases_email on public.efi_user_purchases(email);
+create index if not exists idx_efi_user_purchases_credential_id on public.efi_user_purchases(credential_id);
+
+alter table public.efi_user_purchases add column if not exists reviewer_decision text;
+alter table public.efi_user_purchases add column if not exists reviewer_notes text;
+alter table public.efi_user_purchases add column if not exists reviewed_at timestamptz;
+alter table public.efi_user_purchases add column if not exists reviewed_by text;
 
 create table if not exists public.efi_payments (
   payment_intent_id text primary key,

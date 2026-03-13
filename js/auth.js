@@ -618,6 +618,41 @@ EFI.Auth = (function () {
     };
   }
 
+  function getReleaseMetrics(progressArg) {
+    var progress = normalizeProgress(progressArg || (getCurrentUser() && getCurrentUser().progress) || getDefaultProgress());
+    var pending = 0;
+    var releaseTimes = [];
+    var scores = [];
+
+    Object.keys(progress.submissions || {}).forEach(function (key) {
+      var row = progress.submissions[key] || {};
+      if (typeof row.score === 'number') scores.push(row.score);
+      if (row.releaseAt) {
+        var time = new Date(row.releaseAt).getTime();
+        if (time > Date.now()) {
+          pending += 1;
+          releaseTimes.push(time);
+        }
+      }
+    });
+
+    if (progress.capstone && progress.capstone.releaseAt) {
+      var capstoneTime = new Date(progress.capstone.releaseAt).getTime();
+      if (capstoneTime > Date.now()) {
+        pending += 1;
+        releaseTimes.push(capstoneTime);
+      }
+    }
+
+    releaseTimes.sort(function (a, b) { return a - b; });
+
+    return {
+      pendingReleaseCount: pending,
+      nextReleaseAt: releaseTimes.length ? new Date(releaseTimes[0]).toISOString() : null,
+      averageScore: scores.length ? Math.round(scores.reduce(function (a, b) { return a + b; }, 0) / scores.length) : null
+    };
+  }
+
   function submitCapstone(evidenceUrl, notes) {
     var user = getCurrentUser();
     if (!user) return Promise.resolve({ ok: false, error: 'Please log in first.' });
@@ -796,6 +831,7 @@ EFI.Auth = (function () {
     getLatestReceiptFor: getLatestReceiptFor,
     verifyPurchasedProduct: verifyPurchasedProduct,
     getCertificationStatus: getCertificationStatus,
+    getReleaseMetrics: getReleaseMetrics,
     submitCapstone: submitCapstone,
     runAutoGrading: runAutoGrading,
     saveModuleSubmission: saveModuleSubmission,

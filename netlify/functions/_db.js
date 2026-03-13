@@ -103,7 +103,13 @@ async function getProgress(email) {
 async function addPurchase(email, purchase) {
   const normalized = String(email || '').trim().toLowerCase();
   const list = MEM.purchases.get(normalized) || [];
-  list.push(purchase);
+  list.push({
+    ...purchase,
+    reviewerDecision: purchase.reviewerDecision || null,
+    reviewerNotes: purchase.reviewerNotes || null,
+    reviewedAt: purchase.reviewedAt || null,
+    reviewedBy: purchase.reviewedBy || null
+  });
   MEM.purchases.set(normalized, list);
 
   if (hasSupabase()) {
@@ -117,12 +123,32 @@ async function addPurchase(email, purchase) {
           total: Number(purchase.total || 0),
           items: purchase.items || [],
           receipt: purchase.receipt || null,
-          credential_id: purchase.credentialId || null
+          credential_id: purchase.credentialId || null,
+          reviewer_decision: purchase.reviewerDecision || null,
+          reviewer_notes: purchase.reviewerNotes || null,
+          reviewed_at: purchase.reviewedAt || null,
+          reviewed_by: purchase.reviewedBy || null
         }]
       });
       return { storage: 'supabase' };
     } catch (err) {
-      return { storage: 'memory' };
+      try {
+        await supabaseRequest('efi_user_purchases', {
+          method: 'POST',
+          body: [{
+            id: purchase.id,
+            email: normalized,
+            purchased_at: purchase.date || nowIso(),
+            total: Number(purchase.total || 0),
+            items: purchase.items || [],
+            receipt: purchase.receipt || null,
+            credential_id: purchase.credentialId || null
+          }]
+        });
+        return { storage: 'supabase' };
+      } catch (retryErr) {
+        return { storage: 'memory' };
+      }
     }
   }
 
@@ -134,7 +160,7 @@ async function listPurchases(email) {
 
   if (hasSupabase()) {
     try {
-      const rows = await supabaseRequest(`efi_user_purchases?email=eq.${encodeURIComponent(normalized)}&select=id,purchased_at,total,items,receipt,credential_id&order=purchased_at.desc`);
+      const rows = await supabaseRequest(`efi_user_purchases?email=eq.${encodeURIComponent(normalized)}&select=id,purchased_at,total,items,receipt,credential_id,reviewer_decision,reviewer_notes,reviewed_at,reviewed_by&order=purchased_at.desc`);
       return {
         storage: 'supabase',
         purchases: (rows || []).map((r) => ({
@@ -143,15 +169,151 @@ async function listPurchases(email) {
           total: Number(r.total || 0),
           items: r.items || [],
           receipt: r.receipt || null,
-          credentialId: r.credential_id || null
+          credentialId: r.credential_id || null,
+          reviewerDecision: r.reviewer_decision || null,
+          reviewerNotes: r.reviewer_notes || null,
+          reviewedAt: r.reviewed_at || null,
+          reviewedBy: r.reviewed_by || null
         }))
       };
     } catch (err) {
-      // fall through
+      try {
+        const rows = await supabaseRequest(`efi_user_purchases?email=eq.${encodeURIComponent(normalized)}&select=id,purchased_at,total,items,receipt,credential_id&order=purchased_at.desc`);
+        return {
+          storage: 'supabase',
+          purchases: (rows || []).map((r) => ({
+            id: r.id,
+            date: r.purchased_at,
+            total: Number(r.total || 0),
+            items: r.items || [],
+            receipt: r.receipt || null,
+            credentialId: r.credential_id || null,
+            reviewerDecision: null,
+            reviewerNotes: null,
+            reviewedAt: null,
+            reviewedBy: null
+          }))
+        };
+      } catch (retryErr) {
+        // fall through
+      }
     }
   }
 
   return { storage: 'memory', purchases: MEM.purchases.get(normalized) || [] };
+}
+
+async function listAllPurchases(options = {}) {
+  const email = options.email ? String(options.email).trim().toLowerCase() : '';
+  const itemId = options.itemId ? String(options.itemId).trim() : '';
+  const limit = Math.max(1, Math.min(500, Number(options.limit || 100)));
+
+  if (hasSupabase()) {
+    try {
+      const clauses = ['select=id,email,purchased_at,total,items,receipt,credential_id,reviewer_decision,reviewer_notes,reviewed_at,reviewed_by', 'order=purchased_at.desc', `limit=${limit}`];
+      if (email) clauses.push(`email=eq.${encodeURIComponent(email)}`);
+      const rows = await supabaseRequest(`efi_user_purchases?${clauses.join('&')}`);
+      let purchases = (rows || []).map((r) => ({
+        id: r.id,
+        email: r.email,
+        date: r.purchased_at,
+        total: Number(r.total || 0),
+        items: r.items || [],
+        receipt: r.receipt || null,
+        credentialId: r.credential_id || null,
+        reviewerDecision: r.reviewer_decision || null,
+        reviewerNotes: r.reviewer_notes || null,
+        reviewedAt: r.reviewed_at || null,
+        reviewedBy: r.reviewed_by || null
+      }));
+      if (itemId) {
+        purchases = purchases.filter((purchase) => (purchase.items || []).some((item) => String(item.id || '') === itemId));
+      }
+      return { storage: 'supabase', purchases };
+    } catch (err) {
+      try {
+        const clauses = ['select=id,email,purchased_at,total,items,receipt,credential_id', 'order=purchased_at.desc', `limit=${limit}`];
+        if (email) clauses.push(`email=eq.${encodeURIComponent(email)}`);
+        const rows = await supabaseRequest(`efi_user_purchases?${clauses.join('&')}`);
+        let purchases = (rows || []).map((r) => ({
+          id: r.id,
+          email: r.email,
+          date: r.purchased_at,
+          total: Number(r.total || 0),
+          items: r.items || [],
+          receipt: r.receipt || null,
+          credentialId: r.credential_id || null,
+          reviewerDecision: null,
+          reviewerNotes: null,
+          reviewedAt: null,
+          reviewedBy: null
+        }));
+        if (itemId) {
+          purchases = purchases.filter((purchase) => (purchase.items || []).some((item) => String(item.id || '') === itemId));
+        }
+        return { storage: 'supabase', purchases };
+      } catch (retryErr) {
+        // fall through
+      }
+    }
+  }
+
+  let purchases = [];
+  MEM.purchases.forEach((list, purchaseEmail) => {
+    if (email && purchaseEmail !== email) return;
+    (list || []).forEach((purchase) => {
+      purchases.push({
+        ...purchase,
+        email: purchaseEmail
+      });
+    });
+  });
+  if (itemId) {
+    purchases = purchases.filter((purchase) => (purchase.items || []).some((item) => String(item.id || '') === itemId));
+  }
+  purchases.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+  return { storage: 'memory', purchases: purchases.slice(0, limit) };
+}
+
+async function updatePurchaseReview(email, purchaseId, patch) {
+  const normalized = String(email || '').trim().toLowerCase();
+  const key = String(purchaseId || '').trim();
+  if (!normalized || !key) return null;
+
+  const list = MEM.purchases.get(normalized) || [];
+  let updated = null;
+  const nextList = list.map((purchase) => {
+    if (String(purchase.id || '') !== key) return purchase;
+    updated = {
+      ...purchase,
+      reviewerDecision: patch.reviewerDecision != null ? patch.reviewerDecision : (purchase.reviewerDecision || null),
+      reviewerNotes: patch.reviewerNotes != null ? patch.reviewerNotes : (purchase.reviewerNotes || null),
+      reviewedAt: patch.reviewedAt != null ? patch.reviewedAt : (purchase.reviewedAt || null),
+      reviewedBy: patch.reviewedBy != null ? patch.reviewedBy : (purchase.reviewedBy || null)
+    };
+    return updated;
+  });
+  if (!updated) return null;
+  MEM.purchases.set(normalized, nextList);
+
+  if (hasSupabase()) {
+    try {
+      await supabaseRequest(`efi_user_purchases?id=eq.${encodeURIComponent(key)}&email=eq.${encodeURIComponent(normalized)}`, {
+        method: 'PATCH',
+        body: {
+          reviewer_decision: updated.reviewerDecision,
+          reviewer_notes: updated.reviewerNotes,
+          reviewed_at: updated.reviewedAt,
+          reviewed_by: updated.reviewedBy
+        }
+      });
+      return { storage: 'supabase', purchase: updated };
+    } catch (err) {
+      return { storage: 'memory', purchase: updated };
+    }
+  }
+
+  return { storage: 'memory', purchase: updated };
 }
 
 async function savePaymentIntent(paymentIntentId, payload) {
@@ -238,8 +400,32 @@ async function createSubmission(row) {
   return { storage: 'memory', submission: stored };
 }
 
+async function getSubmission(id) {
+  const key = String(id || '').trim();
+  if (!key) return { found: false, submission: null, storage: 'memory' };
+
+  const cached = MEM.submissions.get(key);
+  if (cached) return { found: true, submission: cached, storage: 'memory' };
+
+  if (hasSupabase()) {
+    try {
+      const rows = await supabaseRequest(`efi_submissions?id=eq.${encodeURIComponent(key)}&select=*&limit=1`);
+      if (Array.isArray(rows) && rows.length) {
+        MEM.submissions.set(key, rows[0]);
+        return { found: true, submission: rows[0], storage: 'supabase' };
+      }
+      return { found: false, submission: null, storage: 'supabase' };
+    } catch (err) {
+      // fall through
+    }
+  }
+
+  return { found: false, submission: null, storage: 'memory' };
+}
+
 async function updateSubmission(id, patch) {
-  const existing = MEM.submissions.get(id);
+  const existingRow = await getSubmission(id);
+  const existing = existingRow && existingRow.submission ? existingRow.submission : null;
   if (!existing) return null;
   const next = { ...existing, ...patch };
   MEM.submissions.set(id, next);
@@ -276,6 +462,33 @@ async function listSubmissions(email) {
   });
   rows.sort((a, b) => String(b.submitted_at).localeCompare(String(a.submitted_at)));
   return { storage: 'memory', submissions: rows };
+}
+
+async function listAllSubmissions(options = {}) {
+  const kind = options.kind ? String(options.kind).trim().toLowerCase() : '';
+  const status = options.status ? String(options.status).trim().toLowerCase() : '';
+  const email = options.email ? String(options.email).trim().toLowerCase() : '';
+  const limit = Math.max(1, Math.min(500, Number(options.limit || 100)));
+
+  if (hasSupabase()) {
+    try {
+      const clauses = ['select=*', 'order=submitted_at.desc', `limit=${limit}`];
+      if (kind) clauses.push(`kind=eq.${encodeURIComponent(kind)}`);
+      if (status) clauses.push(`status=eq.${encodeURIComponent(status)}`);
+      if (email) clauses.push(`email=eq.${encodeURIComponent(email)}`);
+      const rows = await supabaseRequest(`efi_submissions?${clauses.join('&')}`);
+      return { storage: 'supabase', submissions: rows || [] };
+    } catch (err) {
+      // fall through
+    }
+  }
+
+  let rows = Array.from(MEM.submissions.values());
+  if (kind) rows = rows.filter((row) => String(row.kind || '').toLowerCase() === kind);
+  if (status) rows = rows.filter((row) => String(row.status || '').toLowerCase() === status);
+  if (email) rows = rows.filter((row) => String(row.email || '').toLowerCase() === email);
+  rows.sort((a, b) => String(b.submitted_at || '').localeCompare(String(a.submitted_at || '')));
+  return { storage: 'memory', submissions: rows.slice(0, limit) };
 }
 
 async function getDueFeedback(now) {
@@ -653,11 +866,15 @@ module.exports = {
   getProgress,
   addPurchase,
   listPurchases,
+  listAllPurchases,
+  updatePurchaseReview,
   savePaymentIntent,
   hasVerifiedPayment,
   createSubmission,
+  getSubmission,
   updateSubmission,
   listSubmissions,
+  listAllSubmissions,
   getDueFeedback,
   saveLead,
   saveEvent,

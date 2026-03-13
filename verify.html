@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Verify Certificate | The Executive Functioning Institute</title>
-  <meta name="description" content="Verify an EFI credential by entering a credential ID. Confirm the authenticity of a Certified Executive Function Coach certificate.">
+  <meta name="description" content="Verify an EFI credential using the signed verification token issued with the certificate. Confirm that a credential ID matches EFI's server-signed purchase record.">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="canonical" href="https://executivefunctioninginstitute.com/verify.html" />
 </head>
@@ -13,10 +13,18 @@
   <main id="main-content" class="section">
     <div class="container container--narrow">
       <h1>Verify Certificate</h1>
-      <p>Enter a credential ID (for example: <code>EFI-CEFC-XXXXXXX</code>) to validate against signed purchase records.</p>
+      <p>EFI does not run a public credential directory lookup by ID alone. Verification works from the signed token issued with the certificate. The credential ID is used as an optional cross-check.</p>
+      <div class="card" style="margin:var(--space-lg) 0;border-left:4px solid var(--color-primary);">
+        <h2 style="font-size:1.1rem;margin-bottom:var(--space-sm);">How this verification works</h2>
+        <ul style="padding-left:var(--space-lg);margin-bottom:0;">
+          <li>Use the full verification link from the certificate when possible.</li>
+          <li>Paste the signed receipt token if you were given the token separately.</li>
+          <li>Enter the credential ID to confirm the token matches the displayed certificate.</li>
+        </ul>
+      </div>
       <form id="verify-form">
-        <label for="verify-id">Credential ID</label>
-        <input id="verify-id" class="form-control" type="text" required placeholder="EFI-CEFC-..." style="margin-bottom:var(--space-md);">
+        <label for="verify-id">Credential ID (optional cross-check)</label>
+        <input id="verify-id" class="form-control" type="text" placeholder="EFI-CEFC-..." style="margin-bottom:var(--space-md);">
         <label for="verify-receipt">Signed Receipt Token</label>
         <input id="verify-receipt" class="form-control" type="text" required placeholder="Paste signed receipt token" style="margin-bottom:var(--space-md);">
         <button class="btn btn--primary" type="submit">Verify</button>
@@ -38,14 +46,17 @@
         return;
       }
 
-      fetch('/api/verify?receipt=' + encodeURIComponent(receipt) + '&product=certificate&credential_id=' + encodeURIComponent(id))
+      var query = '/api/verify?receipt=' + encodeURIComponent(receipt) + '&product=certificate';
+      if (id) query += '&credential_id=' + encodeURIComponent(id);
+
+      fetch(query)
         .then(function (res) { return res.json(); })
         .then(function (data) {
           if (!data.ok || !data.verified) {
-            out.innerHTML = '<h3>Not Verified</h3><p>No signed certificate match found for this credential ID.</p>';
+            out.innerHTML = '<h3>Not Verified</h3><p>The signed token did not produce a valid certificate match.</p><p style="color:var(--color-text-muted);">If you entered a credential ID, it may not match the receipt token you provided.</p>';
             return;
           }
-          out.innerHTML = '<h3>Verified</h3><p><strong>Credential ID:</strong> ' + data.receipt.credential_id + '</p><p><strong>Issued:</strong> ' + new Date(data.receipt.issued_at).toLocaleDateString() + '</p><p><strong>Status:</strong> Verified via server-signed purchase record.</p>';
+          out.innerHTML = '<h3>Verified</h3><p><strong>Credential ID:</strong> ' + data.receipt.credential_id + '</p><p><strong>Issued:</strong> ' + new Date(data.receipt.issued_at).toLocaleDateString() + '</p><p><strong>Status:</strong> Verified via EFI server-signed purchase record.</p>';
         }).catch(function () {
           out.innerHTML = '<h3>Verification Error</h3><p>Could not contact the verification service.</p>';
         });

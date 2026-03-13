@@ -164,3 +164,51 @@ test('failed module assessment does not count as completed', async () => {
   const { auth } = loadAuthWithUser(user);
   assert.equal(auth.isModuleComplete('3', auth.getCurrentUser().progress), false);
 });
+
+test('getReleaseMetrics summarizes pending releases and average score', async () => {
+  const future = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+  const laterFuture = new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString();
+  const user = {
+    email: 'metrics@example.com',
+    name: 'Metrics Learner',
+    role: 'learner',
+    progress: {
+      modules: { '1': true },
+      moduleAssessments: {
+        '1': {
+          moduleId: '1',
+          score: 88,
+          correct: 8,
+          total: 10,
+          passed: true,
+          completedAt: '2026-03-09T00:00:00.000Z'
+        }
+      },
+      submissions: {
+        '1': {
+          status: 'feedback_ready',
+          score: 88,
+          releaseAt: future
+        },
+        '2': {
+          status: 'feedback_ready',
+          score: 92,
+          releaseAt: laterFuture
+        }
+      },
+      esqrCompleted: false,
+      capstone: {
+        status: 'feedback_pending_release',
+        releaseAt: laterFuture
+      }
+    },
+    purchases: []
+  };
+
+  const { auth } = loadAuthWithUser(user);
+  const metrics = auth.getReleaseMetrics(auth.getCurrentUser().progress);
+
+  assert.equal(metrics.pendingReleaseCount, 3);
+  assert.equal(metrics.averageScore, 90);
+  assert.equal(metrics.nextReleaseAt, future);
+});

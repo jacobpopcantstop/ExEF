@@ -16,10 +16,25 @@ This is the single source of truth for **active needed changes**. Roadmaps/audit
   - `EFI_VIDEO_PROVIDER`
   - `EFI_VIDEO_ALLOWED_HOSTS`
 - [ ] Verify production webhook fanout delivery + persistence.
+- [ ] Apply Supabase `efi_user_purchases` migration for certificate review state columns (`reviewer_decision`, `reviewer_notes`, `reviewed_at`, `reviewed_by`).
 - [ ] Finalize/publish jurisdiction + principal-office legal metadata (if required for go-live policy).
 
 ### Release gate
 - [ ] Run `python3 scripts/release_gate.py` and resolve all blockers.
+
+## Recently Completed
+- ✅ Certificate review state now persists on purchase records and appears directly in the certificate review queue.
+- ✅ Reviewer-only submission override/release actions and certificate decision logging added with required notes and admin controls.
+- ✅ Server-side audit logging added for purchase issuance/denials, verification checks, submission events, and feedback release notifications, with admin audit-trail visibility.
+- ✅ Trust and member-operations copy aligned to real verification, purchase-state, and release-window behavior across certification, store, dashboard, login, and verify surfaces.
+- ✅ Full icon normalization completed on legacy utility navigation controls.
+- ✅ Production video CDN/storage provider policy finalized and enforced in manifest + release checks.
+- ✅ CMS-backed coach directory operations, moderation queue, and audit history.
+- ✅ Video metadata manifest and caption/transcript release-gate checks.
+- ✅ Community hub recap archive and API-backed anonymous question intake.
+- ✅ Certification transparency updates (SLA ranges + sample passing outline visibility).
+- ✅ Launch-blocker gate (`scripts/check_launch_blockers.py`) wired into release checks.
+- ✅ Conversion and trust copy polish across curriculum/store/enroll/legal surfaces.
 
 ---
 

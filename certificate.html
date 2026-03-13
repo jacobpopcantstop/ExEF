@@ -224,15 +224,18 @@
       return;
     }
 
+    if (!certStatus.eligibleForCertificate) {
+      gateMsg.innerHTML = 'A certificate purchase record was found, but your released readiness record is not complete yet. Refresh grading status from your <a href="dashboard.html">dashboard</a> or contact EFI support before treating this certificate as issued.';
+      gateActions.style.display = 'flex';
+      gateActions.style.justifyContent = 'center';
+      gateActions.style.gap = 'var(--space-md)';
+      document.getElementById('gate-login').style.display = 'none';
+      return;
+    }
+
     // Show certificate
     gate.style.display = 'none';
     certSection.style.display = 'block';
-
-    if (!certStatus.eligibleForCertificate) {
-      document.querySelector('.cert__watermark').textContent = 'Provisional Issue';
-      document.querySelector('.cert__watermark').style.color = 'rgba(211, 84, 0, 0.11)';
-      document.querySelector('.cert__subtitle').textContent = 'Certified Executive Functioning Coach (Provisional)';
-    }
 
     var user = EFI.Auth.getCurrentUser();
     document.getElementById('cert-name').textContent = user.name;
@@ -262,7 +265,7 @@
     if (!signedCheck || !signedCheck.verified) {
       gate.style.display = 'block';
       certSection.style.display = 'none';
-      gateMsg.textContent = 'Certificate purchase could not be validated by server verification.';
+      gateMsg.textContent = 'Certificate purchase could not be validated against the server-signed verification record.';
       gateActions.style.display = 'flex';
       gateActions.style.justifyContent = 'center';
       gateActions.style.gap = 'var(--space-md)';

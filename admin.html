@@ -200,6 +200,163 @@
           </div>
         </article>
 
+        <article class="card" style="grid-column:1 / -1;">
+          <h2>Submission Review Queue</h2>
+          <p>Pending and recently processed submissions with direct reviewer actions.</p>
+          <div class="grid grid--4" style="align-items:end;margin-bottom:var(--space-md);">
+            <div>
+              <label for="submission-queue-kind">Kind</label>
+              <select id="submission-queue-kind" class="form-control">
+                <option value="">All</option>
+                <option value="module">Module</option>
+                <option value="capstone">Capstone</option>
+              </select>
+            </div>
+            <div>
+              <label for="submission-queue-status">Status</label>
+              <select id="submission-queue-status" class="form-control">
+                <option value="">All</option>
+                <option value="feedback_ready">Feedback Ready</option>
+                <option value="needs_revision">Needs Revision</option>
+              </select>
+            </div>
+            <div>
+              <label for="submission-queue-email">Learner Email</label>
+              <input id="submission-queue-email" class="form-control" type="email" placeholder="Filter by learner email">
+            </div>
+            <div class="button-group">
+              <button type="button" id="submission-queue-refresh-btn" class="btn btn--secondary btn--sm">Refresh Queue</button>
+            </div>
+          </div>
+          <p id="submission-queue-status-text" style="font-size:0.9rem;color:var(--color-text-muted);">Loading submissions...</p>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Learner</th>
+                  <th>Submission</th>
+                  <th>Status</th>
+                  <th>Score</th>
+                  <th>Release</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="submission-queue-body">
+                <tr><td colspan="6">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card" style="grid-column:1 / -1;">
+          <h2>Certificate Review Queue</h2>
+          <p>Certificate purchase records ready for reviewer handling, with direct decision actions.</p>
+          <div class="grid grid--3" style="align-items:end;margin-bottom:var(--space-md);">
+            <div>
+              <label for="certificate-queue-email">Learner Email</label>
+              <input id="certificate-queue-email" class="form-control" type="email" placeholder="Filter by learner email">
+            </div>
+            <div>
+              <label for="certificate-queue-framed">Include Framed Add-ons</label>
+              <select id="certificate-queue-framed" class="form-control">
+                <option value="0">Certificate Purchases Only</option>
+                <option value="1">Include Framed Add-ons</option>
+              </select>
+            </div>
+            <div class="button-group">
+              <button type="button" id="certificate-queue-refresh-btn" class="btn btn--secondary btn--sm">Refresh Certificate Queue</button>
+            </div>
+          </div>
+          <p id="certificate-queue-status-text" style="font-size:0.9rem;color:var(--color-text-muted);">Loading certificate purchases...</p>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Learner</th>
+                  <th>Credential</th>
+                  <th>Purchased</th>
+                  <th>Total</th>
+                  <th>Decision</th>
+                  <th>Items</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="certificate-queue-body">
+                <tr><td colspan="7">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card" style="grid-column:1 / -1;">
+          <h2>Recent Ops Audit Trail</h2>
+          <p>Latest submission, verification, and purchase events recorded by the operational audit log.</p>
+          <div class="button-group" style="margin-bottom:var(--space-sm);">
+            <button type="button" id="ops-audit-refresh-btn" class="btn btn--secondary btn--sm">Refresh Audit Trail</button>
+            <button type="button" id="ops-audit-export-btn" class="btn btn--outline btn--sm">Export Ops Audit CSV</button>
+          </div>
+          <p id="ops-audit-status" style="font-size:0.9rem;color:var(--color-text-muted);">Loading audit trail...</p>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>When</th>
+                  <th>Action</th>
+                  <th>Actor</th>
+                  <th>Target</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody id="ops-audit-body">
+                <tr><td colspan="5">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Submission Review Controls</h2>
+          <p>Record a reviewer decision for a submission. Notes are required for overrides and manual release actions. Use the queue above to populate the submission ID when possible.</p>
+          <label for="review-submission-id">Submission ID</label>
+          <input id="review-submission-id" class="form-control" placeholder="sub_...">
+          <label for="review-submission-decision">Decision</label>
+          <select id="review-submission-decision" class="form-control">
+            <option value="release_now">Release Now</option>
+            <option value="override_pass">Override Pass</option>
+            <option value="override_fail">Override Fail</option>
+            <option value="needs_revision">Needs Revision</option>
+          </select>
+          <label for="review-submission-score">Score Override (optional)</label>
+          <input id="review-submission-score" class="form-control" type="number" min="0" max="100" placeholder="Leave blank to keep/default score">
+          <label for="review-submission-notes">Reviewer Notes</label>
+          <textarea id="review-submission-notes" class="form-control" rows="4" placeholder="Explain the override, release, or revision decision."></textarea>
+          <div class="button-group" style="margin-top:var(--space-md);">
+            <button type="button" id="review-submission-btn" class="btn btn--secondary btn--sm">Record Submission Decision</button>
+          </div>
+          <p id="review-submission-status" style="font-size:0.9rem;color:var(--color-text-muted);margin-top:var(--space-sm);"></p>
+        </article>
+
+        <article class="card">
+          <h2>Certificate Review Controls</h2>
+          <p>Record approve, hold, or reject decisions against a real certificate purchase record.</p>
+          <label for="review-certificate-email">Learner Email</label>
+          <input id="review-certificate-email" class="form-control" type="email" placeholder="learner@example.com">
+          <label for="review-certificate-id">Credential ID (optional)</label>
+          <input id="review-certificate-id" class="form-control" placeholder="EFI-CEFC-...">
+          <label for="review-certificate-decision">Decision</label>
+          <select id="review-certificate-decision" class="form-control">
+            <option value="approve_release">Approve Release</option>
+            <option value="hold">Hold</option>
+            <option value="reject">Reject</option>
+          </select>
+          <label for="review-certificate-notes">Reviewer Notes</label>
+          <textarea id="review-certificate-notes" class="form-control" rows="4" placeholder="Explain the certificate decision."></textarea>
+          <div class="button-group" style="margin-top:var(--space-md);">
+            <button type="button" id="review-certificate-btn" class="btn btn--secondary btn--sm">Record Certificate Decision</button>
+          </div>
+          <p id="review-certificate-status" style="font-size:0.9rem;color:var(--color-text-muted);margin-top:var(--space-sm);"></p>
+        </article>
+
         <article class="card">
           <h2>Release Checklist</h2>
           <p>Follow the release and governance checklist before production cutover.</p>

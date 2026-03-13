@@ -18,6 +18,11 @@
 ## 4) Security prerequisites
 - Auth/session/purchase/certification logic is server-backed through Netlify Functions + Supabase storage.
 - Signed certificate issuance and verification API is enabled (`/api/verify`).
+- Apply the latest `efi_user_purchases` schema additions for certificate review state:
+  - `reviewer_decision`
+  - `reviewer_notes`
+  - `reviewed_at`
+  - `reviewed_by`
 
 ## 5) Observability
 - Client telemetry + funnel analytics transport exists (`/api/track-event`); wire webhook targets to CRM/analytics ingestion.
@@ -33,6 +38,10 @@
 ## 7) Community + Directory Operations
 - Community recap intake endpoint: `/api/community-question` (anonymous question capture with rate limiting).
 - Directory CMS endpoint: `/api/coach-directory` with privileged moderation/edit/archive + CSV export support.
+- Reviewer ops endpoints:
+  - `/api/submissions?review_queue=1` for privileged submission queue access
+  - `/api/verify?review_queue=1` for privileged certificate queue access
+  - `/api/audit-logs` for privileged audit-trail review
 
 ## Security Header Baseline
 - Added `netlify.toml` with strict default headers (CSP, HSTS, XFO, XCTO, Referrer-Policy, Permissions-Policy).

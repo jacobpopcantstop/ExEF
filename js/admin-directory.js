@@ -3,6 +3,9 @@
   var lastAuditLogs = [];
   var lastConfigChecks = [];
   var lastCmsRecords = [];
+  var lastOpsAuditLogs = [];
+  var lastSubmissionQueue = [];
+  var lastCertificateQueue = [];
 
   function byId(id) {
     return document.getElementById(id);
@@ -21,6 +24,21 @@
 
   function setCmsStatus(message) {
     var status = byId('cms-status');
+    if (status) status.textContent = message;
+  }
+
+  function setOpsAuditStatus(message) {
+    var status = byId('ops-audit-status');
+    if (status) status.textContent = message;
+  }
+
+  function setSubmissionQueueStatus(message) {
+    var status = byId('submission-queue-status-text');
+    if (status) status.textContent = message;
+  }
+
+  function setCertificateQueueStatus(message) {
+    var status = byId('certificate-queue-status-text');
     if (status) status.textContent = message;
   }
 
@@ -435,6 +453,200 @@
       });
   }
 
+  function renderOpsAudit(logs) {
+    var body = byId('ops-audit-body');
+    if (!body) return;
+    if (!logs.length) {
+      body.innerHTML = '<tr><td colspan="5">No ops audit events loaded.</td></tr>';
+      return;
+    }
+    body.innerHTML = logs.map(function (log) {
+      var metadata = log.metadata || {};
+      var note = metadata.reason || metadata.error || metadata.email || metadata.verification_mode || JSON.stringify(metadata || {});
+      return (
+        '<tr>' +
+          '<td>' + escapeHTML(log.created_at ? new Date(log.created_at).toLocaleString() : 'N/A') + '</td>' +
+          '<td><code>' + escapeHTML(log.action || '') + '</code></td>' +
+          '<td>' + escapeHTML((log.actor_role || 'unknown') + (log.actor_email ? ' / ' + log.actor_email : '')) + '</td>' +
+          '<td>' + escapeHTML((log.target_type || 'n/a') + (log.target_id ? ' / ' + log.target_id : '')) + '</td>' +
+          '<td>' + escapeHTML(note) + '</td>' +
+        '</tr>'
+      );
+    }).join('');
+  }
+
+  function renderSubmissionQueue(records) {
+    var body = byId('submission-queue-body');
+    if (!body) return;
+    if (!records.length) {
+      body.innerHTML = '<tr><td colspan="6">No submissions match current filters.</td></tr>';
+      return;
+    }
+    body.innerHTML = records.map(function (row) {
+      var label = row.kind === 'capstone'
+        ? 'Capstone'
+        : ('Module ' + escapeHTML(row.module_id || '?'));
+      var releaseText = row.release_at ? new Date(row.release_at).toLocaleString() : 'Immediate';
+      var scoreText = row.feedback_available && typeof row.score === 'number' ? (row.score + '%') : 'Held';
+      return (
+        '<tr data-submission-id="' + escapeHTML(row.id) + '">' +
+          '<td><strong>' + escapeHTML(row.email || 'Unknown') + '</strong><br><small>' + escapeHTML(row.id || '') + '</small></td>' +
+          '<td>' + label + '</td>' +
+          '<td>' + escapeHTML(row.status || '') + '</td>' +
+          '<td>' + escapeHTML(scoreText) + '</td>' +
+          '<td>' + escapeHTML(releaseText) + '</td>' +
+          '<td><div class="button-group">' +
+            '<button type="button" class="btn btn--sm btn--secondary js-submission-release">Release</button>' +
+            '<button type="button" class="btn btn--sm btn--ghost js-submission-pass">Pass</button>' +
+            '<button type="button" class="btn btn--sm btn--ghost js-submission-revise">Revise</button>' +
+          '</div></td>' +
+        '</tr>'
+      );
+    }).join('');
+  }
+
+  function renderCertificateQueue(records) {
+    var body = byId('certificate-queue-body');
+    if (!body) return;
+    if (!records.length) {
+      body.innerHTML = '<tr><td colspan="7">No certificate purchases match current filters.</td></tr>';
+      return;
+    }
+    body.innerHTML = records.map(function (row) {
+      var items = (row.items || []).map(function (item) { return item.name || item.id || 'item'; }).join(', ');
+      var decision = row.reviewerDecision
+        ? (row.reviewerDecision + (row.reviewedAt ? ' (' + new Date(row.reviewedAt).toLocaleDateString() + ')' : ''))
+        : 'Pending';
+      return (
+        '<tr data-purchase-id="' + escapeHTML(row.id) + '" data-credential-id="' + escapeHTML(row.credentialId || '') + '" data-email="' + escapeHTML(row.email || '') + '">' +
+          '<td><strong>' + escapeHTML(row.email || 'Unknown') + '</strong><br><small>' + escapeHTML(row.id || '') + '</small></td>' +
+          '<td>' + escapeHTML(row.credentialId || 'Pending') + '</td>' +
+          '<td>' + escapeHTML(row.date ? new Date(row.date).toLocaleString() : 'N/A') + '</td>' +
+          '<td>$' + escapeHTML(String(row.total || 0)) + '</td>' +
+          '<td>' + escapeHTML(decision) + '</td>' +
+          '<td>' + escapeHTML(items || 'Certificate') + '</td>' +
+          '<td><div class="button-group">' +
+            '<button type="button" class="btn btn--sm btn--secondary js-certificate-approve">Approve</button>' +
+            '<button type="button" class="btn btn--sm btn--ghost js-certificate-hold">Hold</button>' +
+            '<button type="button" class="btn btn--sm btn--ghost js-certificate-reject">Reject</button>' +
+          '</div></td>' +
+        '</tr>'
+      );
+    }).join('');
+  }
+
+  function loadOpsAudit() {
+    setOpsAuditStatus('Loading audit trail...');
+    return fetch('/api/audit-logs?limit=100', {
+      headers: authHeaders()
+    })
+      .then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (payload) {
+          if (!res.ok || payload.ok === false) throw new Error(payload.error || 'Unable to load ops audit trail');
+          return payload;
+        });
+      })
+      .then(function (payload) {
+        lastOpsAuditLogs = payload.logs || [];
+        renderOpsAudit(lastOpsAuditLogs);
+        setOpsAuditStatus('Loaded ' + lastOpsAuditLogs.length + ' audit event(s).');
+      })
+      .catch(function (err) {
+        lastOpsAuditLogs = [];
+        renderOpsAudit([]);
+        setOpsAuditStatus(err.message || 'Unable to load ops audit trail.');
+      });
+  }
+
+  function readSubmissionQueueFilters() {
+    return {
+      kind: (byId('submission-queue-kind') && byId('submission-queue-kind').value || '').trim(),
+      status: (byId('submission-queue-status') && byId('submission-queue-status').value || '').trim(),
+      email: (byId('submission-queue-email') && byId('submission-queue-email').value || '').trim()
+    };
+  }
+
+  function loadSubmissionQueue() {
+    var filters = readSubmissionQueueFilters();
+    var params = new URLSearchParams({
+      review_queue: '1',
+      limit: '100'
+    });
+    if (filters.kind) params.set('kind', filters.kind);
+    if (filters.status) params.set('status', filters.status);
+    if (filters.email) params.set('email', filters.email);
+    setSubmissionQueueStatus('Loading submissions...');
+    return fetch('/api/submissions?' + params.toString(), {
+      headers: authHeaders()
+    })
+      .then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (payload) {
+          if (!res.ok || payload.ok === false) throw new Error(payload.error || 'Unable to load submission queue');
+          return payload;
+        });
+      })
+      .then(function (payload) {
+        lastSubmissionQueue = payload.submissions || [];
+        renderSubmissionQueue(lastSubmissionQueue);
+        setSubmissionQueueStatus('Loaded ' + lastSubmissionQueue.length + ' submission(s).');
+      })
+      .catch(function (err) {
+        lastSubmissionQueue = [];
+        renderSubmissionQueue([]);
+        setSubmissionQueueStatus(err.message || 'Unable to load submission queue.');
+      });
+  }
+
+  function readCertificateQueueFilters() {
+    return {
+      email: (byId('certificate-queue-email') && byId('certificate-queue-email').value || '').trim(),
+      include_framed: (byId('certificate-queue-framed') && byId('certificate-queue-framed').value || '0').trim()
+    };
+  }
+
+  function loadCertificateQueue() {
+    var filters = readCertificateQueueFilters();
+    var params = new URLSearchParams({
+      review_queue: '1',
+      limit: '100',
+      include_framed: filters.include_framed || '0'
+    });
+    if (filters.email) params.set('email', filters.email);
+    setCertificateQueueStatus('Loading certificate purchases...');
+    return fetch('/api/verify?' + params.toString(), {
+      headers: authHeaders()
+    })
+      .then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (payload) {
+          if (!res.ok || payload.ok === false) throw new Error(payload.error || 'Unable to load certificate queue');
+          return payload;
+        });
+      })
+      .then(function (payload) {
+        lastCertificateQueue = payload.purchases || [];
+        renderCertificateQueue(lastCertificateQueue);
+        setCertificateQueueStatus('Loaded ' + lastCertificateQueue.length + ' certificate purchase record(s).');
+      })
+      .catch(function (err) {
+        lastCertificateQueue = [];
+        renderCertificateQueue([]);
+        setCertificateQueueStatus(err.message || 'Unable to load certificate queue.');
+      });
+  }
+
+  function postJson(url, payload) {
+    return fetch(url, {
+      method: 'POST',
+      headers: Object.assign({ 'Content-Type': 'application/json' }, secureHeaders()),
+      body: JSON.stringify(payload)
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (!res.ok || data.ok === false) throw new Error(data.error || 'Request failed');
+        return data;
+      });
+    });
+  }
+
   function bindExportActions() {
     var auditBtn = byId('directory-audit-export-btn');
     if (auditBtn) {
@@ -511,6 +723,34 @@
         );
       });
     }
+
+    var opsAuditExportBtn = byId('ops-audit-export-btn');
+    if (opsAuditExportBtn) {
+      opsAuditExportBtn.addEventListener('click', function () {
+        if (!lastOpsAuditLogs.length) {
+          setOpsAuditStatus('No ops audit events loaded to export.');
+          return;
+        }
+        var rows = lastOpsAuditLogs.map(function (log) {
+          return [
+            log.id || '',
+            log.created_at || '',
+            log.actor_role || '',
+            log.actor_email || '',
+            log.action || '',
+            log.target_type || '',
+            log.target_id || '',
+            log.ip || '',
+            JSON.stringify(log.metadata || {})
+          ];
+        });
+        downloadCsv(
+          'efi-ops-audit-' + new Date().toISOString().slice(0, 10) + '.csv',
+          ['id', 'created_at', 'actor_role', 'actor_email', 'action', 'target_type', 'target_id', 'ip', 'metadata'],
+          rows
+        );
+      });
+    }
   }
 
   function bindCmsFilterControls() {
@@ -523,14 +763,175 @@
     });
   }
 
+  function bindOpsAuditControls() {
+    var refreshBtn = byId('ops-audit-refresh-btn');
+    if (refreshBtn) refreshBtn.addEventListener('click', loadOpsAudit);
+  }
+
+  function bindReviewControls() {
+    var submissionBtn = byId('review-submission-btn');
+    if (submissionBtn) {
+      submissionBtn.addEventListener('click', function () {
+        var status = byId('review-submission-status');
+        ensureCsrfToken().then(function () {
+          var payload = {
+            action: 'review_submission',
+            submission_id: (byId('review-submission-id').value || '').trim(),
+            decision: (byId('review-submission-decision').value || '').trim(),
+            reviewer_notes: (byId('review-submission-notes').value || '').trim()
+          };
+          var score = (byId('review-submission-score').value || '').trim();
+          if (score) payload.score = Number(score);
+          if (payload.decision === 'release_now') payload.release_now = true;
+          status.textContent = 'Recording submission decision...';
+          return postJson('/api/submissions', payload);
+        }).then(function (result) {
+          status.textContent = result.message || 'Submission decision recorded.';
+          loadOpsAudit();
+        }).catch(function (err) {
+          status.textContent = err.message || 'Unable to record submission decision.';
+        });
+      });
+    }
+
+    var certificateBtn = byId('review-certificate-btn');
+    if (certificateBtn) {
+      certificateBtn.addEventListener('click', function () {
+        var status = byId('review-certificate-status');
+        ensureCsrfToken().then(function () {
+          status.textContent = 'Recording certificate decision...';
+          return postJson('/api/verify', {
+            action: 'review_certificate',
+            email: (byId('review-certificate-email').value || '').trim(),
+            credential_id: (byId('review-certificate-id').value || '').trim(),
+            decision: (byId('review-certificate-decision').value || '').trim(),
+            reviewer_notes: (byId('review-certificate-notes').value || '').trim()
+          });
+        }).then(function (result) {
+          status.textContent = result.message || 'Certificate decision recorded.';
+          loadOpsAudit();
+        }).catch(function (err) {
+          status.textContent = err.message || 'Unable to record certificate decision.';
+        });
+      });
+    }
+  }
+
+  function bindSubmissionQueueControls() {
+    var refreshBtn = byId('submission-queue-refresh-btn');
+    if (refreshBtn) refreshBtn.addEventListener('click', loadSubmissionQueue);
+    ['submission-queue-kind', 'submission-queue-status', 'submission-queue-email'].forEach(function (id) {
+      var el = byId(id);
+      if (!el) return;
+      el.addEventListener(id === 'submission-queue-email' ? 'input' : 'change', loadSubmissionQueue);
+    });
+
+    var body = byId('submission-queue-body');
+    if (!body) return;
+    body.addEventListener('click', function (event) {
+      var target = event.target;
+      if (!target || !target.closest('tr')) return;
+      var row = target.closest('tr');
+      var submissionId = row.getAttribute('data-submission-id');
+      var submission = (lastSubmissionQueue || []).find(function (item) { return String(item.id) === String(submissionId); }) || null;
+      if (!submissionId || !submission) return;
+
+      function runDecision(decision, defaultNotes, score) {
+        ensureCsrfToken().then(function () {
+          setSubmissionQueueStatus('Recording reviewer decision...');
+          var payload = {
+            action: 'review_submission',
+            submission_id: submissionId,
+            decision: decision,
+            reviewer_notes: window.prompt('Reviewer notes', defaultNotes) || defaultNotes
+          };
+          if (score != null) payload.score = score;
+          if (decision === 'release_now') payload.release_now = true;
+          return postJson('/api/submissions', payload);
+        }).then(function () {
+          return Promise.all([loadSubmissionQueue(), loadOpsAudit()]);
+        }).catch(function (err) {
+          setSubmissionQueueStatus(err.message || 'Unable to record reviewer decision.');
+        });
+      }
+
+      if (target.classList.contains('js-submission-release')) {
+        runDecision('release_now', 'Manual release after reviewer check.');
+      }
+      if (target.classList.contains('js-submission-pass')) {
+        var passScore = typeof submission.score === 'number' ? Math.max(75, submission.score) : 85;
+        runDecision('override_pass', 'Manual pass after reviewer review.', passScore);
+      }
+      if (target.classList.contains('js-submission-revise')) {
+        var failScore = typeof submission.score === 'number' ? Math.min(74, submission.score) : 60;
+        runDecision('needs_revision', 'Needs revision after reviewer review.', failScore);
+      }
+    });
+  }
+
+  function bindCertificateQueueControls() {
+    var refreshBtn = byId('certificate-queue-refresh-btn');
+    if (refreshBtn) refreshBtn.addEventListener('click', loadCertificateQueue);
+    ['certificate-queue-email', 'certificate-queue-framed'].forEach(function (id) {
+      var el = byId(id);
+      if (!el) return;
+      el.addEventListener(id === 'certificate-queue-email' ? 'input' : 'change', loadCertificateQueue);
+    });
+
+    var body = byId('certificate-queue-body');
+    if (!body) return;
+    body.addEventListener('click', function (event) {
+      var target = event.target;
+      if (!target || !target.closest('tr')) return;
+      var row = target.closest('tr');
+      var email = row.getAttribute('data-email');
+      var credentialId = row.getAttribute('data-credential-id');
+      if (!email) return;
+
+      function runDecision(decision, defaultNotes) {
+        ensureCsrfToken().then(function () {
+          setCertificateQueueStatus('Recording certificate decision...');
+          return postJson('/api/verify', {
+            action: 'review_certificate',
+            email: email,
+            credential_id: credentialId,
+            decision: decision,
+            reviewer_notes: window.prompt('Reviewer notes', defaultNotes) || defaultNotes
+          });
+        }).then(function () {
+          return Promise.all([loadCertificateQueue(), loadOpsAudit()]);
+        }).catch(function (err) {
+          setCertificateQueueStatus(err.message || 'Unable to record certificate decision.');
+        });
+      }
+
+      if (target.classList.contains('js-certificate-approve')) {
+        runDecision('approve_release', 'Approve release after certificate review.');
+      }
+      if (target.classList.contains('js-certificate-hold')) {
+        runDecision('hold', 'Hold certificate pending additional review.');
+      }
+      if (target.classList.contains('js-certificate-reject')) {
+        runDecision('reject', 'Reject certificate release after review.');
+      }
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     if (!byId('directory-moderation-body')) return;
     bindModerationActions();
     bindCmsActions();
     bindCmsFilterControls();
+    bindSubmissionQueueControls();
+    bindCertificateQueueControls();
+    bindOpsAuditControls();
+    bindReviewControls();
     bindExportActions();
     loadQueue();
     loadCmsRecords();
+    loadSubmissionQueue();
+    loadCertificateQueue();
     loadOpsConfig();
+    loadOpsAudit();
   });
 })();

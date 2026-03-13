@@ -364,6 +364,14 @@
         </article>
       </div>
     </section>
+
+    <section class="section section--alt">
+      <div class="container">
+        <article class="card" id="cohort-analytics-container">
+          <p style="color:var(--color-text-muted);">Loading cohort analytics&hellip;</p>
+        </article>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
@@ -376,6 +384,7 @@
   <script src="js/auth.js"></script>
   <script src="js/main.js"></script>
   <script src="js/admin-directory.js"></script>
+  <script src="js/cohort-analytics.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       if (!EFI.Auth.requireRole(['admin', 'reviewer'], 'dashboard.html')) return;

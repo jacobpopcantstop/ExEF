@@ -359,6 +359,20 @@
       localStorage.setItem(ACTION_PLAN_STORAGE_KEY, JSON.stringify((plans || []).slice(-50)));
     }
 
+    function getAdaptiveCadence(baselineCadence) {
+      var plans = readActionPlans();
+      var active = plans.filter(function(p) { return p && p.state && p.state.status !== 'expired'; });
+      if (!active.length) return baselineCadence;
+      var engaged = active.filter(function(p) {
+        var s = p.state.status;
+        return s === 'started' || s === 'checkin_completed' || s === 'completed';
+      }).length;
+      var rate = engaged / active.length;
+      if (rate >= 0.8) return baselineCadence;
+      if (rate >= 0.5) return baselineCadence === '7d' ? '72h' : baselineCadence;
+      return '24h';
+    }
+
     function updateActionPlanStatus(planId, status) {
       var plans = readActionPlans();
       var updated = false;
@@ -566,6 +580,8 @@
     function buildTimeCalibratorPlan(metrics, latestEntry) {
       if (!metrics || !latestEntry) return null;
       var now = new Date();
+      var timeCadence = getAdaptiveCadence('7d');
+      var timeDueMs = timeCadence === '24h' ? 24 * 60 * 60 * 1000 : (timeCadence === '72h' ? 72 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000);
       return {
         schema_version: '1.0',
         plan_id: 'plan_time_' + Date.now(),
@@ -587,8 +603,8 @@
           evidence_prompt: 'How much did your average delta change after using the correction factor?'
         },
         recheck: {
-          cadence: '7d',
-          due_at: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          cadence: timeCadence,
+          due_at: new Date(now.getTime() + timeDueMs).toISOString(),
           metric_type: 'score_delta',
           success_threshold: { type: 'numeric_or_state', value: 1 }
         },
@@ -612,6 +628,8 @@
     function buildTaskFrictionPlan(latestResult) {
       if (!latestResult) return null;
       var now = new Date();
+      var taskCadence = getAdaptiveCadence('72h');
+      var taskDueMs = taskCadence === '24h' ? 24 * 60 * 60 * 1000 : (taskCadence === '72h' ? 72 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000);
       return {
         schema_version: '1.0',
         plan_id: 'plan_task_' + Date.now(),
@@ -633,8 +651,8 @@
           evidence_prompt: 'Did startup delay shrink after repeated use of the script?'
         },
         recheck: {
-          cadence: '72h',
-          due_at: new Date(now.getTime() + 72 * 60 * 60 * 1000).toISOString(),
+          cadence: taskCadence,
+          due_at: new Date(now.getTime() + taskDueMs).toISOString(),
           metric_type: 'self_rating',
           success_threshold: { type: 'numeric_or_state', value: 1 }
         },

@@ -121,14 +121,41 @@ document.addEventListener('DOMContentLoaded', function () {
       safeSetLocalStorage(ASSESSMENT_EVENTS_KEY, JSON.stringify((events || []).slice(-300)));
     }
 
+    function getAuthContext() {
+      try {
+        if (window.EFI && window.EFI.Auth && typeof window.EFI.Auth.isLoggedIn === 'function') {
+          var session = window.EFI.Auth.getSession ? window.EFI.Auth.getSession() : null;
+          return {
+            authenticated: window.EFI.Auth.isLoggedIn(),
+            auth_mode: session ? (session.mode || 'prototype') : 'guest'
+          };
+        }
+      } catch (e) {}
+      return { authenticated: false, auth_mode: 'guest' };
+    }
+
     function storeAssessmentEvent(payload) {
       if (!payload || !payload.event_name) return;
       var list = readAssessmentEvents();
+      var planId = payload.properties && payload.properties.plan_id ? payload.properties.plan_id : null;
+
+      // Dedupe: practice_plan_generated fires at most once per plan_id
+      if (payload.event_name === 'practice_plan_generated' && planId) {
+        var alreadyStored = list.some(function (e) {
+          return e && e.event_name === 'practice_plan_generated' &&
+            e.properties && e.properties.plan_id === planId;
+        });
+        if (alreadyStored) return;
+      }
+
+      var auth = getAuthContext();
       list.push({
         event_name: payload.event_name,
         page: payload.page,
         source: payload.source,
         properties: payload.properties || {},
+        authenticated: auth.authenticated,
+        auth_mode: auth.auth_mode,
         recorded_at: new Date().toISOString()
       });
       writeAssessmentEvents(list);
@@ -209,14 +236,16 @@ document.addEventListener('DOMContentLoaded', function () {
       plans.forEach(function(plan) {
         if (!isDue(plan)) return;
         plan.state = plan.state || {};
-        if (!plan.state.recheck_due_emitted_at) {
+        var currentCadence = plan.recheck && plan.recheck.cadence ? plan.recheck.cadence : '';
+        if (!plan.state.recheck_due_emitted_at || plan.state.recheck_due_emitted_cadence !== currentCadence) {
           plan.state.recheck_due_emitted_at = new Date().toISOString();
+          plan.state.recheck_due_emitted_cadence = currentCadence;
           plan.state.updated_at = plan.state.recheck_due_emitted_at;
           changed = true;
           track('spaced_recheck_due', {
             plan_id: plan.plan_id,
             source_tool: plan.source_tool || 'unknown',
-            cadence: plan.recheck && plan.recheck.cadence ? plan.recheck.cadence : '',
+            cadence: currentCadence,
             due_at: plan.recheck && plan.recheck.due_at ? plan.recheck.due_at : ''
           });
         }
@@ -409,6 +438,18 @@ document.addEventListener('DOMContentLoaded', function () {
       };
     }
 
+    function getLeastEngagedPlan(plans) {
+      var active = (plans || []).filter(function(p) {
+        return p && p.state && p.state.status !== 'expired' && p.state.status !== 'completed';
+      });
+      if (!active.length) return null;
+      return active.slice().sort(function(a, b) {
+        var ac = (a.state && Array.isArray(a.state.checkins)) ? a.state.checkins.length : 0;
+        var bc = (b.state && Array.isArray(b.state.checkins)) ? b.state.checkins.length : 0;
+        return ac - bc;
+      })[0];
+    }
+
     function renderDashboardPracticeCard(plans) {
       var page = window.location.pathname.split('/').pop() || 'index.html';
       if (page !== 'dashboard.html') return;
@@ -419,11 +460,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
       var summary = computePracticeAdherence(plans);
       var adherencePercent = Math.round(summary.adherenceRate * 100);
+      var isLowAdherence = summary.stateLabel === 'Needs support';
+      var borderColor = isLowAdherence ? '#c62828' : 'var(--color-primary)';
+      var statusColor = isLowAdherence ? '#c62828' : 'inherit';
+      var flagIcon = isLowAdherence
+        ? '<svg aria-hidden="true" style="display:inline-block;vertical-align:middle;margin-right:4px;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c62828" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>'
+        : '';
+
+      var interventionBlock = '';
+      if (isLowAdherence) {
+        var laggingPlan = getLeastEngagedPlan(plans);
+        var planLabel = laggingPlan && laggingPlan.focus && laggingPlan.focus.title
+          ? laggingPlan.focus.title
+          : 'your least-active plan';
+        interventionBlock =
+          '<div style="margin-top:var(--space-md);padding:var(--space-sm);background:rgba(198,40,40,0.06);border-radius:var(--border-radius);">' +
+          '<p style="margin:0 0 var(--space-xs) 0;font-weight:700;color:#c62828;">Intervention recommended</p>' +
+          '<p style="margin:0 0 var(--space-sm) 0;">Log a 2-minute check-in on <em>' + planLabel + '</em> to restart your consistency streak.</p>' +
+          '<a href="dashboard.html#learning-queue" class="btn btn--sm btn--secondary">Go to Learning Queue</a>' +
+          '</div>';
+      }
 
       var card = document.createElement('section');
       card.id = 'dashboard-practice-adherence';
       card.className = 'card';
-      card.style.borderLeft = '4px solid var(--color-primary)';
+      card.style.borderLeft = '4px solid ' + borderColor;
       card.style.marginBottom = 'var(--space-lg)';
       card.innerHTML =
         '<h3 style="margin-top:0;">Practice Adherence</h3>' +
@@ -433,8 +494,9 @@ document.addEventListener('DOMContentLoaded', function () {
           '<p style="margin:0;"><strong>Adherence:</strong> ' + adherencePercent + '% (' + summary.engagedPlans + '/' + summary.activePlans + ' active plans)</p>' +
           '<p style="margin:0;"><strong>Last 7 days check-ins:</strong> ' + summary.recentCheckins + '</p>' +
         '</div>' +
-        '<p style="margin:var(--space-sm) 0 0;"><strong>Status:</strong> ' + summary.stateLabel + '</p>' +
-        '<p style="margin:var(--space-xs) 0 0;color:var(--color-text-light);"><strong>Recovery prompt:</strong> ' + summary.recoveryPrompt + '</p>';
+        '<p style="margin:var(--space-sm) 0 0;color:' + statusColor + ';">' + flagIcon + '<strong>Status:</strong> ' + summary.stateLabel + '</p>' +
+        '<p style="margin:var(--space-xs) 0 0;color:var(--color-text-light);">' + summary.recoveryPrompt + '</p>' +
+        interventionBlock;
 
       anchor.insertAdjacentElement('afterbegin', card);
     }

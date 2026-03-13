@@ -16,7 +16,8 @@
           "correct": 3,
           "explanation": "Barkley identifies four primary executive functions: inhibition, working memory, emotional regulation, and reconstitution. While time perception is important in EF coaching, it is not one of his core primary functions.",
           "misconception_primary": "knowledge_vs_performance",
-          "misconception_secondary": "effort_vs_regulation"
+          "misconception_secondary": "effort_vs_regulation",
+          "difficulty": "easy"
         },
         {
           "id": "m1q2",
@@ -30,7 +31,8 @@
           "correct": 1,
           "explanation": "Temporal horizon is the psychological distance at which future consequences become 'real' and motivating to behavior. People with EF deficits often have a contracted temporal horizon, making long-term planning difficult.",
           "misconception_primary": "planning_without_transfer",
-          "misconception_secondary": "knowledge_vs_performance"
+          "misconception_secondary": "knowledge_vs_performance",
+          "difficulty": "easy"
         },
         {
           "id": "m1q3",
@@ -44,7 +46,8 @@
           "correct": 0,
           "explanation": "Verbal working memory and language-based reasoning mature later than other executive functions, often not fully developing until the mid-20s. This is why executive function deficits are sometimes more apparent in adolescence and young adulthood.",
           "misconception_primary": "knowledge_vs_performance",
-          "misconception_secondary": "effort_vs_regulation"
+          "misconception_secondary": "effort_vs_regulation",
+          "difficulty": "medium"
         },
         {
           "id": "m1q4",
@@ -58,7 +61,8 @@
           "correct": 1,
           "explanation": "The Extended Phenotype refers to the use of external structures, tools, reminders, and environmental modifications that replace or augment the internal executive function system. This is a core principle of EF coaching.",
           "misconception_primary": "willpower_over_protocol",
-          "misconception_secondary": "context_blind_intervention"
+          "misconception_secondary": "context_blind_intervention",
+          "difficulty": "easy"
         },
         {
           "id": "m1q5",
@@ -72,7 +76,8 @@
           "correct": 1,
           "explanation": "Understanding that EF deficits are rooted in neurobiology helps clients understand they are not lazy or unmotivated, but rather dealing with a brain-based challenge. This shifts the narrative and reduces internalized shame, which is essential for therapeutic change.",
           "misconception_primary": "effort_vs_regulation",
-          "misconception_secondary": "knowledge_vs_performance"
+          "misconception_secondary": "knowledge_vs_performance",
+          "difficulty": "medium"
         },
         {
           "id": "m1q6",
@@ -86,7 +91,8 @@
           "correct": 1,
           "explanation": "Time blindness in the context of EF is not literal inability to tell time, but rather difficulty holding future consequences in mind. It affects planning, deadline management, and understanding how long tasks take.",
           "misconception_primary": "planning_without_transfer",
-          "misconception_secondary": "willpower_over_protocol"
+          "misconception_secondary": "willpower_over_protocol",
+          "difficulty": "easy"
         },
         {
           "id": "m1q7",
@@ -100,7 +106,8 @@
           "correct": 1,
           "explanation": "The Extended Phenotype approach emphasizes environmental design and external tools rather than relying on willpower or internal systems. This is more effective and sustainable than trying to overcome deficits through effort alone.",
           "misconception_primary": "willpower_over_protocol",
-          "misconception_secondary": "context_blind_intervention"
+          "misconception_secondary": "context_blind_intervention",
+          "difficulty": "medium"
         },
         {
           "id": "m1q8",
@@ -112,7 +119,8 @@
           "correct": 1,
           "explanation": "False. Barkley views emotional dysregulation as a primary executive function deficit rooted in brain biology, not as a willpower or motivation problem. This is a critical distinction that changes how coaches approach the work.",
           "misconception_primary": "effort_vs_regulation",
-          "misconception_secondary": "knowledge_vs_performance"
+          "misconception_secondary": "knowledge_vs_performance",
+          "difficulty": "easy"
         }
       ]
     },
@@ -132,7 +140,8 @@
           "correct": 1,
           "explanation": "While coaches do not diagnose, a structured intake helps identify which executive functions are impaired, in which contexts, and to what degree. This information guides the coaching strategy.",
           "misconception_primary": "diagnostic_overreach",
-          "misconception_secondary": "knowledge_vs_performance"
+          "misconception_secondary": "knowledge_vs_performance",
+          "difficulty": "easy"
         },
         {
           "id": "m2q2",
@@ -146,7 +155,8 @@
           "correct": 3,
           "explanation": "While political preferences may be relevant context, they are not a core EF domain. Core domains include academic/work performance, social/emotional function, time/task management, and impulse control.",
           "misconception_primary": "diagnostic_overreach",
-          "misconception_secondary": "context_blind_intervention"
+          "misconception_secondary": "context_blind_intervention",
+          "difficulty": "easy"
         },
         {
           "id": "m2q3",
@@ -160,7 +170,8 @@
           "correct": 1,
           "explanation": "The ESQ-R (Executive Skill Questionnaire - Revised) is a self-report tool that helps identify patterns of executive function across multiple life domains. It's a coaching tool, not a diagnostic instrument.",
           "misconception_primary": "diagnostic_overreach",
-          "misconception_secondary": "ethics_scope_drift"
+          "misconception_secondary": "ethics_scope_drift",
+          "difficulty": "easy"
         },
         {
           "id": "m2q4",
@@ -174,7 +185,8 @@
           "correct": 2,
           "explanation": "Strengths-based coaching builds on existing capacities rather than only focusing on deficits. A client's strengths become resources for developing weaker areas.",
           "misconception_primary": "context_blind_intervention",
-          "misconception_secondary": "planning_without_transfer"
+          "misconception_secondary": "planning_without_transfer",
+          "difficulty": "medium"
         },
         {
           "id": "m2q5",
@@ -188,7 +200,8 @@
           "correct": 1,
           "explanation": "Goodness of Fit means that coaching strategies are tailored to the individual's unique profile of strengths, deficits, environment, and goals\u2014not applying generic solutions.",
           "misconception_primary": "context_blind_intervention",
-          "misconception_secondary": "planning_without_transfer"
+          "misconception_secondary": "planning_without_transfer",
+          "difficulty": "medium"
         },
         {
           "id": "m2q6",
@@ -202,7 +215,8 @@
           "correct": 0,
           "explanation": "Brown's Activation cluster includes the ability to organize thoughts, prioritize, and initiate action. It's foundational to planning and task initiation.",
           "misconception_primary": "knowledge_vs_performance",
-          "misconception_secondary": "planning_without_transfer"
+          "misconception_secondary": "planning_without_transfer",
+          "difficulty": "medium"
         }
       ]
     },
@@ -222,7 +236,8 @@
           "correct": 1,
           "explanation": "The coaching alliance is built on collaboration, trust, and shared responsibility for change. It's fundamentally different from a hierarchical expert-client relationship.",
           "misconception_primary": "knowledge_vs_performance",
-          "misconception_secondary": "ethics_scope_drift"
+          "misconception_secondary": "ethics_scope_drift",
+          "difficulty": "easy"
         },
         {
           "id": "m3q2",
@@ -236,7 +251,8 @@
           "correct": 1,
           "explanation": "Effective coaching is collaborative and action-oriented. The client does the work between sessions; the coach provides structure, accountability, and guidance.",
           "misconception_primary": "willpower_over_protocol",
-          "misconception_secondary": "planning_without_transfer"
+          "misconception_secondary": "planning_without_transfer",
+          "difficulty": "medium"
         },
         {
           "id": "m3q3",
@@ -250,7 +266,8 @@
           "correct": 1,
           "explanation": "Scaffolding is the process of providing structured support that decreases over time as the client internalizes skills and systems. It's based on the learning principle that temporary structure enables long-term independence.",
           "misconception_primary": "willpower_over_protocol",
-          "misconception_secondary": "planning_without_transfer"
+          "misconception_secondary": "planning_without_transfer",
+          "difficulty": "medium"
         },
         {
           "id": "m3q4",
@@ -262,7 +279,8 @@
           "correct": 1,
           "explanation": "False. While the coach provides structure and support, the client owns the responsibility for effort and implementation. The coach is a guide, not a fixer.",
           "misconception_primary": "planning_without_transfer",
-          "misconception_secondary": "knowledge_vs_performance"
+          "misconception_secondary": "knowledge_vs_performance",
+          "difficulty": "easy"
         },
         {
           "id": "m3q5",
@@ -276,7 +294,8 @@
           "correct": 1,
           "explanation": "Understanding what the client cares about helps ground coaching in intrinsic motivation. Strategies aligned with values are more likely to be sustained.",
           "misconception_primary": "planning_without_transfer",
-          "misconception_secondary": "context_blind_intervention"
+          "misconception_secondary": "context_blind_intervention",
+          "difficulty": "medium"
         }
       ]
     },
@@ -296,7 +315,8 @@
           "correct": 1,
           "explanation": "External structures (timers, checklists, visual reminders) offload cognitive work from impaired systems, freeing mental resources and building competence. This is the Extended Phenotype principle.",
           "misconception_primary": "willpower_over_protocol",
-          "misconception_secondary": "context_blind_intervention"
+          "misconception_secondary": "context_blind_intervention",
+          "difficulty": "medium"
         },
         {
           "id": "m4q2",
@@ -310,7 +330,8 @@
           "correct": 1,
           "explanation": "Task initiation problems are addressed by reducing the perception of task difficulty (breaking it down), adding external supports, and providing accountability or motivation from outside the person.",
           "misconception_primary": "willpower_over_protocol",
-          "misconception_secondary": "planning_without_transfer"
+          "misconception_secondary": "planning_without_transfer",
+          "difficulty": "medium"
         },
         {
           "id": "m4q3",
@@ -324,7 +345,8 @@
           "correct": 1,
           "explanation": "A working memory dump (or 'brain dump') is a technique where the client records all thoughts, worries, and to-dos externally. This reduces cognitive load and anxiety.",
           "misconception_primary": "planning_without_transfer",
-          "misconception_secondary": "willpower_over_protocol"
+          "misconception_secondary": "willpower_over_protocol",
+          "difficulty": "easy"
         },
         {
           "id": "m4q4",
@@ -338,7 +360,8 @@
           "correct": 3,
           "explanation": "Brown identifies 'Emotion' as one of six executive function clusters. Poor emotional regulation can derail coaching progress and require targeted interventions.",
           "misconception_primary": "knowledge_vs_performance",
-          "misconception_secondary": "effort_vs_regulation"
+          "misconception_secondary": "effort_vs_regulation",
+          "difficulty": "hard"
         },
         {
           "id": "m4q5",
@@ -350,7 +373,8 @@
           "correct": 1,
           "explanation": "False. Accountability in coaching means creating structures where the client reports progress and is supported to problem-solve obstacles\u2014not shamed. It's supportive, not punitive.",
           "misconception_primary": "ethics_scope_drift",
-          "misconception_secondary": "willpower_over_protocol"
+          "misconception_secondary": "willpower_over_protocol",
+          "difficulty": "easy"
         }
       ]
     },
@@ -370,7 +394,8 @@
           "correct": 1,
           "explanation": "Effective coaching is adapted to the client's developmental stage, life context, and priorities. Workplace accountability looks different from academic accountability.",
           "misconception_primary": "context_blind_intervention",
-          "misconception_secondary": "knowledge_vs_performance"
+          "misconception_secondary": "knowledge_vs_performance",
+          "difficulty": "medium"
         },
         {
           "id": "m5q2",
@@ -384,7 +409,8 @@
           "correct": 2,
           "explanation": "The approach depends on which issue is creating the primary barrier. Sometimes anxiety management is needed before EF coaching can be effective; sometimes the reverse is true.",
           "misconception_primary": "context_blind_intervention",
-          "misconception_secondary": "planning_without_transfer"
+          "misconception_secondary": "planning_without_transfer",
+          "difficulty": "hard"
         },
         {
           "id": "m5q3",
@@ -398,7 +424,8 @@
           "correct": 1,
           "explanation": "Time bridging uses alarms, timers, visual schedules, and frequent coach contact to create external awareness of time passage. Over time, this can help develop a more accurate internal sense of time.",
           "misconception_primary": "planning_without_transfer",
-          "misconception_secondary": "willpower_over_protocol"
+          "misconception_secondary": "willpower_over_protocol",
+          "difficulty": "medium"
         },
         {
           "id": "m5q4",
@@ -412,7 +439,8 @@
           "correct": 2,
           "explanation": "Open-ended environments with no external structure place full responsibility on internal executive function systems. Structured environments provide scaffolding. This is why coaching is so effective\u2014it provides external structure.",
           "misconception_primary": "context_blind_intervention",
-          "misconception_secondary": "knowledge_vs_performance"
+          "misconception_secondary": "knowledge_vs_performance",
+          "difficulty": "medium"
         },
         {
           "id": "m5q5",
@@ -426,7 +454,8 @@
           "correct": 1,
           "explanation": "Parent coaching focuses on helping families provide appropriately structured environments while gradually building the child's independence. This is scaffolding in practice.",
           "misconception_primary": "willpower_over_protocol",
-          "misconception_secondary": "context_blind_intervention"
+          "misconception_secondary": "context_blind_intervention",
+          "difficulty": "hard"
         }
       ]
     },
@@ -446,7 +475,8 @@
           "correct": 1,
           "explanation": "While there is overlap, coaching is future-focused and goal-oriented, while therapy typically addresses past trauma and underlying pathology. Coaches need clear boundaries and referral relationships.",
           "misconception_primary": "ethics_scope_drift",
-          "misconception_secondary": "diagnostic_overreach"
+          "misconception_secondary": "diagnostic_overreach",
+          "difficulty": "easy"
         },
         {
           "id": "m6q2",
@@ -458,7 +488,8 @@
           "correct": 1,
           "explanation": "False. Coaches are not diagnosticians. While they assess executive function patterns, diagnosis requires a qualified healthcare provider. Coaches should know when to refer.",
           "misconception_primary": "diagnostic_overreach",
-          "misconception_secondary": "ethics_scope_drift"
+          "misconception_secondary": "ethics_scope_drift",
+          "difficulty": "easy"
         },
         {
           "id": "m6q3",
@@ -472,7 +503,8 @@
           "correct": 1,
           "explanation": "Suicidal ideation is beyond the scope of coaching and requires immediate professional mental health intervention. The coach should stop coaching and facilitate referral.",
           "misconception_primary": "ethics_scope_drift",
-          "misconception_secondary": "diagnostic_overreach"
+          "misconception_secondary": "diagnostic_overreach",
+          "difficulty": "hard"
         },
         {
           "id": "m6q4",
@@ -486,7 +518,8 @@
           "correct": 1,
           "explanation": "Scope of practice defines the boundaries of what a coach is trained to do. Working outside scope is unethical and potentially harmful.",
           "misconception_primary": "ethics_scope_drift",
-          "misconception_secondary": "diagnostic_overreach"
+          "misconception_secondary": "diagnostic_overreach",
+          "difficulty": "medium"
         },
         {
           "id": "m6q5",
@@ -500,7 +533,8 @@
           "correct": 1,
           "explanation": "A coaching agreement sets clear expectations and protects both coach and client by establishing boundaries, payment terms, confidentiality, and scope.",
           "misconception_primary": "ethics_scope_drift",
-          "misconception_secondary": "planning_without_transfer"
+          "misconception_secondary": "planning_without_transfer",
+          "difficulty": "medium"
         },
         {
           "id": "m6q6",
@@ -514,7 +548,8 @@
           "correct": 2,
           "explanation": "Informed consent means the client enters coaching with full understanding of what it is, what to expect, limitations, and confidentiality. This is essential for ethical practice.",
           "misconception_primary": "ethics_scope_drift",
-          "misconception_secondary": "diagnostic_overreach"
+          "misconception_secondary": "diagnostic_overreach",
+          "difficulty": "medium"
         },
         {
           "id": "m6q7",
@@ -528,7 +563,8 @@
           "correct": 1,
           "explanation": "Most jurisdictions require coaches to report suspected child abuse/neglect. This is a legal and ethical obligation that supersedes confidentiality agreements.",
           "misconception_primary": "ethics_scope_drift",
-          "misconception_secondary": "context_blind_intervention"
+          "misconception_secondary": "context_blind_intervention",
+          "difficulty": "hard"
         }
       ]
     }
@@ -557,7 +593,12 @@
           "label": "Friction diagnostics and startup protocol",
           "href": "task-start-friction.html"
         }
-      ]
+      ],
+      "difficulty_ladder": {
+        "easy": { "ids": ["m1q8"], "guidance": "Review the foundational distinction between biological regulation load and character/motivation." },
+        "medium": { "ids": ["m1q5"], "guidance": "Apply the neurobiology framing to a real client scenario and identify one shame-reduction reframe." },
+        "hard": { "ids": [], "guidance": "Practice coaching through complex emotional dysregulation episodes using only regulation-load language." }
+      }
     },
     "knowledge_vs_performance": {
       "title": "Knowledge vs Performance Distinction",
@@ -582,7 +623,12 @@
           "label": "Behavior-first coaching architecture",
           "href": "module-3.html"
         }
-      ]
+      ],
+      "difficulty_ladder": {
+        "easy": { "ids": ["m1q1", "m3q1"], "guidance": "Focus on core definitions: what each model says, not how to apply it." },
+        "medium": { "ids": ["m1q3", "m2q6"], "guidance": "Practice distinguishing knowledge from demonstrated execution in intake and session scenarios." },
+        "hard": { "ids": ["m4q4"], "guidance": "Apply multi-model integration (Brown + Barkley) to complex session disruption scenarios." }
+      }
     },
     "diagnostic_overreach": {
       "title": "Non-Diagnostic Coaching Boundaries",
@@ -607,7 +653,12 @@
           "label": "EFI Scope of Practice policy",
           "href": "scope-of-practice.html"
         }
-      ]
+      ],
+      "difficulty_ladder": {
+        "easy": { "ids": ["m2q1", "m2q2", "m2q3", "m6q2"], "guidance": "Review the core intake purpose and what coaches can and cannot assess or label." },
+        "medium": { "ids": [], "guidance": "Practice reframing assessment language from diagnostic to pattern-based in a mock intake." },
+        "hard": { "ids": [], "guidance": "Navigate complex cases where a client presents clinical indicators and self-diagnoses." }
+      }
     },
     "context_blind_intervention": {
       "title": "Context-Fit Intervention Design",
@@ -632,7 +683,12 @@
           "label": "Population-sensitive intervention adaptation",
           "href": "module-5.html"
         }
-      ]
+      ],
+      "difficulty_ladder": {
+        "easy": { "ids": [], "guidance": "Review the Goodness of Fit framework and identify 3 context variables that change strategy selection." },
+        "medium": { "ids": ["m2q4", "m2q5", "m4q1", "m5q1", "m5q4"], "guidance": "Apply context-fit reasoning to single-profile cases and select one well-matched intervention." },
+        "hard": { "ids": ["m5q2"], "guidance": "Navigate complex comorbid cases where multiple context factors conflict and require prioritization." }
+      }
     },
     "planning_without_transfer": {
       "title": "Planning-to-Transfer Bridge",
@@ -657,7 +713,12 @@
           "label": "Time calibration and repeated measurement",
           "href": "time-blindness-calibrator.html"
         }
-      ]
+      ],
+      "difficulty_ladder": {
+        "easy": { "ids": ["m1q2", "m1q6", "m3q4", "m4q3"], "guidance": "Review foundational concepts: temporal horizon, time blindness, and external offloading." },
+        "medium": { "ids": ["m3q5", "m5q3"], "guidance": "Practice building a plan with explicit transfer steps, done-states, and time-bridging tools." },
+        "hard": { "ids": [], "guidance": "Design a full execution loop for a high-friction, multi-context client scenario with delayed recheck." }
+      }
     },
     "willpower_over_protocol": {
       "title": "Protocol over Willpower",
@@ -682,7 +743,12 @@
           "label": "Task-start protocol and time-bridging tools",
           "href": "module-5.html"
         }
-      ]
+      ],
+      "difficulty_ladder": {
+        "easy": { "ids": ["m1q4"], "guidance": "Ground yourself in the Extended Phenotype principle: external tools substitute for, not supplement, internal EF." },
+        "medium": { "ids": ["m1q7", "m3q2", "m3q3", "m4q2"], "guidance": "Practice converting willpower-framed advice into concrete protocol or environmental modification." },
+        "hard": { "ids": ["m5q5"], "guidance": "Apply scaffolding + protocol design in complex family or organizational coaching contexts." }
+      }
     },
     "ethics_scope_drift": {
       "title": "Ethics and Scope Control",
@@ -707,7 +773,12 @@
           "label": "Coach directory policy and legal guardrails",
           "href": "coach-directory-policy.html"
         }
-      ]
+      ],
+      "difficulty_ladder": {
+        "easy": { "ids": ["m4q5", "m6q1"], "guidance": "Review the core distinctions: coaching vs therapy, accountability vs shame, role clarity." },
+        "medium": { "ids": ["m6q4", "m6q5", "m6q6"], "guidance": "Practice applying scope, consent, and agreement standards to routine intake and contracting scenarios." },
+        "hard": { "ids": ["m6q3", "m6q7"], "guidance": "Navigate safety crisis and mandated-reporting scenarios: when to pause coaching and how to escalate." }
+      }
     }
   }
 }

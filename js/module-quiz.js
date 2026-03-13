@@ -121,12 +121,25 @@
     return ranked.length ? ranked[0] : '';
   }
 
+  function getMissedDifficultyLevel(missedQuestions, topMisconception) {
+    var relevant = missedQuestions.filter(function(q) {
+      return q.misconception_primary === topMisconception || q.misconception_secondary === topMisconception;
+    });
+    if (!relevant.length) return 'medium';
+    var counts = { easy: 0, medium: 0, hard: 0 };
+    relevant.forEach(function(q) { var d = q.difficulty || 'medium'; counts[d] = (counts[d] || 0) + 1; });
+    if (counts.easy >= 1) return 'easy';
+    if (counts.medium >= 1) return 'medium';
+    return 'hard';
+  }
+
   function buildActionPlanPayload(summary) {
     var remediationMap = (quizData && quizData.remediation_map) ? quizData.remediation_map : {};
     var missedQuestions = currentQuiz.data.questions.filter(function(question) {
       return userAnswers[question.id] !== question.correct;
     });
     var focusKey = getTopMisconceptionTag(missedQuestions, remediationMap);
+    var adaptiveDifficulty = getMissedDifficultyLevel(missedQuestions, focusKey);
     var remediation = remediationMap[focusKey] || {
       title: summary.passed ? 'Retention and Transfer Reinforcement' : 'Concept Reinforcement Plan',
       summary: summary.passed
@@ -171,7 +184,8 @@
         success_threshold: {
           type: 'numeric_or_state',
           value: summary.passed ? 0 : 1
-        }
+        },
+        adaptive_difficulty: adaptiveDifficulty
       },
       remediation_links: (remediation.module_targets || []).map(function(target) {
         return { label: target.label, href: target.href };
@@ -356,9 +370,15 @@
         return '<li><a href="' + target.href + '">' + target.label + '</a></li>';
       }).join('');
 
+      var diffLevel = getMissedDifficultyLevel(missedQuestions, key);
+      var ladder = rem.difficulty_ladder && rem.difficulty_ladder[diffLevel];
+      var diffLabel = diffLevel === 'easy' ? 'Foundational' : (diffLevel === 'hard' ? 'Advanced' : 'Applied');
+      var diffGuidance = ladder && ladder.guidance ? ladder.guidance : '';
+
       html += '<div style="margin-top:var(--space-md);padding-top:var(--space-sm);border-top:1px solid var(--color-border);">' +
-        '<p style="margin:0 0 var(--space-xs) 0;"><strong>' + rem.title + '</strong> <span style="color:var(--color-text-muted);font-size:0.9rem;">(' + item.count + ' missed)</span></p>' +
+        '<p style="margin:0 0 var(--space-xs) 0;"><strong>' + rem.title + '</strong> <span style="color:var(--color-text-muted);font-size:0.9rem;">(' + item.count + ' missed \u00b7 ' + diffLabel + ' level)</span></p>' +
         '<p style="margin:0 0 var(--space-xs) 0;color:var(--color-text-light);">' + rem.summary + '</p>' +
+        (diffGuidance ? '<p style="margin:0 0 var(--space-xs) 0;"><strong>Where to focus:</strong> ' + diffGuidance + '</p>' : '') +
         (actions[0] ? '<p style="margin:0 0 var(--space-xs) 0;"><strong>Try next:</strong> ' + actions[0] + '</p>' : '') +
         (links ? '<ul class="checklist" style="margin-top:0;">' + links + '</ul>' : '') +
       '</div>';

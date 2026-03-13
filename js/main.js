@@ -157,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   })();
 
-
   (function initSpacedRecheckEngine() {
     var ACTION_PLAN_KEY = 'efi_action_plans_v1';
 
@@ -687,6 +686,69 @@ document.addEventListener('DOMContentLoaded', function () {
     renderDashboardRecheckCard(updatedPlans);
   })();
 
+  (function normalizeInstitutionFooter() {
+    var footer = document.querySelector('.footer');
+    if (!footer) return;
+    var container = footer.querySelector('.container');
+    if (!container) return;
+
+    container.innerHTML =
+      '<div class="footer__grid footer__grid--institutional">' +
+        '<div class="footer__brand footer__brand--institutional">' +
+          '<p class="footer__eyebrow">Route Before You Buy</p>' +
+          '<a href="index.html" class="nav__logo" style="color:var(--color-white);">' +
+            '<div class="nav__logo-icon">EFI</div><span>Executive Functioning Institute</span>' +
+          '</a>' +
+          '<p>EFI is structured as a decision tree. Visitors should identify their role, use one free tool or route page first, and only move to paid review when the next step is already obvious.</p>' +
+          '<ul class="footer__dossier">' +
+            '<li><span>Step 1</span><strong>Choose a role: parent, educator, or practitioner</strong></li>' +
+            '<li><span>Step 2</span><strong>Use the free layer: assessments, toolkits, curriculum, and public standards</strong></li>' +
+            '<li><span>Step 3</span><strong>Use reviewed services only when the route and scope are already clear</strong></li>' +
+          '</ul>' +
+        '</div>' +
+        '<div>' +
+          '<h4>Audience Routes</h4>' +
+          '<ul class="footer__links">' +
+            '<li><a href="coaching-home.html">Parents and Families</a></li>' +
+            '<li><a href="teacher-to-coach.html">Educators in Transition</a></li>' +
+            '<li><a href="certification.html">Professionals and Practitioners</a></li>' +
+            '<li><a href="index.html#start-paths">Homepage Router</a></li>' +
+          '</ul>' +
+        '</div>' +
+        '<div>' +
+          '<h4>Free Layer</h4>' +
+          '<ul class="footer__links">' +
+            '<li><a href="resources.html#assessments">Assessments and Tools</a></li>' +
+            '<li><a href="resources.html#toolkits">Role-Based Toolkits</a></li>' +
+            '<li><a href="curriculum.html">Open Curriculum</a></li>' +
+            '<li><a href="resources.html#library">Reference Library</a></li>' +
+          '</ul>' +
+        '</div>' +
+        '<div>' +
+          '<h4>Reviewed Next Steps</h4>' +
+          '<ul class="footer__links">' +
+            '<li><a href="certification.html">Certification Standards</a></li>' +
+            '<li><a href="store.html">Reviewed Services</a></li>' +
+            '<li><a href="coaching-contact.html">Start an Intake Conversation</a></li>' +
+            '<li><a href="store.html#paid-path">Free vs Paid Boundary</a></li>' +
+          '</ul>' +
+        '</div>' +
+        '<div>' +
+          '<h4>Evidence</h4>' +
+          '<ul class="footer__links">' +
+            '<li><a href="EFI-Capstone-Transparency-Rubric.pdf" target="_blank" rel="noopener">Capstone Rubric PDF</a></li>' +
+            '<li><a href="EFI-Competency-Crosswalk-Map.pdf" target="_blank" rel="noopener">Competency Crosswalk</a></li>' +
+            '<li><a href="verify.html">Credential Verification</a></li>' +
+            '<li><a href="resources.html#source-access">Source Access Notes</a></li>' +
+            '<li><a href="https://github.com/jacobpopcantstop/TheExecutiveFunctioningInstitute" target="_blank" rel="noopener">GitHub Repository</a></li>' +
+          '</ul>' +
+        '</div>' +
+      '</div>' +
+      '<div class="footer__bottom">' +
+        '<span class="footer__status">Built around Barkley, Brown, Dawson &amp; Guare, and Ward with public routing, standards, and review artifacts.</span>' +
+      '</div>';
+  })();
+
   (function injectFooterLegalLinks() {
     var footers = document.querySelectorAll('.footer__bottom');
     if (!footers.length) return;
@@ -707,34 +769,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var primaryLinks = [
       { href: 'index.html', label: 'Home' },
-      { href: 'about.html', label: 'About' },
       { href: 'curriculum.html', label: 'Curriculum' },
       { href: 'resources.html', label: 'Resources' },
-      { href: 'coaching-home.html', label: 'Coaching' },
-      { href: 'store.html', label: 'Store' },
       { href: 'certification.html', label: 'Certification' }
+    ];
+
+    var audienceLinks = [
+      { href: 'coaching-home.html', label: 'Parents' },
+      { href: 'teacher-to-coach.html', label: 'Educators' },
+      { href: 'certification.html', label: 'Professionals' }
     ];
 
     document.querySelectorAll('.nav__links').forEach(function (links) {
       var existingAuth = links.querySelector('.nav__auth');
       var authHtml = existingAuth ? existingAuth.innerHTML : '';
-      var currentSignature = Array.prototype.map.call(links.children, function (child) {
-        if (child.classList && child.classList.contains('nav__auth')) return 'auth';
-        if (child.tagName === 'A') return (child.getAttribute('href') || '') + '|' + child.textContent.trim();
-        return '';
-      }).join('||');
-      var expectedSignature = primaryLinks.map(function (item) {
-        return item.href + '|' + item.label;
-      }).join('||') + '||auth||store.html|View Store';
-      if (currentSignature === expectedSignature) return;
-      var html = '';
+      var html = '<div class="nav__cluster">' +
+        '<p class="nav__eyebrow">Explore</p>';
 
       primaryLinks.forEach(function (item) {
         html += '<a href="' + item.href + '" class="nav__link">' + item.label + '</a>';
       });
 
-      html += '<span class="nav__auth">' + authHtml + '</span>';
-      html += '<a href="store.html" class="nav__link nav__link--cta">View Store</a>';
+      html += '</div><div class="nav__cluster nav__cluster--support">' +
+        '<p class="nav__eyebrow">By Audience</p>';
+
+      audienceLinks.forEach(function (item) {
+        html += '<a href="' + item.href + '" class="nav__link">' + item.label + '</a>';
+      });
+
+      html += '<span class="nav__auth">' + authHtml + '</span>' +
+        '<a href="index.html#start-paths" class="nav__link nav__link--cta">Choose Route</a>' +
+        '</div>';
       links.innerHTML = html;
     });
   })();
@@ -1072,6 +1137,65 @@ document.addEventListener('DOMContentLoaded', function () {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
+
+  /* --- Page Transitions --- */
+  (function initPageTransitions() {
+    if (!document.body) return;
+    var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+    var leaveTimer = null;
+
+    requestAnimationFrame(function () {
+      document.body.classList.add('page-ready');
+    });
+
+    window.addEventListener('pageshow', function () {
+      if (leaveTimer) {
+        window.clearTimeout(leaveTimer);
+        leaveTimer = null;
+      }
+      document.body.classList.remove('page-is-leaving');
+      document.body.classList.add('page-ready');
+    });
+
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented) return;
+      if (e.button !== 0) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+      var link = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      if (!link) return;
+      if (link.hasAttribute('download')) return;
+      if ((link.getAttribute('target') || '').toLowerCase() === '_blank') return;
+      if (link.classList.contains('btn')) return;
+      if (link.closest('.accordion__content, form, .tool-panel, .resources-assessment-layout, .resources-role-layout')) return;
+
+      var rawHref = link.getAttribute('href');
+      if (!rawHref || rawHref.charAt(0) === '#') return;
+      if (/^(mailto:|tel:|javascript:)/i.test(rawHref)) return;
+
+      var url;
+      try {
+        url = new URL(link.href, window.location.href);
+      } catch (err) {
+        return;
+      }
+
+      if (url.origin !== window.location.origin) return;
+      if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return;
+
+      e.preventDefault();
+      document.body.classList.add('page-is-leaving');
+      if (leaveTimer) window.clearTimeout(leaveTimer);
+      leaveTimer = window.setTimeout(function () {
+        document.body.classList.remove('page-is-leaving');
+      }, 900);
+
+      window.setTimeout(function () {
+        window.location.href = url.href;
+      }, 180);
+    });
+  })();
 
   /* --- Accordion --- */
   document.querySelectorAll('.accordion').forEach(function (accordion) {

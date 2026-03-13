@@ -12,6 +12,16 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The Executive Functioning Institute">
   <link rel="canonical" href="https://executivefunctioninginstitute.com/store.html" />
+  <script>
+    (function () {
+      try {
+        var savedTheme = localStorage.getItem('efi_theme');
+        if (savedTheme) {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      } catch (err) {}
+    })();
+  </script>
 </head>
 <body>
 
@@ -44,147 +54,220 @@
       <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li> <li aria-current="page">Store</li></ol></nav>
       <h1>Certification Services &amp; Professional Review</h1>
       <p>EFI keeps the curriculum free and charges for the part that actually requires expert labor: human grading, practicum review, credential decisions, and professional interpretation.</p>
-      <p class="page-header__note">All educational content on the site remains free. Paid services fund manual assessment review, written evaluator feedback, capstone scoring, credential operations, and optional professional analysis. Promotional pricing can be offered during selected high-traffic weeks for parents, educators, and students.</p>
+      <p class="page-header__note">Use this page after the route is already clear. Parents usually arrive here from assessments or coaching, educators from the transition page, and practitioners from certification standards.</p>
     </div>
   </header>
 
-  <!-- What's Coming -->
   <section class="section">
     <div class="container">
-      <div class="section-header fade-in">
-        <span class="section-header__tag">Certification Services</span>
-        <h2>Certification Pipeline Pricing</h2>
-        <p>These are the standard public list prices. The paid layer is built around real human evaluation, not automated scoring dressed up as certification.</p>
+      <div class="store-ledger">
+        <div class="store-ledger__panel fade-in">
+          <p class="curriculum-kicker">Pricing Logic</p>
+          <h2>EFI sells reviewer labor, not access theater</h2>
+          <p class="lead">The educational layer stays open. The paid layer begins where a real person has to score, audit, interpret, or credential the work.</p>
+          <ul class="artifact-ledger">
+            <li><span>Free Layer</span><strong>Curriculum pages, reading structure, open tools, source notes, and public standards.</strong></li>
+            <li><span>Paid Layer</span><strong>Human-scored assignments, professional interpretation, capstone review, revision notes, and credential operations.</strong></li>
+            <li><span>Store Role</span><strong>This page is the public pricing dossier so buyers can inspect scope before starting an intake conversation.</strong></li>
+          </ul>
+        </div>
+        <aside class="store-ledger__panel fade-in">
+          <h3>At a glance</h3>
+          <ul class="artifact-ledger">
+            <li><span>Highest-Touch Offer</span><strong>CEFC reviewed pathway from enrollment through capstone decision</strong></li>
+            <li><span>Fastest Entry</span><strong>ESQ-R professional analysis for families or adults who want interpretation first</strong></li>
+            <li><span>Current Purchase Model</span><strong>Public pricing with account-based purchase records; some services may still begin with intake or consultation</strong></li>
+          </ul>
+          <div class="button-group" style="margin-top:var(--space-lg);">
+            <a href="#store-router" class="btn btn--primary btn--sm">Choose the Right Path</a>
+            <a href="certification.html" class="btn btn--secondary btn--sm">Review Standards First</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="store-router">
+    <div class="container">
+      <div class="section-header section-header--left fade-in">
+        <span class="section-header__tag">Route Check</span>
+        <h2>Which reviewed path are you actually choosing?</h2>
+        <p>The store should confirm a decision, not force visitors to make one from scratch. If you cannot name your role and desired outcome yet, leave this page and go back to the start paths.</p>
+      </div>
+      <div class="callout callout--accent fade-in" style="margin-bottom:var(--space-xl);">
+        <p class="callout__label">Too Early?</p>
+        <p>If you are still trying to understand the problem, use the free assessment desk. If you teach and are exploring a transition, use the educator route. If you already know the standards fit, then use this page to compare reviewer-led services.</p>
       </div>
       <div class="grid grid--3 stagger">
-        <div class="card" style="border-top:4px solid var(--color-primary);">
-          <h3>CEFC Enrollment Access</h3>
-          <p>The entry point for professionals who want formal progression through the CEFC pathway with real reviewer oversight and accountable scoring standards.</p>
-          <p style="font-size:1.4rem;font-weight:700;color:var(--color-primary);margin:var(--space-md) 0;">$695</p>
-          <ul class="checklist" style="margin-top:var(--space-md);">
-            <li>Unlocks all graded module assessments</li>
-            <li>Human-scored module reviews using the published rubric</li>
-            <li>Certification readiness tracking in dashboard</li>
-            <li>Tracks course completion toward capstone eligibility</li>
+        <article class="card fade-in" style="border-top:4px solid var(--color-accent);">
+          <h3>Parent or Adult Seeking Interpretation</h3>
+          <p>Use this route if you want expert interpretation before deciding on ongoing support. The free assessment should usually come first.</p>
+          <ul class="checklist">
+            <li>Start with the free ESQ-R</li>
+            <li>Use professional analysis when you want a clearer action report</li>
+            <li>Use coaching when you already know local support is the right next move</li>
           </ul>
-          <p class="notice" style="margin-top:var(--space-md);font-size:0.9rem;">Best fit for educators or clinicians who want external validation, written evaluator feedback, and a real readiness checkpoint before a larger business transition.</p>
-        </div>
-
-        <div class="card" style="border-top:4px solid var(--module-4);">
-          <h3>Capstone Review &amp; Credentialing</h3>
-          <p>Manual evaluation of the intake simulation packet, case study, and original tool with structured written feedback, revision guidance, and credential processing.</p>
-          <p style="font-size:1.4rem;font-weight:700;color:var(--module-4);margin:var(--space-md) 0;">$350</p>
-          <ul class="checklist" style="margin-top:var(--space-md);">
-            <li>Evaluation of intake simulation packet, case study, and original tool</li>
-            <li>Revision feedback and re-review support</li>
-            <li>Directory listing included upon passing</li>
+          <div class="button-group">
+            <a href="esqr.html" class="btn btn--secondary btn--sm">Take the Free ESQ-R</a>
+            <a href="coaching-home.html" class="btn btn--ghost btn--sm">Open Parent Route</a>
+          </div>
+        </article>
+        <article class="card fade-in" style="border-top:4px solid var(--module-2);">
+          <h3>Educator Exploring a Transition</h3>
+          <p>Use this route if you teach now and are deciding whether reviewed coursework or a coaching practice shift makes sense.</p>
+          <ul class="checklist">
+            <li>Start with the educator transition page</li>
+            <li>Use launch tools and ROI planning before buying</li>
+            <li>Come back here when enrollment oversight is the actual next step</li>
           </ul>
-          <p class="notice" style="margin-top:var(--space-md);font-size:0.9rem;">Priced in line with industry exam-fee logic while reflecting the heavier manual review load and the judgment required for final credential decisions.</p>
-        </div>
-
-        <div class="card" style="border-top:4px solid var(--module-2);">
-          <h3>CEFC Bundle</h3>
-          <p>One combined package for professionals who want the full human-reviewed pathway from enrollment through final capstone review and credential issuance.</p>
-          <p style="font-size:1.4rem;font-weight:700;color:var(--module-2);margin:var(--space-md) 0;">$895</p>
-          <ul class="checklist" style="margin-top:var(--space-md);">
-            <li>Enrollment access plus capstone review</li>
-            <li>Simplified purchase path for full certification progression</li>
-            <li>Total pathway stays under the $1,000 threshold</li>
+          <div class="button-group">
+            <a href="teacher-to-coach.html" class="btn btn--secondary btn--sm">Open Educator Route</a>
+            <a href="certification.html" class="btn btn--ghost btn--sm">Review Standards Next</a>
+          </div>
+        </article>
+        <article class="card fade-in" style="border-top:4px solid var(--module-6);">
+          <h3>Practitioner Ready for Reviewed Certification</h3>
+          <p>Use this route if you already know the standards, scope, and credential structure fit the work you want to do.</p>
+          <ul class="checklist">
+            <li>Review standards and scope first</li>
+            <li>Compare enrollment versus full-path bundle</li>
+            <li>Use intake conversation to confirm the reviewed service</li>
           </ul>
-          <p class="notice" style="margin-top:var(--space-md);font-size:0.9rem;">Designed as the straightforward all-in route for practitioners who already know they want both human-scored module review and final credential evaluation.</p>
-        </div>
-      </div>
-      <div class="callout callout--accent fade-in" style="margin-top:var(--space-xl);">
-        <p class="callout__label">Ready To Move Forward?</p>
-        <p>If you already know you want reviewed certification or professional analysis, use the consultation page to start the intake conversation now. EFI will route you to the right next step for certification, assessment review, or coaching support.</p>
-        <div class="button-group" style="margin-top:var(--space-md);">
-          <a href="coaching-contact.html" class="btn btn--primary btn--sm">Start Enrollment Conversation</a>
-          <a href="certification.html" class="btn btn--secondary btn--sm">Review Certification Standards</a>
-        </div>
+          <div class="button-group">
+            <a href="#paid-path" class="btn btn--primary btn--sm">Compare Reviewed Services</a>
+            <a href="curriculum.html" class="btn btn--ghost btn--sm">Inspect Curriculum First</a>
+          </div>
+        </article>
       </div>
     </div>
   </section>
 
   <section class="section section--alt">
     <div class="container">
-      <div class="section-header fade-in">
-        <span class="section-header__tag">Assessment Product</span>
-        <h2>ESQ-R Professional Analysis</h2>
-        <p>A lower-friction entry point for families or adults who want a professional interpretation before deciding on ongoing coaching. This is positioned as expert analysis, not an automated quiz upsell.</p>
+      <div class="section-header section-header--left fade-in">
+        <span class="section-header__tag">Offer Dossiers</span>
+        <h2>Reviewed services and paid pathways</h2>
+        <p>Each offer is scoped around a real job EFI performs: reviewer oversight, formal scoring, expert interpretation, or final credential operations.</p>
       </div>
-      <div class="card fade-in" style="border-top:4px solid var(--color-accent);">
-        <div class="grid grid--2" style="gap:var(--space-2xl);align-items:start;">
-          <div>
-            <p style="font-size:1.4rem;font-weight:700;color:var(--color-accent);margin:0 0 var(--space-md);">$199</p>
-            <p>Receive a 5-7 page professional report mapping skill domains, strength/strain patterns, and concrete intervention priorities from the ESQ-R.</p>
-            <ul class="checklist" style="margin-top:var(--space-md);">
-              <li>5-7 page professional analysis report</li>
-              <li>Strength and strain pattern mapping by skill domain</li>
-              <li>Intervention priorities with suggested implementation sequence</li>
-            </ul>
-            <p class="notice" style="margin-top:var(--space-md);font-size:0.9rem;">This is an educational and coaching-oriented interpretation service. It is not a clinical diagnosis, psychological evaluation, or medical opinion.</p>
+      <div class="offer-grid">
+        <article class="offer-dossier offer-dossier--primary fade-in">
+          <p class="offer-dossier__eyebrow">Certification entry</p>
+          <h3>CEFC Enrollment Access</h3>
+          <span class="offer-dossier__price">$695</span>
+          <p>For professionals who want formal progression through the CEFC pathway with reviewer oversight and accountable scoring standards.</p>
+          <ul class="offer-dossier__meta">
+            <li><span>Includes</span><strong>Six graded module assessments, written evaluator feedback, and readiness tracking toward capstone eligibility</strong></li>
+            <li><span>Best Fit</span><strong>Educators, clinicians, and practitioners who want external review before a larger transition</strong></li>
+            <li><span>Boundary</span><strong>Does not include final capstone scoring or credential issuance</strong></li>
+          </ul>
+          <p class="notice">This is the “reviewed coursework” layer. The buyer is paying for human scoring and oversight, not access to readings.</p>
+        </article>
+
+        <article class="offer-dossier offer-dossier--capstone fade-in">
+          <p class="offer-dossier__eyebrow">Final review</p>
+          <h3>Capstone Review &amp; Credentialing</h3>
+          <span class="offer-dossier__price">$350</span>
+          <p>Manual evaluation of the intake simulation packet, case study, and original tool with revision guidance and credential processing.</p>
+          <ul class="offer-dossier__meta">
+            <li><span>Includes</span><strong>Rubric scoring, written revision notes, re-review support, and credential decision workflow</strong></li>
+            <li><span>Best Fit</span><strong>Candidates who have already completed the reviewed curriculum layer</strong></li>
+            <li><span>Output</span><strong>Pass decision plus verification and directory workflow when eligible</strong></li>
+          </ul>
+          <p class="notice">Priced around judgment-heavy manual review. This is the most evaluator-intensive part of the certification stack.</p>
+        </article>
+
+        <article class="offer-dossier offer-dossier--bundle fade-in">
+          <p class="offer-dossier__eyebrow">Full pathway</p>
+          <h3>CEFC Bundle</h3>
+          <span class="offer-dossier__price">$895</span>
+          <p>The combined reviewed path for practitioners who already know they want enrollment oversight and final capstone review.</p>
+          <ul class="offer-dossier__meta">
+            <li><span>Includes</span><strong>Enrollment access plus capstone review in one purchase path</strong></li>
+            <li><span>Best Fit</span><strong>Practitioners who want the cleanest all-in route under the $1,000 threshold</strong></li>
+            <li><span>Operational Benefit</span><strong>One intake conversation and one pricing anchor for the whole credential path</strong></li>
+          </ul>
+          <p class="notice">This is the simplest program purchase if the buyer is already committed to the full reviewed certification track.</p>
+        </article>
+
+        <article class="offer-dossier offer-dossier--assessment fade-in">
+          <p class="offer-dossier__eyebrow">Interpretation service</p>
+          <h3>ESQ-R Professional Analysis</h3>
+          <span class="offer-dossier__price">$199</span>
+          <p>A lower-friction expert interpretation service for families or adults who want a concrete report before deciding on ongoing support.</p>
+          <ul class="offer-dossier__meta">
+            <li><span>Includes</span><strong>5-7 page report mapping strength and strain patterns with intervention priorities</strong></li>
+            <li><span>Best Fit</span><strong>People who want professional interpretation without an immediate weekly coaching commitment</strong></li>
+            <li><span>Boundary</span><strong>Educational and coaching-oriented analysis, not diagnosis or medical opinion</strong></li>
+          </ul>
+          <div class="artifact-card__links">
+            <a href="esqr.html" class="btn btn--secondary btn--sm">Take the Free ESQ-R</a>
+            <a href="coaching-home.html#services" class="btn btn--ghost btn--sm">Compare Coaching Options</a>
           </div>
-          <div>
-            <h3 style="margin-top:0;">Why It Exists</h3>
-            <p>This offer is positioned like a productized professional service, roughly equivalent to one focused hour of professional review. It gives families actionable insight without requiring an immediate weekly-coaching commitment.</p>
-            <p style="color:var(--color-text-light);margin-top:var(--space-sm);">Recommended promo logic: keep $199 as the anchor price, then offer limited-time event pricing during parent, educator, or student traffic spikes.</p>
-            <div class="button-group" style="margin-top:var(--space-lg);">
-              <a href="esqr.html" class="btn btn--secondary btn--sm">Take the Free ESQ-R</a>
-              <a href="coaching-home.html#services" class="btn btn--ghost btn--sm">Compare Coaching Options</a>
-            </div>
-          </div>
-        </div>
+        </article>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <div class="section-header fade-in">
-        <span class="section-header__tag">Sale Calendar</span>
-        <h2>When EFI Runs Promotional Weeks</h2>
-        <p>EFI does not run always-on discounts. Promotional pricing is reserved for predictable demand spikes so the standard list price stays clear and credible.</p>
-      </div>
-      <div class="grid grid--3 stagger">
-        <div class="card" style="border-top:4px solid var(--color-accent);">
-          <h3>Parents</h3>
-          <ul class="checklist">
-            <li>Late July to early September for back-to-school demand</li>
-            <li>Early January for semester reset and New Year planning</li>
-            <li>Mid May to late June for finals, summer planning, and transitions</li>
-            <li>Short 5-7 day windows around report cards, IEP seasons, or school breaks</li>
-          </ul>
+      <div class="artifact-board">
+        <div class="artifact-board__intro fade-in">
+          <p class="curriculum-kicker">Proof Before Purchase</p>
+          <h2>The public artifacts that justify the paid layer</h2>
+          <p>EFI should not ask for trust first. These are the public documents and pages that show what is being taught, how it is reviewed, and where the paid boundary starts.</p>
+          <div class="artifact-grid">
+            <article class="artifact-card artifact-card--1">
+              <p class="artifact-card__label">Curriculum artifact</p>
+              <h3>Open module syllabus</h3>
+              <p>Visitors can inspect the actual six-module sequence, the units, and the assignment logic before paying for scoring.</p>
+              <div class="artifact-card__links">
+                <a href="curriculum.html" class="btn btn--secondary btn--sm">Open Curriculum</a>
+              </div>
+            </article>
+            <article class="artifact-card artifact-card--2">
+              <p class="artifact-card__label">Standards artifact</p>
+              <h3>Rubric and competency map</h3>
+              <p>EFI publishes its capstone rubric and competency crosswalk so the credential isn’t a black box.</p>
+              <div class="artifact-card__links">
+                <a href="EFI-Capstone-Transparency-Rubric.pdf" class="btn btn--secondary btn--sm" target="_blank" rel="noopener">Open Rubric PDF</a>
+                <a href="EFI-Competency-Crosswalk-Map.pdf" class="btn btn--ghost btn--sm" target="_blank" rel="noopener">Crosswalk PDF</a>
+              </div>
+            </article>
+            <article class="artifact-card artifact-card--3">
+              <p class="artifact-card__label">Operations artifact</p>
+              <h3>Verification and paid boundary</h3>
+              <p>EFI separates open reading from reviewed work, then documents verification, receipt handling, and credential operations in public.</p>
+              <div class="artifact-card__links">
+                <a href="verify.html" class="btn btn--secondary btn--sm">Verify Credential</a>
+                <a href="#paid-path" class="btn btn--ghost btn--sm">See Paid Boundary</a>
+              </div>
+            </article>
+          </div>
         </div>
-        <div class="card" style="border-top:4px solid var(--module-2);">
-          <h3>Educators</h3>
-          <ul class="checklist">
-            <li>June to July for career-transition and summer planning</li>
-            <li>Late October to mid November for midyear burnout and intervention demand</li>
-            <li>Launch-week offers tied to webinars, workshops, or cohort email courses</li>
-          </ul>
-        </div>
-        <div class="card" style="border-top:4px solid var(--module-4);">
-          <h3>Students</h3>
-          <ul class="checklist">
-            <li>Early January for academic reset momentum</li>
-            <li>Mid May to late June for finals and summer transition planning</li>
-            <li>Short launch windows tied to workshops or seasonal skill-building events</li>
-          </ul>
-        </div>
-      </div>
-      <div class="callout callout--accent fade-in" style="margin-top:var(--space-xl);">
-        <p class="callout__label">Campaign Rules</p>
-        <p>EFI should generally run 3-6 promotional weeks per year, with each campaign lasting about 5-10 days. Public list pricing remains visible as the anchor before and after every sale period.</p>
+        <aside class="artifact-board__rail fade-in">
+          <div class="callout callout--accent">
+            <p class="callout__label">Campaign policy</p>
+            <p>EFI runs seasonal campaigns, not permanent discounting. Public list pricing stays visible as the anchor before and after promotional weeks.</p>
+          </div>
+          <div class="card">
+            <h3>Promotional calendar</h3>
+            <ul class="artifact-ledger">
+              <li><span>Parents</span><strong>Late July to early September, early January, and mid May to late June</strong></li>
+              <li><span>Educators</span><strong>June to July, plus late October to mid November transition windows</strong></li>
+              <li><span>Students</span><strong>Early January and late spring academic transition periods</strong></li>
+            </ul>
+          </div>
+        </aside>
       </div>
     </div>
   </section>
 
   <section class="section section--alt" id="paid-path">
-    <div class="container container--narrow">
-      <div class="section-header fade-in">
-        <span class="section-header__tag">Enrollment Access</span>
-        <h2>What Paid Enrollment Actually Unlocks</h2>
-        <p>EFI keeps the educational layer free. Paid access exists for the parts that require reviewer labor, formal scoring, and credential operations.</p>
+    <div class="container">
+      <div class="section-header section-header--left fade-in">
+        <span class="section-header__tag">Operations Boundary</span>
+        <h2>What paid enrollment actually unlocks</h2>
+          <p>EFI keeps the theory and browsing layer public. Payment starts where review, interpretation, and credential operations require accountable labor.</p>
       </div>
       <div class="grid grid--2 stagger">
         <div class="card fade-in" style="border-top:4px solid var(--color-primary);">
@@ -198,12 +281,12 @@
           </ul>
           <div class="callout callout--accent" style="margin-top:var(--space-lg);">
             <p class="callout__label">What Your Purchase Unlocks</p>
-            <p>Every theory page, module, and assessment tool on EFI is free to read and use. Paid enrollment adds the <em>accountability layer</em>: human-reviewed submissions, written rubric feedback, dashboard progress tracking, and the credential decision that certifies your readiness to practice.</p>
+            <p>Every theory page, module, and assessment tool on EFI is free to read and use. Paid enrollment adds the accountability layer: human-reviewed submissions, written rubric feedback, dashboard progress tracking, and the credential decision that certifies your readiness to practice.</p>
           </div>
         </div>
         <div class="card fade-in" id="purchase-status" style="border-top:4px solid var(--color-accent);">
           <h3 style="margin-top:0;">Purchase Status</h3>
-          <p>EFI now supports a fast-track purchase request directly on this page. Submit once, choose your package, and EFI routes you into credential onboarding without extra back-and-forth.</p>
+          <p>EFI uses public pricing, account-based purchase records, and a fast-track purchase request directly on this page so people can move into the correct reviewed service without extra back-and-forth.</p>
           <ul class="checklist">
             <li>Pick your offer lane (Enrollment, Capstone, Bundle, or ESQ-R Analysis)</li>
             <li>Submit a purchase-intent request in under 60 seconds</li>
@@ -304,11 +387,11 @@
   <!-- CTA -->
   <section class="cta-section">
     <div class="container">
-      <h2>Want to Explore Before You Enroll?</h2>
-      <p>Read Module 1 for free, take the ESQ-R self-assessment, or download the Skills Gap Analyzer &mdash; no account required. Come back when you&rsquo;re ready for reviewed certification work and professional feedback.</p>
+      <h2>Not ready for pricing?</h2>
+      <p>Go back to the route pages, use the free layer first, and return only when you know which reviewed service matches the job you need done.</p>
       <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
-        <a href="esqr.html" class="btn btn--primary btn--lg">Take the Free ESQ-R</a>
-        <a href="curriculum.html" class="btn btn--outline-white btn--lg">View the Curriculum</a>
+        <a href="index.html#start-paths" class="btn btn--primary btn--lg">Choose a Start Path</a>
+        <a href="resources.html#assessments" class="btn btn--outline-white btn--lg">Use Free Tools First</a>
       </div>
     </div>
   </section>

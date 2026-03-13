@@ -728,7 +728,7 @@ document.addEventListener('DOMContentLoaded', function () {
           '<h4>Reviewed Next Steps</h4>' +
           '<ul class="footer__links">' +
             '<li><a href="certification.html">Certification Standards</a></li>' +
-            '<li><a href="store.html">Reviewed Services</a></li>' +
+            '<li><a href="store.html">Reviewed Services and Pricing</a></li>' +
             '<li><a href="coaching-contact.html">Start an Intake Conversation</a></li>' +
             '<li><a href="store.html#paid-path">Free vs Paid Boundary</a></li>' +
           '</ul>' +
@@ -814,7 +814,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var cta = document.createElement('a');
     cta.href = 'store.html';
     cta.className = 'floating-store-cta';
-    cta.textContent = 'Open Store';
+    cta.textContent = 'Reviewed Services';
     cta.setAttribute('data-analytics-event', 'floating_store_click');
     document.body.appendChild(cta);
   })();

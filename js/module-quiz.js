@@ -51,6 +51,20 @@
     localStorage.setItem(ACTION_PLAN_STORAGE_KEY, JSON.stringify((plans || []).slice(-50)));
   }
 
+  function getAdaptiveCadence(baselineCadence) {
+    var plans = readActionPlans();
+    var active = plans.filter(function(p) { return p && p.state && p.state.status !== 'expired'; });
+    if (!active.length) return baselineCadence;
+    var engaged = active.filter(function(p) {
+      var s = p.state.status;
+      return s === 'started' || s === 'checkin_completed' || s === 'completed';
+    }).length;
+    var rate = engaged / active.length;
+    if (rate >= 0.8) return baselineCadence;
+    if (rate >= 0.5) return baselineCadence === '7d' ? '72h' : baselineCadence;
+    return '24h';
+  }
+
   function updatePlanStatus(planId, status) {
     var plans = readActionPlans();
     var updated = false;
@@ -127,8 +141,8 @@
 
     var planId = 'plan_' + String(currentQuiz.id || 'module') + '_' + Date.now();
     var now = new Date();
-    var cadence = summary.passed ? '7d' : '72h';
-    var dueMs = summary.passed ? (7 * 24 * 60 * 60 * 1000) : (72 * 60 * 60 * 1000);
+    var cadence = getAdaptiveCadence(summary.passed ? '7d' : '72h');
+    var dueMs = cadence === '24h' ? 24 * 60 * 60 * 1000 : (cadence === '72h' ? 72 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000);
 
     return {
       schema_version: '1.0',

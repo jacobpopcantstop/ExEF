@@ -1660,6 +1660,10 @@ p {
   grid-template-columns: minmax(0, 1fr);
 }
 
+.home-routing .route-matrix {
+  margin-top: var(--space-2xl);
+}
+
 .route-matrix--resources {
   margin-top: var(--space-2xl);
 }

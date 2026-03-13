@@ -1,114 +1,108 @@
 {
-  "skills": [
-    { "id": "response-inhibition", "name": "Response Inhibition", "domain": "doing", "questions": ["q1", "q2", "q3"] },
-    { "id": "working-memory", "name": "Working Memory", "domain": "thinking", "questions": ["q4", "q5", "q6"] },
-    { "id": "emotional-control", "name": "Emotional Control", "domain": "doing", "questions": ["q7", "q8", "q9"] },
-    { "id": "sustained-attention", "name": "Sustained Attention", "domain": "doing", "questions": ["q10", "q11", "q12"] },
-    { "id": "task-initiation", "name": "Task Initiation", "domain": "doing", "questions": ["q13", "q14", "q15"] },
-    { "id": "planning", "name": "Planning", "domain": "thinking", "questions": ["q16", "q17", "q18"] },
-    { "id": "organization", "name": "Organization", "domain": "thinking", "questions": ["q19", "q20", "q21"] },
-    { "id": "time-management", "name": "Time Management", "domain": "thinking", "questions": ["q22", "q23", "q24"] },
-    { "id": "goal-directed-persistence", "name": "Goal-Directed Persistence", "domain": "doing", "questions": ["q25", "q26", "q27"] },
-    { "id": "flexibility", "name": "Flexibility", "domain": "doing", "questions": ["q28", "q29", "q30"] },
-    { "id": "metacognition", "name": "Metacognition", "domain": "thinking", "questions": ["q31", "q32", "q33"] },
-    { "id": "stress-tolerance", "name": "Stress Tolerance", "domain": "doing", "questions": ["q34", "q35", "q36"] }
-  ],
-  "strategies": {
-    "response-inhibition": {
-      "summary": "You may act or speak before fully thinking things through, leading to regret or impulsive decisions.",
+  "version": "2026-03-13",
+  "title": "EFI ESQ-R Interactive Intake",
+  "description": "A 25-item, 5-area executive-function intake experience aligned to EFI's current public ESQ-R framing.",
+  "scale": {
+    "min": 1,
+    "max": 5,
+    "labels": ["Rarely true", "Sometimes true", "Mixed", "Usually true", "Consistently true"]
+  },
+  "areas": [
+    {
+      "id": "planning-time",
+      "name": "Planning and Time Management",
+      "signal": "planning",
+      "intro": "This area looks at how clearly you map work, estimate time, and sequence steps before pressure builds.",
+      "strengthSummary": "You appear to create enough structure ahead of time to reduce last-minute chaos.",
+      "growthSummary": "The planning load may be landing too late, which can make reasonable work feel urgent or messy.",
       "strategies": [
-        "Practice the 10-Second Rule: when you feel the urge to respond, count to 10 silently before acting.",
-        "Use physical pause cues such as a sticky note or bracelet to trigger a stop-and-think moment.",
-        "Before sending emotional messages, save as draft and revisit after 15 minutes."
+        "Define what done looks like before you begin.",
+        "Multiply first-draft estimates by 1.5 until you have real timing data.",
+        "Use visible checkpoints for any task that takes longer than one sitting."
       ]
     },
-    "working-memory": {
-      "summary": "You may struggle to hold information in mind, forget instructions, or lose track of multi-step tasks.",
+    {
+      "id": "initiation-follow-through",
+      "name": "Task Initiation and Follow-Through",
+      "signal": "activation",
+      "intro": "This area tracks how reliably you can begin work without extra pressure and keep momentum across multiple days.",
+      "strengthSummary": "Once a task matters, you are usually able to create traction and keep it moving.",
+      "growthSummary": "The main problem may be ignition rather than ability. Starts cost too much energy, so follow-through becomes fragile.",
       "strategies": [
-        "Externalize memory with one capture notebook or app.",
-        "Use checklists for tasks with more than two steps.",
-        "Repeat instructions aloud to increase retention."
+        "Choose one tiny visible first move before the work session starts.",
+        "Use a two-minute launch ritual so starting does not require a fresh decision each time.",
+        "End each day with a bridge note naming tomorrow's first action."
       ]
     },
-    "emotional-control": {
-      "summary": "Frustration, anxiety, or strong emotions may interfere with your ability to stay productive and on-task.",
+    {
+      "id": "attention-working-memory",
+      "name": "Attention and Working Memory",
+      "signal": "environment",
+      "intro": "This area covers staying with the task, holding key details in mind, and recovering after distraction.",
+      "strengthSummary": "You appear to hold task information well enough to stay oriented and recover after normal interruptions.",
+      "growthSummary": "Focus may be leaking through distraction, overload, or restart friction more than it first appears.",
       "strategies": [
-        "Name the emotion before task start to reduce emotional overload.",
-        "Use a short regulation routine: breathe, move, reset, return.",
-        "Check intensity on a 1-10 scale and regulate first when above 7."
+        "Stage only the materials for the current task before you begin.",
+        "Use a restart card after interruptions: where I was, next step, timer.",
+        "Externalize multi-step work with a checklist instead of relying on memory alone."
       ]
     },
-    "sustained-attention": {
-      "summary": "Maintaining focus on low-interest tasks may be difficult and variable across contexts.",
+    {
+      "id": "organization-monitoring",
+      "name": "Organization and Self-Monitoring",
+      "signal": "planning",
+      "intro": "This area measures how well your systems stay usable and how quickly you notice when work is drifting off course.",
+      "strengthSummary": "Your systems appear visible enough to support consistency without constant cleanup.",
+      "growthSummary": "The friction may be less about effort and more about weak external systems or late error detection.",
       "strategies": [
-        "Use timed focus blocks with planned breaks.",
-        "Reduce distractions before starting: silence notifications and remove visual clutter.",
-        "Add stimulation to low-interest tasks through body doubling or music."
+        "Create one home for tasks, one home for materials, and one weekly reset.",
+        "Add checkpoints that ask what is working, what is off, and what changes now.",
+        "Review your calendar and task list together instead of in separate silos."
       ]
     },
-    "task-initiation": {
-      "summary": "Getting started may be the primary bottleneck even when you know exactly what to do.",
+    {
+      "id": "regulation-flexibility",
+      "name": "Emotional Regulation and Flexibility",
+      "signal": "regulation",
+      "intro": "This area tracks how strongly emotion, uncertainty, or sudden changes disrupt performance and recovery.",
+      "strengthSummary": "You appear able to stay fairly steady under shifting conditions and return to task after stress.",
+      "growthSummary": "Stress, disappointment, or changing expectations may be draining more execution energy than others can see.",
       "strategies": [
-        "Create a consistent 2-minute launch ritual.",
-        "Commit to two minutes only; momentum often follows.",
-        "Use accountability check-ins to trigger starts."
-      ]
-    },
-    "planning": {
-      "summary": "You may begin tasks without a clear plan, resulting in missed steps and avoidable stress.",
-      "strategies": [
-        "Start with what Done looks like, then map steps backward.",
-        "Ask: what does done look like, what steps are needed, what materials are required?",
-        "Reuse planning templates for recurring task types."
-      ]
-    },
-    "organization": {
-      "summary": "Disorganization may increase friction, lost time, and avoidable stress.",
-      "strategies": [
-        "Set up one launch pad for daily essentials.",
-        "Apply one-touch processing for email and paper.",
-        "Schedule a weekly 15-minute reset for physical and digital spaces."
-      ]
-    },
-    "time-management": {
-      "summary": "Time blindness may cause underestimation, lateness, and missed deadlines.",
-      "strategies": [
-        "Use visual time tools such as analog clocks or time wedges.",
-        "Track predicted versus actual task time weekly.",
-        "Add transition buffers between commitments."
-      ]
-    },
-    "goal-directed-persistence": {
-      "summary": "You may start strong but struggle to sustain effort when rewards are delayed.",
-      "strategies": [
-        "Break long goals into short milestone deliverables.",
-        "Use visible progress tracking.",
-        "Add external accountability for longer horizons."
-      ]
-    },
-    "flexibility": {
-      "summary": "Unexpected changes may trigger rigidity, stress, or shutdown.",
-      "strategies": [
-        "Pre-plan a backup option for every major plan.",
-        "Use transition warnings before task/context switches.",
-        "Use a brief physical reset to interrupt stuck thinking."
-      ]
-    },
-    "metacognition": {
-      "summary": "Self-monitoring may be inconsistent, making it harder to adjust strategy in real time.",
-      "strategies": [
-        "Pause at checkpoints to ask: what is working, what is not, what changes now?",
-        "Use a short daily reflection prompt.",
-        "Self-score work with rubrics before submission."
-      ]
-    },
-    "stress-tolerance": {
-      "summary": "High pressure may reduce your ability to think clearly and prioritize effectively.",
-      "strategies": [
-        "Use a fixed stress protocol for overload moments.",
-        "Prioritize with triage labels: urgent, important, can wait.",
-        "Build tolerance with repeated low-stakes pressure practice."
+        "Name the emotional state first, then pick the next concrete move.",
+        "Pre-plan a fallback option for high-friction tasks.",
+        "Use short reset routines after stress instead of asking yourself to push straight through."
       ]
     }
-  }
+  ],
+  "questions": [
+    { "id": "q1", "areaId": "planning-time", "prompt": "Before I begin a multi-step task, I usually know what the finished version should look like." },
+    { "id": "q2", "areaId": "planning-time", "prompt": "My schedule leaves enough room for transitions, setup time, and normal interruptions." },
+    { "id": "q3", "areaId": "planning-time", "prompt": "I can break large projects into smaller steps without getting stuck in the middle." },
+    { "id": "q4", "areaId": "planning-time", "prompt": "I usually estimate task length realistically instead of planning for ideal conditions only." },
+    { "id": "q5", "areaId": "planning-time", "prompt": "When deadlines move closer, my plan still mostly holds instead of collapsing." },
+
+    { "id": "q6", "areaId": "initiation-follow-through", "prompt": "I can start important work without needing panic, shame, or someone watching me." },
+    { "id": "q7", "areaId": "initiation-follow-through", "prompt": "If I know the first step, I can usually begin within a reasonable window." },
+    { "id": "q8", "areaId": "initiation-follow-through", "prompt": "I stay with longer projects instead of losing momentum after the first burst." },
+    { "id": "q9", "areaId": "initiation-follow-through", "prompt": "If I miss a day, I can restart the next day without a major reset." },
+    { "id": "q10", "areaId": "initiation-follow-through", "prompt": "I do not rely on deadline pressure as my main way to create action." },
+
+    { "id": "q11", "areaId": "attention-working-memory", "prompt": "I can stay with low-interest work without my attention sliding away quickly." },
+    { "id": "q12", "areaId": "attention-working-memory", "prompt": "I hold the key details of a task in mind while I work." },
+    { "id": "q13", "areaId": "attention-working-memory", "prompt": "After an interruption, I can get back on track without a long restart delay." },
+    { "id": "q14", "areaId": "attention-working-memory", "prompt": "Noise, clutter, or notifications do not pull me off course as easily as they used to." },
+    { "id": "q15", "areaId": "attention-working-memory", "prompt": "I finish routine tasks without forgetting steps or losing the thread halfway through." },
+
+    { "id": "q16", "areaId": "organization-monitoring", "prompt": "My task list, calendar, and materials are organized enough that I can trust them." },
+    { "id": "q17", "areaId": "organization-monitoring", "prompt": "I notice fairly quickly when a plan is drifting and can correct it before things snowball." },
+    { "id": "q18", "areaId": "organization-monitoring", "prompt": "Important materials, files, or links are usually where I expect them to be." },
+    { "id": "q19", "areaId": "organization-monitoring", "prompt": "I review priorities often enough that avoidable surprises stay limited." },
+    { "id": "q20", "areaId": "organization-monitoring", "prompt": "My systems still work when life gets busy, rather than only on calm days." },
+
+    { "id": "q21", "areaId": "regulation-flexibility", "prompt": "Strong feelings do not usually knock me out of action for long." },
+    { "id": "q22", "areaId": "regulation-flexibility", "prompt": "When plans change, I can adapt without losing the whole day." },
+    { "id": "q23", "areaId": "regulation-flexibility", "prompt": "I can handle feedback without shutting down, spiraling, or over-correcting." },
+    { "id": "q24", "areaId": "regulation-flexibility", "prompt": "Pressure makes me more focused more often than it makes me freeze." },
+    { "id": "q25", "areaId": "regulation-flexibility", "prompt": "If something goes wrong, I can recover and move to the next step without staying stuck there." }
+  ]
 }

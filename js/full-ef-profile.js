@@ -121,6 +121,27 @@
     return String(value || '').toLowerCase();
   }
 
+  function esqrAreaSignalPressure(esqr) {
+    var map = makeSignalMap();
+    if (!esqr) return map;
+
+    if (esqr.signalPressure && typeof esqr.signalPressure === 'object') {
+      Object.keys(map).forEach(function (key) {
+        map[key] = Number(esqr.signalPressure[key] || 0);
+      });
+      return map;
+    }
+
+    if (!Array.isArray(esqr.growthAreas)) return map;
+    esqr.growthAreas.forEach(function (area, index) {
+      var signal = String(area && area.signal || '').toLowerCase();
+      if (map[signal] !== undefined) {
+        map[signal] += index === 0 ? 2 : 1;
+      }
+    });
+    return map;
+  }
+
   function makeSignalMap() {
     return {
       planning: 0,
@@ -156,7 +177,12 @@
     var esqrGrowth = Array.isArray(esqr && esqr.growthAreas) ? esqr.growthAreas.map(function (item) {
       return normalizedText(item && item.name);
     }).join(' ') : '';
+    var esqrPressure = esqrAreaSignalPressure(esqr);
     var strongTimeFactor = !!(timeMetrics && hasTimeConfidence && (timeMetrics.meanFactor >= 1.25 || timeMetrics.meanFactor <= 0.8));
+
+    Object.keys(signalMap).forEach(function (key) {
+      signalMap[key] += esqrPressure[key] || 0;
+    });
 
     if (
       storyLabel.indexOf('planning') !== -1 ||
@@ -264,10 +290,13 @@
     if (esqr) {
       completed.push('ESQ-R');
       if (esqr.growthAreas && esqr.growthAreas.length) {
-        priorities.push('ESQ-R growth areas: ' + esqr.growthAreas.slice(0, 2).map(function (item) { return item.name; }).join(' + '));
+        priorities.push('ESQ-R leverage points: ' + esqr.growthAreas.slice(0, 2).map(function (item) { return item.name; }).join(' + '));
       }
       if (esqr.strengths && esqr.strengths.length) {
         strengths.push('ESQ-R strengths: ' + esqr.strengths.slice(0, 3).map(function (item) { return item.name; }).join(', '));
+      }
+      if (typeof esqr.overallScore === 'number') {
+        strengths.push('ESQ-R overall score: ' + esqr.overallScore.toFixed(1) + '/5.');
       }
     }
 

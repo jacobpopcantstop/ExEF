@@ -1,4 +1,4 @@
-const { jsonHeaders } = require('./_common');
+const { json } = require('./_common');
 const { getActor, isPrivilegedRole } = require('./_authz');
 
 function checkVar(name, options = {}) {
@@ -17,7 +17,7 @@ exports.handler = async function handler(event) {
   if (event.httpMethod !== 'GET') {
     return {
       statusCode: 405,
-      headers: jsonHeaders(),
+      headers: json(405, {}).headers,
       body: JSON.stringify({ ok: false, error: 'Method not allowed' })
     };
   }
@@ -26,7 +26,7 @@ exports.handler = async function handler(event) {
   if (!isPrivilegedRole(actor.role)) {
     return {
       statusCode: 403,
-      headers: jsonHeaders(),
+      headers: json(403, {}).headers,
       body: JSON.stringify({ ok: false, error: 'Admin or reviewer role required' })
     };
   }
@@ -52,7 +52,7 @@ exports.handler = async function handler(event) {
 
   return {
     statusCode: 200,
-    headers: jsonHeaders(),
+    headers: json(200, {}).headers,
     body: JSON.stringify({
       ok: true,
       actor_role: actor.role,

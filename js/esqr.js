@@ -1,32 +1,40 @@
-/* ============================================
-   ESQ-R Interactive Assessment
-   Config-driven scoring, chart, and recommendations
-   ============================================ */
-
 (function () {
   'use strict';
 
   var form = document.getElementById('esqr-form');
   if (!form) return;
 
+  var questionsWrap = document.getElementById('esqr-question-groups');
   var progressFill = document.getElementById('progress-fill');
   var progressText = document.getElementById('progress-text');
+  var draftStatus = document.getElementById('esqr-draft-status');
   var errorMsg = document.getElementById('esqr-error');
   var resultsSection = document.getElementById('esqr-results');
-  var downloadPngBtn = document.getElementById('esqr-download-png-btn');
-  var downloadPdfBtn = document.getElementById('esqr-download-pdf-btn');
-  var shareBtn = document.getElementById('esqr-share-btn');
+  var titleEl = document.getElementById('esqr-result-title');
+  var ledeEl = document.getElementById('esqr-result-lede');
+  var summaryEl = document.getElementById('esqr-summary');
+  var signalSummaryEl = document.getElementById('esqr-signal-summary');
+  var strengthsEl = document.getElementById('strengths-list');
+  var growthEl = document.getElementById('weaknesses-list');
+  var nextToolsEl = document.getElementById('esqr-next-tools');
   var shareStatus = document.getElementById('esqr-share-status');
   var historyEl = document.getElementById('esqr-history');
   var leadForm = document.getElementById('esqr-lead-form');
   var leadStatus = document.getElementById('esqr-lead-status');
   var leadOfferPreview = document.getElementById('esqr-offer-preview');
+  var resetBtn = document.getElementById('esqr-reset-btn');
+  var copyBtn = document.getElementById('esqr-copy-btn');
+  var exportBtn = document.getElementById('esqr-export-btn');
+  var downloadPngBtn = document.getElementById('esqr-download-png-btn');
+  var downloadPdfBtn = document.getElementById('esqr-download-pdf-btn');
+  var shareBtn = document.getElementById('esqr-share-btn');
 
   var HISTORY_KEY = 'efi_esqr_history';
   var RESULT_KEY = 'efi_esqr_results';
-  var SKILLS = [];
-  var STRATEGIES = {};
-  var totalQuestions = 36;
+  var DRAFT_KEY = 'efi_esqr_draft_v2';
+  var MAX_HISTORY = 20;
+
+  var config = null;
   var lastResultsPayload = null;
   var ACTION_PLAN_STORAGE_KEY = 'efi_action_plans_v1';
   var REFLECTION_STORAGE_KEY = 'efi_reflections_v1';
@@ -39,23 +47,16 @@
     if (leadStatus) leadStatus.textContent = message;
   }
 
-  function deriveOffer(bottomSkills) {
-    var primary = bottomSkills && bottomSkills.length ? String(bottomSkills[0].id || '') : '';
-    var bySkill = {
-      'task-initiation': { code: 'START40', focus: 'starting tasks consistently' },
-      'planning': { code: 'PLAN40', focus: 'planning and sequencing' },
-      'time-management': { code: 'TIME40', focus: 'time management systems' },
-      'organization': { code: 'ORDER40', focus: 'organization workflows' },
-      'sustained-attention': { code: 'FOCUS40', focus: 'attention support' },
-      'emotional-control': { code: 'CALM40', focus: 'emotional regulation under load' },
-      'goal-directed-persistence': { code: 'MOMENTUM40', focus: 'follow-through and consistency' }
-    };
-    var selected = bySkill[primary] || { code: 'ESQR40', focus: 'executive function coaching support' };
-    return {
-      code: selected.code,
-      focus: selected.focus,
-      discountPercent: 40
-    };
+  function readJson(key, fallback) {
+    try {
+      return JSON.parse(localStorage.getItem(key)) || fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function writeJson(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
   }
 
 
@@ -361,17 +362,19 @@
         }
         return;
       }
-      var s = document.createElement('script');
-      s.src = src;
-      s.async = true;
-      s.defer = true;
-      s.setAttribute('data-src', src);
-      s.onload = function () {
-        s.setAttribute('data-loaded', '1');
+      var script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+      script.defer = true;
+      script.setAttribute('data-src', src);
+      script.onload = function () {
+        script.setAttribute('data-loaded', '1');
         resolve();
       };
-      s.onerror = function () { reject(new Error('Failed loading ' + src)); };
-      document.head.appendChild(s);
+      script.onerror = function () {
+        reject(new Error('Failed loading ' + src));
+      };
+      document.head.appendChild(script);
     });
   }
 
@@ -388,159 +391,447 @@
   function loadConfig() {
     return fetch('data/esqr-config.json', { cache: 'no-store' })
       .then(function (res) {
-        if (!res.ok) throw new Error('Unable to load ESQ-R config.');
+        if (!res.ok) throw new Error('Unable to load the ESQ-R configuration.');
         return res.json();
       })
-      .then(function (cfg) {
-        SKILLS = Array.isArray(cfg.skills) ? cfg.skills : [];
-        STRATEGIES = cfg.strategies && typeof cfg.strategies === 'object' ? cfg.strategies : {};
-        if (!SKILLS.length) throw new Error('ESQ-R skills configuration missing.');
+      .then(function (payload) {
+        if (!payload || !Array.isArray(payload.areas) || !Array.isArray(payload.questions)) {
+          throw new Error('The ESQ-R configuration is incomplete.');
+        }
+        config = payload;
       });
+  }
+
+  function areaMap() {
+    var map = {};
+    config.areas.forEach(function (area) {
+      map[area.id] = area;
+    });
+    return map;
+  }
+
+  function getScale() {
+    var scale = config.scale || {};
+    return {
+      min: Number(scale.min) || 1,
+      max: Number(scale.max) || 5,
+      labels: Array.isArray(scale.labels) && scale.labels.length ? scale.labels : ['Rarely true', 'Sometimes true', 'Mixed', 'Usually true', 'Consistently true']
+    };
+  }
+
+  function renderQuestions() {
+    if (!questionsWrap || !config) return;
+    var scale = getScale();
+    var areasById = areaMap();
+    var grouped = {};
+    config.questions.forEach(function (question) {
+      if (!grouped[question.areaId]) grouped[question.areaId] = [];
+      grouped[question.areaId].push(question);
+    });
+
+    var html = '';
+    config.areas.forEach(function (area, areaIndex) {
+      var questions = grouped[area.id] || [];
+      html += '<fieldset class="esqr-skill-group fade-in visible" data-area="' + area.id + '">';
+      html += '<legend class="esqr-skill-group__legend">' + area.name + '</legend>';
+      html += '<p class="esqr-area-intro">' + area.intro + '</p>';
+      questions.forEach(function (question, questionIndex) {
+        var itemNumber = areaIndex * 5 + questionIndex + 1;
+        html += '<div class="esqr-item">';
+        html += '<p class="esqr-item__text"><span class="esqr-item__number">' + itemNumber + '.</span> ' + question.prompt + '</p>';
+        html += '<div class="esqr-rating" role="radiogroup" aria-label="Rating for question ' + itemNumber + '">';
+        html += '<span class="esqr-rating__label">' + scale.labels[0] + '</span>';
+        for (var value = scale.min; value <= scale.max; value++) {
+          html += '<label class="esqr-rating__option">';
+          html += '<input type="radio" name="' + question.id + '" value="' + value + '" required>';
+          html += '<span>' + value + '</span>';
+          html += '</label>';
+        }
+        html += '<span class="esqr-rating__label">' + scale.labels[scale.labels.length - 1] + '</span>';
+        html += '</div>';
+        html += '</div>';
+      });
+      html += '</fieldset>';
+    });
+    questionsWrap.innerHTML = html;
+  }
+
+  function applyDraft() {
+    var draft = readJson(DRAFT_KEY, null);
+    if (!draft || !draft.answers) return;
+    Object.keys(draft.answers).forEach(function (questionId) {
+      var value = String(draft.answers[questionId]);
+      var input = form.querySelector('input[name="' + questionId + '"][value="' + value + '"]');
+      if (input) input.checked = true;
+    });
+    if (draftStatus) {
+      var timestamp = draft.savedAt ? new Date(draft.savedAt).toLocaleString() : 'recently';
+      draftStatus.hidden = false;
+      draftStatus.textContent = 'Saved progress restored from ' + timestamp + '.';
+    }
+  }
+
+  function getAnswers() {
+    var answers = {};
+    config.questions.forEach(function (question) {
+      var checked = form.querySelector('input[name="' + question.id + '"]:checked');
+      if (checked) answers[question.id] = Number(checked.value);
+    });
+    return answers;
+  }
+
+  function saveDraft() {
+    var answers = getAnswers();
+    if (!Object.keys(answers).length) return;
+    writeJson(DRAFT_KEY, {
+      savedAt: new Date().toISOString(),
+      answers: answers
+    });
+    if (draftStatus) {
+      draftStatus.hidden = false;
+      draftStatus.textContent = 'Progress saved on this device.';
+    }
+  }
+
+  function clearDraft() {
+    localStorage.removeItem(DRAFT_KEY);
+    if (draftStatus) {
+      draftStatus.hidden = true;
+      draftStatus.textContent = '';
+    }
+  }
+
+  function updateProgress() {
+    if (!config) return;
+    var answered = form.querySelectorAll('input[type="radio"]:checked').length;
+    var total = config.questions.length;
+    var pct = total ? Math.round((answered / total) * 100) : 0;
+    if (progressFill) progressFill.style.width = pct + '%';
+    if (progressText) progressText.textContent = answered + ' of ' + total + ' answered';
+    var bar = progressFill && progressFill.closest('.esqr-progress');
+    if (bar) {
+      bar.setAttribute('aria-valuenow', answered);
+      bar.setAttribute('aria-valuemax', total);
+    }
+  }
+
+  function isComplete() {
+    return config.questions.every(function (question) {
+      return !!form.querySelector('input[name="' + question.id + '"]:checked');
+    });
+  }
+
+  function scoreBand(score) {
+    if (score >= 4.2) return 'Clear strength';
+    if (score >= 3.4) return 'Stable capacity';
+    if (score >= 2.6) return 'Mixed signal';
+    return 'Support needed';
+  }
+
+  function computeResults() {
+    var answers = getAnswers();
+    var groupedQuestions = {};
+    config.questions.forEach(function (question) {
+      if (!groupedQuestions[question.areaId]) groupedQuestions[question.areaId] = [];
+      groupedQuestions[question.areaId].push(question);
+    });
+
+    var areas = config.areas.map(function (area) {
+      var questions = groupedQuestions[area.id] || [];
+      var values = questions.map(function (question) {
+        return Number(answers[question.id] || 0);
+      });
+      var total = values.reduce(function (sum, value) { return sum + value; }, 0);
+      var average = values.length ? (total / values.length) : 0;
+      return {
+        id: area.id,
+        name: area.name,
+        signal: area.signal,
+        intro: area.intro,
+        score: Number(average.toFixed(2)),
+        band: scoreBand(average),
+        strengthSummary: area.strengthSummary,
+        growthSummary: area.growthSummary,
+        strategies: area.strategies || [],
+        items: questions.map(function (question) {
+          return {
+            id: question.id,
+            prompt: question.prompt,
+            score: Number(answers[question.id] || 0)
+          };
+        })
+      };
+    }).sort(function (a, b) {
+      return b.score - a.score;
+    });
+
+    var overallScore = areas.reduce(function (sum, area) { return sum + area.score; }, 0) / Math.max(1, areas.length);
+    var strengths = areas.slice(0, 2);
+    var growthAreas = areas.slice(-2).reverse();
+    var signalPressure = {
+      planning: 0,
+      activation: 0,
+      regulation: 0,
+      environment: 0
+    };
+
+    growthAreas.forEach(function (area, index) {
+      if (signalPressure[area.signal] !== undefined) {
+        signalPressure[area.signal] += index === 0 ? 2 : 1;
+      }
+    });
+
+    return {
+      answers: answers,
+      areas: areas,
+      strengths: strengths,
+      growthAreas: growthAreas,
+      overallScore: Number(overallScore.toFixed(2)),
+      signalPressure: signalPressure
+    };
+  }
+
+  function deriveOffer(growthAreas) {
+    var primary = growthAreas && growthAreas.length ? String(growthAreas[0].id || '') : '';
+    var byArea = {
+      'planning-time': { code: 'PLAN40', focus: 'planning and time management' },
+      'initiation-follow-through': { code: 'START40', focus: 'task initiation and follow-through' },
+      'attention-working-memory': { code: 'FOCUS40', focus: 'focus and working memory support' },
+      'organization-monitoring': { code: 'ORDER40', focus: 'organization and self-monitoring systems' },
+      'regulation-flexibility': { code: 'CALM40', focus: 'regulation and flexible recovery' }
+    };
+    var selected = byArea[primary] || { code: 'ESQR40', focus: 'executive functioning coaching support' };
+    return {
+      code: selected.code,
+      focus: selected.focus,
+      discountPercent: 40
+    };
+  }
+
+  function buildNarrative(result) {
+    var top = result.strengths[0];
+    var growth = result.growthAreas[0];
+    var overallBand = scoreBand(result.overallScore);
+    var narrative = 'Your strongest current base looks like ' + top.name.toLowerCase() + ', while the biggest drag appears in ' + growth.name.toLowerCase() + '. ';
+    if (result.overallScore >= 4) {
+      narrative += 'Overall, this profile reads like a solid system with a few pressure points worth tightening.';
+    } else if (result.overallScore >= 3) {
+      narrative += 'Overall, this profile looks workable but uneven. Stronger days probably depend on setup and conditions more than outsiders realize.';
+    } else {
+      narrative += 'Overall, this profile suggests that daily demands may be outrunning your current support systems, which makes external scaffolding especially important right now.';
+    }
+    return {
+      title: overallBand + ': ' + growth.name + ' is the main leverage point',
+      lede: narrative
+    };
+  }
+
+  function buildSignalSummary(result) {
+    var ranked = Object.keys(result.signalPressure).map(function (key) {
+      return { key: key, score: result.signalPressure[key] };
+    }).sort(function (a, b) {
+      return b.score - a.score;
+    }).filter(function (item) {
+      return item.score > 0;
+    });
+
+    if (!ranked.length) {
+      return 'No major cross-signal pressure stands out yet. Use the other EFI tools to see where friction becomes situational rather than trait-like.';
+    }
+
+    var labelMap = {
+      planning: 'planning',
+      activation: 'activation',
+      regulation: 'regulation',
+      environment: 'environment and focus'
+    };
+
+    return 'Cross-signal read: the strongest pressure appears in ' + labelMap[ranked[0].key] + '. Pair this result with another EFI diagnostic to confirm whether the pattern is structural, situational, or both.';
+  }
+
+  function buildNextTools(result) {
+    var primarySignal = result.growthAreas.length ? result.growthAreas[0].signal : '';
+    var suggestionsBySignal = {
+      planning: [
+        { href: 'time-blindness-calibrator.html', label: 'Time Blindness Calibrator', copy: 'Check whether your schedule is compressing task length and transitions.' },
+        { href: 'full-ef-profile.html', label: 'Cross-Signal Profile', copy: 'Combine timing drift with the rest of your EFI data.' }
+      ],
+      activation: [
+        { href: 'task-start-friction.html', label: 'Task Start Friction', copy: 'Turn startup resistance into a concrete first-step protocol.' },
+        { href: 'full-ef-profile.html', label: 'Cross-Signal Profile', copy: 'See whether your pattern is activation-only or activation-plus-planning.' }
+      ],
+      environment: [
+        { href: 'ef-profile-story.html', label: 'EF Profile Story', copy: 'Add narrative detail around distraction, overload, and recovery.' },
+        { href: 'full-ef-profile.html', label: 'Cross-Signal Profile', copy: 'Merge attention patterns with the rest of the EFI tool stack.' }
+      ],
+      regulation: [
+        { href: 'ef-profile-story.html', label: 'EF Profile Story', copy: 'Add emotional-load context and a short experiment plan.' },
+        { href: 'task-start-friction.html', label: 'Task Start Friction', copy: 'Map where pressure and dread are blocking execution.' }
+      ]
+    };
+
+    return suggestionsBySignal[primarySignal] || [
+      { href: 'ef-profile-story.html', label: 'EF Profile Story', copy: 'Add narrative detail to this intake snapshot.' },
+      { href: 'full-ef-profile.html', label: 'Cross-Signal Profile', copy: 'Combine multiple EFI tools into one synthesis.' }
+    ];
+  }
+
+  function renderChart(result) {
+    var container = document.getElementById('esqr-chart');
+    if (!container) return;
+    var html = '<div class="esqr-bars esqr-bars--single">';
+    result.areas.slice().reverse().forEach(function (area) {
+      var pct = (area.score / 5) * 100;
+      var barClass = area.signal === 'regulation' ? 'esqr-bar--doing' : 'esqr-bar--thinking';
+      html += '<div class="esqr-bar-group">';
+      html += '<div class="esqr-bar-wrapper">';
+      html += '<div class="esqr-bar ' + barClass + '" style="height:' + pct + '%;" title="' + area.name + ': ' + area.score + '/5">';
+      html += '<span class="esqr-bar__value">' + area.score.toFixed(1) + '</span>';
+      html += '</div>';
+      html += '</div>';
+      html += '<div class="esqr-bar__label">' + area.name + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+    html += '<div class="esqr-chart-legend">';
+    html += '<span class="esqr-legend-item"><span class="esqr-legend-dot" style="background:var(--color-primary-light);"></span> Planning, activation, and attention systems</span>';
+    html += '<span class="esqr-legend-item"><span class="esqr-legend-dot" style="background:var(--color-accent);"></span> Regulation and flexibility</span>';
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  function renderAreaCards(items, type) {
+    return items.map(function (area) {
+      var cardClass = type === 'strength' ? 'esqr-result-card--strength' : 'esqr-result-card--weakness';
+      var summary = type === 'strength' ? area.strengthSummary : area.growthSummary;
+      var html = '<div class="esqr-result-card ' + cardClass + '">';
+      html += '<div class="esqr-result-card__header"><strong>' + area.name + '</strong><span class="esqr-result-card__score">' + area.score.toFixed(1) + '/5</span></div>';
+      html += '<span class="esqr-result-card__domain">' + area.band + '</span>';
+      html += '<p class="esqr-result-card__summary">' + summary + '</p>';
+      if (Array.isArray(area.strategies) && area.strategies.length) {
+        html += '<ul class="esqr-result-card__strategies">';
+        area.strategies.forEach(function (strategy) {
+          html += '<li>' + strategy + '</li>';
+        });
+        html += '</ul>';
+      }
+      html += '</div>';
+      return html;
+    }).join('');
   }
 
   function renderHistory() {
     if (!historyEl) return;
-    var history = [];
-    try { history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch (e) { history = []; }
+    var history = readJson(HISTORY_KEY, []);
     if (!history.length) {
       historyEl.style.display = 'none';
+      historyEl.innerHTML = '';
       return;
     }
-    var html = '<h4 style="margin-bottom:var(--space-sm);">Recent ESQ-R Snapshots</h4><ul class="checklist">';
+    var html = '<h3 style="margin-top:0;">Recent ESQ-R snapshots</h3><ul class="checklist">';
     history.slice(-5).reverse().forEach(function (entry) {
-      html += '<li>' + new Date(entry.generatedAt).toLocaleString() + ' &mdash; Top strengths: ' + entry.strengths.map(function (s) { return s.name; }).join(', ') + '</li>';
+      var growth = Array.isArray(entry.growthAreas) && entry.growthAreas.length ? entry.growthAreas[0].name : 'No growth area';
+      var strength = Array.isArray(entry.strengths) && entry.strengths.length ? entry.strengths[0].name : 'No strength';
+      html += '<li>' + new Date(entry.generatedAt).toLocaleString() + ' - strongest: ' + strength + '; main leverage point: ' + growth + '.</li>';
     });
     html += '</ul>';
     historyEl.innerHTML = html;
     historyEl.style.display = 'block';
   }
 
-  function updateProgress() {
-    var answered = form.querySelectorAll('input[type="radio"]:checked').length;
-    var pct = Math.round((answered / totalQuestions) * 100);
-    progressFill.style.width = pct + '%';
-    progressText.textContent = answered + ' of ' + totalQuestions + ' answered';
-    var bar = progressFill.closest('.esqr-progress');
-    if (bar) bar.setAttribute('aria-valuenow', answered);
-  }
-
-  function getScores() {
-    var scores = {};
-    SKILLS.forEach(function (skill) {
-      var sum = 0;
-      var count = 0;
-      skill.questions.forEach(function (qName) {
-        var checked = form.querySelector('input[name="' + qName + '"]:checked');
-        if (checked) {
-          sum += parseInt(checked.value, 10);
-          count++;
-        }
+  function buildSummaryText() {
+    if (!lastResultsPayload) return '';
+    var lines = [];
+    lines.push('EFI ESQ-R Interactive Intake');
+    lines.push('Generated: ' + new Date(lastResultsPayload.generatedAt).toLocaleString());
+    lines.push('');
+    lines.push(lastResultsPayload.profileTitle);
+    lines.push(lastResultsPayload.profileNarrative);
+    lines.push('');
+    lines.push('Overall score: ' + lastResultsPayload.overallScore.toFixed(1) + '/5');
+    lines.push('Cross-signal note: ' + lastResultsPayload.signalSummary);
+    lines.push('');
+    lines.push('Current strengths:');
+    lastResultsPayload.strengths.forEach(function (area) {
+      lines.push('- ' + area.name + ': ' + area.score.toFixed(1) + '/5');
+    });
+    lines.push('');
+    lines.push('Main leverage points:');
+    lastResultsPayload.growthAreas.forEach(function (area) {
+      lines.push('- ' + area.name + ': ' + area.score.toFixed(1) + '/5');
+      (area.strategies || []).slice(0, 2).forEach(function (strategy) {
+        lines.push('  Strategy: ' + strategy);
       });
-      scores[skill.id] = count > 0 ? +(sum / count).toFixed(1) : 0;
     });
-    return scores;
+    lines.push('');
+    lines.push('Suggested next tools:');
+    lastResultsPayload.nextTools.forEach(function (tool) {
+      lines.push('- ' + tool.label + ': ' + tool.copy);
+    });
+    return lines.join('\n');
   }
 
-  function isComplete() {
-    for (var i = 1; i <= totalQuestions; i++) {
-      if (!form.querySelector('input[name="q' + i + '"]:checked')) return false;
+  function downloadText(text, fileName) {
+    var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  function copyText(text, done) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(done);
+      return;
     }
-    return true;
+    done();
   }
 
-  function renderChart(scores) {
-    var container = document.getElementById('esqr-chart');
-    container.innerHTML = '';
-
-    var maxScore = 7;
-    var thinkingSkills = SKILLS.filter(function (s) { return s.domain === 'thinking'; })
-      .sort(function (a, b) { return scores[b.id] - scores[a.id]; });
-    var doingSkills = SKILLS.filter(function (s) { return s.domain === 'doing'; })
-      .sort(function (a, b) { return scores[b.id] - scores[a.id]; });
-
-    var html = '<div class="esqr-bars">';
-
-    html += '<div class="esqr-domain-group"><div class="esqr-domain-label esqr-domain-label--thinking">Thinking</div><div class="esqr-domain-bars">';
-    thinkingSkills.forEach(function (skill) {
-      var score = scores[skill.id];
-      var pct = (score / maxScore) * 100;
-      html += '<div class="esqr-bar-group"><div class="esqr-bar-wrapper">';
-      html += '<div class="esqr-bar esqr-bar--thinking" style="height:' + pct + '%;" title="' + skill.name + ': ' + score + '/7">';
-      html += '<span class="esqr-bar__value">' + score + '</span></div></div>';
-      html += '<div class="esqr-bar__label">' + skill.name + '</div></div>';
-    });
-    html += '</div></div>';
-
-    html += '<div class="esqr-domain-group"><div class="esqr-domain-label esqr-domain-label--doing">Doing</div><div class="esqr-domain-bars">';
-    doingSkills.forEach(function (skill) {
-      var score = scores[skill.id];
-      var pct = (score / maxScore) * 100;
-      html += '<div class="esqr-bar-group"><div class="esqr-bar-wrapper">';
-      html += '<div class="esqr-bar esqr-bar--doing" style="height:' + pct + '%;" title="' + skill.name + ': ' + score + '/7">';
-      html += '<span class="esqr-bar__value">' + score + '</span></div></div>';
-      html += '<div class="esqr-bar__label">' + skill.name + '</div></div>';
-    });
-    html += '</div></div></div>';
-
-    html += '<div class="esqr-chart-legend">';
-    html += '<span class="esqr-legend-item"><span class="esqr-legend-dot" style="background:var(--color-primary-light);"></span> Thinking</span>';
-    html += '<span class="esqr-legend-item"><span class="esqr-legend-dot" style="background:var(--color-accent);"></span> Doing</span>';
-    html += '</div>';
-
-    container.innerHTML = html;
-  }
-
-  function renderResults(scores) {
-    var sorted = SKILLS.map(function (skill) {
-      return { id: skill.id, name: skill.name, domain: skill.domain, score: scores[skill.id] };
-    }).sort(function (a, b) { return b.score - a.score; });
-
-    var top3 = sorted.slice(0, 3);
-    var bottom3 = sorted.slice(-3).reverse();
-
-    var strengthsHtml = '';
-    top3.forEach(function (s) {
-      strengthsHtml += '<div class="esqr-result-card esqr-result-card--strength">';
-      strengthsHtml += '<div class="esqr-result-card__header"><strong>' + s.name + '</strong><span class="esqr-result-card__score">' + s.score + '/7</span></div>';
-      strengthsHtml += '<span class="esqr-result-card__domain">' + s.domain + '</span></div>';
-    });
-    document.getElementById('strengths-list').innerHTML = strengthsHtml;
-
-    var weakHtml = '';
-    bottom3.forEach(function (s) {
-      var strat = STRATEGIES[s.id] || { summary: 'No strategy profile available.', strategies: [] };
-      weakHtml += '<div class="esqr-result-card esqr-result-card--weakness">';
-      weakHtml += '<div class="esqr-result-card__header"><strong>' + s.name + '</strong><span class="esqr-result-card__score">' + s.score + '/7</span></div>';
-      weakHtml += '<span class="esqr-result-card__domain">' + s.domain + '</span>';
-      weakHtml += '<p class="esqr-result-card__summary">' + strat.summary + '</p><h5>Recommended Strategies:</h5><ul class="esqr-result-card__strategies">';
-      (strat.strategies || []).forEach(function (str) { weakHtml += '<li>' + str + '</li>'; });
-      weakHtml += '</ul></div>';
-    });
-    document.getElementById('weaknesses-list').innerHTML = weakHtml;
-
-    var thinkingSkills = SKILLS.filter(function (s) { return s.domain === 'thinking'; });
-    var doingSkills = SKILLS.filter(function (s) { return s.domain === 'doing'; });
-    var thinkingAvg = thinkingSkills.reduce(function (sum, s) { return sum + scores[s.id]; }, 0) / thinkingSkills.length;
-    var doingAvg = doingSkills.reduce(function (sum, s) { return sum + scores[s.id]; }, 0) / doingSkills.length;
-
-    document.getElementById('thinking-avg').textContent = thinkingAvg.toFixed(1) + ' / 7';
-    document.getElementById('doing-avg').textContent = doingAvg.toFixed(1) + ' / 7';
+  function renderResults() {
+    var result = computeResults();
+    var narrative = buildNarrative(result);
+    var signalSummary = buildSignalSummary(result);
+    var nextTools = buildNextTools(result);
+    var offer = deriveOffer(result.growthAreas);
 
     lastResultsPayload = {
       generatedAt: new Date().toISOString(),
-      strengths: top3,
-      growthAreas: bottom3,
-      domainAverages: {
-        thinking: Number(thinkingAvg.toFixed(2)),
-        doing: Number(doingAvg.toFixed(2))
-      },
-      allScores: scores,
-      offer: deriveOffer(bottom3)
+      modelVersion: config.version,
+      overallScore: result.overallScore,
+      areas: result.areas,
+      strengths: result.strengths,
+      growthAreas: result.growthAreas,
+      signalPressure: result.signalPressure,
+      signalSummary: signalSummary,
+      profileTitle: narrative.title,
+      profileNarrative: narrative.lede,
+      nextTools: nextTools,
+      offer: offer
     };
 
+    if (titleEl) titleEl.textContent = narrative.title;
+    if (ledeEl) ledeEl.textContent = narrative.lede;
+    if (summaryEl) {
+      summaryEl.innerHTML =
+        '<p><strong>Overall score:</strong> ' + result.overallScore.toFixed(1) + '/5</p>' +
+        '<p><strong>Strongest current base:</strong> ' + result.strengths[0].name + '</p>' +
+        '<p style="margin-bottom:0;"><strong>Main leverage point:</strong> ' + result.growthAreas[0].name + '</p>';
+    }
+    if (signalSummaryEl) signalSummaryEl.textContent = signalSummary;
+    if (strengthsEl) strengthsEl.innerHTML = renderAreaCards(result.strengths, 'strength');
+    if (growthEl) growthEl.innerHTML = renderAreaCards(result.growthAreas, 'growth');
+    if (nextToolsEl) {
+      nextToolsEl.innerHTML = nextTools.map(function (tool) {
+        return '<li><strong><a href="' + tool.href + '">' + tool.label + '</a>:</strong> ' + tool.copy + '</li>';
+      }).join('');
+    }
     if (leadOfferPreview) {
       leadOfferPreview.hidden = false;
-      leadOfferPreview.textContent = 'Recommended offer: ' + lastResultsPayload.offer.code + ' (' + lastResultsPayload.offer.discountPercent + '% off) for ' + lastResultsPayload.offer.focus + '. Enter your email below and we will send the details.';
+      leadOfferPreview.textContent = 'Recommended EFI follow-up: ' + offer.code + ' (' + offer.discountPercent + '% off) for ' + offer.focus + '.';
     }
 
     var plan = buildEsqrActionPlan(lastResultsPayload);
@@ -561,54 +852,106 @@
       renderEsqrReflectionPrompt(plan);
     }
 
-    localStorage.setItem(RESULT_KEY, JSON.stringify(lastResultsPayload));
-    var history = [];
-    try { history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch (e) { history = []; }
+    renderChart(result);
+    writeJson(RESULT_KEY, lastResultsPayload);
+    var history = readJson(HISTORY_KEY, []);
     history.push(lastResultsPayload);
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(-20)));
+    writeJson(HISTORY_KEY, history.slice(-MAX_HISTORY));
     renderHistory();
-  }
-
-  function buildShareText() {
-    if (!lastResultsPayload) return '';
-    var strengths = lastResultsPayload.strengths.map(function (s) { return s.name + ' (' + s.score + '/7)'; }).join(', ');
-    var growth = lastResultsPayload.growthAreas.map(function (s) { return s.name + ' (' + s.score + '/7)'; }).join(', ');
-    return 'My EFI ESQ-R summary\nStrengths: ' + strengths + '\nGrowth areas: ' + growth + '\nThinking avg: ' + lastResultsPayload.domainAverages.thinking + '/7\nDoing avg: ' + lastResultsPayload.domainAverages.doing + '/7';
+    clearDraft();
+    if (resultsSection) resultsSection.hidden = false;
+    if (resultsSection) resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setShareStatus('Result ready. Copy, export, save, or continue into the next tool.');
   }
 
   function renderResultsImageBlob() {
     if (!resultsSection || resultsSection.hidden) {
       return Promise.reject(new Error('Generate your profile first, then export.'));
     }
-    return ensureCanvasEngine().then(function () {
-      return window.html2canvas(resultsSection, {
-        scale: 2,
-        backgroundColor: '#ffffff',
-        useCORS: true,
-        logging: false
+    return ensureCanvasEngine()
+      .then(function () {
+        return window.html2canvas(resultsSection, {
+          scale: 2,
+          backgroundColor: '#ffffff',
+          useCORS: true,
+          logging: false
+        });
+      })
+      .then(function (canvas) {
+        return new Promise(function (resolve) {
+          canvas.toBlob(function (blob) {
+            resolve({ blob: blob, canvas: canvas });
+          }, 'image/png');
+        });
       });
-    }).then(function (canvas) {
-      return new Promise(function (resolve) {
-        canvas.toBlob(function (blob) {
-          resolve({ blob: blob, canvas: canvas });
-        }, 'image/png');
-      });
-    });
   }
 
   function downloadBlob(blob, filename) {
     var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
     URL.revokeObjectURL(url);
   }
 
   function bindActions() {
-    form.addEventListener('change', updateProgress);
+    form.addEventListener('change', function () {
+      updateProgress();
+      saveDraft();
+    });
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (!isComplete()) {
+        if (errorMsg) {
+          errorMsg.hidden = false;
+          errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+      if (errorMsg) errorMsg.hidden = true;
+      renderResults();
+    });
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function () {
+        form.reset();
+        clearDraft();
+        localStorage.removeItem(RESULT_KEY);
+        if (resultsSection) resultsSection.hidden = true;
+        lastResultsPayload = null;
+        updateProgress();
+        setShareStatus('Questionnaire reset.');
+      });
+    }
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function () {
+        var text = buildSummaryText();
+        if (!text) {
+          setShareStatus('Generate your profile first, then copy the summary.');
+          return;
+        }
+        copyText(text, function () {
+          setShareStatus('Summary copied.');
+        });
+      });
+    }
+
+    if (exportBtn) {
+      exportBtn.addEventListener('click', function () {
+        var text = buildSummaryText();
+        if (!text) {
+          setShareStatus('Generate your profile first, then export the summary.');
+          return;
+        }
+        downloadText(text, 'efi-esqr-summary-' + new Date().toISOString().slice(0, 10) + '.txt');
+        setShareStatus('Text summary exported.');
+      });
+    }
 
     if (downloadPngBtn) {
       downloadPngBtn.addEventListener('click', function () {
@@ -627,24 +970,24 @@
         renderResultsImageBlob().then(function (result) {
           return ensurePdfEngine().then(function () {
             var jsPDF = window.jspdf.jsPDF;
+            var pdf = new jsPDF('p', 'mm', 'a4');
+            var imageData = result.canvas.toDataURL('image/png');
             var pageWidth = 210;
             var pageHeight = 297;
             var margin = 10;
             var contentWidth = pageWidth - (margin * 2);
             var contentHeight = (result.canvas.height * contentWidth) / result.canvas.width;
-            var pdf = new jsPDF('p', 'mm', 'a4');
-            var imageData = result.canvas.toDataURL('image/png');
             var y = margin;
             var heightLeft = contentHeight;
 
             pdf.addImage(imageData, 'PNG', margin, y, contentWidth, contentHeight);
-            heightLeft -= (pageHeight - margin * 2);
+            heightLeft -= (pageHeight - (margin * 2));
 
             while (heightLeft > 0) {
               y = heightLeft - contentHeight + margin;
               pdf.addPage();
               pdf.addImage(imageData, 'PNG', margin, y, contentWidth, contentHeight);
-              heightLeft -= (pageHeight - margin * 2);
+              heightLeft -= (pageHeight - (margin * 2));
             }
 
             pdf.save('efi-esqr-results-' + new Date().toISOString().slice(0, 10) + '.pdf');
@@ -658,59 +1001,36 @@
 
     if (shareBtn) {
       shareBtn.addEventListener('click', function () {
-        var text = buildShareText();
+        var text = buildSummaryText();
         if (!text) {
           setShareStatus('Generate your profile first, then share.');
           return;
         }
-
         renderResultsImageBlob().then(function (result) {
           if (navigator.canShare && navigator.share && result.blob) {
             var file = new File([result.blob], 'efi-esqr-results.png', { type: 'image/png' });
             if (navigator.canShare({ files: [file] })) {
               return navigator.share({
-                title: 'My EFI ESQ-R Results',
+                title: 'EFI ESQ-R Interactive Intake',
                 text: text,
                 files: [file]
               }).then(function () {
-                setShareStatus('Results snapshot shared successfully.');
-                return;
+                setShareStatus('Results shared successfully.');
               });
             }
           }
-
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            return navigator.clipboard.writeText(text).then(function () {
-              setShareStatus('Device does not support file sharing here. Summary copied to clipboard instead.');
-            });
-          }
-          throw new Error('Sharing is not supported on this browser.');
+          copyText(text, function () {
+            setShareStatus('File sharing is not available here. Summary copied instead.');
+          });
         }).catch(function (err) {
           setShareStatus(err.message || 'Unable to share results.');
         });
       });
     }
 
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      if (!isComplete()) {
-        errorMsg.hidden = false;
-        errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-      }
-
-      errorMsg.hidden = true;
-      var scores = getScores();
-      renderChart(scores);
-      renderResults(scores);
-      resultsSection.hidden = false;
-      resultsSection.scrollIntoView({ behavior: 'smooth' });
-    });
-
     if (leadForm) {
-      leadForm.addEventListener('submit', function (e) {
-        e.preventDefault();
+      leadForm.addEventListener('submit', function (event) {
+        event.preventDefault();
         var nameEl = document.getElementById('esqr-lead-name');
         var emailEl = document.getElementById('esqr-lead-email');
         var consentEl = document.getElementById('esqr-lead-consent');
@@ -720,11 +1040,11 @@
         var consent = !!(consentEl && consentEl.checked);
 
         if (!lastResultsPayload) {
-          setLeadStatus('Generate your ESQ-R profile first so we can save the right result set.');
+          setLeadStatus('Generate your ESQ-R result first so EFI can save the right profile.');
           return;
         }
         if (!email || email.indexOf('@') === -1) {
-          setLeadStatus('Enter a valid email to save your results.');
+          setLeadStatus('Enter a valid email to save your result.');
           return;
         }
         if (!consent) {
@@ -750,10 +1070,10 @@
             offer_code: lastResultsPayload.offer.code,
             discount_percent: lastResultsPayload.offer.discountPercent,
             metadata: {
-              strengths: lastResultsPayload.strengths.map(function (s) { return s.id; }),
-              growth_areas: lastResultsPayload.growthAreas.map(function (s) { return s.id; }),
-              thinking_avg: lastResultsPayload.domainAverages.thinking,
-              doing_avg: lastResultsPayload.domainAverages.doing
+              overall_score: lastResultsPayload.overallScore,
+              strengths: lastResultsPayload.strengths.map(function (area) { return area.id; }),
+              growth_areas: lastResultsPayload.growthAreas.map(function (area) { return area.id; }),
+              signal_pressure: lastResultsPayload.signalPressure
             }
           })
         }).then(function (res) {
@@ -763,7 +1083,7 @@
           });
         }).then(function (body) {
           var sentCode = body.offer_code || lastResultsPayload.offer.code;
-          setLeadStatus('Saved. Check your inbox for your ' + sentCode + ' discount code and next-step tools.');
+          setLeadStatus('Saved. Check your inbox for your ' + sentCode + ' follow-up tools.');
           if (window.EFI && EFI.Analytics && EFI.Analytics.track) {
             EFI.Analytics.track('esqr_lead_capture', {
               source: 'esqr_assessment',
@@ -782,16 +1102,16 @@
     }
   }
 
-  loadConfig()
-    .then(function () {
-      bindActions();
-      updateProgress();
-      renderHistory();
-    })
-    .catch(function (err) {
-      if (errorMsg) {
-        errorMsg.hidden = false;
-        errorMsg.textContent = err.message || 'Unable to initialize ESQ-R right now.';
-      }
-    });
+  loadConfig().then(function () {
+    renderQuestions();
+    applyDraft();
+    bindActions();
+    updateProgress();
+    renderHistory();
+  }).catch(function (err) {
+    if (errorMsg) {
+      errorMsg.hidden = false;
+      errorMsg.textContent = err.message || 'Unable to initialize the ESQ-R tool right now.';
+    }
+  });
 })();

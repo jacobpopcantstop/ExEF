@@ -57,6 +57,7 @@
     var tbAdd = document.getElementById('tb-add-entry');
     var tbReset = document.getElementById('tb-reset');
     var tbCopySummary = document.getElementById('tb-copy-summary');
+    var tbExportText = document.getElementById('tb-export-text');
     var tbExportCsv = document.getElementById('tb-export-csv');
     var tbBody = document.getElementById('tb-entries-body');
     var tbMessage = document.getElementById('tb-message');
@@ -84,6 +85,8 @@
     }
 
     function adjustedBenchmark(benchmark, complexityKey) {
+      if (complexityKey === 'easy') complexityKey = 'simple';
+      if (complexityKey === 'hard') complexityKey = 'complex';
       var modifier = TIME_COMPLEXITY[complexityKey] || TIME_COMPLEXITY.typical;
       if (!benchmark) return 0;
       return Math.round(benchmark.benchmark * modifier.factor);
@@ -660,6 +663,18 @@
       }
     }
 
+    function downloadText(text, filename) {
+      var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
     function exportTimeEntriesCsv() {
       var entries = readEntries();
         if (!entries.length) {
@@ -773,6 +788,19 @@
 
     if (tbExportCsv) {
       tbExportCsv.addEventListener('click', exportTimeEntriesCsv);
+    }
+
+    if (tbExportText) {
+      tbExportText.addEventListener('click', function () {
+        var metrics = computeTimeMetrics(readEntries());
+        if (!metrics) {
+          if (tbMessage) tbMessage.textContent = 'Add valid entries before exporting a summary.';
+          return;
+        }
+        var summary = buildTimeSummary(metrics);
+        downloadText(summary, 'efi-time-blindness-summary-' + new Date().toISOString().slice(0, 10) + '.txt');
+        if (tbMessage) tbMessage.textContent = 'Summary exported.';
+      });
     }
 
     if (tbCategory) {
@@ -1131,6 +1159,7 @@
     var tfRun = document.getElementById('tf-run');
     var tfReset = document.getElementById('tf-reset');
     var tfCopy = document.getElementById('tf-copy');
+    var tfExport = document.getElementById('tf-export');
     var tfResult = document.getElementById('tf-result');
     var tfMessage = document.getElementById('tf-message');
     var tfScenario = document.getElementById('tf-scenario');
@@ -1451,6 +1480,17 @@
         copyText(lastProtocol, function () {
           if (tfMessage) tfMessage.textContent = 'Protocol copied.';
         });
+      });
+    }
+
+    if (tfExport) {
+      tfExport.addEventListener('click', function () {
+        if (!lastProtocol) {
+          if (tfMessage) tfMessage.textContent = 'Run analysis first, then export the protocol.';
+          return;
+        }
+        downloadText(lastProtocol, 'efi-task-start-friction-' + new Date().toISOString().slice(0, 10) + '.txt');
+        if (tfMessage) tfMessage.textContent = 'Protocol exported.';
       });
     }
 

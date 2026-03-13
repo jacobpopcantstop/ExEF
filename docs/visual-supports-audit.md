@@ -103,7 +103,7 @@ output would significantly increase engagement and comprehension.
 
 | # | Tool | Visual | Rationale |
 |---|------|--------|-----------|
-| 34 | ESQ-R | Radar/bar chart of 12 skills across Thinking/Doing domains | Color-coded profile is more memorable than text list |
+| 34 | ESQ-R | Area chart or grouped bars across the 5 public ESQ-R skill areas | Color-coded profile is more memorable than text list |
 | 35 | EF Profile Story | Visual hierarchy or cluster map of dominant friction patterns | Pattern recognition at a glance |
 | 36 | Full EF Profile | Cross-signal dashboard combining multiple tool results | Unified visual profile rather than concatenated text |
 | 37 | Gap Analyzer | Visual gap map showing capacity vs. demand per skill area | Bar-chart overlay of current level vs. required level |

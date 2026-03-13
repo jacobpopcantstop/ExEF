@@ -1,6 +1,6 @@
 # Quiz Outcomes Report (Bespoke)
 
-Last updated: February 27, 2026
+Last updated: March 13, 2026
 
 This report defines all output categories produced by EFI interactive quiz/tools currently in production:
 - ESQ-R (`esqr.html`, `js/esqr.js`)
@@ -10,21 +10,22 @@ This report defines all output categories produced by EFI interactive quiz/tools
 ## 1) ESQ-R Outcome Matrix
 
 ## Scoring Model
-- 36 questions total
-- 12 skills total
-- Scale per question: 1 to 7
-- Skill score: average of that skill's question values, rounded to 1 decimal
-- Domain averages:
-  - `thinking`: average of all Thinking skill scores
-  - `doing`: average of all Doing skill scores
+- 25 questions total
+- 5 executive-function areas total
+- Scale per question: 1 to 5
+- Area score: average of that area's five question values, rounded to 2 decimals
+- Overall score: average of all five area scores
+- Cross-signal pressure:
+  - derived from the two lowest-ranked areas
+  - translated into `planning`, `activation`, `environment`, and `regulation` signals for the Cross-Signal Profile
 
 ## Deterministic Outputs
-- Top 3 strengths:
-  - highest 3 skill scores after descending sort
-- Top 3 growth areas:
-  - lowest 3 skill scores after descending sort, then reversed display order
+- Top 2 strengths:
+  - highest 2 area scores after descending sort
+- Top 2 growth areas:
+  - lowest 2 area scores after descending sort, then reversed display order
 - Offer code outcome:
-  - derived from lowest-ranked skill ID when mapped
+  - derived from lowest-ranked area ID when mapped
   - fallback: `ESQR40`
 
 ## All ESQ-R Result Categories
@@ -32,8 +33,8 @@ This report defines all output categories produced by EFI interactive quiz/tools
   - trigger: any unanswered question
   - outcome: validation error shown, no results generated
 - `complete_assessment`:
-  - trigger: all 36 answered
-  - outcome: chart, top-3 strengths, top-3 growth areas, domain averages, strategy recommendations
+  - trigger: all 25 answered
+  - outcome: chart, top-2 strengths, top-2 growth areas, overall score, cross-signal summary, strategy recommendations, next-tool recommendations
 - `lead_capture_ready`:
   - trigger: completed results exist
   - outcome: ESQ-R lead form enabled with offer preview
@@ -51,13 +52,15 @@ This report defines all output categories produced by EFI interactive quiz/tools
   - outcome: success status with code
 
 ## Interpretation Bands (Recommended Narrative Layer)
-These bands are not hardcoded in UI, but should be used in reporting copy for consistent interpretation:
-- `6.0 - 7.0`: strong autonomous capacity
-- `4.5 - 5.9`: functional but inconsistent under load
-- `3.0 - 4.4`: scaffold recommended
-- `1.0 - 2.9`: high support priority
+These bands are hardcoded in the current UI:
+- `4.2 - 5.0`: clear strength
+- `3.4 - 4.19`: stable capacity
+- `2.6 - 3.39`: mixed signal
+- `1.0 - 2.59`: support needed
 
 ## Export/Share States
+- Copy summary success/fail
+- Text export success/fail
 - PNG export success/fail
 - PDF export success/fail
 - Native share success

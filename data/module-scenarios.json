@@ -1,0 +1,254 @@
+{
+  "module-2": {
+    "title": "Intake & Assessment Simulations",
+    "description": "Practice real assessment decisions before working with clients. Each scenario presents a coaching moment—choose the response that best fits EF coaching principles.",
+    "scenarios": [
+      {
+        "id": "m2s1",
+        "situation": "A new client says during intake: \u201cI\u2019ve been told by family that I have ADHD but I\u2019ve never been formally diagnosed. Can you assess me and confirm it based on our sessions?\u201d",
+        "question": "How do you respond?",
+        "branches": [
+          {
+            "label": "Explain coaching scope and refer for formal diagnosis",
+            "quality": "best",
+            "outcome": "Correct approach. Coaching assesses executive function patterns and functional impairment, but diagnosis requires a qualified clinician. You explain this clearly, validate the client\u2019s experience, and offer a referral pathway alongside the coaching work.",
+            "action": "Practice language: \u201cI can map your EF patterns and build supports around them. For a formal diagnosis, you\u2019ll want a neuropsychologist or psychiatrist\u2014I can help you find one while we do our work here.\u201d"
+          },
+          {
+            "label": "Run a structured intake and tell the client what patterns you see",
+            "quality": "acceptable",
+            "outcome": "Partially appropriate. Describing functional patterns is within scope, but framing findings as a diagnosis is not. Be clear that your intake identifies EF support needs, not diagnostic labels.",
+            "action": "Reframe: use pattern language (\u201cyou show strong task-initiation difficulty\u201d) not clinical labels (\u201cyou have ADHD\u201d)."
+          },
+          {
+            "label": "Begin an ADHD-specific coaching protocol since the client seems confident about the diagnosis",
+            "quality": "incorrect",
+            "outcome": "Scope drift. Operating on an assumed or self-reported diagnosis without referral bypasses the client\u2019s right to proper evaluation and exposes you to ethical and legal risk. Coaching protocols should follow functional assessment, not assumed diagnosis.",
+            "action": "Review Module 6 (Ethics & Scope) on diagnostic overreach and referral obligations."
+          }
+        ],
+        "reflection": "Diagnostic overreach is one of the most common scope errors in EF coaching. Your role is to assess EF patterns, not assign clinical labels."
+      },
+      {
+        "id": "m2s2",
+        "situation": "On the ESQ-R, your client self-reports strong organizational and planning skills. But in describing their daily life, they mention chronic missed deadlines, a desk buried under papers, and three weeks of unopened mail.",
+        "question": "How do you handle this discrepancy?",
+        "branches": [
+          {
+            "label": "Explore the gap with follow-up behavioral questions",
+            "quality": "best",
+            "outcome": "This is triangulation\u2014a core intake skill. You ask for specific behavioral examples (\u201cTell me about the last time you had a deadline. What happened the day before?\u201d) to distinguish between idealized self-report and actual functioning. The gap itself is diagnostic data.",
+            "action": "Add at least two behavioral examples per flagged domain during intake to ground the ESQ-R data in observable reality."
+          },
+          {
+            "label": "Trust the self-report\u2014clients know themselves best",
+            "quality": "acceptable",
+            "outcome": "Self-report has value, but sole reliance misses a key intake skill. People with EF deficits often struggle to accurately assess their own functioning (metacognitive impairment is part of the profile). A good intake cross-validates.",
+            "action": "Use the ESQ-R as a starting point, not a final answer. Always follow up with behavioral examples."
+          },
+          {
+            "label": "Tell the client their self-assessment is inaccurate",
+            "quality": "incorrect",
+            "outcome": "This damages the coaching alliance early. Correcting a client\u2019s self-perception directly and without exploration creates defensiveness and shame. Your role is to explore, not adjudicate.",
+            "action": "Use curiosity instead of correction: \u201cHelp me understand\u2014you rated organization as strong, and I also heard about some missed deadlines. How do those fit together for you?\u201d"
+          }
+        ],
+        "reflection": "Intake is triangulation, not transcription. Self-report, behavioral examples, and functional context should all inform the baseline picture."
+      },
+      {
+        "id": "m2s3",
+        "situation": "Your intake reveals that a client functions well at home but shows significant EF deficits only in professional settings\u2014missing workplace deadlines, struggling to prioritize tasks, and underperforming in meetings.",
+        "question": "What does this context-specific pattern tell you?",
+        "branches": [
+          {
+            "label": "Design coaching strategies specific to the work environment and its demands",
+            "quality": "best",
+            "outcome": "Exactly right. Context-dependent EF expression is common\u2014the demands, stakes, and structure of a work environment differ from home, so deficits surface differently. Goodness of Fit means matching your interventions to the environment where impairment actually occurs.",
+            "action": "Map the specific work triggers: Is it open-plan distraction? Unclear task briefs? Meeting overload? Build supports for those specific demands."
+          },
+          {
+            "label": "Assume the client is less motivated at work and address motivation first",
+            "quality": "incorrect",
+            "outcome": "This misapplies the effort-vs-regulation distinction. Context-specific EF breakdown is not about motivation\u2014it\u2019s about the mismatch between the environment\u2019s demands and the client\u2019s regulatory capacity. Motivation framing increases shame without fixing the structural problem.",
+            "action": "Reframe: \u201cThe work environment places higher EF demand on you. We\u2019ll build supports for that specific context.\u201d"
+          },
+          {
+            "label": "Conclude the client does not have significant EF deficits since home functioning is strong",
+            "quality": "incorrect",
+            "outcome": "Incorrect interpretation. EF deficits often surface only in high-demand, low-structure environments. Strong home functioning does not rule out meaningful deficits in other contexts. This is a Goodness of Fit issue, not an absence of a coaching need.",
+            "action": "Review the Goodness of Fit framework\u2014functional impairment in even one domain warrants targeted support."
+          }
+        ],
+        "reflection": "EF deficits are context-sensitive. Functioning varies with environment, structure, and demand. Coaching strategies must follow the same logic."
+      }
+    ]
+  },
+  "module-3": {
+    "title": "Coaching Architecture Simulations",
+    "description": "Practice navigating real coaching relationship moments. Each scenario tests your ability to apply core coaching architecture principles under realistic conditions.",
+    "scenarios": [
+      {
+        "id": "m3s1",
+        "situation": "Three sessions in, your client consistently responds to coaching questions with \u201cI don\u2019t know, what do you think I should do?\u201d They wait for you to generate solutions rather than engaging in their own problem-solving.",
+        "question": "How do you respond?",
+        "branches": [
+          {
+            "label": "Use a Socratic redirect to keep ownership with the client",
+            "quality": "best",
+            "outcome": "This protects the coaching architecture. You might ask: \u201cWhat have you tried before that worked even a little?\u201d or \u201cIf you had to pick one thing, what would you start with?\u201d The client owns the solution; you scaffold the process of finding it.",
+            "action": "Build a habit of returning the question: \u201cWhat\u2019s your instinct?\u201d and sitting with silence long enough for the client to generate an answer."
+          },
+          {
+            "label": "Give one suggestion framed as an experiment to try",
+            "quality": "acceptable",
+            "outcome": "This can work as a short-term scaffold, but rely on it sparingly. If the client never generates their own solutions, you are reinforcing dependence rather than building capacity. Offer options when the client is genuinely stuck\u2014but return to their agency quickly.",
+            "action": "After offering a suggestion, always ask: \u201cDoes that fit your situation? What would you change about it?\u201d"
+          },
+          {
+            "label": "Provide a detailed step-by-step plan for them to follow",
+            "quality": "incorrect",
+            "outcome": "This replaces the coaching relationship with a consulting relationship. The client may follow the plan once but will not have developed the skill to generate their own. Long-term dependence on coach-generated solutions undermines the coaching goal.",
+            "action": "If you find yourself generating plans repeatedly, stop the session and re-contract: revisit roles and who is responsible for what."
+          }
+        ],
+        "reflection": "The coaching alliance keeps ownership with the client. Your role is to scaffold the process, not supply the content. Solution generation is a skill\u2014it requires practice, not rescue."
+      },
+      {
+        "id": "m3s2",
+        "situation": "Your client has not completed any agreed-upon between-session tasks for two consecutive weeks. They say they intended to do them but didn\u2019t.",
+        "question": "What is your coaching move?",
+        "branches": [
+          {
+            "label": "Explore collaboratively what got in the way",
+            "quality": "best",
+            "outcome": "Non-completion is data, not failure. You explore: Was the task too large? Was the cue missing? Was there a competing demand? Was the client\u2019s confidence lower than they let on? This analysis drives better plan design\u2014not increased pressure.",
+            "action": "Ask: \u201cWhen did the task feel most possible this week? What made it hard to start from there?\u201d Use the answer to redesign the task."
+          },
+          {
+            "label": "Remind the client that between-session work is important and encourage them to try harder",
+            "quality": "acceptable",
+            "outcome": "This approach may work once, but it treats the problem as motivation rather than design. If the task was not completed twice, the problem is more likely in the task structure (too vague, too big, wrong cue) than in effort. Motivation framing increases shame without solving the problem.",
+            "action": "Shift from \u201ctry harder\u201d to \u201clet\u2019s make it harder to fail.\u201d Redesign the task into something that can succeed with minimal activation energy."
+          },
+          {
+            "label": "Stop assigning between-session tasks to reduce client stress",
+            "quality": "incorrect",
+            "outcome": "Between-session work is a core mechanism of behavior change in EF coaching. Removing it because it\u2019s hard removes the primary vehicle for transfer. Instead, reduce the task size or change its structure\u2014don\u2019t eliminate the practice loop.",
+            "action": "The smallest viable between-session task is better than no task. Even a 2-minute observation (\u201cjust notice when you feel task friction\u201d) keeps the loop alive."
+          }
+        ],
+        "reflection": "Non-completion means the task was not designed for success. Redesign before you re-assign. The coaching architecture depends on between-session transfer."
+      },
+      {
+        "id": "m3s3",
+        "situation": "Your client says they want to improve their time management by \u201cjust focusing more and trying not to get distracted.\u201d They believe willpower is the solution.",
+        "question": "How do you respond?",
+        "branches": [
+          {
+            "label": "Redirect to protocol design with one concrete external support",
+            "quality": "best",
+            "outcome": "This is the Extended Phenotype in action. You validate the goal and redirect the method: \u201cFocus is the outcome we want. Let\u2019s design one external tool that makes focus the path of least resistance.\u201d A timer, a single-tab browser rule, or a body-doubling session replaces the need for willpower.",
+            "action": "Identify one recurring context where the client loses focus and design a single environmental support for that exact situation."
+          },
+          {
+            "label": "Agree to try the willpower approach for one week",
+            "quality": "acceptable",
+            "outcome": "Letting the client test their hypothesis is sometimes appropriate\u2014especially if they are skeptical of external supports. However, frame it explicitly as an experiment with a pre-defined evaluation: \u201cLet\u2019s try it and track what happens. If it works, great. If not, we\u2019ll add a support.\u201d",
+            "action": "Set a concrete measure for the week: \u201cCount how many times you lost focus and for how long.\u201d Use the data to decide the next step."
+          },
+          {
+            "label": "Agree that willpower training is a valid EF coaching strategy",
+            "quality": "incorrect",
+            "outcome": "This contradicts core EF coaching principles. Willpower is a limited and unreliable resource that depletes under cognitive load\u2014exactly the conditions EF-deficit clients face most. Endorsing willpower as a primary strategy reinforces the effort-vs-regulation misconception.",
+            "action": "Review Module 1 (Extended Phenotype) and Module 4 (environmental modification) for protocol-based alternatives."
+          }
+        ],
+        "reflection": "Protocol over willpower is a foundational principle. External supports are not a crutch\u2014they are the intervention."
+      }
+    ]
+  },
+  "module-4": {
+    "title": "Applied Methods Simulations",
+    "description": "Practice applying specific EF coaching techniques to real client situations. Each scenario tests your ability to select and implement the right methodology in context.",
+    "scenarios": [
+      {
+        "id": "m4s1",
+        "situation": "Your client says: \u201cI know exactly what I need to do on this project, I just can\u2019t make myself start.\u201d They have a plan but have not moved in three days.",
+        "question": "Which technique do you apply first?",
+        "branches": [
+          {
+            "label": "Identify the first micro-step and commit to a 5-minute start",
+            "quality": "best",
+            "outcome": "Task initiation failure is usually a first-step problem, not a whole-project problem. You break the task to its smallest possible entry point (\u201cOpen the file and type the title\u201d) and attach a time-limited commitment. This bypasses the brain\u2019s threat response to large tasks.",
+            "action": "Use the \u201cGet Ready, Do, Done\u201d framework: Get Ready = stage one thing. Do = one micro-step. Done = immediate reward or checkpoint. This is the full initiation loop."
+          },
+          {
+            "label": "Explore emotional resistance before suggesting a strategy",
+            "quality": "acceptable",
+            "outcome": "Checking for emotional interference is appropriate when a client shows signs of dread or shame. But if the client reports knowing what to do and wanting to start, the bottleneck is more likely structural than emotional. Try the task decomposition first; come back to emotion if it surfaces.",
+            "action": "Ask: \u201cOn a scale of 1-10, how much dread is attached to starting right now?\u201d If high, address the emotion. If low, decompose the task."
+          },
+          {
+            "label": "Help the client visualize successfully completing the project to build momentum",
+            "quality": "incorrect",
+            "outcome": "Visualization activates future-state thinking, which requires exactly the executive function capacity that is impaired. Research shows visualization of outcomes can reduce activation by creating a false sense of completion. EF coaching prioritizes behavioral start moves over internal mental preparation.",
+            "action": "Replace visualization with an external action: stage the materials, set a timer, remove one distraction, then start."
+          }
+        ],
+        "reflection": "Task initiation failure is a first-step problem. The solution is to make the first step small enough that starting requires almost no activation energy."
+      },
+      {
+        "id": "m4s2",
+        "situation": "A client has a high-stakes deadline in 3 days and their workspace is cluttered, their phone notifications are on, and they have 40 browser tabs open. They want to start working immediately.",
+        "question": "What is your implementation priority?",
+        "branches": [
+          {
+            "label": "Address the environment first before beginning the work",
+            "quality": "best",
+            "outcome": "Environmental design is the highest-leverage intervention when multiple distractors are present. 10 minutes of environment staging (\u201cclear the desk, close all tabs except two, silence the phone\u201d) dramatically reduces cognitive load for the entire work session. This is the Extended Phenotype principle in direct application.",
+            "action": "Build a pre-work staging routine: 3 specific steps the client does before every work session to prepare the environment. Practice this until it\u2019s automatic."
+          },
+          {
+            "label": "Focus on the task immediately since time is short",
+            "quality": "acceptable",
+            "outcome": "Understandable with a tight deadline, but the environment will undermine every work attempt. A distracted work session of three hours often produces less than one focused hour. A 10-minute environment setup almost always pays off.",
+            "action": "Frame the environment setup as part of the task: \u201cSetting up the space is step zero. It\u2019s not procrastination\u2014it\u2019s the start script.\u201d"
+          },
+          {
+            "label": "Have the client relocate to a library or caf\u00e9 to escape the environment entirely",
+            "quality": "acceptable",
+            "outcome": "Location change can work, but it\u2019s not always available and doesn\u2019t teach the client to manage their primary workspace. It also adds friction (packing up, travel) that may delay the start. Prefer in-place environment modification as the primary skill.",
+            "action": "Use relocation as a backup option when the workspace cannot be sufficiently controlled in the available time."
+          }
+        ],
+        "reflection": "Environmental design is not preparation\u2014it is the intervention. The workspace either supports or undermines every coaching strategy that follows."
+      },
+      {
+        "id": "m4s3",
+        "situation": "You introduce cognitive offloading to a client (writing things down externally to free mental bandwidth). They resist, saying: \u201cI have a good memory, I\u2019ll just remember it.\u201d",
+        "question": "How do you respond?",
+        "branches": [
+          {
+            "label": "Reframe: offloading is for freeing mental energy, not compensating for bad memory",
+            "quality": "best",
+            "outcome": "The reframe removes the shame trigger. You say: \u201cThis isn\u2019t about your memory being bad\u2014it\u2019s about freeing the mental energy you\u2019d otherwise use to hold that item, so you can use it on the actual task. Let\u2019s test it with one list this week.\u201d This invites trial without judgment.",
+            "action": "Make the test concrete and low-stakes: one external list for one category (e.g., only to-dos, only grocery items) for one week. Evaluate the result together."
+          },
+          {
+            "label": "Accept their preference and suggest a different offloading method",
+            "quality": "acceptable",
+            "outcome": "Respecting client preference is important, and there are multiple forms of cognitive offloading (voice memos, sticky notes, digital apps). However, do not abandon the principle\u2014find the medium that fits. Letting the client opt out of all offloading avoids the friction but loses the benefit.",
+            "action": "Offer a menu: \u201cWriting isn\u2019t the only option. Would voice memos work? A whiteboard? A simple app? The format doesn\u2019t matter\u2014the externalization does.\u201d"
+          },
+          {
+            "label": "Explain that their memory is likely unreliable due to their EF deficits",
+            "quality": "incorrect",
+            "outcome": "This approach triggers shame and defensiveness. Telling a client their memory is bad\u2014especially as justification for a new tool\u2014damages trust and makes them less likely to try the technique. Cognitive offloading should be framed as a performance upgrade, not a deficit accommodation.",
+            "action": "Replace deficit framing with capacity framing: \u201cThe strongest performers in any field use external systems\u2014not because their memories are bad, but because they know their mental energy is finite.\u201d"
+          }
+        ],
+        "reflection": "How you introduce cognitive offloading matters as much as the technique itself. Shame-free framing determines whether the client actually tries it."
+      }
+    ]
+  }
+}

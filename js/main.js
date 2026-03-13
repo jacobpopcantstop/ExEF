@@ -121,14 +121,41 @@ document.addEventListener('DOMContentLoaded', function () {
       safeSetLocalStorage(ASSESSMENT_EVENTS_KEY, JSON.stringify((events || []).slice(-300)));
     }
 
+    function getAuthContext() {
+      try {
+        if (window.EFI && window.EFI.Auth && typeof window.EFI.Auth.isLoggedIn === 'function') {
+          var session = window.EFI.Auth.getSession ? window.EFI.Auth.getSession() : null;
+          return {
+            authenticated: window.EFI.Auth.isLoggedIn(),
+            auth_mode: session ? (session.mode || 'prototype') : 'guest'
+          };
+        }
+      } catch (e) {}
+      return { authenticated: false, auth_mode: 'guest' };
+    }
+
     function storeAssessmentEvent(payload) {
       if (!payload || !payload.event_name) return;
       var list = readAssessmentEvents();
+      var planId = payload.properties && payload.properties.plan_id ? payload.properties.plan_id : null;
+
+      // Dedupe: practice_plan_generated fires at most once per plan_id
+      if (payload.event_name === 'practice_plan_generated' && planId) {
+        var alreadyStored = list.some(function (e) {
+          return e && e.event_name === 'practice_plan_generated' &&
+            e.properties && e.properties.plan_id === planId;
+        });
+        if (alreadyStored) return;
+      }
+
+      var auth = getAuthContext();
       list.push({
         event_name: payload.event_name,
         page: payload.page,
         source: payload.source,
         properties: payload.properties || {},
+        authenticated: auth.authenticated,
+        auth_mode: auth.auth_mode,
         recorded_at: new Date().toISOString()
       });
       writeAssessmentEvents(list);
@@ -209,14 +236,16 @@ document.addEventListener('DOMContentLoaded', function () {
       plans.forEach(function(plan) {
         if (!isDue(plan)) return;
         plan.state = plan.state || {};
-        if (!plan.state.recheck_due_emitted_at) {
+        var currentCadence = plan.recheck && plan.recheck.cadence ? plan.recheck.cadence : '';
+        if (!plan.state.recheck_due_emitted_at || plan.state.recheck_due_emitted_cadence !== currentCadence) {
           plan.state.recheck_due_emitted_at = new Date().toISOString();
+          plan.state.recheck_due_emitted_cadence = currentCadence;
           plan.state.updated_at = plan.state.recheck_due_emitted_at;
           changed = true;
           track('spaced_recheck_due', {
             plan_id: plan.plan_id,
             source_tool: plan.source_tool || 'unknown',
-            cadence: plan.recheck && plan.recheck.cadence ? plan.recheck.cadence : '',
+            cadence: currentCadence,
             due_at: plan.recheck && plan.recheck.due_at ? plan.recheck.due_at : ''
           });
         }

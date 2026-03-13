@@ -98,6 +98,21 @@
     var tools = Object.keys(TOOL_LABELS);
     var rows = [];
 
+    // Auth-state slice
+    ['authenticated', 'anonymous'].forEach(function (authState) {
+      var isAuth = authState === 'authenticated';
+      var authEvents = data.events.filter(function (e) { return e && e.authenticated === isAuth; });
+      if (!authEvents.length) return;
+      var authPlanIds = new Set(authEvents.map(function (e) {
+        return e.properties && e.properties.plan_id ? e.properties.plan_id : '';
+      }).filter(Boolean));
+      var authPlans = data.plans.filter(function (p) { return p && authPlanIds.has(p.plan_id); });
+      var authReflections = data.reflections.filter(function (r) {
+        return r && authPlanIds.has(r.plan_id || '');
+      });
+      rows.push(kpiRow((isAuth ? '\u{1F512} Authenticated' : '\u{1F310} Anonymous'), kpiFor(authPlans, authEvents, authReflections)));
+    });
+
     tools.forEach(function (tool) {
       var toolPlans = data.plans.filter(function (p) { return p && p.source_tool === tool; });
       if (!toolPlans.length) return;

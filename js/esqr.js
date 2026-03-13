@@ -297,10 +297,31 @@
     localStorage.setItem(REFLECTION_STORAGE_KEY, JSON.stringify(list.slice(-100)));
   }
 
+  function buildReflectionPrefill(plan) {
+    if (!plan) return '';
+    var lines = [];
+    var focusTitle = plan.focus && plan.focus.title ? plan.focus.title : '';
+    var todayAction = plan.actions && plan.actions.today && plan.actions.today[0] ? plan.actions.today[0] : '';
+    var evidencePrompt = plan.actions && plan.actions.evidence_prompt ? plan.actions.evidence_prompt : '';
+    var checkins = plan.state && Array.isArray(plan.state.checkins) ? plan.state.checkins : [];
+    var lastCheckin = checkins.length > 0 ? checkins[checkins.length - 1] : null;
+
+    if (focusTitle) { lines.push('Testing: ' + focusTitle); lines.push(''); }
+    if (lastCheckin && lastCheckin.metric_value) {
+      lines.push('Yesterday: ' + lastCheckin.metric_value);
+    } else {
+      lines.push('Yesterday: first attempt');
+    }
+    if (todayAction) { lines.push("Today I\u2019ll: " + todayAction); }
+    if (evidencePrompt) { lines.push("I\u2019ll know it worked when: " + evidencePrompt); }
+    return lines.join('\n');
+  }
+
   function renderEsqrReflectionPrompt(plan) {
     if (!resultsSection || !plan) return;
     var existing = document.getElementById('esqr-reflection-card');
     if (existing) existing.remove();
+    var prefill = buildReflectionPrefill(plan);
 
     var card = document.createElement('section');
     card.id = 'esqr-reflection-card';
@@ -309,8 +330,8 @@
     card.style.borderLeft = '4px solid var(--color-accent)';
     card.innerHTML =
       '<h4 style="margin-top:0;">48-Hour Reflection Prompt</h4>' +
-      '<p style="color:var(--color-text-light);">What will you test in the next 48 hours to improve this ESQ-R growth area?</p>' +
-      '<textarea id="esqr-reflection-input" rows="3" style="width:100%;padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--border-radius);"></textarea>' +
+      '<p style="color:var(--color-text-light);">Edit or replace the starter text below, then save your commitment.</p>' +
+      '<textarea id="esqr-reflection-input" rows="5" style="width:100%;padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--border-radius);"></textarea>' +
       '<div class="button-group" style="margin-top:var(--space-sm);">' +
       '<button type="button" id="esqr-reflection-save" class="btn btn--secondary btn--sm">Save Reflection</button>' +
       '</div>' +
@@ -319,6 +340,7 @@
     resultsSection.appendChild(card);
 
     var input = card.querySelector('#esqr-reflection-input');
+    if (input && prefill) { input.value = prefill; }
     var save = card.querySelector('#esqr-reflection-save');
     var status = card.querySelector('#esqr-reflection-status');
     if (!input || !save || !status) return;

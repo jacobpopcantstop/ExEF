@@ -43,25 +43,25 @@ Requires Deployment/Operator Input
 ## 2) Product learning loop priorities (next build window)
 
 ### P0 (highest ROI)
-- [ ] Reflection prompt prefills from plan focus/history (backlog item #3).
-- [ ] Adaptive practice intensity based on adherence state (item #4).
-- [ ] Misconception-family difficulty ladder for quiz remediation (item #5).
+- [x] Reflection prompt prefills from plan focus/history (backlog item #3).
+- [x] Adaptive practice intensity based on adherence state (item #4).
+- [x] Misconception-family difficulty ladder for quiz remediation (item #5).
 
 ### P1
-- [ ] Branching scenario simulations for Modules 2-4 (item #7).
-- [ ] Cohort analytics views (operator/curriculum/coaching slices) (item #8).
-- [ ] Authenticated event sync + dedupe hardening for KPI reliability (item #9).
+- [x] Branching scenario simulations for Modules 2-4 (item #7).
+- [x] Cohort analytics views (operator/curriculum/coaching slices) (item #8).
+- [x] Authenticated event sync + dedupe hardening for KPI reliability (item #9).
 
 ### P2
-- [ ] Intervention flags for chronically low adherence (item #10).
+- [x] Intervention flags for chronically low adherence (item #10).
 
 ---
 
 ## 3) Content/compliance cleanup still open
 
-- [ ] Final pass on outcome/effectiveness marketing claims not yet rechecked against evidence.
-- [ ] Legal/privacy/credential-verification copy pass against current backend behavior and policies.
-- [ ] Long-form model pages: verify explanatory language stays interpretation-safe (no over-absolute claims).
+- [x] Final pass on outcome/effectiveness marketing claims not yet rechecked against evidence.
+- [x] Legal/privacy/credential-verification copy pass against current backend behavior and policies.
+- [x] Long-form model pages: verify explanatory language stays interpretation-safe (no over-absolute claims).
 
 ---
 

@@ -18,6 +18,15 @@ document.addEventListener('DOMContentLoaded', function () {
   var host = window.location.hostname || '';
   var TRACKING_ENABLED = !/github\.io$/i.test(host) && !/^(localhost|127\.0\.0\.1)$/i.test(host) && window.location.protocol !== 'file:';
 
+  function revealStaticContent() {
+    document.querySelectorAll('.fade-in, .stagger > *').forEach(function (el) {
+      el.classList.add('visible');
+    });
+  }
+
+  // Critical page sections should not depend on later JS branches to become visible.
+  revealStaticContent();
+
   function safeSetLocalStorage(key, value) {
     try {
       localStorage.setItem(key, value);

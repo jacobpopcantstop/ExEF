@@ -1,18 +1,13 @@
 # Progress Tracker (Canonical)
 
-Last updated: February 26, 2026
+Last updated: March 13, 2026
 
-## Current State
-- This is the single source of truth for project progress.
-- Historical implementation logs are archived in:
-  - `docs/production-readiness-todos.md`
-  - `docs/next-10-todos.md`
-  - `docs/content-gap-audit.md`
-  - `docs/roadmap-to-perfection.md`
+This is the single source of truth for **active needed changes**. Roadmaps/audits/todo wave logs are archived snapshots unless explicitly marked active here.
 
-## Active Open Items
-### Requires Deployment/Operator Input
-- ⚠️ Set Netlify production env vars:
+## 1) Launch blockers (do first)
+
+### Platform/operator
+- [ ] Set production Netlify env vars:
   - `EFI_CRM_WEBHOOK_URL`
   - `EFI_ESP_WEBHOOK_URL`
   - `EFI_DOWNLOAD_SIGNING_SECRET`
@@ -20,22 +15,58 @@ Last updated: February 26, 2026
   - `EFI_SUBMISSIONS_CRON_SECRET`
   - `EFI_VIDEO_PROVIDER`
   - `EFI_VIDEO_ALLOWED_HOSTS`
-- ⚠️ Confirm production webhooks receive and persist external fanout payloads.
-- ⚠️ Publish final jurisdiction/principal-office legal metadata if desired.
+- [ ] Verify production webhook fanout delivery + persistence.
+- [ ] Finalize/publish jurisdiction + principal-office legal metadata (if required for go-live policy).
 
-## Recently Completed
-- ✅ Full icon normalization completed on legacy utility navigation controls.
-- ✅ Production video CDN/storage provider policy finalized and enforced in manifest + release checks.
-- ✅ CMS-backed coach directory operations, moderation queue, and audit history.
-- ✅ Video metadata manifest and caption/transcript release-gate checks.
-- ✅ Community hub recap archive and API-backed anonymous question intake.
-- ✅ Certification transparency updates (SLA ranges + sample passing outline visibility).
-- ✅ Launch-blocker gate (`scripts/check_launch_blockers.py`) wired into release checks.
-- ✅ Conversion and trust copy polish across curriculum/store/enroll/legal surfaces.
+### Release gate
+- [ ] Run `python3 scripts/release_gate.py` and resolve all blockers.
 
-## Acceptance Gate
-- Run: `python3 scripts/release_gate.py`
-- Expected: all checks pass (links, accessibility, PDFs, source hub, video pipeline, copy style, tests, sitemap/canonical, security headers, launch blockers).
+---
 
-## Notes
-- For release-ready historical change detail by wave, see `docs/production-readiness-todos.md`.
+## 2) Product learning loop priorities (next build window)
+
+### P0 (highest ROI)
+- [ ] Reflection prompt prefills from plan focus/history (backlog item #3).
+- [ ] Adaptive practice intensity based on adherence state (item #4).
+- [ ] Misconception-family difficulty ladder for quiz remediation (item #5).
+
+### P1
+- [ ] Branching scenario simulations for Modules 2-4 (item #7).
+- [ ] Cohort analytics views (operator/curriculum/coaching slices) (item #8).
+- [ ] Authenticated event sync + dedupe hardening for KPI reliability (item #9).
+
+### P2
+- [ ] Intervention flags for chronically low adherence (item #10).
+
+---
+
+## 3) Content/compliance cleanup still open
+
+- [ ] Final pass on outcome/effectiveness marketing claims not yet rechecked against evidence.
+- [ ] Legal/privacy/credential-verification copy pass against current backend behavior and policies.
+- [ ] Long-form model pages: verify explanatory language stays interpretation-safe (no over-absolute claims).
+
+---
+
+## 4) Already completed recently (do not re-open)
+
+- [x] One-click recheck CTA in reminder rows.
+- [x] Near-mastery guidance state.
+- [x] Cross-tool effort/time estimate badges.
+- [x] Action-plan schema established for cross-tool plan + recheck loop.
+- [x] Coaching niche-positioning consistency pass across home/contact/services.
+- [x] Major fact-check hardening pass across assessment language and operational claims.
+
+---
+
+## 5) Archive map
+
+Historical detail is preserved in:
+- `docs/production-readiness-todos.md`
+- `docs/next-10-todos.md`
+- `docs/roadmap-to-perfection.md`
+- `docs/content-gap-audit.md`
+- `docs/next-wave-v2-backlog.md`
+- `docs/assessment-interactive-audit.md`
+- `docs/business-audit-2026-03-12.md`
+- `docs/fact-check-audit.md`

@@ -437,7 +437,7 @@
         '<p style="color:var(--color-text-light);"><strong>Evidence prompt:</strong> ' + plan.actions.evidence_prompt + '</p>' +
         (linksHtml ? '<ul class="checklist">' + linksHtml + '</ul>' : '') +
         '<p style="margin-top:var(--space-sm);"><strong>48-hour reflection:</strong> What will you test in the next 48 hours?</p>' +
-        '<textarea class="assessment-reflection-input" rows="2" style="width:100%;padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--border-radius);"></textarea>';
+        '<textarea class="assessment-reflection-input" rows="3" style="width:100%;padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--border-radius);font-family:inherit;line-height:1.5;"></textarea>';
 
       var row = document.createElement('div');
       row.className = 'button-group';
@@ -459,6 +459,39 @@
       status.style.color = 'var(--color-text-light)';
 
       var reflectionInput = card.querySelector('.assessment-reflection-input');
+
+      // #3  Prefill reflection textarea from stored plan focus / reflection history
+      (function prefillReflection() {
+        if (!reflectionInput) return;
+        var lines = [];
+        try {
+          var storedPlans = JSON.parse(localStorage.getItem(ACTION_PLAN_STORAGE_KEY)) || [];
+          var sourcePlans = storedPlans.filter(function(p) {
+            return p && p.source_tool && p.source_tool === sourceLabel;
+          });
+          var recentPlan = sourcePlans.length ? sourcePlans[sourcePlans.length - 1] : (storedPlans.length ? storedPlans[storedPlans.length - 1] : null);
+          if (recentPlan && recentPlan.focus && recentPlan.focus.title) {
+            lines.push('Last focus: ' + recentPlan.focus.title);
+            if (recentPlan.actions && recentPlan.actions.today && recentPlan.actions.today[0]) {
+              lines.push('Pending action: ' + recentPlan.actions.today[0]);
+            }
+          }
+        } catch (e) {}
+        try {
+          var storedReflections = JSON.parse(localStorage.getItem(REFLECTION_STORAGE_KEY)) || [];
+          var sourceReflections = storedReflections.filter(function(r) {
+            return r && r.source_tool === sourceLabel;
+          });
+          var lastRefl = sourceReflections.length ? sourceReflections[sourceReflections.length - 1] : null;
+          if (lastRefl && lastRefl.reflection_48h) {
+            lines.push('Previous reflection: "' + lastRefl.reflection_48h.slice(0, 80) + (lastRefl.reflection_48h.length > 80 ? '\u2026' : '') + '"');
+          }
+        } catch (e) {}
+        if (lines.length) {
+          reflectionInput.value = lines.join('\n') + '\n\nWhat will you test in the next 48 hours?';
+        }
+      })();
+
       var reflectionBtn = document.createElement('button');
       reflectionBtn.type = 'button';
       reflectionBtn.className = 'btn btn--secondary btn--sm';

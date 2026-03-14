@@ -259,6 +259,63 @@
     </div>
   </section>
 
+  <!-- #7  Branching Scenario: Module 2 — Intake Decision -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-header__tag">Applied Scenario</span>
+        <h2>Intake Coaching Decision</h2>
+        <p class="section-header__subtitle">Work through a realistic intake situation. Your decisions affect what happens next.</p>
+      </div>
+      <div class="card" data-scenario="module2-intake" style="border-top:4px solid var(--module-2);">
+        <div class="scenario-stage" data-stage="start">
+          <p><strong>Situation:</strong> A new client, Jamie, has just completed the ESQ-R self-report. Their scores show significant deficits in Task Initiation and Time Management, but relatively strong Working Memory. During the intake call, Jamie says: "I know exactly what I need to do — I just can't make myself start."</p>
+          <p><strong>What is your priority as the intake coach?</strong></p>
+          <div class="scenario-choices">
+            <button type="button" class="btn btn--secondary" data-choice="A">A) Ask Jamie to describe a recent specific example of failing to start a task they knew how to do.</button>
+            <button type="button" class="btn btn--secondary" data-choice="B">B) Explain the knowledge–performance distinction and tell Jamie this is a common EF pattern.</button>
+            <button type="button" class="btn btn--secondary" data-choice="C">C) Ask about Jamie's childhood and school history to understand the root cause.</button>
+          </div>
+        </div>
+        <div class="scenario-stage" data-stage="A" style="display:none;">
+          <p style="color:#4CAF50;font-weight:600;">Strong intake move.</p>
+          <p>Asking for a specific recent example grounds the conversation in observable behavior rather than abstract patterns. This is consistent with the Goodness of Fit principle — you're collecting concrete, context-specific data before making coaching decisions.</p>
+          <p><strong>Jamie describes:</strong> "Last Tuesday I had a work report due. I sat at my desk for 90 minutes, reorganized my desktop, made coffee twice — never typed a word."</p>
+          <p><strong>What do you do next?</strong></p>
+          <div class="scenario-choices">
+            <button type="button" class="btn btn--secondary" data-choice="A2">A) Probe the environmental setup — what was on the desk, what time of day, what competed for attention?</button>
+            <button type="button" class="btn btn--secondary" data-choice="B2">B) Reassure Jamie that avoidance is normal and suggest they try breaking the task into smaller steps.</button>
+          </div>
+        </div>
+        <div class="scenario-stage" data-stage="A2" style="display:none;">
+          <p style="color:#4CAF50;font-weight:600;">Excellent. Context-fit assessment in action.</p>
+          <p>Probing environment, time-of-day, and competing stimuli gives you the data needed to design a context-specific initiation protocol — not a generic to-do list. Jamie's strong Working Memory means the plan can be more complex; the initiation barrier is the leverage point.</p>
+          <p><strong>Outcome:</strong> You identify that Jamie performs best in a cleared workspace in the morning. You design a two-step "desk clear + timer on" startup protocol. Jamie reports success 4 of 5 days in week one.</p>
+          <p style="font-weight:600;color:var(--color-primary);">Scenario complete. Key takeaway: specific behavioral examples + context probing = interventions that actually transfer.</p>
+          <button type="button" class="btn btn--sm btn--secondary scenario-restart">Restart Scenario</button>
+        </div>
+        <div class="scenario-stage" data-stage="B2" style="display:none;">
+          <p style="color:#FF9800;font-weight:600;">Partial miss — context skipped.</p>
+          <p>"Break it into smaller steps" is generic advice that ignores the context data you just collected. Jamie knows how to do the report; the barrier is initiation, not task complexity. Generic advice here risks the knowledge–performance trap: Jamie will understand the strategy but not apply it because the environmental triggers aren't addressed.</p>
+          <p><strong>Outcome:</strong> Jamie tries breaking the report into steps, gets stuck on the first item, and emails you two days later saying "the strategy didn't work." You've now lost trust and will need to re-intake.</p>
+          <button type="button" class="btn btn--sm btn--secondary scenario-restart">Try Again</button>
+        </div>
+        <div class="scenario-stage" data-stage="B" style="display:none;">
+          <p style="color:#FF9800;font-weight:600;">Useful but premature.</p>
+          <p>Psychoeducation about the knowledge–performance gap is valuable — but offering it before collecting behavioral data puts the theory before the evidence. You don't yet know which specific contexts trigger Jamie's initiation failures, so the explanation has no anchor to Jamie's actual experience.</p>
+          <p>Better approach: collect the specific example first (Choice A), then introduce the framing once you have concrete behavior to attach it to.</p>
+          <button type="button" class="btn btn--sm btn--secondary scenario-restart">Try Again</button>
+        </div>
+        <div class="scenario-stage" data-stage="C" style="display:none;">
+          <p style="color:#F44336;font-weight:600;">Scope and priority risk.</p>
+          <p>Exploring developmental history can be contextually useful — but as a first move in intake it signals a clinical/therapeutic orientation that is outside EF coaching scope. EF coaches focus on current functional patterns and forward-looking behavior change, not developmental etiology. Starting here delays the functional assessment and may confuse the coaching role.</p>
+          <p>Reserve developmental history questions for cases where there is a clear functional reason to ask — and frame them in terms of current patterns, not root causes.</p>
+          <button type="button" class="btn btn--sm btn--secondary scenario-restart">Try Again</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Module Navigation -->
   <section class="section">
     <div class="container">

@@ -852,4 +852,121 @@
     wrap.appendChild(toc);
     main.appendChild(wrap);
   })();
+
+  // ── #10  Intervention flags for chronically low adherence ──────────────────
+  // After 3+ sessions with low adherence signals (low completion ratio),
+  // display a persistent intervention prompt offering check-in, goal review,
+  // or coach contact.  Only shown once per 72-hour window to avoid fatigue.
+  (function initInterventionFlag() {
+    var ADHERENCE_KEY = 'efi_adherence_v1';
+    var INTERVENTION_KEY = 'efi_intervention_v1';
+    var MIN_SESSIONS_FOR_INTERVENTION = 3;
+    var INTERVENTION_COOLDOWN_MS = 72 * 60 * 60 * 1000; // 72 hours
+
+    function readAdherence() {
+      try { return JSON.parse(localStorage.getItem(ADHERENCE_KEY)) || { sessions: [] }; } catch (e) { return { sessions: [] }; }
+    }
+
+    function readInterventionMeta() {
+      try { return JSON.parse(localStorage.getItem(INTERVENTION_KEY)) || {}; } catch (e) { return {}; }
+    }
+
+    function writeInterventionMeta(meta) {
+      try { localStorage.setItem(INTERVENTION_KEY, JSON.stringify(meta)); } catch (e) {}
+    }
+
+    function shouldShowIntervention() {
+      var data = readAdherence();
+      var sessions = Array.isArray(data.sessions) ? data.sessions : [];
+      if (sessions.length < MIN_SESSIONS_FOR_INTERVENTION) return false;
+
+      // Must have computed level == 'low'
+      var level = data.computed && data.computed.level ? data.computed.level : 'medium';
+      if (level !== 'low') return false;
+
+      // Confirm that the last N sessions are predominantly incomplete
+      var recent = sessions.slice(-MIN_SESSIONS_FOR_INTERVENTION);
+      var anyCompleted = recent.some(function(s) { return s.completed; });
+      if (anyCompleted) return false; // at least one was done — not chronically low
+
+      // Cooldown: don't show again within 72 h
+      var meta = readInterventionMeta();
+      if (meta.last_shown_at) {
+        var lastShown = Date.parse(meta.last_shown_at);
+        if (Number.isFinite(lastShown) && (Date.now() - lastShown) < INTERVENTION_COOLDOWN_MS) return false;
+      }
+
+      return true;
+    }
+
+    function trackEvent(eventName, props) {
+      if (window.EFI && window.EFI.Analytics && typeof window.EFI.Analytics.track === 'function') {
+        window.EFI.Analytics.track(eventName, props || {});
+      }
+    }
+
+    function renderInterventionBanner() {
+      var anchor = document.querySelector('main .container') || document.querySelector('main');
+      if (!anchor || document.getElementById('efi-intervention-banner')) return;
+
+      var meta = readInterventionMeta();
+      meta.last_shown_at = new Date().toISOString();
+      meta.show_count = (meta.show_count || 0) + 1;
+      writeInterventionMeta(meta);
+
+      trackEvent('low_adherence_intervention_shown', {
+        show_count: meta.show_count,
+        shown_at: meta.last_shown_at,
+        page: window.location.pathname.split('/').pop() || 'index.html'
+      });
+
+      var banner = document.createElement('section');
+      banner.id = 'efi-intervention-banner';
+      banner.className = 'card';
+      banner.style.borderLeft = '4px solid #FF9800';
+      banner.style.marginBottom = 'var(--space-lg)';
+      banner.style.background = 'rgba(255, 152, 0, 0.06)';
+
+      banner.innerHTML =
+        '<h5 style="margin-top:0;color:#e65100;">Checking In With You</h5>' +
+        '<p style="color:var(--color-text-light);">' +
+        'It looks like recent sessions haven\'t been completed. That\'s okay — everyone hits friction. ' +
+        'Here are three things that often help:' +
+        '</p>' +
+        '<ul class="checklist" style="margin-top:0;">' +
+        '<li><a href="coaching-services.html">Schedule a check-in with a coach</a> — 20 minutes can reset momentum.</li>' +
+        '<li><a href="dashboard.html">Review your goals on the dashboard</a> — sometimes goals need updating, not more effort.</li>' +
+        '<li><a href="coaching-contact.html">Contact the EFI team</a> — we can help you troubleshoot what\'s getting in the way.</li>' +
+        '</ul>' +
+        '<div class="button-group" style="margin-top:var(--space-sm);">' +
+        '<button type="button" class="btn btn--secondary btn--sm" id="efi-intervention-dismiss">I\'m back on track — dismiss</button>' +
+        '</div>' +
+        '<p id="efi-intervention-status" style="margin-top:var(--space-xs);font-size:0.85rem;color:var(--color-text-muted);"></p>';
+
+      anchor.insertBefore(banner, anchor.firstChild);
+
+      var dismissBtn = banner.querySelector('#efi-intervention-dismiss');
+      var statusEl = banner.querySelector('#efi-intervention-status');
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          banner.style.display = 'none';
+          var m = readInterventionMeta();
+          m.dismissed_at = new Date().toISOString();
+          m.last_shown_at = m.dismissed_at; // reset cooldown from dismissal time
+          writeInterventionMeta(m);
+          trackEvent('low_adherence_intervention_dismissed', {
+            dismissed_at: m.dismissed_at,
+            page: window.location.pathname.split('/').pop() || 'index.html'
+          });
+          if (statusEl) statusEl.textContent = 'Dismissed. Keep going — you\'ve got this.';
+        });
+      }
+    }
+
+    // Only run on module pages to avoid intruding on non-learning pages
+    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    if (/^module-/.test(currentPage) && shouldShowIntervention()) {
+      renderInterventionBanner();
+    }
+  })();
 })();

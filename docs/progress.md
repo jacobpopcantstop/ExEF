@@ -43,17 +43,17 @@ Requires Deployment/Operator Input
 ## 2) Product learning loop priorities (next build window)
 
 ### P0 (highest ROI)
-- [x] Reflection prompt prefills from plan focus/history (backlog item #3).
-- [x] Adaptive practice intensity based on adherence state (item #4).
-- [x] Misconception-family difficulty ladder for quiz remediation (item #5).
+- [x] Reflection prompt prefills from plan focus/history (backlog item #3). — `js/module-quiz.js` (buildReflectionPrefill + renderReflectionPrompt), `js/assessment-tools.js` (prefillReflection IIFE).
+- [x] Adaptive practice intensity based on adherence state (item #4). — `js/module-quiz.js` (readAdherenceData, recordAdherenceSession, selectAdaptiveQuestions; key: efi_adherence_v1).
+- [x] Misconception-family difficulty ladder for quiz remediation (item #5). — `js/module-quiz.js` (MISCONCEPTION_LADDER, renderRemediationLadderQuestion, remediationLadderState per-session state).
 
 ### P1
-- [x] Branching scenario simulations for Modules 2-4 (item #7).
-- [x] Cohort analytics views (operator/curriculum/coaching slices) (item #8).
-- [x] Authenticated event sync + dedupe hardening for KPI reliability (item #9).
+- [x] Branching scenario simulations for Modules 2-4 (item #7). — `js/module-scenarios.js` (new engine), scenario HTML sections in `module-2.html`, `module-3.html`, `module-4.html`.
+- [x] Cohort analytics views (operator/curriculum/coaching slices) (item #8). — `js/admin-analytics.js` (new file), cohort analytics section added to `admin.html`.
+- [x] Authenticated event sync + dedupe hardening for KPI reliability (item #9). — `js/main.js` (generateEventId, markEventSent, getAuthUserId; event_id + user_id on all events; key: efi_sent_event_ids_v1).
 
 ### P2
-- [x] Intervention flags for chronically low adherence (item #10).
+- [x] Intervention flags for chronically low adherence (item #10). — `js/module-enhancements.js` (initInterventionFlag IIFE; banner after 3+ consecutive incomplete sessions; 72 h cooldown).
 
 ---
 

@@ -1,6 +1,11 @@
 /**
  * Module Quiz System
  * Saves module mastery test results into the learner account progress state.
+ *
+ * Product Learning Loop additions:
+ *   #3  Reflection prompt prefills from plan focus / history
+ *   #4  Adaptive practice intensity based on adherence state
+ *   #5  Misconception-family difficulty ladder for quiz remediation
  */
 
 (function() {
@@ -9,11 +14,444 @@
   var PASSING_SCORE = 80;
   var ACTION_PLAN_STORAGE_KEY = 'efi_action_plans_v1';
   var REFLECTION_STORAGE_KEY = 'efi_reflections_v1';
+  var ADHERENCE_STORAGE_KEY = 'efi_adherence_v1';
   var currentQuiz = null;
   var userAnswers = {};
   var quizData = null;
   var lastSavedResult = null;
   var statusMessage = '';
+  // Per-question remediation ladder state for this session
+  // Shape: { [questionId]: { ladderIndex: Number, resolved: Boolean } }
+  var remediationLadderState = {};
+
+  // ── #4  Adherence tracking ──────────────────────────────────────────────────
+  // Reads/writes a lightweight session log.  Each entry records whether a quiz
+  // session was completed or abandoned.  The last 10 sessions determine the
+  // adherence level: high (≥70 % completed), medium (40–69 %), low (<40 %).
+
+  function readAdherenceData() {
+    try { return JSON.parse(localStorage.getItem(ADHERENCE_STORAGE_KEY)) || { sessions: [] }; } catch (e) { return { sessions: [] }; }
+  }
+
+  function writeAdherenceData(data) {
+    try { localStorage.setItem(ADHERENCE_STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+  }
+
+  function recordAdherenceSession(moduleId, completed) {
+    var data = readAdherenceData();
+    data.sessions = Array.isArray(data.sessions) ? data.sessions : [];
+    data.sessions.push({ at: new Date().toISOString(), moduleId: moduleId || '', completed: !!completed });
+    data.sessions = data.sessions.slice(-30); // keep last 30
+    var recent = data.sessions.slice(-10);
+    var doneCount = recent.filter(function(s) { return s.completed; }).length;
+    var ratio = recent.length ? doneCount / recent.length : 0;
+    data.computed = {
+      level: ratio >= 0.7 ? 'high' : (ratio >= 0.4 ? 'medium' : 'low'),
+      score: ratio,
+      sample_size: recent.length
+    };
+    writeAdherenceData(data);
+    return data.computed;
+  }
+
+  function getAdherenceLevel() {
+    var data = readAdherenceData();
+    return (data.computed && data.computed.level) ? data.computed.level : 'medium';
+  }
+
+  // ── #4  Adaptive question selection ────────────────────────────────────────
+  // high  → 5–6 questions, harder misconception families first
+  // medium → all questions, standard order
+  // low   → all questions, simpler concepts first (more reinforcement)
+
+  var HARDER_MISCONCEPTIONS = ['willpower_over_protocol', 'planning_without_transfer', 'ethics_scope_drift'];
+
+  function selectAdaptiveQuestions(questions, adherenceLevel) {
+    if (!Array.isArray(questions) || !questions.length) return questions;
+
+    if (adherenceLevel === 'high') {
+      var hard = questions.filter(function(q) {
+        return HARDER_MISCONCEPTIONS.indexOf(q.misconception_primary) !== -1 ||
+               HARDER_MISCONCEPTIONS.indexOf(q.misconception_secondary) !== -1;
+      });
+      var easy = questions.filter(function(q) {
+        return HARDER_MISCONCEPTIONS.indexOf(q.misconception_primary) === -1 &&
+               HARDER_MISCONCEPTIONS.indexOf(q.misconception_secondary) === -1;
+      });
+      // Present harder items first; cap at 6, floor at 5
+      return hard.concat(easy).slice(0, Math.max(5, Math.min(6, questions.length)));
+    }
+
+    if (adherenceLevel === 'low') {
+      // Simpler concepts first for maximum reinforcement
+      var simpleFirst = questions.filter(function(q) {
+        return HARDER_MISCONCEPTIONS.indexOf(q.misconception_primary) === -1 &&
+               HARDER_MISCONCEPTIONS.indexOf(q.misconception_secondary) === -1;
+      });
+      var harderLast = questions.filter(function(q) {
+        return HARDER_MISCONCEPTIONS.indexOf(q.misconception_primary) !== -1 ||
+               HARDER_MISCONCEPTIONS.indexOf(q.misconception_secondary) !== -1;
+      });
+      return simpleFirst.concat(harderLast);
+    }
+
+    return questions; // medium: standard order, all questions
+  }
+
+  // ── #5  Misconception difficulty ladder ─────────────────────────────────────
+  // When a learner gets a question wrong the ladder activates: it serves
+  // progressively simpler scaffold questions until the learner gets one right,
+  // then marks the family resolved and lets them advance.
+  // Questions are ordered simplest (index 0) → harder (higher index).
+
+  var MISCONCEPTION_LADDER = {
+    knowledge_vs_performance: [
+      {
+        id: 'scaffold_kvp_1',
+        scaffoldLevel: 1,
+        question: 'Can someone fully understand how executive function works but still struggle to perform the skill reliably?',
+        options: [
+          'Yes — understanding and doing are separate processes',
+          'No — if you understand it, you can do it'
+        ],
+        correct: 0,
+        explanation: 'Correct. EF coaching distinguishes declarative knowledge ("I know I should plan") from procedural execution reliability. Understanding alone does not create consistent behavior — this is the knowledge–performance gap.'
+      },
+      {
+        id: 'scaffold_kvp_2',
+        scaffoldLevel: 2,
+        question: 'A client correctly explains the concept of temporal horizon but continues to miss every deadline. What does this best illustrate?',
+        options: [
+          'The client is not motivated enough',
+          'The knowledge vs. performance gap: insight does not automatically produce behavior change',
+          'The client needs to study the material more',
+          'The coach needs to re-explain the concept'
+        ],
+        correct: 1,
+        explanation: 'The knowledge–performance gap is central to Barkley\'s model. EF coaching should focus on observable execution behaviors with real-world checkpoints, not just verbal understanding.'
+      }
+    ],
+    effort_vs_regulation: [
+      {
+        id: 'scaffold_evr_1',
+        scaffoldLevel: 1,
+        question: 'When someone with an EF deficit fails to start a task, what is the PRIMARY explanation according to the neurobiological model?',
+        options: [
+          'Laziness or lack of effort',
+          'A regulation deficit in the brain\'s executive system',
+          'Low intelligence',
+          'Poor upbringing'
+        ],
+        correct: 1,
+        explanation: 'Task-initiation failures in EF deficits are neurobiological, not character-based. Framing them as regulation problems — not effort problems — reduces shame and points toward effective supports.'
+      },
+      {
+        id: 'scaffold_evr_2',
+        scaffoldLevel: 2,
+        question: 'A coach tells a client: "You just need to try harder." Which coaching principle does this violate?',
+        options: [
+          'None — encouraging effort is always helpful',
+          'It misattributes a regulation-load problem to a motivation or character failure',
+          'Coaches should never encourage clients',
+          'This is fully consistent with EF coaching principles'
+        ],
+        correct: 1,
+        explanation: 'Effort-framing ignores the neurobiological root of EF deficits and compounds shame. EF coaching uses regulation-load analysis and externalized supports, not willpower exhortations.'
+      }
+    ],
+    willpower_over_protocol: [
+      {
+        id: 'scaffold_wop_1',
+        scaffoldLevel: 1,
+        question: 'What is the "Extended Phenotype" strategy in EF coaching?',
+        options: [
+          'Training clients to rely more on willpower',
+          'Using external tools, reminders, and environmental structures to substitute for impaired EF',
+          'A medication management protocol',
+          'A formal diagnostic framework'
+        ],
+        correct: 1,
+        explanation: 'Extended Phenotype = designing the environment to do the work the internal EF system cannot reliably do. External scaffolds (timers, checklists, reminders) replace — not supplement — internal regulation.'
+      },
+      {
+        id: 'scaffold_wop_2',
+        scaffoldLevel: 2,
+        question: 'A client keeps forgetting daily medication. A protocol-over-willpower response would be:',
+        options: [
+          'Tell the client to remember harder',
+          'Design a visual cue or alarm tied to an existing morning habit',
+          'Reduce coaching session frequency',
+          'Explain again why the medication is important'
+        ],
+        correct: 1,
+        explanation: 'Behavioral design — habit stacking, environmental cues — is more reliable than willpower-based reminders. EF coaching externalizes cognitive demand rather than demanding internal vigilance.'
+      }
+    ],
+    planning_without_transfer: [
+      {
+        id: 'scaffold_pwt_1',
+        scaffoldLevel: 1,
+        question: 'A coaching plan is created but the client never implements it. What element is most likely missing?',
+        options: [
+          'A specific first action step tied to a real context and a checkpoint date',
+          'More detailed written notes',
+          'A longer planning session',
+          'A more complex strategy'
+        ],
+        correct: 0,
+        explanation: 'Plans without a concrete first action in a specific context and a scheduled checkpoint rarely transfer to real behavior. Transfer requires specifying: what, when, where, and how you will know it happened.'
+      },
+      {
+        id: 'scaffold_pwt_2',
+        scaffoldLevel: 2,
+        question: 'What does "second-context transfer" mean in the EF coaching model?',
+        options: [
+          'Practicing the same skill in a different real-world situation to confirm generalization',
+          'Reviewing session notes a second time',
+          'Having a second coach confirm the plan',
+          'Creating a backup plan'
+        ],
+        correct: 0,
+        explanation: 'A skill is not mastered until it transfers across contexts. Requiring a second-context performance rep before marking mastery prevents the "session room only" learning trap.'
+      }
+    ],
+    context_blind_intervention: [
+      {
+        id: 'scaffold_cbi_1',
+        scaffoldLevel: 1,
+        question: 'What does "Goodness of Fit" mean in EF coaching?',
+        options: [
+          'All clients benefit from the same evidence-based intervention',
+          'Matching the coaching strategy to the client\'s unique profile, environment, and life context',
+          'Finding the most affordable intervention',
+          'Using the intervention with the most research citations'
+        ],
+        correct: 1,
+        explanation: 'Goodness of Fit means tailoring interventions to the individual — their EF profile, environment, values, and constraints — rather than applying a one-size-fits-all solution.'
+      }
+    ],
+    diagnostic_overreach: [
+      {
+        id: 'scaffold_dr_1',
+        scaffoldLevel: 1,
+        question: 'A client asks after an EF assessment: "Do I have ADHD?" The correct coach response is:',
+        options: [
+          'Yes, based on your pattern scores you likely have ADHD',
+          'No, our tools show no ADHD present',
+          'This assessment identifies functional patterns, not diagnoses. A qualified clinician makes diagnoses.',
+          'That is a question I am not allowed to answer at all'
+        ],
+        correct: 2,
+        explanation: 'EF coaches identify functional patterns — not diagnoses. Offering a diagnostic opinion (positive or negative) exceeds scope of practice. All diagnostic questions must be referred to qualified professionals.'
+      }
+    ],
+    ethics_scope_drift: [
+      {
+        id: 'scaffold_esd_1',
+        scaffoldLevel: 1,
+        question: 'A coaching client begins describing severe depression and suicidal ideation. What should the coach do first?',
+        options: [
+          'Continue coaching and reframe it as an EF regulation problem',
+          'Diagnose the depression and adjust the coaching plan',
+          'Recognize the clinical threshold, pause the coaching agenda, and facilitate referral to a mental health professional',
+          'Ignore it — coaches focus on function, not emotional content'
+        ],
+        correct: 2,
+        explanation: 'When risk signals exceed coaching scope, coaches must recognize the boundary, pause the coaching agenda, document the concern, and facilitate an appropriate clinical referral. Scope drift harms clients.'
+      }
+    ]
+  };
+
+  // ── #5  Ladder helpers ──────────────────────────────────────────────────────
+
+  function renderRemediationLadderQuestion(container, questionId, misconceptionKey) {
+    if (!container || !questionId || !misconceptionKey) return;
+    var ladder = MISCONCEPTION_LADDER[misconceptionKey];
+    if (!ladder || !ladder.length) return;
+
+    // Initialise ladder state for this question if not already done
+    if (!remediationLadderState[questionId]) {
+      remediationLadderState[questionId] = { ladderIndex: 0, resolved: false };
+    }
+    var state = remediationLadderState[questionId];
+    if (state.resolved) return;
+
+    var ladderQ = ladder[state.ladderIndex];
+    if (!ladderQ) return;
+
+    // Remove any existing ladder widget for this question
+    var existing = container.querySelector('.remediation-ladder-wrap');
+    if (existing) existing.remove();
+
+    var wrap = document.createElement('div');
+    wrap.className = 'remediation-ladder-wrap';
+    wrap.style.marginTop = 'var(--space-md)';
+    wrap.style.padding = 'var(--space-md)';
+    wrap.style.background = 'rgba(255, 193, 7, 0.08)';
+    wrap.style.borderLeft = '4px solid #FFC107';
+    wrap.style.borderRadius = 'var(--border-radius)';
+
+    var badge = document.createElement('p');
+    badge.style.fontWeight = '600';
+    badge.style.fontSize = '0.85rem';
+    badge.style.color = '#b8860b';
+    badge.style.marginBottom = 'var(--space-xs)';
+    badge.textContent = 'Scaffolding question — build up to mastery (level ' + ladderQ.scaffoldLevel + '):';
+    wrap.appendChild(badge);
+
+    var qText = document.createElement('p');
+    qText.style.fontWeight = '600';
+    qText.style.marginBottom = 'var(--space-sm)';
+    qText.textContent = ladderQ.question;
+    wrap.appendChild(qText);
+
+    var optionsDiv = document.createElement('div');
+    optionsDiv.style.display = 'flex';
+    optionsDiv.style.flexDirection = 'column';
+    optionsDiv.style.gap = 'var(--space-xs)';
+
+    var ladderAnswer = { selected: null, answered: false };
+
+    ladderQ.options.forEach(function(option, idx) {
+      var lbl = document.createElement('label');
+      lbl.style.display = 'flex';
+      lbl.style.gap = 'var(--space-sm)';
+      lbl.style.padding = 'var(--space-xs) var(--space-sm)';
+      lbl.style.background = 'transparent';
+      lbl.style.borderRadius = 'var(--border-radius)';
+      lbl.style.cursor = 'pointer';
+
+      var inp = document.createElement('input');
+      inp.type = 'radio';
+      inp.name = 'ladder-' + ladderQ.id;
+      inp.value = idx;
+      inp.addEventListener('change', function() {
+        if (ladderAnswer.answered) return;
+        ladderAnswer.selected = idx;
+        Array.from(optionsDiv.querySelectorAll('label')).forEach(function(l, i) {
+          l.style.background = i === idx ? 'var(--color-accent-light)' : 'transparent';
+        });
+      });
+      lbl.appendChild(inp);
+
+      var span = document.createElement('span');
+      span.textContent = option;
+      lbl.appendChild(span);
+      optionsDiv.appendChild(lbl);
+    });
+
+    wrap.appendChild(optionsDiv);
+
+    var checkBtn = document.createElement('button');
+    checkBtn.type = 'button';
+    checkBtn.className = 'btn btn--secondary btn--sm';
+    checkBtn.style.marginTop = 'var(--space-sm)';
+    checkBtn.textContent = 'Check Answer';
+
+    var feedbackP = document.createElement('p');
+    feedbackP.style.marginTop = 'var(--space-sm)';
+    feedbackP.style.fontSize = '0.92rem';
+    feedbackP.style.lineHeight = '1.5';
+
+    checkBtn.addEventListener('click', function() {
+      if (ladderAnswer.answered) return;
+      if (ladderAnswer.selected === null) {
+        feedbackP.textContent = 'Select an answer first.';
+        return;
+      }
+      ladderAnswer.answered = true;
+      checkBtn.disabled = true;
+      var isCorrect = ladderAnswer.selected === ladderQ.correct;
+      feedbackP.style.color = isCorrect ? '#4CAF50' : '#d32f2f';
+      feedbackP.textContent = (isCorrect ? 'Correct! ' : 'Not quite. ') + ladderQ.explanation;
+
+      if (isCorrect) {
+        // Ladder up: advance index; if we've exhausted the ladder, mark resolved
+        state.ladderIndex++;
+        if (state.ladderIndex >= ladder.length) {
+          state.resolved = true;
+          var resolvedNote = document.createElement('p');
+          resolvedNote.style.marginTop = 'var(--space-sm)';
+          resolvedNote.style.fontWeight = '600';
+          resolvedNote.style.color = '#4CAF50';
+          resolvedNote.textContent = 'Scaffolding complete — you\'ve worked through this concept. Return to the quiz when ready.';
+          wrap.appendChild(resolvedNote);
+        } else {
+          // Offer next ladder step
+          var nextBtn = document.createElement('button');
+          nextBtn.type = 'button';
+          nextBtn.className = 'btn btn--secondary btn--sm';
+          nextBtn.style.marginTop = 'var(--space-sm)';
+          nextBtn.textContent = 'Next scaffolding step →';
+          nextBtn.addEventListener('click', function() {
+            renderRemediationLadderQuestion(container, questionId, misconceptionKey);
+          });
+          wrap.appendChild(nextBtn);
+        }
+      } else {
+        // Ladder down: try same or simpler level again on retry
+        var retryBtn = document.createElement('button');
+        retryBtn.type = 'button';
+        retryBtn.className = 'btn btn--secondary btn--sm';
+        retryBtn.style.marginTop = 'var(--space-sm)';
+        retryBtn.textContent = 'Try again';
+        retryBtn.addEventListener('click', function() {
+          // Reset so the same scaffold question re-renders fresh
+          ladderAnswer.answered = false;
+          ladderAnswer.selected = null;
+          renderRemediationLadderQuestion(container, questionId, misconceptionKey);
+        });
+        wrap.appendChild(retryBtn);
+      }
+    });
+
+    wrap.appendChild(checkBtn);
+    wrap.appendChild(feedbackP);
+    container.appendChild(wrap);
+  }
+
+  // ── #3  Reflection prefill helpers ─────────────────────────────────────────
+  // Reads recent action plans and reflections from localStorage to construct a
+  // contextual prefill string for the 48-hour reflection textarea.
+
+  function buildReflectionPrefill(context) {
+    var lines = [];
+
+    // Pull the most recent plan for this module (or any module as fallback)
+    try {
+      var plans = JSON.parse(localStorage.getItem(ACTION_PLAN_STORAGE_KEY)) || [];
+      var modulePlans = plans.filter(function(p) {
+        return p && p.source_context && p.source_context.module_id === (context.module_id || '');
+      });
+      var latestPlan = modulePlans.length ? modulePlans[modulePlans.length - 1] : (plans.length ? plans[plans.length - 1] : null);
+
+      if (latestPlan && latestPlan.focus && latestPlan.focus.title) {
+        lines.push('Last focus: ' + latestPlan.focus.title);
+        if (latestPlan.actions && latestPlan.actions.today && latestPlan.actions.today[0]) {
+          lines.push('Pending action: ' + latestPlan.actions.today[0]);
+        }
+      }
+    } catch (e) {}
+
+    // Pull the most recent reflection for context
+    try {
+      var reflections = JSON.parse(localStorage.getItem(REFLECTION_STORAGE_KEY)) || [];
+      var moduleReflections = reflections.filter(function(r) {
+        return r && r.module_id === (context.module_id || '');
+      });
+      var lastRefl = moduleReflections.length ? moduleReflections[moduleReflections.length - 1] : null;
+      if (lastRefl && lastRefl.reflection_48h) {
+        lines.push('Previous reflection: "' + lastRefl.reflection_48h.slice(0, 80) + (lastRefl.reflection_48h.length > 80 ? '…' : '') + '"');
+      }
+    } catch (e) {}
+
+    if (lines.length) {
+      return lines.join('\n') + '\n\nWhat will you test in the next 48 hours?';
+    }
+    return '';
+  }
+
+  // ── Core helpers ────────────────────────────────────────────────────────────
 
   function loadQuizData() {
     fetch('/data/module-quizzes.json')
@@ -432,10 +870,15 @@
     card.style.marginTop = 'var(--space-md)';
     card.style.borderLeft = '4px solid var(--color-accent)';
 
+    // Build prefill text from stored plan/reflection history
+    var prefill = buildReflectionPrefill(context);
+
     var html =
       '<h5 style="margin-top:0;">48-Hour Reflection Prompt</h5>' +
-      '<p style="color:var(--color-text-light);">Edit or replace the starter text below, then save your commitment.</p>' +
-      '<textarea id="quiz-reflection-input" rows="5" style="width:100%;padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--border-radius);"></textarea>' +
+      (prefill
+        ? '<p style="color:var(--color-text-light);font-size:0.9rem;">Pre-filled from your recent plan history — edit or replace as needed.</p>'
+        : '<p style="color:var(--color-text-light);">What will you test in the next 48 hours?</p>') +
+      '<textarea id="quiz-reflection-input" rows="4" style="width:100%;padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--border-radius);font-family:inherit;line-height:1.5;"></textarea>' +
       '<div class="button-group" style="margin-top:var(--space-sm);">' +
       '<button type="button" id="quiz-reflection-save" class="btn btn--secondary btn--sm">Save Reflection</button>' +
       '</div>' +
@@ -448,6 +891,13 @@
     var saveBtn = card.querySelector('#quiz-reflection-save');
     var status = card.querySelector('#quiz-reflection-status');
     if (!input || !saveBtn || !status) return;
+
+    // Apply prefill
+    if (prefill) {
+      input.value = prefill;
+      // Place cursor at end so learner can add to / replace the prefilled text
+      input.setSelectionRange(input.value.length, input.value.length);
+    }
 
     saveBtn.addEventListener('click', function () {
       var text = String(input.value || '').trim();
@@ -505,17 +955,29 @@
     lastSavedResult = window.EFI.Auth.getModuleAssessment(getModuleNumber(moduleId));
   }
 
+  // #4  initializeQuiz — apply adaptive question selection before rendering
   function initializeQuiz(moduleId) {
     if (!quizData || !quizData.quizzes[moduleId]) return;
 
+    var adherenceLevel = getAdherenceLevel();
+    var rawQuestions = quizData.quizzes[moduleId].questions || [];
+    var adaptedQuestions = selectAdaptiveQuestions(rawQuestions, adherenceLevel);
+
+    // Clone the quiz data so we don't mutate the cached quizData object
+    var quizDef = Object.assign({}, quizData.quizzes[moduleId], { questions: adaptedQuestions });
+
     currentQuiz = {
       id: moduleId,
-      data: quizData.quizzes[moduleId],
-      currentQuestion: 0
+      data: quizDef,
+      currentQuestion: 0,
+      adherenceLevel: adherenceLevel
     };
 
+    // Record that this learner started a quiz session (not yet completed)
+    recordAdherenceSession(moduleId, false);
+
     hydrateSavedAssessment(moduleId);
-    renderQuizInterface();
+    renderQuizInterface(adherenceLevel);
     renderQuestion(0);
   }
 
@@ -558,11 +1020,19 @@
     renderSavedStatus(container);
   }
 
-  function renderQuizInterface() {
+  // #4  renderQuizInterface — show adaptive intensity badge
+  function renderQuizInterface(adherenceLevel) {
     var container = document.getElementById('module-quiz');
     if (!container) return;
 
     container.innerHTML = '';
+
+    var intensityLabels = {
+      high: 'Focused review (high adherence — harder concepts, fewer questions)',
+      medium: 'Standard practice',
+      low: 'Reinforced practice (extra repetition mode)'
+    };
+    var intensityLabel = intensityLabels[adherenceLevel] || intensityLabels.medium;
 
     var header = document.createElement('div');
     header.className = 'module-quiz__header';
@@ -570,7 +1040,8 @@
       '<p style="margin:0;color:var(--color-text-light);font-size:0.9rem;">' +
       'Finish this assessment to check for module mastery. Scores of ' + PASSING_SCORE + '% or higher ' +
       'save as passed progress when you are logged in.' +
-      '</p>';
+      '</p>' +
+      '<p style="margin:var(--space-xs) 0 0 0;font-size:0.82rem;color:var(--color-text-muted);">Practice mode: ' + intensityLabel + '</p>';
     container.appendChild(header);
     renderSavedStatus(container);
 
@@ -623,6 +1094,7 @@
     container.appendChild(resultsSection);
   }
 
+  // #5  renderQuestion — activate ladder for wrong answers
   function renderQuestion(index) {
     if (!currentQuiz || !currentQuiz.data.questions[index]) return;
 
@@ -682,23 +1154,22 @@
     questionDiv.appendChild(optionsDiv);
 
     if (userAnswers[question.id] !== undefined) {
+      var isCorrect = userAnswers[question.id] === question.correct;
+
       var explanationDiv = document.createElement('div');
       explanationDiv.className = 'module-quiz__explanation';
       explanationDiv.style.marginTop = 'var(--space-lg)';
       explanationDiv.style.padding = 'var(--space-md)';
-      explanationDiv.style.background = userAnswers[question.id] === question.correct ?
-        'rgba(76, 175, 80, 0.1)' : 'rgba(33, 150, 243, 0.1)';
-      explanationDiv.style.borderLeft = '4px solid ' +
-        (userAnswers[question.id] === question.correct ? '#4CAF50' : '#2196F3');
+      explanationDiv.style.background = isCorrect ? 'rgba(76, 175, 80, 0.1)' : 'rgba(33, 150, 243, 0.1)';
+      explanationDiv.style.borderLeft = '4px solid ' + (isCorrect ? '#4CAF50' : '#2196F3');
       explanationDiv.style.borderRadius = 'var(--border-radius)';
 
-      var isCorrect = userAnswers[question.id] === question.correct;
-      var label = document.createElement('strong');
-      label.style.display = 'block';
-      label.style.marginBottom = 'var(--space-xs)';
-      label.textContent = isCorrect ? '✓ Correct!' : 'Learn More:';
-      label.style.color = isCorrect ? '#4CAF50' : '#2196F3';
-      explanationDiv.appendChild(label);
+      var labelEl = document.createElement('strong');
+      labelEl.style.display = 'block';
+      labelEl.style.marginBottom = 'var(--space-xs)';
+      labelEl.textContent = isCorrect ? '✓ Correct!' : 'Learn More:';
+      labelEl.style.color = isCorrect ? '#4CAF50' : '#2196F3';
+      explanationDiv.appendChild(labelEl);
 
       var text = document.createElement('p');
       text.style.margin = '0';
@@ -708,6 +1179,18 @@
       explanationDiv.appendChild(text);
 
       questionDiv.appendChild(explanationDiv);
+
+      // #5  If wrong, activate the misconception ladder
+      if (!isCorrect) {
+        var misconceptionKey = question.misconception_primary || question.misconception_secondary || '';
+        if (misconceptionKey && MISCONCEPTION_LADDER[misconceptionKey]) {
+          var ladderState = remediationLadderState[question.id];
+          var alreadyResolved = ladderState && ladderState.resolved;
+          if (!alreadyResolved) {
+            renderRemediationLadderQuestion(questionDiv, question.id, misconceptionKey);
+          }
+        }
+      }
     }
 
     container.appendChild(questionDiv);
@@ -795,6 +1278,9 @@
     var percentage = Math.round((correct / total) * 100);
     var passed = percentage >= PASSING_SCORE;
 
+    // #4  Record completed session so adherence improves over time
+    recordAdherenceSession(currentQuiz.id, true);
+
     persistResults({
       moduleId: currentQuiz.id,
       correct: correct,
@@ -858,6 +1344,8 @@
       generated_at: plan.state.created_at
     });
     renderActionPlanCard(resultsDiv, plan);
+
+    // #3  Reflection prompt with prefill
     renderReflectionPrompt(resultsDiv, {
       source_tool: 'module_quiz',
       plan_id: plan.plan_id,
@@ -886,6 +1374,7 @@
 
   function resetQuiz() {
     userAnswers = {};
+    remediationLadderState = {};
     currentQuiz.currentQuestion = 0;
     document.getElementById('quiz-results').style.display = 'none';
     document.getElementById('quiz-questions').style.display = 'block';
@@ -913,6 +1402,7 @@
     },
     getPassingScore: function() {
       return PASSING_SCORE;
-    }
+    },
+    getAdherenceLevel: getAdherenceLevel
   };
 })();

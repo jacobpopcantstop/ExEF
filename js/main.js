@@ -102,6 +102,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
   (function initAnalytics() {
     var ASSESSMENT_EVENTS_KEY = 'efi_assessment_events_v1';
+    // #9  Dedup: store sent event IDs so we never double-post the same event
+    var SENT_EVENT_IDS_KEY = 'efi_sent_event_ids_v1';
+
+    // #9  Generate a compact unique ID for each event
+    function generateEventId() {
+      return 'ev_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7);
+    }
+
+    // #9  Check / register an event ID.  Returns true if this ID is new (not sent yet).
+    function markEventSent(eventId) {
+      var sent = {};
+      try { sent = JSON.parse(localStorage.getItem(SENT_EVENT_IDS_KEY)) || {}; } catch (e) {}
+      if (sent[eventId]) return false; // already sent
+      sent[eventId] = Date.now();
+      // Prune entries older than 48 h to keep storage lean
+      var cutoff = Date.now() - (48 * 60 * 60 * 1000);
+      Object.keys(sent).forEach(function(k) { if (sent[k] < cutoff) delete sent[k]; });
+      safeSetLocalStorage(SENT_EVENT_IDS_KEY, JSON.stringify(sent));
+      return true;
+    }
+
+    // #9  Resolve the current authenticated user ID (if available)
+    function getAuthUserId() {
+      try {
+        if (window.EFI && window.EFI.Auth && typeof window.EFI.Auth.getUser === 'function') {
+          var u = window.EFI.Auth.getUser();
+          return (u && u.id) ? String(u.id) : null;
+        }
+      } catch (e) {}
+      return null;
+    }
 
     function post(payload) {
       if (!canPostTracking()) return Promise.resolve();
@@ -150,9 +181,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
       var auth = getAuthContext();
       list.push({
+        event_id: payload.event_id,
         event_name: payload.event_name,
         page: payload.page,
         source: payload.source,
+        user_id: payload.user_id || null,
         properties: payload.properties || {},
         authenticated: auth.authenticated,
         auth_mode: auth.auth_mode,
@@ -165,14 +198,27 @@ document.addEventListener('DOMContentLoaded', function () {
       var page = window.location.pathname.split('/').pop() || 'index.html';
       var params = new URLSearchParams(window.location.search || '');
       var source = params.get('utm_source') || params.get('source') || document.referrer || 'direct';
+
+      // #9  Attach event ID and user ID; skip if this exact ID was already sent
+      var eventId = generateEventId();
+      var userId = getAuthUserId();
+
       var payload = {
+        event_id: eventId,
         event_name: eventName,
         page: page,
         source: source,
+        user_id: userId,
         properties: properties || {}
       };
+
       storeAssessmentEvent(payload);
-      return post(payload);
+
+      // #9  Dedup check — only POST if this event ID has not been sent before
+      if (markEventSent(eventId)) {
+        return post(payload);
+      }
+      return Promise.resolve();
     }
 
     window.EFI.Analytics = {

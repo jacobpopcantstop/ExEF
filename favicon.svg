@@ -1,4 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="EFI">
-  <rect width="64" height="64" rx="12" fill="#12324a"/>
-  <path d="M18 16h28v6H24v8h18v6H24v12h22v6H18z" fill="#e8f1f8"/>
+  <!-- Navy background with rounded corners -->
+  <rect width="64" height="64" rx="10" fill="#162b3c"/>
+  <!-- Gold accent bar at top -->
+  <rect x="0" y="0" width="64" height="5" rx="0" fill="#c9a84c"/>
+  <rect x="0" y="0" width="64" height="5" rx="10" fill="#c9a84c"/>
+  <!-- E letterform — clean, balanced -->
+  <rect x="16" y="16" width="22" height="5"  rx="1" fill="#e8f1f8"/>
+  <rect x="16" y="16" width="5"  height="32" rx="1" fill="#e8f1f8"/>
+  <rect x="16" y="29" width="17" height="5"  rx="1" fill="#c9a84c"/>
+  <rect x="16" y="43" width="22" height="5"  rx="1" fill="#e8f1f8"/>
 </svg>

@@ -49,18 +49,18 @@
 .nav__logo-icon {
   width: 40px;
   height: 40px;
-  background: #ece2d0;
-  border: 1px solid rgba(22, 43, 60, 0.22);
+  background: #162b3c;
+  border: 1px solid #c9a84c;
   border-radius: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-primary-dark);
+  color: #d4aa50;
   font-size: 0.92rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   flex-shrink: 0;
-  box-shadow: none;
+  box-shadow: 0 1px 4px rgba(22, 43, 60, 0.18);
 }
 
 .nav-pixel-wave {

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EFI Capstone Transparency Rubric</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #FAFAF9;
+      color: #1C1917;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 15px;
+      line-height: 1.7;
+      padding: 40px 20px 60px;
+    }
+
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .doc-header {
+      border-bottom: 2px solid #D97706;
+      padding-bottom: 16px;
+      margin-bottom: 32px;
+    }
+    .doc-header .institution {
+      font-family: system-ui, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #D97706;
+      margin-bottom: 4px;
+    }
+    .doc-header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1C1917;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    .doc-header .meta {
+      font-family: system-ui, sans-serif;
+      font-size: 12px;
+      color: #78716C;
+      margin-bottom: 12px;
+    }
+    .doc-header .purpose {
+      font-size: 13px;
+      color: #57534E;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* Component section */
+    .component {
+      margin-bottom: 36px;
+    }
+    .component-label {
+      display: inline-block;
+      background: #FEF3C7;
+      color: #92400E;
+      font-family: system-ui, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+    }
+    .component > h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1C1917;
+      margin-bottom: 20px;
+    }
+
+    /* Domain */
+    .domain {
+      margin-bottom: 24px;
+      page-break-inside: avoid;
+    }
+    .domain h3 {
+      font-family: system-ui, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #44403C;
+      margin-bottom: 10px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #E7E5E0;
+    }
+
+    /* Passing / Needs Revision boxes */
+    .passing, .needs-revision {
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+    }
+    .passing {
+      background: #F0FDF4;
+      border-left: 3px solid #16A34A;
+    }
+    .needs-revision {
+      background: #FEF2F2;
+      border-left: 3px solid #DC2626;
+    }
+    .box-label {
+      font-family: system-ui, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .passing .box-label { color: #15803D; }
+    .needs-revision .box-label { color: #B91C1C; }
+
+    .passing ul, .needs-revision ul {
+      list-style: none;
+      padding: 0;
+    }
+    .passing ul li, .needs-revision ul li {
+      font-size: 14px;
+      line-height: 1.6;
+      padding-left: 16px;
+      position: relative;
+      margin-bottom: 2px;
+    }
+    .passing ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #16A34A;
+      font-size: 12px;
+    }
+    .needs-revision ul li::before {
+      content: '✗';
+      position: absolute;
+      left: 0;
+      color: #DC2626;
+      font-size: 12px;
+    }
+
+    /* Interpretation notes callout */
+    .notes-callout {
+      background: #FEF3C7;
+      border-left: 3px solid #D97706;
+      border-radius: 0 6px 6px 0;
+      padding: 16px 18px;
+      margin-top: 32px;
+      margin-bottom: 32px;
+      page-break-inside: avoid;
+    }
+    .notes-callout h3 {
+      font-family: system-ui, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #92400E;
+      margin-bottom: 10px;
+    }
+    .notes-callout ul {
+      list-style: none;
+      padding: 0;
+    }
+    .notes-callout ul li {
+      font-size: 14px;
+      color: #78350F;
+      padding-left: 16px;
+      position: relative;
+      margin-bottom: 4px;
+      line-height: 1.6;
+    }
+    .notes-callout ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: #D97706;
+    }
+
+    /* Footer */
+    .doc-footer {
+      border-top: 1px solid #E7E5E0;
+      padding-top: 16px;
+      font-family: system-ui, sans-serif;
+      font-size: 12px;
+      color: #78716C;
+      text-align: center;
+    }
+    .doc-footer a {
+      color: #D97706;
+      text-decoration: none;
+    }
+
+    /* Print */
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+        font-size: 13px;
+      }
+      .page {
+        max-width: 100%;
+      }
+      @page {
+        margin: 0.75in;
+        size: letter;
+      }
+      .passing, .needs-revision, .notes-callout {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .domain {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header class="doc-header">
+      <div class="institution">The Executive Functioning Institute</div>
+      <h1>Capstone Transparency Rubric</h1>
+      <div class="meta">Certification Program &middot; v2026.02</div>
+      <p class="purpose">This sample rubric demonstrates how EFI distinguishes Passing versus Needs Revision outcomes in capstone review. It is a transparency artifact and does not replace full reviewer scoring sheets.</p>
+    </header>
+
+    <section class="component">
+      <span class="component-label">Component 1</span>
+      <h2>Intake Simulation</h2>
+
+      <div class="domain">
+        <h3>Rapport Building</h3>
+        <div class="passing">
+          <div class="box-label">Passing Standard</div>
+          <ul>
+            <li>Uses primarily open-ended prompts and reflective listening.</li>
+            <li>Validates client frustration without judgment.</li>
+            <li>Maintains collaborative tone and role clarity.</li>
+          </ul>
+        </div>
+        <div class="needs-revision">
+          <div class="box-label">Needs Revision</div>
+          <ul>
+            <li>Uses primarily directive advice or closed questions.</li>
+            <li>Dismisses client affect and jumps to fixing.</li>
+            <li>Communicates in deficit-focused language.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="domain">
+        <h3>EF Explanation (Psychoeducation)</h3>
+        <div class="passing">
+          <div class="box-label">Passing Standard</div>
+          <ul>
+            <li>Explains EF with accessible, non-clinical language.</li>
+            <li>Uses process framing (e.g., air-traffic-control metaphor).</li>
+            <li>Preserves strengths-based tone.</li>
+          </ul>
+        </div>
+        <div class="needs-revision">
+          <div class="box-label">Needs Revision</div>
+          <ul>
+            <li>Uses dense jargon without translation.</li>
+            <li>Frames EF problems as character deficits.</li>
+            <li>Omits practical behavior translation.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="component">
+      <span class="component-label">Component 2</span>
+      <h2>Intervention Plan</h2>
+
+      <div class="domain">
+        <h3>Theoretical Grounding</h3>
+        <div class="passing">
+          <div class="box-label">Passing Standard</div>
+          <ul>
+            <li>Intervention choices map explicitly to Barkley, Brown, Ward, or Dawson/Guare concepts.</li>
+            <li>Rationale links each tactic to a documented EF mechanism.</li>
+          </ul>
+        </div>
+        <div class="needs-revision">
+          <div class="box-label">Needs Revision</div>
+          <ul>
+            <li>Suggestions are generic or motivational only.</li>
+            <li>No model-to-intervention rationale is provided.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="domain">
+        <h3>Environmental Modification</h3>
+        <div class="passing">
+          <div class="box-label">Passing Standard</div>
+          <ul>
+            <li>Includes concrete external supports before relying on willpower.</li>
+            <li>Includes implementation details at point-of-performance.</li>
+          </ul>
+        </div>
+        <div class="needs-revision">
+          <div class="box-label">Needs Revision</div>
+          <ul>
+            <li>Relies on internal effort alone.</li>
+            <li>Lacks operational environmental changes.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="notes-callout">
+      <h3>Interpretation Notes</h3>
+      <ul>
+        <li>A passing result requires acceptable performance across all required domains.</li>
+        <li>High-variance or borderline submissions may be escalated to manual audit.</li>
+        <li>Final release follows EFI feedback release workflow.</li>
+      </ul>
+    </div>
+
+    <footer class="doc-footer">
+      <a href="mailto:info@theexecutivefunctioninginstitute.com">info@theexecutivefunctioninginstitute.com</a>
+      &nbsp;&middot;&nbsp; &copy; The Executive Functioning Institute
+    </footer>
+
+  </div>
+</body>
+</html>

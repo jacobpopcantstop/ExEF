@@ -5530,6 +5530,11 @@ body.has-topic-clusters.has-topic-clusters-plain main {
   color: #b9cbe1;
 }
 
+[data-theme="dark"] .artifact-preview {
+  background: rgba(20, 28, 42, 0.92);
+  border-color: rgba(127, 192, 255, 0.14);
+}
+
 [data-theme="dark"] .artifact-preview img,
 [data-theme="dark"] .curriculum-dossier__media img,
 [data-theme="dark"] .hero-proof__figure img {

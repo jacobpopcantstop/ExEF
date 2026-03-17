@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { json, parseBody, fanout } = require('./_common');
+const { json, parseBody, fanout, log } = require('./_common');
 const db = require('./_db');
 
 exports.handler = async function (event) {
@@ -25,5 +25,6 @@ exports.handler = async function (event) {
 
   const storage = await db.saveEvent(evt);
   const delivery = await fanout({ type: 'analytics_event', event: evt });
+  log.info('event tracked', { name, email: evt.properties && evt.properties.email ? evt.properties.email : undefined });
   return json(200, { ok: true, event_id: evt.event_id, storage: storage.storage, delivery });
 };

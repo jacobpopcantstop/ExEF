@@ -1,5 +1,12 @@
 const crypto = require('crypto');
 
+// Structured logger — outputs JSON lines compatible with Netlify log drain
+const log = {
+  info:  (msg, meta = {}) => console.log(JSON.stringify({ level: 'info',  msg, ...meta, ts: new Date().toISOString() })),
+  warn:  (msg, meta = {}) => console.warn(JSON.stringify({ level: 'warn',  msg, ...meta, ts: new Date().toISOString() })),
+  error: (msg, meta = {}) => console.error(JSON.stringify({ level: 'error', msg, ...meta, ts: new Date().toISOString() })),
+};
+
 const ASSET_MAP = {
   'gap-analyzer': 'docs/assets/executive-function-skills-gap-analyzer.pdf',
   'launch-plan': 'docs/assets/90-day-coaching-business-launch-plan.pdf'
@@ -82,6 +89,7 @@ async function fanout(payload) {
 }
 
 module.exports = {
+  log,
   ASSET_MAP,
   json,
   parseBody,

@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { json, parseBody, fanout, requiredEnv } = require('./_common');
+const { json, parseBody, fanout, requiredEnv, log } = require('./_common');
 const { getActor } = require('./_authz');
 const db = require('./_db');
 const ai = require('./_ai_rubric');
@@ -120,6 +120,7 @@ async function submit(body, event) {
   if (kind === 'module' && !moduleId) return json(400, { ok: false, error: 'module_id is required for module submissions' });
   if (kind === 'module' && !['1','2','3','4','5','6'].includes(moduleId)) return json(400, { ok: false, error: 'module_id must be 1-6' });
 
+  log.info('submission received', { action: kind === 'capstone' ? 'submit_capstone' : 'submit_module', email, kind });
   const graded = await ai.gradeSubmission({
     kind,
     module_id: moduleId,
@@ -127,6 +128,7 @@ async function submit(body, event) {
     notes
   });
 
+  log.info('grading complete', { email, score: graded.score, passed: graded.passed });
   const submissionRow = await db.createSubmission({
     email,
     kind,
@@ -147,7 +149,7 @@ async function submit(body, event) {
     capstone: { status: kind === 'capstone' ? 'submitted' : 'not_submitted' },
     esqrCompleted: false
   }).catch((err) => {
-    console.error('[EFI] upsertProgress failed for', email, err && err.message);
+    log.error('upsertProgress failed', { email, error: err && err.message });
   });
 
   await saveAudit({
@@ -227,6 +229,7 @@ async function processDueFeedback() {
       score: row.score,
       release_at: row.release_at
     });
+    log.info('feedback released', { submissionId: row.id, email: row.email });
     await db.updateSubmission(row.id, { notified_at: new Date().toISOString() });
     await saveAudit({
       actor_role: 'system',
@@ -329,6 +332,7 @@ async function reviewSubmission(body, event) {
     }
   });
 
+  log.info('reviewer decision', { submissionId, decision, reviewer: actor.email });
   return json(200, {
     ok: true,
     submission: visibleSubmission(updated, new Date().toISOString()),

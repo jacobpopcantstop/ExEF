@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { json, requiredEnv } = require('./_common');
+const { json, requiredEnv, log } = require('./_common');
 const db = require('./_db');
 
 function verifyStripeSignature(rawBody, headerValue, secret) {
@@ -21,6 +21,7 @@ function verifyStripeSignature(rawBody, headerValue, secret) {
 }
 
 exports.handler = async function (event) {
+  try {
   if (event.httpMethod !== 'POST') return json(405, { ok: false, error: 'Method not allowed' });
 
   const rawBody = event.body || '';
@@ -46,6 +47,7 @@ exports.handler = async function (event) {
     return json(400, { ok: false, error: 'Invalid JSON payload' });
   }
 
+  log.info('stripe webhook', { type: payload.type });
   const eventType = String(payload.type || 'unknown');
   const obj = payload.data && payload.data.object ? payload.data.object : {};
   let paymentIntentId = '';
@@ -74,6 +76,9 @@ exports.handler = async function (event) {
     status = 'failed';
   }
 
+  if (paymentIntentId && status === 'succeeded') {
+    log.info('payment complete', { email, amount });
+  }
   if (paymentIntentId) {
     await db.savePaymentIntent(paymentIntentId, {
       status,
@@ -85,4 +90,8 @@ exports.handler = async function (event) {
   }
 
   return json(200, { ok: true, received: true, event_type: eventType, payment_intent_id: paymentIntentId || null });
+  } catch (err) {
+    log.error('stripe webhook error', { error: err.message });
+    return json(500, { ok: false, error: 'Internal server error' });
+  }
 };

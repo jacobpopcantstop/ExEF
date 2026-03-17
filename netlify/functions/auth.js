@@ -1,4 +1,4 @@
-const { json, parseBody, requiredEnv } = require('./_common');
+const { json, parseBody, requiredEnv, log } = require('./_common');
 const db = require('./_db');
 
 function hasSupabaseAuth() {
@@ -51,8 +51,10 @@ async function hydrateUserState(user) {
 }
 
 exports.handler = async function (event) {
+  try {
   if (event.httpMethod === 'GET') {
     const action = String((event.queryStringParameters || {}).action || '').trim();
+    log.info('auth request', { action, method: event.httpMethod });
     if (action === 'config') {
       return json(200, {
         ok: true,
@@ -80,6 +82,7 @@ exports.handler = async function (event) {
     if (!body) return json(400, { ok: false, error: 'Invalid JSON body' });
 
     const action = String(body.action || '').trim();
+    log.info('auth request', { action, method: event.httpMethod });
     if (!hasSupabaseAuth()) return json(503, { ok: false, error: 'Managed auth is not configured' });
 
     if (action === 'register') {
@@ -100,6 +103,7 @@ exports.handler = async function (event) {
 
       const user = safeUser(auth);
       const session = auth.session || null;
+      log.info('user registered', { email });
       if (user && user.email) {
         await db.upsertProgress(user.email, {
           modules: {},
@@ -127,6 +131,7 @@ exports.handler = async function (event) {
 
       const user = safeUser(auth);
       const state = await hydrateUserState(user);
+      log.info('user login', { email });
       return json(200, {
         ok: true,
         user: { ...user, progress: state.progress, purchases: state.purchases },
@@ -147,4 +152,9 @@ exports.handler = async function (event) {
   }
 
   return json(405, { ok: false, error: 'Method not allowed' });
+  } catch (err) {
+    const action = String(((event.queryStringParameters || {}).action) || '').trim();
+    log.error('auth error', { action, error: err.message });
+    return json(500, { ok: false, error: 'Internal server error' });
+  }
 };

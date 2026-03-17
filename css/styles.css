@@ -299,9 +299,9 @@ p {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 var(--space-xl);
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-sm);
   height: 74px;
 }
@@ -321,6 +321,7 @@ p {
   text-transform: none;
   position: relative;
   z-index: 1;
+  grid-column: 1;
 }
 
 .nav .nav__logo > span {
@@ -420,7 +421,8 @@ p {
   gap: 0;
   flex: 0 1 auto;
   min-width: max-content;
-  margin-left: auto;
+  grid-column: 2;
+  justify-self: end;
   justify-content: flex-end;
 }
 
@@ -496,6 +498,7 @@ p {
   cursor: pointer;
   padding: var(--space-sm);
   color: var(--color-text);
+  grid-column: 4;
 }
 
 .nav__toggle svg {
@@ -3406,8 +3409,7 @@ select.form-control {
 /* --- Responsive --- */
 @media (max-width: 1500px) {
   .nav .nav__logo > span {
-    max-width: 10rem;
-    font-size: 0.8rem;
+    display: none;
   }
 }
 
@@ -3452,7 +3454,7 @@ select.form-control {
   }
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1024px) {
   html { font-size: 15px; }
 
   h1 { font-size: 2rem; }
@@ -4548,6 +4550,7 @@ select.form-control {
   transition: background-color var(--transition), color var(--transition), border-color var(--transition);
   flex-shrink: 0;
   margin-left: var(--space-xs);
+  grid-column: 3;
 }
 
 .dark-toggle:hover {

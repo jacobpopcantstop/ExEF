@@ -16,6 +16,7 @@
   transition: background-color var(--transition), color var(--transition), border-color var(--transition);
   flex-shrink: 0;
   margin-left: var(--space-xs);
+  grid-column: 3;
 }
 
 .dark-toggle:hover {

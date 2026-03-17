@@ -8,7 +8,7 @@ async function gotoIndex(page) {
 test.describe('Navigation — Search link', () => {
 
   test('Search link present in rebuilt nav on representative pages', async ({ page }) => {
-    await page.setViewportSize({ width: 1740, height: 900 });
+    await page.setViewportSize({ width: 1440, height: 900 });
     const pages = ['index.html', 'curriculum.html', 'resources.html'];
     for (const p of pages) {
       await page.goto(`/${p}`);

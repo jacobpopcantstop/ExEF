@@ -1065,7 +1065,6 @@ window.EFI.registerMainModule(function (shared) {
     if (currentPage === 'admin.html') return;
 
   var primaryLinks = [
-    { href: 'index.html', label: 'Home' },
     { href: 'curriculum.html', label: 'Curriculum' },
     { href: 'resources.html', label: 'Resources' },
     { href: 'certification.html', label: 'Certification' },
@@ -1110,7 +1109,6 @@ window.EFI.registerMainModule(function (shared) {
         authWrap.appendChild(node);
       });
       audienceCluster.appendChild(authWrap);
-      appendTextLink(audienceCluster, 'index.html#start-paths', 'Choose Route', 'nav__link nav__link--cta');
       links.appendChild(audienceCluster);
     });
   })();

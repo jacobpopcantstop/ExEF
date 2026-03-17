@@ -317,7 +317,10 @@ p {
   color: var(--color-primary-dark);
   text-decoration: none;
   flex-shrink: 0;
+  margin-right: var(--space-lg);
   text-transform: none;
+  position: relative;
+  z-index: 1;
 }
 
 .nav .nav__logo > span {
@@ -415,8 +418,9 @@ p {
   display: flex;
   align-items: center;
   gap: 0;
-  flex: 1 1 auto;
-  min-width: 0;
+  flex: 0 1 auto;
+  min-width: max-content;
+  margin-left: auto;
   justify-content: flex-end;
 }
 
@@ -3400,6 +3404,13 @@ select.form-control {
 
 /* Source: css/src/50-accessibility-responsive.css */
 /* --- Responsive --- */
+@media (max-width: 1500px) {
+  .nav .nav__logo > span {
+    max-width: 10rem;
+    font-size: 0.8rem;
+  }
+}
+
 @media (max-width: 1320px) {
   .nav__inner {
     padding: 0 var(--space-lg);
@@ -3441,7 +3452,7 @@ select.form-control {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1500px) {
   html { font-size: 15px; }
 
   h1 { font-size: 2rem; }

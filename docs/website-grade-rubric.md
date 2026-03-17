@@ -7,9 +7,9 @@
 
 ---
 
-## Overall Grade: **A (94/100)**
+## Overall Grade: **A (95/100)**
 
-*(Previous: A- / 92/100 — updated to reflect session improvements)*
+*(Previous: A- / 92/100 — updated to reflect session improvements through search, offline support, E2E coverage, accessibility focus handling, and visual upgrades)*
 
 ---
 
@@ -36,7 +36,7 @@
 
 ---
 
-### 2. Information Architecture & Navigation — **A (94/100)**
+### 2. Information Architecture & Navigation — **A (95/100)**
 
 | Criterion | Score | Notes |
 |-----------|-------|-------|
@@ -44,19 +44,19 @@
 | Internal linking | 9/10 | Strong cross-linking between modules, resources, and tools. Breadcrumbs on content pages. |
 | URL structure | 8/10 | Flat structure (`/module-1.html`, `/coaching-home.html`). Functional but could benefit from directory-based paths (`/modules/1/`). |
 | Wayfinding | 9/10 | Active nav highlighting, breadcrumbs, role-routing paths on homepage, module navigation within content. |
-| Search/discoverability | 9/10 | Client-side site search implemented (search.html, Fuse.js, 57-page JSON index). URL `?q=` param support. Search link in nav on index.html — needs propagation to all pages. |
+| Search/discoverability | 10/10 | Client-side site search implemented (`search.html`, local `js/search.js`, JSON index). URL `?q=` param support. Search link is preserved in the rebuilt primary nav across the site. |
 | 404 handling | 10/10 | Custom 404 page with helpful links, "Report Broken Link" button that logs analytics events. |
 | Redirects | 9/10 | Legacy coaching paths properly redirected via netlify.toml (301 permanent). |
 | Sitemap | 10/10 | XML sitemap with 57 URLs, priority weighting, and `lastmod` dates on every entry. |
 | Footer navigation | 10/10 | Four-column footer with program links, module links, learn more links, and GitHub. |
 
-**Strengths:** The role-routing approach on the homepage is sophisticated and prevents the "wall of links" problem common to educational sites. Site search is now implemented — Fuse.js with a pre-built JSON index, live filtering, and deep-link support via `?q=` param.
+**Strengths:** The role-routing approach on the homepage is sophisticated and prevents the "wall of links" problem common to educational sites. Site search is now implemented with a local search script, live filtering, and deep-link support via `?q=` param. The rebuilt shared navigation now preserves search access while collapsing earlier on narrower desktops to avoid brand collisions.
 
-**Weaknesses:** Search nav link currently only on the home page — needs to propagate to all 57 pages. URL structure remains flat.
+**Weaknesses:** URL structure remains flat.
 
 ---
 
-### 3. Visual Design & UI — **A- (93/100)**
+### 3. Visual Design & UI — **A (94/100)**
 
 | Criterion | Score | Notes |
 |-----------|-------|-------|
@@ -65,19 +65,19 @@
 | Typography | 9/10 | Iowan Old Style/Palatino for headings, Avenir Next for body. Good pairing. 8-step spacing scale. |
 | Component design | 9/10 | Cards, tabs, accordions, callouts, buttons — all polished and consistent. BEM naming convention. |
 | Dark mode | 9/10 | Full dark theme via `data-theme` attribute. Specificity bugs causing cream backgrounds on home, curriculum, resources, and artifact-preview card — all resolved. |
-| Imagery | 7/10 | Only SVG diagrams. No photography, illustrations, or hero images. Content is text-heavy. |
+| Imagery | 8/10 | Still mostly SVG/documentary imagery, but flagship pages now use stronger artifact previews and institute-style visual surfaces instead of relying purely on text blocks. |
 | Whitespace & layout | 9/10 | Generous whitespace. 1200px max-width container. Clear visual rhythm. |
 | Animation | 8/10 | Subtle fade-in animations with `prefers-reduced-motion` respected. Not overused. |
 | Branding | 10/10 | Nav logo restored to original navy→green gradient. Favicon redesigned to match. Social `og:image` card added (1200×630 SVG). Dark mode toggle visible at all zoom levels. |
 | Module differentiation | 10/10 | Each of the 6 modules has a unique color identity carried through borders, accents, and headers. |
 
-**Strengths:** Dark mode is now genuinely thorough — root-cause specificity bugs fixed across home, curriculum, and resources pages. Logo and favicon restored to the distinctive navy-to-green gradient. Social preview card added for all 37 pages.
+**Strengths:** Dark mode is now genuinely thorough — root-cause specificity bugs fixed across home, curriculum, and resources pages. Logo and favicon restored to the distinctive navy-to-green gradient. Social preview card added for all primary pages. Homepage, about, resources, and coaching surfaces now use stronger artifact/media layouts that feel more like an institute dossier than a generic marketing shell.
 
-**Weaknesses:** Site is still almost entirely text and SVG. Hero sections lack photography or custom illustration.
+**Weaknesses:** Site is still primarily text plus SVG/documentary surfaces. Original photography or bespoke illustration would push the brand further.
 
 ---
 
-### 4. Technical Implementation — **A (95/100)**
+### 4. Technical Implementation — **A (96/100)**
 
 | Criterion | Score | Notes |
 |-----------|-------|-------|
@@ -90,22 +90,22 @@
 | Dependency management | 10/10 | Near-zero external dependencies. Only Supabase client for auth. No jQuery, Bootstrap, or framework bloat. |
 | Security headers | 10/10 | CSP, HSTS (with preload), X-Frame-Options DENY, X-Content-Type-Options, Referrer-Policy, Permissions-Policy — all configured in netlify.toml. |
 | API design | 9/10 | OpenAPI spec in `/docs/api/openapi.yaml`. Clean REST endpoints via Netlify Functions. Auth, submissions, webhooks all serverless. |
-| Testing | 8/10 | 6 test files, 22 tests using Node.js native test runner. Coverage includes grading logic, rate limiting. Still no frontend or E2E tests. |
+| Testing | 9/10 | Node.js test runner coverage plus Playwright E2E coverage for navigation, dark mode, skip link behavior, ESQ-R, and module quiz flows. |
 
-**Strengths:** The zero-framework approach is bold and well-executed. `main.bundle.js` consolidates scripts with individual-file fallback. CI pipeline added. Structured JSON logging in all Netlify Functions. Test count expanded.
+**Strengths:** The zero-framework approach is bold and well-executed. `main.bundle.js` / `main.bundle.min.js` consolidate shared scripts with individual-file fallback. CI pipeline added. Structured JSON logging in all Netlify Functions. Playwright coverage now protects critical frontend behavior in addition to backend logic.
 
-**Weaknesses:** No frontend component tests or E2E tests. JS still not minified.
+**Weaknesses:** There is still no component-level frontend test layer, and the broader page-specific script surface outside the shared main bundle is not yet fully bundled/minified.
 
 ---
 
-### 5. Performance — **A- (91/100)**
+### 5. Performance — **A (93/100)**
 
 | Criterion | Score | Notes |
 |-----------|-------|-------|
 | CSS delivery | 9/10 | Single compiled stylesheet with `<link rel="preload">`. No render-blocking surprises. |
-| JavaScript loading | 8/10 | `main.bundle.js` loaded first with individual-file fallback. `defer` added to all script tags across all pages. |
+| JavaScript loading | 9/10 | `main.bundle.min.js` is loaded first with unminified and individual-file fallbacks. `defer` added to all script tags across all pages. |
 | Asset optimization | 7/10 | SVGs are lightweight but no image optimization pipeline exists. No WebP/AVIF conversion. |
-| Caching strategy | 8/10 | Netlify CDN provides edge caching. localStorage used for theme/state. No service worker. |
+| Caching strategy | 9/10 | Netlify CDN provides edge caching. localStorage used for theme/state. A production-only service worker adds offline/cache support for core pages and shared assets. |
 | Third-party scripts | 10/10 | Minimal: only Supabase client and Stripe. No analytics scripts, social widgets, or ad trackers. |
 | Critical rendering path | 9/10 | Theme set inline before styles load (prevents FOUC). CSS preloaded. All JS deferred site-wide. |
 | Font loading | 8/10 | System fallback fonts specified. No FOIT issues with web fonts. |
@@ -113,13 +113,13 @@
 | Lazy loading | 9/10 | `loading="lazy"` added to all below-fold images across all pages. |
 | CDN utilization | 10/10 | Netlify CDN with global edge distribution. Cloudflare Stream for video. |
 
-**Strengths:** `defer` on all scripts site-wide eliminates render-blocking JS. `loading="lazy"` now on all images. Bundle-first JS loading strategy reduces request count.
+**Strengths:** `defer` on all scripts site-wide eliminates render-blocking JS. `loading="lazy"` now on all images. Bundle-first JS loading strategy reduces request count, and the new service worker adds pragmatic offline support for core institute pages.
 
-**Weaknesses:** JS still not minified. No service worker for offline capability.
+**Weaknesses:** The shared main bundle is minified, but the broader page-specific script surface is still not fully consolidated behind a single production bundling strategy.
 
 ---
 
-### 6. Accessibility (a11y) — **A (96/100)**
+### 6. Accessibility (a11y) — **A (97/100)**
 
 | Criterion | Score | Notes |
 |-----------|-------|-------|
@@ -131,12 +131,12 @@
 | Reduced motion | 10/10 | `@media (prefers-reduced-motion: reduce)` kills all animations and transitions. |
 | High contrast mode | 10/10 | `@media (forced-colors: active)` adds visible borders to buttons, cards, nav. |
 | Form accessibility | 10/10 | Labels with `for` attributes, error messages with appropriate roles. ESQ-R `<legend>` elements fixed — were floating outside fieldset border due to browser-native behavior; anchored inside with `float: none`. |
-| Focus management | 8/10 | Focus ring variable (`--focus-ring`). Some dynamic content may not manage focus on state changes. |
+| Focus management | 9/10 | Focus ring variable (`--focus-ring`). Dynamic assessment and quiz results now receive focus and live-region treatment when they appear. |
 | Automated auditing | 9/10 | `check_accessibility.py` script validates structure, labels, headings. |
 
-**Strengths:** Contrast audit addressed the two systemic failures (light and muted text variables). ESQ-R section header bug fixed. Dark mode toggle now visible at all zoom levels.
+**Strengths:** Contrast audit addressed the two systemic failures (light and muted text variables). ESQ-R section header bug fixed. Dark mode toggle now visible at all zoom levels. Quiz and assessment result surfaces now behave more predictably for keyboard and assistive-technology users.
 
-**Weaknesses:** Dynamic content injection (quiz results, assessment outputs) may not consistently announce to screen readers.
+**Weaknesses:** Some secondary dynamic tools outside the main assessment flows could still use more explicit focus/announcement handling.
 
 ---
 
@@ -161,7 +161,7 @@
 
 ---
 
-### 8. Responsive Design — **A (93/100)**
+### 8. Responsive Design — **A (94/100)**
 
 | Criterion | Score | Notes |
 |-----------|-------|-------|
@@ -174,9 +174,9 @@
 | Print styles | 9/10 | Comprehensive print stylesheet: hides nav/footer, removes box shadows, shows link URLs, forces visible content. HTML credential docs (Capstone Rubric, Crosswalk Map) print-ready via `@media print` with `page-break-inside: avoid`. |
 | Breakpoint coverage | 9/10 | 4 breakpoints: 1024px, 768px, 480px + forced-colors. Good coverage. |
 | Form adaptation | 9/10 | Forms stack vertically on mobile. Buttons go full-width. |
-| Navigation adaptation | 10/10 | Desktop links collapse to off-canvas mobile menu with proper aria-expanded toggling. |
+| Navigation adaptation | 10/10 | Desktop links collapse to off-canvas mobile menu with proper aria-expanded toggling, and the breakpoint now shifts earlier to protect the logo/brand block on narrower desktop widths. |
 
-**Strengths:** Print stylesheet extended to cover the two new HTML credential documents. Touch targets and responsive behavior unchanged and solid.
+**Strengths:** Print stylesheet extended to cover the two new HTML credential documents. Touch targets remain solid, and the navigation now protects brand visibility by collapsing earlier instead of allowing desktop-link overflow.
 
 **Weaknesses:** No `srcset` for responsive images. No container queries for component-level responsiveness.
 
@@ -227,16 +227,16 @@
 | Category | Score | Grade | Change |
 |----------|-------|-------|--------|
 | 1. Content Quality & Depth | 96/100 | A | ↑ +1 |
-| 2. Information Architecture | 94/100 | A | ↑ +3 |
-| 3. Visual Design & UI | 93/100 | A- | ↑ +3 |
-| 4. Technical Implementation | 95/100 | A | ↑ +2 |
-| 5. Performance | 91/100 | A- | ↑ +4 |
-| 6. Accessibility | 96/100 | A | ↑ +3 |
+| 2. Information Architecture | 95/100 | A | ↑ +4 |
+| 3. Visual Design & UI | 94/100 | A | ↑ +4 |
+| 4. Technical Implementation | 96/100 | A | ↑ +3 |
+| 5. Performance | 93/100 | A | ↑ +6 |
+| 6. Accessibility | 97/100 | A | ↑ +4 |
 | 7. SEO | 97/100 | A | ↑ +6 |
-| 8. Responsive Design | 93/100 | A | — |
+| 8. Responsive Design | 94/100 | A | ↑ +1 |
 | 9. Security | 95/100 | A | — |
 | 10. Backend & Infrastructure | 94/100 | A- | ↑ +3 |
-| **Weighted Average** | **94/100** | **A** | **↑ +2** |
+| **Weighted Average** | **95/100** | **A** | **↑ +3** |
 
 ---
 
@@ -256,20 +256,20 @@
 
 ## Top 5 Improvement Opportunities
 
-1. **Minify JavaScript.** `main.bundle.js` exists and `defer` is in place, but the bundle isn't minified. Adding esbuild as a build step would reduce payload size meaningfully.
+1. **Consolidate more page-specific JavaScript.** The shared main bundle is now minified, but many page-level scripts still ship independently. Extending the production bundling strategy beyond `main.bundle.min.js` would further reduce request overhead.
 
 2. **Add visual media.** The site is almost entirely text and SVG diagrams. Photography or custom illustrations would improve first impressions and reduce cognitive load significantly.
 
-3. **Propagate Search nav link.** Client-side search is built and indexed, but the nav link only appears on the home page. A find-and-replace across all 57 HTML pages would complete the feature.
+3. **Deepen search and offline verification.** Search and offline support now exist, but they should be validated on the production domain with dedicated regression coverage for search state, offline fallback, and service-worker updates.
 
-4. **Expand E2E test coverage.** 22 unit tests for the backend logic is a good start, but there are no frontend component tests and no Playwright/Cypress E2E tests. Assessment scoring, auth flows, and quiz grading are the priority areas.
+4. **Expand E2E coverage beyond the current critical flows.** Playwright now covers nav, dark mode, skip links, ESQ-R, and module quiz flows. The next high-value additions are auth/account mode switching, search, checkout, and service-worker/offline behavior.
 
-5. **Service worker / offline mode.** The static content is ideal for a service worker. Offline reading for curriculum pages would be a meaningful UX upgrade with minimal implementation complexity.
+5. **Add richer original media.** The site is stronger visually than before, but it still leans on SVGs and documentary-style surfaces. Original photography or custom illustration would be the clearest remaining jump in perceived quality.
 
 ---
 
 ## Conclusion
 
-The Executive Functioning Institute website has moved from **A- (92)** to **A (94)**. The improvements span every category: dark mode is fully repaired, the credential documents are now professionally designed, site search is operational, the CI pipeline is wired up, structured logging is in place, and the contrast audit brought accessibility above WCAG AA site-wide.
+The Executive Functioning Institute website has moved from **A- (92)** to **A (95)**. The improvements now span every category: dark mode is fully repaired, the credential documents are professionally designed, site search runs locally, offline support is in place for core reading surfaces, Playwright E2E coverage protects key frontend flows, and the flagship pages use stronger artifact/media layouts.
 
-The remaining gaps are operational rather than architectural — JS minification, visual media, and test coverage. The foundation is production-grade.
+The remaining gaps are now mostly refinement rather than foundation: broader production bundling for page-level scripts, richer original media, and deeper live-domain verification of the new search/offline surfaces. The foundation is production-grade.

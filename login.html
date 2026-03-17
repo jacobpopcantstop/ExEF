@@ -47,8 +47,8 @@
     <div class="container container--narrow">
       <div class="text-center fade-in" style="margin-bottom:var(--space-2xl);">
         <div class="nav__logo-icon" style="width:64px;height:64px;font-size:1.5rem;margin:0 auto var(--space-lg);">EFI</div>
-        <h1>Welcome Back</h1>
-        <p class="lead">Log in to access your dashboard, purchase records, released grading results, and certificate verification links.</p>
+        <h1 id="auth-hero-title">Welcome Back</h1>
+        <p id="auth-hero-lead" class="lead">Log in to access your dashboard, purchase records, released grading results, and certificate verification links.</p>
       </div>
 
       <!-- Login Form -->
@@ -141,15 +141,29 @@
 
     var loginPanel = document.getElementById('login-panel');
     var registerPanel = document.getElementById('register-panel');
+    var heroTitle = document.getElementById('auth-hero-title');
+    var heroLead = document.getElementById('auth-hero-lead');
+
+    function setAuthMode(mode) {
+      var isRegister = mode === 'register';
+      loginPanel.style.display = isRegister ? 'none' : 'block';
+      registerPanel.style.display = isRegister ? 'block' : 'none';
+      if (heroTitle) {
+        heroTitle.textContent = isRegister ? 'Welcome' : 'Welcome Back';
+      }
+      if (heroLead) {
+        heroLead.textContent = isRegister
+          ? 'Create an account to access your EFI dashboard, keep purchases attached to one member record, and track certification progress over time.'
+          : 'Log in to access your dashboard, purchase records, released grading results, and certificate verification links.';
+      }
+    }
 
     document.getElementById('show-register').addEventListener('click', function() {
-      loginPanel.style.display = 'none';
-      registerPanel.style.display = 'block';
+      setAuthMode('register');
     });
 
     document.getElementById('show-login').addEventListener('click', function() {
-      registerPanel.style.display = 'none';
-      loginPanel.style.display = 'block';
+      setAuthMode('login');
     });
 
     // Login

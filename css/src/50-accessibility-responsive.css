@@ -1,4 +1,11 @@
 /* --- Responsive --- */
+@media (max-width: 1500px) {
+  .nav .nav__logo > span {
+    max-width: 10rem;
+    font-size: 0.8rem;
+  }
+}
+
 @media (max-width: 1320px) {
   .nav__inner {
     padding: 0 var(--space-lg);
@@ -40,7 +47,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1500px) {
   html { font-size: 15px; }
 
   h1 { font-size: 2rem; }

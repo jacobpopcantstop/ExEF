@@ -29,6 +29,13 @@
   var downloadPdfBtn = document.getElementById('esqr-download-pdf-btn');
   var shareBtn = document.getElementById('esqr-share-btn');
 
+  if (resultsSection) {
+    resultsSection.setAttribute('role', 'region');
+    resultsSection.setAttribute('aria-live', 'polite');
+    resultsSection.setAttribute('aria-labelledby', 'esqr-result-title');
+    resultsSection.tabIndex = -1;
+  }
+
   var HISTORY_KEY = 'efi_esqr_history';
   var RESULT_KEY = 'efi_esqr_results';
   var DRAFT_KEY = 'efi_esqr_draft_v2';
@@ -1100,6 +1107,7 @@
     clearDraft();
     if (resultsSection) resultsSection.hidden = false;
     if (resultsSection) resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (resultsSection) resultsSection.focus();
     setShareStatus('Result ready. Copy, export, save, or continue into the next tool.');
   }
 
@@ -1164,6 +1172,8 @@
         lastResultsPayload = null;
         updateProgress();
         setShareStatus('Questionnaire reset.');
+        var firstQuestion = form.querySelector('input[type="radio"]');
+        if (firstQuestion) firstQuestion.focus();
       });
     }
 

@@ -1261,6 +1261,10 @@
     resultsSection.id = 'quiz-results';
     resultsSection.style.display = 'none';
     resultsSection.className = 'module-quiz__results';
+    resultsSection.setAttribute('role', 'region');
+    resultsSection.setAttribute('aria-live', 'polite');
+    resultsSection.setAttribute('aria-label', 'Module quiz results');
+    resultsSection.tabIndex = -1;
     resultsSection.style.marginTop = 'var(--space-xl)';
     resultsSection.style.padding = 'var(--space-lg)';
     resultsSection.style.background = 'var(--color-bg-alt)';
@@ -1537,6 +1541,7 @@
     if (controls) controls.style.display = 'none';
 
     document.getElementById('quiz-questions').style.display = 'none';
+    resultsDiv.focus();
   }
 
   function getResultsMessage(percentage) {
@@ -1554,6 +1559,8 @@
     document.getElementById('quiz-questions').style.display = 'block';
     document.querySelector('.module-quiz__controls').style.display = 'flex';
     renderQuestion(0);
+    var firstOption = document.querySelector('#quiz-questions input[type="radio"]');
+    if (firstOption) firstOption.focus();
   }
 
   document.addEventListener('DOMContentLoaded', function() {

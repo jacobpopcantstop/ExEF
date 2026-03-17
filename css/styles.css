@@ -302,6 +302,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-sm);
   height: 74px;
 }
 
@@ -414,6 +415,9 @@ p {
   display: flex;
   align-items: center;
   gap: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: flex-end;
 }
 
 .nav__cluster {
@@ -453,6 +457,7 @@ p {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  white-space: nowrap;
   border-radius: 0;
   border-bottom: 2px solid transparent;
   transition: color var(--transition), background-color var(--transition), border-color var(--transition);
@@ -3395,6 +3400,31 @@ select.form-control {
 
 /* Source: css/src/50-accessibility-responsive.css */
 /* --- Responsive --- */
+@media (max-width: 1320px) {
+  .nav__inner {
+    padding: 0 var(--space-lg);
+  }
+
+  .nav__cluster {
+    gap: 0;
+  }
+
+  .nav__cluster + .nav__cluster {
+    margin-left: var(--space-sm);
+    padding-left: var(--space-sm);
+  }
+
+  .nav__link {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.77rem;
+    letter-spacing: 0.06em;
+  }
+
+  .nav__link--cta {
+    padding: 0.7rem 0.85rem;
+  }
+}
+
 @media (max-width: 1024px) {
   .grid--3 { grid-template-columns: repeat(2, 1fr); }
   .grid--4 { grid-template-columns: repeat(2, 1fr); }
@@ -4496,8 +4526,8 @@ select.form-control {
   background: rgba(255, 255, 255, 0.55);
   border: 1px solid rgba(22, 43, 60, 0.32);
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -4506,7 +4536,7 @@ select.form-control {
   color: var(--color-text);
   transition: background-color var(--transition), color var(--transition), border-color var(--transition);
   flex-shrink: 0;
-  margin-left: var(--space-sm);
+  margin-left: var(--space-xs);
 }
 
 .dark-toggle:hover {

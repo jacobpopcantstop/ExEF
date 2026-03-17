@@ -52,6 +52,22 @@
     return TRACKING_ENABLED && !!window.fetch;
   }
 
+  function registerServiceWorker() {
+    var host = window.location.hostname || '';
+    var isLocal = /^(localhost|127\.0\.0\.1)$/i.test(host);
+    var canRegister = 'serviceWorker' in navigator &&
+      window.location.protocol === 'https:' &&
+      !isLocal;
+
+    if (!canRegister) return;
+
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function (err) {
+        console.error('[EFI service worker] Registration failed:', err);
+      });
+    }, { once: true });
+  }
+
   function highlightActiveNavLinks() {
     var currentPage = window.location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('.nav__link').forEach(function (link) {
@@ -73,6 +89,8 @@
     revealStaticContent: revealStaticContent,
     safeSetLocalStorage: safeSetLocalStorage
   };
+
+  registerServiceWorker();
 
   var modulesReady = false;
   var domReady = document.readyState !== 'loading';

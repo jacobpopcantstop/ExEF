@@ -1,4 +1,29 @@
 /* --- Responsive --- */
+@media (max-width: 1320px) {
+  .nav__inner {
+    padding: 0 var(--space-lg);
+  }
+
+  .nav__cluster {
+    gap: 0;
+  }
+
+  .nav__cluster + .nav__cluster {
+    margin-left: var(--space-sm);
+    padding-left: var(--space-sm);
+  }
+
+  .nav__link {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.77rem;
+    letter-spacing: 0.06em;
+  }
+
+  .nav__link--cta {
+    padding: 0.7rem 0.85rem;
+  }
+}
+
 @media (max-width: 1024px) {
   .grid--3 { grid-template-columns: repeat(2, 1fr); }
   .grid--4 { grid-template-columns: repeat(2, 1fr); }

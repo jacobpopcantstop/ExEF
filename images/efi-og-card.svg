@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">The Executive Functioning Institute</title>
+  <desc id="desc">Science-based executive functioning education, tools, and certification.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f5f1e8"/>
+      <stop offset="100%" stop-color="#ebe4d7"/>
+    </linearGradient>
+    <pattern id="rules" width="84" height="84" patternUnits="userSpaceOnUse">
+      <path d="M84 0H0V84" fill="none" stroke="rgba(39,73,96,0.08)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#rules)"/>
+  <rect x="72" y="72" width="1056" height="486" fill="rgba(255,255,255,0.72)" stroke="#274960" stroke-opacity="0.18"/>
+  <rect x="72" y="72" width="10" height="486" fill="#7c5a2b"/>
+  <g font-family="'Iowan Old Style','Palatino Linotype','Book Antiqua',Georgia,serif" fill="#162b3c">
+    <text x="126" y="172" font-size="28" font-weight="700" letter-spacing="5">THE EXECUTIVE FUNCTIONING INSTITUTE</text>
+    <text x="126" y="272" font-size="72" font-weight="700">Science-based EF education</text>
+    <text x="126" y="350" font-size="72" font-weight="700">with visible standards</text>
+  </g>
+  <g font-family="'Avenir Next','Helvetica Neue','Segoe UI',sans-serif" fill="#243543">
+    <text x="126" y="432" font-size="30">Open curriculum, public tools, capstone rubric, and reviewer-led certification services.</text>
+  </g>
+  <g transform="translate(126 484)">
+    <rect width="210" height="54" fill="#274960"/>
+    <text x="24" y="35" font-family="'Avenir Next','Helvetica Neue','Segoe UI',sans-serif" font-size="24" font-weight="700" fill="#ffffff">Curriculum</text>
+    <rect x="232" width="268" height="54" fill="none" stroke="#274960"/>
+    <text x="256" y="35" font-family="'Avenir Next','Helvetica Neue','Segoe UI',sans-serif" font-size="24" font-weight="700" fill="#274960">Assessment Tools</text>
+  </g>
+</svg>

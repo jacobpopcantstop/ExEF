@@ -134,6 +134,10 @@
     gap: var(--space-md);
   }
 
+  .hero-sheet__ledger {
+    gap: var(--space-sm);
+  }
+
   .hero__evidence-item {
     padding-right: 0;
     padding-bottom: var(--space-md);
@@ -155,8 +159,13 @@
     justify-content: center;
   }
 
-  .hero__quickstart {
-    padding: var(--space-md);
+  .hero__evidence,
+  .curriculum-proof-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-proof__actions {
+    flex-direction: column;
   }
 
   .masthead-strip__grid {
@@ -183,6 +192,15 @@
     height: 38px;
   }
 
+  .curriculum-reading-room__step {
+    grid-template-columns: 1fr;
+  }
+
+  .curriculum-reading-room__num {
+    width: 40px;
+    height: 40px;
+  }
+
   .route-matrix {
     grid-template-columns: 1fr;
   }
@@ -197,8 +215,10 @@
   }
 
   .curriculum-masthead__grid,
+  .curriculum-reading-room,
   .curriculum-philosophy,
-  .launch-room {
+  .launch-room,
+  .artifact-board {
     grid-template-columns: 1fr;
   }
 
@@ -292,6 +312,7 @@
   .footer__bottom a,
   .module-nav a,
   .checklist li a,
+  .hero-proof__actions a,
   .hero-sheet__links a,
   .route-step a,
   .role-card p > a {
@@ -396,4 +417,3 @@
     border: 2px solid ButtonText;
   }
 }
-

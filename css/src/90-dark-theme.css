@@ -35,7 +35,7 @@
 }
 
 [data-theme="dark"] .nav {
-  background: rgba(18, 24, 39, 0.97);
+  background: rgba(18, 24, 39, 0.99);
   border-bottom-color: var(--color-border);
 }
 
@@ -58,8 +58,9 @@
 }
 
 [data-theme="dark"] .nav__link--cta {
-  background-color: var(--color-accent);
-  color: #fff;
+  background-color: rgba(127, 192, 255, 0.16);
+  border-color: rgba(127, 192, 255, 0.24);
+  color: #f5f8ff;
 }
 
 [data-theme="dark"] .nav__links {
@@ -120,7 +121,15 @@
 }
 
 [data-theme="dark"] .hero {
-  background: #141922;
+  background:
+    linear-gradient(180deg, rgba(18, 24, 39, 0.98), rgba(14, 18, 30, 0.98)),
+    repeating-linear-gradient(
+      90deg,
+      rgba(127, 192, 255, 0.04) 0,
+      rgba(127, 192, 255, 0.04) 1px,
+      transparent 1px,
+      transparent 84px
+    );
 }
 
 [data-theme="dark"] .hero__title {
@@ -163,6 +172,16 @@
   color: #b9cbe1;
 }
 
+[data-theme="dark"] .hero-sheet__ledger dt {
+  color: #9fb2cb;
+}
+
+[data-theme="dark"] .hero-sheet__ledger dd,
+[data-theme="dark"] .hero-sheet__ledger dd a,
+[data-theme="dark"] .hero-sheet__quote {
+  color: #f5f8ff;
+}
+
 [data-theme="dark"] .hero-sheet__title,
 [data-theme="dark"] .curriculum-facts strong,
 [data-theme="dark"] .about-masthead__facts strong,
@@ -201,6 +220,51 @@
   box-shadow: none;
 }
 
+[data-theme="dark"] .hero-proof,
+[data-theme="dark"] .curriculum-proof-card {
+  background:
+    linear-gradient(180deg, rgba(19, 27, 40, 0.98), rgba(19, 27, 40, 0.95)),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 33px,
+      rgba(127, 192, 255, 0.05) 33px,
+      rgba(127, 192, 255, 0.05) 34px
+    );
+  border-color: rgba(127, 192, 255, 0.18);
+}
+
+[data-theme="dark"] .hero-proof--contrast {
+  background:
+    linear-gradient(180deg, rgba(9, 14, 25, 0.98), rgba(6, 10, 18, 0.98)),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 33px,
+      rgba(255, 255, 255, 0.035) 33px,
+      rgba(255, 255, 255, 0.035) 34px
+    );
+}
+
+[data-theme="dark"] .hero-proof__label,
+[data-theme="dark"] .curriculum-proof-card .curriculum-kicker {
+  color: #b9cbe1;
+}
+
+[data-theme="dark"] .hero-proof__figure figcaption,
+[data-theme="dark"] .curriculum-dossier__media figcaption,
+[data-theme="dark"] .artifact-preview figcaption,
+[data-theme="dark"] .hero-sheet__caption {
+  color: #b9cbe1;
+}
+
+[data-theme="dark"] .artifact-preview img,
+[data-theme="dark"] .curriculum-dossier__media img,
+[data-theme="dark"] .hero-proof__figure img {
+  border-color: rgba(127, 192, 255, 0.2);
+  background: rgba(15, 23, 42, 0.82);
+}
+
 [data-theme="dark"] .visual-slot__frame {
   border-color: rgba(148, 163, 184, 0.32);
   background:
@@ -230,8 +294,22 @@
 
 [data-theme="dark"] .route-sheet__intro,
 [data-theme="dark"] .route-step p,
-[data-theme="dark"] .role-card p {
+[data-theme="dark"] .role-card p,
+[data-theme="dark"] .curriculum-reading-room__step p {
   color: #c2d0de;
+}
+
+[data-theme="dark"] .hero__quickstart {
+  background: rgba(19, 27, 40, 0.88);
+  border-color: rgba(127, 192, 255, 0.18);
+}
+
+[data-theme="dark"] .hero__quickstart p {
+  color: #c2d0de;
+}
+
+[data-theme="dark"] .hero__quickstart strong {
+  color: #f5f8ff;
 }
 
 [data-theme="dark"] .archive-panel__kicker {
@@ -391,7 +469,6 @@
   border-color: rgba(255, 255, 255, 0.34);
 }
 
-[data-theme="dark"] .hero__quickstart,
 [data-theme="dark"] .route-matrix__card {
   background:
     linear-gradient(180deg, rgba(26, 34, 48, 0.92), rgba(16, 24, 35, 0.94)),
@@ -405,12 +482,10 @@
   border-color: rgba(255, 255, 255, 0.12);
 }
 
-[data-theme="dark"] .hero__quickstart p,
 [data-theme="dark"] .route-matrix__card p {
   color: rgba(255, 255, 255, 0.76);
 }
 
-[data-theme="dark"] .hero__quickstart strong,
 [data-theme="dark"] .route-matrix__label,
 [data-theme="dark"] .route-matrix__card h2,
 [data-theme="dark"] .route-matrix__card h3 {
@@ -422,13 +497,23 @@
 [data-theme="dark"] .module-card,
 [data-theme="dark"] .store-card,
 [data-theme="dark"] .testimonial {
-  background: #1a2332;
+  background:
+    linear-gradient(180deg, rgba(26, 35, 50, 0.98), rgba(23, 31, 45, 0.98)),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 35px,
+      rgba(127, 192, 255, 0.04) 35px,
+      rgba(127, 192, 255, 0.04) 36px
+    );
   border-color: var(--color-border);
 }
 
 [data-theme="dark"] .section-header__tag {
-  background: rgba(74, 158, 218, 0.15);
-  color: var(--color-primary);
+  background: transparent;
+  color: #b9cbe1;
+  border-top-color: rgba(127, 192, 255, 0.24);
+  border-bottom-color: rgba(127, 192, 255, 0.12);
 }
 
 [data-theme="dark"] .section-cite {

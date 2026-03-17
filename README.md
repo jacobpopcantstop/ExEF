@@ -87,6 +87,12 @@ CSS now uses a tiny local build step while still shipping a single generated sty
   - `css/src/80-ui-extras.css` for dark-mode toggle, roadmap, and site-guide additions
   - `css/src/90-dark-theme.css` for dark theme overrides
 
+The shared frontend entry path also uses a small local JS bundling step:
+- Edit `js/main-analytics.js`, `js/main-learning-loop.js`, and `js/main-ui.js`
+- Rebuild with `python3 scripts/build_main_bundle.py`
+- Production pages still load `js/main.js`
+- `js/main.js` now prefers the generated `js/main.bundle.js` and falls back to the individual source modules if the bundle is missing
+
 For managed auth + durable persistence deployment, provision Supabase tables with `docs/supabase-schema.sql`.
 Set `EFI_SUBMISSIONS_CRON_SECRET` in production and rely on `netlify/functions/process-due-feedback.js` for delayed feedback release notifications.
 
@@ -99,6 +105,7 @@ Set `EFI_SUBMISSIONS_CRON_SECRET` in production and rely on `netlify/functions/p
 - `python3 scripts/check_ux_audit.py` — structural UX audit baseline.
 - `python3 scripts/check_console_logs.py` — blocks `console.log` and `debugger` in production JS.
 - `python3 scripts/build_css.py` — regenerates `css/styles.css` from `css/src/manifest.txt`.
+- `python3 scripts/build_main_bundle.py` — regenerates `js/main.bundle.js` from the shared `main-*` modules.
 - `python3 scripts/release_gate.py` — consolidated deployment gate.
 - `node --test tests/ai-rubric.test.mjs` — unit tests for rubric grading utilities.
 

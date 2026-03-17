@@ -77,7 +77,9 @@
   var modulesReady = false;
   var domReady = document.readyState !== 'loading';
   var modulesStarted = false;
-  var moduleFiles = ['main-analytics.js', 'main-learning-loop.js', 'main-ui.js'];
+  var bundledModuleFile = 'main.bundle.js';
+  var fallbackModuleFiles = ['main-analytics.js', 'main-learning-loop.js', 'main-ui.js'];
+  var fallbackLoadStarted = false;
 
   function runModules() {
     if (!modulesReady || !domReady || modulesStarted) return;
@@ -111,7 +113,7 @@
     return 'js/';
   }
 
-  function loadScriptsSequentially(files, done) {
+  function loadScriptsSequentially(files, done, errorHandler) {
     var base = getBasePath();
     var index = 0;
 
@@ -135,6 +137,10 @@
       script.onload = next;
       script.onerror = function () {
         console.error('[EFI main bootstrap] Failed to load module:', file);
+        if (typeof errorHandler === 'function') {
+          errorHandler(file, next);
+          return;
+        }
         next();
       };
       document.head.appendChild(script);
@@ -143,8 +149,23 @@
     next();
   }
 
-  loadScriptsSequentially(moduleFiles, function () {
+  function loadFallbackModules() {
+    if (fallbackLoadStarted) return;
+    fallbackLoadStarted = true;
+    loadScriptsSequentially(fallbackModuleFiles, function () {
+      modulesReady = true;
+      maybeRunModules();
+    });
+  }
+
+  loadScriptsSequentially([bundledModuleFile], function () {
     modulesReady = true;
     maybeRunModules();
+  }, function (file) {
+    if (file === bundledModuleFile) {
+      loadFallbackModules();
+      return;
+    }
+    loadFallbackModules();
   });
 })();

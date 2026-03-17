@@ -37,8 +37,8 @@
   --module-6: #148f77;
 
   /* Typography */
-  --font-heading: 'Merriweather', Georgia, serif;
-  --font-body: 'Avenir Next', 'Segoe UI', sans-serif;
+  --font-heading: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  --font-body: 'Avenir Next', 'Helvetica Neue', 'Segoe UI', sans-serif;
 
   /* Spacing */
   --space-xs: 0.25rem;
@@ -61,15 +61,15 @@
 
   /* Shadows */
   --shadow-sm: 0 1px 2px rgba(22, 43, 60, 0.06);
-  --shadow-md: 0 8px 18px rgba(22, 43, 60, 0.08);
-  --shadow-lg: 0 14px 30px rgba(22, 43, 60, 0.1);
-  --shadow-xl: 0 18px 36px rgba(22, 43, 60, 0.12);
+  --shadow-md: 0 6px 14px rgba(22, 43, 60, 0.06);
+  --shadow-lg: 0 10px 22px rgba(22, 43, 60, 0.08);
+  --shadow-xl: 0 14px 28px rgba(22, 43, 60, 0.1);
 
   /* Focus ring */
   --focus-ring: 0 0 0 3px rgba(36, 113, 163, 0.4);
 
   /* Transitions */
-  --transition: 0.3s ease;
+  --transition: 0.2s ease;
 }
 
 /* --- Reset & Base --- */
@@ -121,13 +121,13 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   background-image:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0)),
     repeating-linear-gradient(
       180deg,
       transparent 0,
-      transparent 41px,
-      rgba(36, 53, 67, 0.025) 41px,
-      rgba(36, 53, 67, 0.025) 42px
+      transparent 45px,
+      rgba(36, 53, 67, 0.016) 45px,
+      rgba(36, 53, 67, 0.016) 46px
     );
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
@@ -141,13 +141,13 @@ img {
 }
 
 a {
-  color: var(--color-primary-light);
+  color: var(--color-primary-dark);
   text-decoration: none;
   transition: color var(--transition);
 }
 
 a:hover {
-  color: var(--color-primary);
+  color: var(--color-accent-dark);
 }
 
 /* Global focus styles */
@@ -193,9 +193,9 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: var(--space-md);
 }
 
-h1 { font-size: 2.75rem; font-weight: 700; }
-h2 { font-size: 2rem; font-weight: 700; }
-h3 { font-size: 1.5rem; font-weight: 600; }
+h1 { font-size: 2.75rem; font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
+h3 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em; }
 h4 { font-size: 1.25rem; font-weight: 600; }
 h5 { font-size: 1.1rem; font-weight: 600; }
 
@@ -272,4 +272,3 @@ p {
 .gap-3xl { gap: var(--space-3xl); }
 .gap-2xl { gap: var(--space-2xl); }
 .gap-md { gap: var(--space-md); }
-

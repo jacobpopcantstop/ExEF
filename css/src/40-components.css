@@ -1,6 +1,14 @@
 /* --- Cards --- */
 .card {
-  background: var(--color-white);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 244, 237, 0.98)),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 35px,
+      rgba(22, 43, 60, 0.02) 35px,
+      rgba(22, 43, 60, 0.02) 36px
+    );
   border-radius: var(--border-radius-lg);
   padding: var(--space-2xl);
   border: 1px solid rgba(22, 43, 60, 0.16);
@@ -37,7 +45,15 @@
 /* --- Module Cards --- */
 .module-card {
   position: relative;
-  background: var(--color-white);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 245, 238, 0.98)),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 35px,
+      rgba(22, 43, 60, 0.018) 35px,
+      rgba(22, 43, 60, 0.018) 36px
+    );
   border-radius: var(--border-radius-lg);
   padding: var(--space-2xl);
   border: 1px solid rgba(22, 43, 60, 0.16);
@@ -146,11 +162,12 @@
 
 .section-header__tag {
   display: inline-block;
-  padding: 0.2rem 0.6rem 0.2rem 0;
+  padding: 0.18rem 0.75rem 0.18rem 0;
   background: transparent;
   color: var(--color-primary-dark);
   border-radius: 0;
-  border-bottom: 1px solid rgba(22, 43, 60, 0.16);
+  border-top: 1px solid rgba(22, 43, 60, 0.2);
+  border-bottom: 1px solid rgba(22, 43, 60, 0.1);
   font-size: 0.8rem;
   font-weight: 700;
   margin-bottom: var(--space-md);
@@ -186,14 +203,17 @@
 .feature-item {
   display: flex;
   gap: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(22, 43, 60, 0.1);
 }
 
 .feature-item__icon {
   flex-shrink: 0;
   width: 48px;
   height: 48px;
-  border-radius: var(--border-radius);
-  background: rgba(26, 82, 118, 0.08);
+  border-radius: 2px;
+  background: rgba(22, 43, 60, 0.08);
+  border: 1px solid rgba(22, 43, 60, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -656,6 +676,15 @@ blockquote cite {
   padding: var(--space-4xl) 0 var(--space-xl);
 }
 
+.footer__logo,
+.footer .nav__logo {
+  color: var(--color-white);
+}
+
+.footer .nav__logo:hover {
+  color: var(--color-white);
+}
+
 .footer__grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -686,6 +715,16 @@ blockquote cite {
   color: rgba(255,255,255,0.7);
   font-size: 0.95rem;
   margin-top: var(--space-md);
+}
+
+.footer__logo {
+  color: var(--color-white);
+}
+
+.footer__logo .nav__logo-icon {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.16);
+  color: var(--color-white);
 }
 
 .footer__brand--institutional p {
@@ -776,7 +815,16 @@ blockquote cite {
 
 /* --- CTA Section --- */
 .cta-section {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  background:
+    linear-gradient(180deg, rgba(18, 32, 43, 0.98), rgba(18, 32, 43, 0.98)),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 36px,
+      rgba(255, 255, 255, 0.04) 36px,
+      rgba(255, 255, 255, 0.04) 37px
+    );
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding: var(--space-4xl) 0;
   text-align: center;
   color: var(--color-white);
@@ -1175,4 +1223,3 @@ select.form-control {
   flex-wrap: wrap;
   gap: var(--space-md);
 }
-

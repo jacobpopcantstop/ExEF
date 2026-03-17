@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search | The Executive Functioning Institute</title>
+  <meta name="description" content="Search all EFI pages, modules, tools, and resources.">
+  <link rel="preload" href="css/styles.css" as="style">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.svg">
+  <meta name="robots" content="noindex">
+  <script>
+    (function () {
+      try {
+        var savedTheme = localStorage.getItem('efi_theme');
+        if (savedTheme) {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      } catch (err) {}
+    })();
+  </script>
+  <style>
+    .search-hero {
+      background: var(--color-surface, #f7f4ef);
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid var(--color-border, #e0d8cc);
+    }
+    .search-hero h1 {
+      margin: 0 0 1.25rem;
+    }
+    .search-form {
+      display: flex;
+      gap: 0.5rem;
+      max-width: 640px;
+    }
+    .search-form input[type="search"] {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 2px solid var(--color-border, #e0d8cc);
+      border-radius: 6px;
+      background: #fff;
+      color: inherit;
+      outline: none;
+    }
+    .search-form input[type="search"]:focus {
+      border-color: var(--color-accent, #7c5a2b);
+    }
+    .search-results-section {
+      padding: 2rem 0 4rem;
+    }
+    .search-status {
+      color: #666;
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+    .search-result-card {
+      display: block;
+      padding: 16px 20px;
+      margin: 12px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .search-result-card:hover {
+      border-color: var(--color-accent, #7c5a2b);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .search-result-card h3 {
+      margin: 0 0 8px;
+      color: var(--color-primary, #274960);
+      font-size: 1.05rem;
+    }
+    .search-result-card p {
+      margin: 0 0 8px;
+      color: #555;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .search-result-url {
+      font-size: 12px;
+      color: #888;
+    }
+    .search-no-results {
+      color: #666;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body class="page-search">
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Navigation -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">EFI</div>
+        <span>Executive Functioning Institute</span>
+      </a>
+      <div class="nav__links" id="nav-links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="curriculum.html" class="nav__link">Curriculum</a>
+        <a href="resources.html" class="nav__link">Resources</a>
+        <a href="coaching-home.html" class="nav__link">Coaching</a>
+        <a href="store.html" class="nav__link">Store</a>
+        <a href="certification.html" class="nav__link">Certification</a>
+        <span class="nav__auth"></span>
+        <a href="search.html" class="nav__link nav__link--active" aria-current="page">Search</a>
+      </div>
+      <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <main id="main-content">
+
+    <div class="search-hero">
+      <div class="container">
+        <h1>Search EFI</h1>
+        <form class="search-form" role="search" onsubmit="return false;">
+          <input
+            type="search"
+            id="search-input"
+            placeholder="Search modules, tools, frameworks…"
+            aria-label="Search site content"
+            autocomplete="off"
+            spellcheck="false"
+          >
+        </form>
+      </div>
+    </div>
+
+    <section class="search-results-section">
+      <div class="container">
+        <p class="search-status" id="search-status" aria-live="polite"></p>
+        <div id="search-results"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="index.html" class="nav__logo footer__logo">
+            <div class="nav__logo-icon">EFI</div>
+            <span>Executive Functioning Institute</span>
+          </a>
+          <p>An open-source program providing rigorous, science-based Executive Functioning Coaching Certification grounded in neuroscience and evidence-based practice.</p>
+        </div>
+        <div>
+          <h4>Program</h4>
+          <ul class="footer__links">
+            <li><a href="curriculum.html">Curriculum</a></li>
+            <li><a href="certification.html">Certification</a></li>
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="store.html">Store</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Modules</h4>
+          <ul class="footer__links">
+            <li><a href="module-1.html">Neuropsychology</a></li>
+            <li><a href="module-2.html">Assessment</a></li>
+            <li><a href="module-3.html">Coaching Framework</a></li>
+            <li><a href="module-4.html">Applied Methods</a></li>
+            <li><a href="module-5.html">Special Populations</a></li>
+            <li><a href="module-6.html">Professional Practice</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>EFI Reference Links</h4>
+          <ul class="footer__links">
+            <li><a href="about.html">About EFI</a></li>
+            <li><a href="about.html#models">Theoretical Models</a></li>
+            <li><a href="resources.html#reading">Reading Packets</a></li>
+            <li><a href="https://github.com/jacobpopcantstop/TheExecutiveFunctioningInstitute" target="_blank" rel="noopener">GitHub</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>The Executive Functioning Institute &mdash; Open-Source Education</span>
+        <span>Built on the research of Barkley, Brown, Dawson &amp; Guare, and Ward</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
+
+  <script src="js/nav-auth.js"></script>
+  <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js"></script>
+  <script>
+    let fuse;
+    const statusEl = document.getElementById('search-status');
+    const resultsEl = document.getElementById('search-results');
+
+    fetch('/data/search-index.json')
+      .then(r => r.json())
+      .then(pages => {
+        fuse = new Fuse(pages, {
+          keys: [
+            { name: 'title', weight: 0.7 },
+            { name: 'body', weight: 0.3 }
+          ],
+          includeScore: true,
+          threshold: 0.4,
+          minMatchCharLength: 2
+        });
+        statusEl.textContent = pages.length + ' pages indexed and ready to search.';
+
+        // Run search if query already in URL
+        const q = new URLSearchParams(location.search).get('q');
+        if (q) {
+          document.getElementById('search-input').value = q;
+          runSearch(q);
+        }
+      })
+      .catch(() => {
+        statusEl.textContent = 'Search index could not be loaded.';
+      });
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function runSearch(query) {
+      if (!fuse || !query.trim()) {
+        resultsEl.innerHTML = '';
+        statusEl.textContent = fuse ? '' : statusEl.textContent;
+        return;
+      }
+      const results = fuse.search(query).slice(0, 20);
+      if (results.length === 0) {
+        statusEl.textContent = '';
+        resultsEl.innerHTML = '<p class="search-no-results">No results found for "<strong>' +
+          escapeHtml(query) + '</strong>"</p>';
+        return;
+      }
+      statusEl.textContent = results.length + ' result' + (results.length === 1 ? '' : 's') + ' for "' + escapeHtml(query) + '"';
+      resultsEl.innerHTML = results.map(({ item }) => `
+        <a href="${escapeHtml(item.url)}" class="search-result-card">
+          <h3>${escapeHtml(item.title)}</h3>
+          <p>${escapeHtml(item.body.substring(0, 200))}…</p>
+          <span class="search-result-url">${escapeHtml(item.url)}</span>
+        </a>
+      `).join('');
+    }
+
+    document.getElementById('search-input').addEventListener('input', e => {
+      const q = e.target.value;
+      runSearch(q);
+      history.replaceState(null, '', q ? '?q=' + encodeURIComponent(q) : location.pathname);
+    });
+  </script>
+</body>
+</html>

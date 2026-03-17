@@ -134,14 +134,14 @@
       margin-bottom: 2px;
     }
     .passing ul li::before {
-      content: '✓';
+      content: '✓' / '';
       position: absolute;
       left: 0;
       color: #16A34A;
       font-size: 12px;
     }
     .needs-revision ul li::before {
-      content: '✗';
+      content: '✗' / '';
       position: absolute;
       left: 0;
       color: #DC2626;
@@ -201,6 +201,10 @@
     }
 
     /* Print */
+    @page {
+      margin: 0.75in;
+      size: letter;
+    }
     @media print {
       body {
         background: #fff;
@@ -210,9 +214,10 @@
       .page {
         max-width: 100%;
       }
-      @page {
-        margin: 0.75in;
-        size: letter;
+      .doc-footer a::after {
+        content: ' (' attr(href) ')';
+        font-size: 11px;
+        color: #44403C;
       }
       .passing, .needs-revision, .notes-callout {
         -webkit-print-color-adjust: exact;

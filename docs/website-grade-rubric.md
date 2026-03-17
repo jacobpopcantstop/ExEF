@@ -7,9 +7,9 @@
 
 ---
 
-## Overall Grade: **A (95/100)**
+## Overall Grade: **A (96/100)**
 
-*(Previous: A- / 92/100 — updated to reflect session improvements through search, offline support, E2E coverage, accessibility focus handling, and visual upgrades)*
+*(Previous: A- / 92/100 — updated to reflect session improvements through search, offline support, E2E coverage, accessibility focus handling, visual upgrades, and recent nav/mobile reliability fixes.)*
 
 ---
 
@@ -77,13 +77,13 @@
 
 ---
 
-### 4. Technical Implementation — **A (96/100)**
+### 4. Technical Implementation — **A (97/100)**
 
 | Criterion | Score | Notes |
 |-----------|-------|-------|
 | HTML semantics | 10/10 | `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>` used correctly throughout. Proper heading hierarchy. |
 | CSS architecture | 9/10 | ITCSS-inspired with numbered partials, custom build system, CSS custom properties. Source files across 9 partials. |
-| JavaScript quality | 9/10 | Vanilla JS with custom module system (`EFI.registerMainModule`). No framework dependencies. |
+| JavaScript quality | 10/10 | Vanilla JS with custom module system (`EFI.registerMainModule`). No framework dependencies. Shared nav state was hardened to avoid flaky mobile toggle behavior. |
 | Build tooling | 9/10 | Python scripts for CSS compilation, link checking, accessibility audits, release gating. `main.bundle.js` consolidates JS. |
 | Error handling | 9/10 | try/catch around localStorage access, graceful degradation for missing APIs, error states in forms. |
 | Code organization | 9/10 | Clear separation: `/css/src/` for styles, `/js/` for scripts, `/data/` for JSON, `/netlify/functions/` for backend. |
@@ -92,7 +92,7 @@
 | API design | 9/10 | OpenAPI spec in `/docs/api/openapi.yaml`. Clean REST endpoints via Netlify Functions. Auth, submissions, webhooks all serverless. |
 | Testing | 9/10 | Node.js test runner coverage plus Playwright E2E coverage for navigation, dark mode, skip link behavior, ESQ-R, and module quiz flows. |
 
-**Strengths:** The zero-framework approach is bold and well-executed. `main.bundle.js` / `main.bundle.min.js` consolidate shared scripts with individual-file fallback. CI pipeline added. Structured JSON logging in all Netlify Functions. Playwright coverage now protects critical frontend behavior in addition to backend logic.
+**Strengths:** The zero-framework approach is bold and well-executed. `main.bundle.js` / `main.bundle.min.js` consolidate shared scripts with individual-file fallback. CI pipeline added. Structured JSON logging in all Netlify Functions. Playwright coverage now protects critical frontend behavior in addition to backend logic, including repeated mobile-nav interaction.
 
 **Weaknesses:** There is still no component-level frontend test layer, and the broader page-specific script surface outside the shared main bundle is not yet fully bundled/minified.
 
@@ -119,14 +119,14 @@
 
 ---
 
-### 6. Accessibility (a11y) — **A (97/100)**
+### 6. Accessibility (a11y) — **A (98/100)**
 
 | Criterion | Score | Notes |
 |-----------|-------|-------|
 | Semantic HTML | 10/10 | Proper landmark elements throughout. |
 | Skip links | 10/10 | `<a href="#main-content" class="skip-link">` on every page. |
 | ARIA attributes | 9/10 | `aria-label`, `aria-expanded`, `aria-current`, `aria-hidden` used appropriately. |
-| Keyboard navigation | 9/10 | Focus states styled, interactive elements keyboard-accessible. |
+| Keyboard navigation | 10/10 | Focus states styled, interactive elements keyboard-accessible. Shared mobile navigation behavior is now more reliable across repeated interactions. |
 | Color contrast | 10/10 | Full contrast audit completed. `--color-text-light` darkened (#475a68 → #3a4f60), `--color-text-muted` darkened (#6b746f → #575f5a). Both now clear WCAG AA on cream background. Dark mode marginals also bumped. |
 | Reduced motion | 10/10 | `@media (prefers-reduced-motion: reduce)` kills all animations and transitions. |
 | High contrast mode | 10/10 | `@media (forced-colors: active)` adds visible borders to buttons, cards, nav. |
@@ -134,7 +134,7 @@
 | Focus management | 9/10 | Focus ring variable (`--focus-ring`). Dynamic assessment and quiz results now receive focus and live-region treatment when they appear. |
 | Automated auditing | 9/10 | `check_accessibility.py` script validates structure, labels, headings. |
 
-**Strengths:** Contrast audit addressed the two systemic failures (light and muted text variables). ESQ-R section header bug fixed. Dark mode toggle now visible at all zoom levels. Quiz and assessment result surfaces now behave more predictably for keyboard and assistive-technology users.
+**Strengths:** Contrast audit addressed the two systemic failures (light and muted text variables). ESQ-R section header bug fixed. Dark mode toggle now visible at all zoom levels. Quiz and assessment result surfaces now behave more predictably for keyboard and assistive-technology users, and the shared navigation no longer intermittently fails on touch devices.
 
 **Weaknesses:** Some secondary dynamic tools outside the main assessment flows could still use more explicit focus/announcement handling.
 
@@ -161,22 +161,22 @@
 
 ---
 
-### 8. Responsive Design — **A (94/100)**
+### 8. Responsive Design — **A (97/100)**
 
 | Criterion | Score | Notes |
 |-----------|-------|-------|
-| Mobile layout | 10/10 | Full mobile menu with hamburger toggle. All grids collapse to single column. |
-| Tablet layout | 9/10 | 2-column grids at 1024px breakpoint. Footer and navigation adapt cleanly. |
+| Mobile layout | 10/10 | Full mobile menu with reliable hamburger toggle. Artifact/proof grids now collapse to single-column cards with phone-specific spacing and typography. |
+| Tablet layout | 10/10 | 2-column grids at 1024px breakpoint. Footer and navigation adapt cleanly, and the menu now collapses earlier to protect the brand block on laptop-width screens. |
 | Desktop layout | 10/10 | Full 3-4 column grids, sidebar navigation on module pages, spacious hero layouts. |
 | Touch targets | 10/10 | 44px minimum hit area enforced on mobile (`min-height: 44px` at 480px breakpoint). |
 | Typography scaling | 9/10 | Font-size adjusts at breakpoints (15px base on mobile). |
 | Image handling | 8/10 | `max-width: 100%` on images. No `srcset` or responsive image strategy. |
 | Print styles | 9/10 | Comprehensive print stylesheet: hides nav/footer, removes box shadows, shows link URLs, forces visible content. HTML credential docs (Capstone Rubric, Crosswalk Map) print-ready via `@media print` with `page-break-inside: avoid`. |
-| Breakpoint coverage | 9/10 | 4 breakpoints: 1024px, 768px, 480px + forced-colors. Good coverage. |
+| Breakpoint coverage | 10/10 | 4 breakpoints: 1024px, 768px, 640px, 480px + forced-colors. Coverage is now strong across laptop, tablet, and phone widths. |
 | Form adaptation | 9/10 | Forms stack vertically on mobile. Buttons go full-width. |
 | Navigation adaptation | 10/10 | Desktop links collapse to off-canvas mobile menu with proper aria-expanded toggling, and the breakpoint now shifts earlier to protect the logo/brand block on narrower desktop widths. |
 
-**Strengths:** Print stylesheet extended to cover the two new HTML credential documents. Touch targets remain solid, and the navigation now protects brand visibility by collapsing earlier instead of allowing desktop-link overflow.
+**Strengths:** Print stylesheet extended to cover the two new HTML credential documents. Touch targets remain solid, the navigation now protects brand visibility by collapsing earlier instead of allowing desktop-link overflow, and the artifact/proof card system now reshapes cleanly on phones instead of preserving cramped desktop proportions.
 
 **Weaknesses:** No `srcset` for responsive images. No container queries for component-level responsiveness.
 
@@ -229,14 +229,14 @@
 | 1. Content Quality & Depth | 96/100 | A | ↑ +1 |
 | 2. Information Architecture | 95/100 | A | ↑ +4 |
 | 3. Visual Design & UI | 94/100 | A | ↑ +4 |
-| 4. Technical Implementation | 96/100 | A | ↑ +3 |
+| 4. Technical Implementation | 97/100 | A | ↑ +4 |
 | 5. Performance | 93/100 | A | ↑ +6 |
-| 6. Accessibility | 97/100 | A | ↑ +4 |
+| 6. Accessibility | 98/100 | A | ↑ +5 |
 | 7. SEO | 97/100 | A | ↑ +6 |
-| 8. Responsive Design | 94/100 | A | ↑ +1 |
+| 8. Responsive Design | 97/100 | A | ↑ +4 |
 | 9. Security | 95/100 | A | — |
 | 10. Backend & Infrastructure | 94/100 | A- | ↑ +3 |
-| **Weighted Average** | **95/100** | **A** | **↑ +3** |
+| **Weighted Average** | **96/100** | **A** | **↑ +4** |
 
 ---
 

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EFI Curriculum Standard Alignment Map</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #FAFAF9;
+      color: #1C1917;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 15px;
+      line-height: 1.7;
+      padding: 40px 20px 60px;
+    }
+
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* Header — identical brand treatment to Rubric */
+    .doc-header {
+      border-bottom: 2px solid #D97706;
+      padding-bottom: 16px;
+      margin-bottom: 32px;
+    }
+    .doc-header .institution {
+      font-family: system-ui, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #D97706;
+      margin-bottom: 4px;
+    }
+    .doc-header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1C1917;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    .doc-header .meta {
+      font-family: system-ui, sans-serif;
+      font-size: 12px;
+      color: #78716C;
+      margin-bottom: 12px;
+    }
+    .doc-header .purpose {
+      font-size: 13px;
+      color: #57534E;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* Section heading */
+    .section-label {
+      display: inline-block;
+      background: #FEF3C7;
+      color: #92400E;
+      font-family: system-ui, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1C1917;
+      margin-bottom: 16px;
+    }
+
+    /* Crosswalk table */
+    .crosswalk-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 36px;
+      page-break-inside: avoid;
+    }
+    .crosswalk-table thead tr {
+      border-bottom: 2px solid #D97706;
+    }
+    .crosswalk-table th {
+      font-family: system-ui, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #78716C;
+      padding: 8px 12px 8px 0;
+      text-align: left;
+    }
+    .crosswalk-table th:last-child { padding-right: 0; }
+
+    .crosswalk-table tbody tr {
+      border-bottom: 1px solid #E7E5E0;
+    }
+    .crosswalk-table tbody tr:last-child {
+      border-bottom: none;
+    }
+    .crosswalk-table td {
+      padding: 14px 12px 14px 0;
+      vertical-align: top;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .crosswalk-table td:last-child { padding-right: 0; }
+
+    /* Column widths */
+    .col-module  { width: 35%; }
+    .col-icf     { width: 25%; }
+    .col-theme   { width: 40%; }
+
+    .module-name {
+      font-weight: 700;
+      color: #1C1917;
+    }
+    .module-sub {
+      font-size: 12px;
+      color: #78716C;
+      font-style: italic;
+    }
+
+    .icf-badge {
+      display: inline-block;
+      background: #FEF3C7;
+      color: #92400E;
+      font-family: system-ui, sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 3px;
+      line-height: 1.4;
+    }
+
+    .theme-text {
+      color: #44403C;
+    }
+
+    /* References section */
+    .references {
+      margin-bottom: 28px;
+    }
+    .references .section-title {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+    .references ul {
+      list-style: none;
+      padding: 0;
+    }
+    .references ul li {
+      font-size: 14px;
+      color: #57534E;
+      padding-left: 20px;
+      position: relative;
+      margin-bottom: 4px;
+      font-style: italic;
+    }
+    .references ul li::before {
+      content: '·' / '';
+      position: absolute;
+      left: 6px;
+      color: #D97706;
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    /* Status note callout */
+    .status-callout {
+      border: 1px solid #E7E5E0;
+      border-left: 3px solid #78716C;
+      border-radius: 0 6px 6px 0;
+      background: #F5F5F4;
+      padding: 14px 16px;
+      margin-bottom: 32px;
+      page-break-inside: avoid;
+    }
+    .status-callout .callout-label {
+      font-family: system-ui, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #78716C;
+      margin-bottom: 6px;
+    }
+    .status-callout p {
+      font-size: 13px;
+      color: #57534E;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .doc-footer {
+      border-top: 1px solid #E7E5E0;
+      padding-top: 16px;
+      font-family: system-ui, sans-serif;
+      font-size: 12px;
+      color: #78716C;
+      text-align: center;
+    }
+    .doc-footer a {
+      color: #D97706;
+      text-decoration: none;
+    }
+
+    /* Print */
+    @page { margin: 0.75in; size: letter; }
+
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+        font-size: 13px;
+      }
+      .page {
+        max-width: 100%;
+      }
+      .crosswalk-table, .status-callout {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        page-break-inside: avoid;
+      }
+      .icf-badge {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .doc-footer a::after {
+        content: ' (' attr(href) ')';
+        font-size: 11px;
+        color: #44403C;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header class="doc-header">
+      <div class="institution">The Executive Functioning Institute</div>
+      <h1>Curriculum Standard Alignment Map</h1>
+      <div class="meta">Certification Program &middot; v2026.02</div>
+      <p class="purpose">This map shows how EFI curriculum components align to ICF competency language and EF-specific professional standard themes.</p>
+    </header>
+
+    <div style="margin-bottom: 24px;">
+      <span class="section-label">Crosswalk</span>
+    </div>
+
+    <table class="crosswalk-table">
+      <thead>
+        <tr>
+          <th class="col-module">EFI Module</th>
+          <th class="col-icf">ICF Competency</th>
+          <th class="col-theme">Standard Theme</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-module">
+            <span class="module-name">Module 1.1</span><br>
+            <span class="module-sub">Inhibition and the Pause</span>
+          </td>
+          <td class="col-icf"><span class="icf-badge">Evokes Awareness</span></td>
+          <td class="col-theme"><span class="theme-text">Neuroscience foundation (PFC development, inhibition control)</span></td>
+        </tr>
+        <tr>
+          <td class="col-module">
+            <span class="module-name">Module 2.2</span><br>
+            <span class="module-sub">Intake and Goal Setting</span>
+          </td>
+          <td class="col-icf"><span class="icf-badge">Establishes Agreements</span></td>
+          <td class="col-theme"><span class="theme-text">Assessment practice using structured EF profiling workflows</span></td>
+        </tr>
+        <tr>
+          <td class="col-module">
+            <span class="module-name">Module 3</span><br>
+            <span class="module-sub">Coaching Architecture</span>
+          </td>
+          <td class="col-icf"><span class="icf-badge">Cultivates Trust and Safety</span></td>
+          <td class="col-theme"><span class="theme-text">Scope-of-practice boundaries and referral ethics</span></td>
+        </tr>
+        <tr>
+          <td class="col-module">
+            <span class="module-name">Module 4</span><br>
+            <span class="module-sub">Applied Methodologies</span>
+          </td>
+          <td class="col-icf"><span class="icf-badge">Facilitates Client Growth</span></td>
+          <td class="col-theme"><span class="theme-text">Intervention design and environmental engineering</span></td>
+        </tr>
+        <tr>
+          <td class="col-module">
+            <span class="module-name">Module 6</span><br>
+            <span class="module-sub">Ethics and Practice</span>
+          </td>
+          <td class="col-icf"><span class="icf-badge">Demonstrates Ethical Practice</span></td>
+          <td class="col-theme"><span class="theme-text">Professional conduct, privacy, and documentation quality</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="references">
+      <h2 class="section-title">Evidence References</h2>
+      <ul>
+        <li>ICF Core Competencies</li>
+        <li>NBEFC competency and credentialing guidance</li>
+        <li>Barkley (1997) inhibition and executive-function framework</li>
+      </ul>
+    </div>
+
+    <div class="status-callout">
+      <div class="callout-label">Status Note</div>
+      <p>This crosswalk is an internal alignment artifact and not a formal external accreditation claim.</p>
+    </div>
+
+    <footer class="doc-footer">
+      <a href="mailto:info@theexecutivefunctioninginstitute.com">info@theexecutivefunctioninginstitute.com</a>
+      &nbsp;&middot;&nbsp; &copy; The Executive Functioning Institute
+    </footer>
+
+  </div>
+</body>
+</html>

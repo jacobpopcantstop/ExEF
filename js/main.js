@@ -77,7 +77,8 @@
   var modulesReady = false;
   var domReady = document.readyState !== 'loading';
   var modulesStarted = false;
-  var bundledModuleFile = 'main.bundle.js';
+  var bundledModuleFile = 'main.bundle.min.js';
+  var bundledModuleFileFallback = 'main.bundle.js';
   var fallbackModuleFiles = ['main-analytics.js', 'main-learning-loop.js', 'main-ui.js'];
   var fallbackLoadStarted = false;
 
@@ -162,8 +163,14 @@
     modulesReady = true;
     maybeRunModules();
   }, function (file) {
+    // min bundle failed — try unminified bundle, then individual files
     if (file === bundledModuleFile) {
-      loadFallbackModules();
+      loadScriptsSequentially([bundledModuleFileFallback], function () {
+        modulesReady = true;
+        maybeRunModules();
+      }, function () {
+        loadFallbackModules();
+      });
       return;
     }
     loadFallbackModules();

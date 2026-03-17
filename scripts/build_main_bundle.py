@@ -6,10 +6,16 @@ from pathlib import Path
 import re
 import sys
 
+try:
+    import rjsmin
+    _HAS_RJSMIN = True
+except ImportError:
+    _HAS_RJSMIN = False
 
 ROOT = Path(__file__).resolve().parents[1]
 JS_DIR = ROOT / "js"
 OUTPUT = JS_DIR / "main.bundle.js"
+OUTPUT_MIN = JS_DIR / "main.bundle.min.js"
 SOURCES = [
     "main-analytics.js",
     "main-learning-loop.js",
@@ -54,6 +60,16 @@ def build() -> int:
     OUTPUT.write_text(output, encoding="utf-8")
     size = OUTPUT.stat().st_size
     print(f"Built {OUTPUT.relative_to(ROOT)} from {len(SOURCES)} source file(s), {size} bytes.")
+
+    if _HAS_RJSMIN:
+        minified = rjsmin.jsmin(output)
+        OUTPUT_MIN.write_text(minified, encoding="utf-8")
+        min_size = OUTPUT_MIN.stat().st_size
+        savings = round((1 - min_size / size) * 100)
+        print(f"Minified {OUTPUT_MIN.relative_to(ROOT)}: {min_size} bytes ({savings}% smaller).")
+    else:
+        print("rjsmin not installed — skipping minification. Run: pip install rjsmin")
+
     return 0
 
 

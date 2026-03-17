@@ -45,6 +45,8 @@
   padding: var(--space-xl);
   margin-bottom: var(--space-xl);
   background: var(--color-white);
+  /* Prevent legend from floating outside the fieldset border */
+  overflow: visible;
 }
 
 .esqr-skill-group__legend {
@@ -52,7 +54,11 @@
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--color-heading);
-  display: block;
+  /* Keep legend fully inside the fieldset */
+  float: none;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 var(--space-md);
 }
 
 .esqr-skill-group__domain {

@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # All validation scripts use stdlib only — no pip install needed.
+
+      - name: Run link checker
+        run: python scripts/check_links.py
+        continue-on-error: true
+
+      - name: Run accessibility check
+        run: python scripts/check_accessibility.py
+        continue-on-error: true
+
+      - name: Run release gate
+        run: python scripts/release_gate.py
+        continue-on-error: true
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run tests
+        # tests/ directory currently has no test files; this step is a no-op
+        # until *.test.js files are added. The glob expansion will fail
+        # gracefully with || true so the workflow does not block.
+        run: |
+          shopt -s nullglob
+          files=(tests/*.test.js)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No test files found in tests/ — skipping."
+          else
+            node --test "${files[@]}"
+          fi

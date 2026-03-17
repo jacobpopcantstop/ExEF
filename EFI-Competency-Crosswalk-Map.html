@@ -16,6 +16,18 @@
       padding: 40px 20px 60px;
     }
 
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
     .page {
       max-width: 720px;
       margin: 0 auto;
@@ -70,6 +82,9 @@
       border-radius: 3px;
       margin-bottom: 8px;
     }
+    .section-label-wrapper {
+      margin-bottom: 24px;
+    }
     .section-title {
       font-size: 18px;
       font-weight: 700;
@@ -82,7 +97,6 @@
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 36px;
-      page-break-inside: avoid;
     }
     .crosswalk-table thead tr {
       border-bottom: 2px solid #D97706;
@@ -142,6 +156,13 @@
 
     .theme-text {
       color: #44403C;
+    }
+
+    .table-note {
+      font-size: 12px;
+      color: #78716C;
+      font-style: italic;
+      margin-bottom: 28px;
     }
 
     /* References section */
@@ -228,6 +249,8 @@
       .crosswalk-table, .status-callout {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
+      }
+      .crosswalk-table tbody tr {
         page-break-inside: avoid;
       }
       .icf-badge {
@@ -252,11 +275,12 @@
       <p class="purpose">This map shows how EFI curriculum components align to ICF competency language and EF-specific professional standard themes.</p>
     </header>
 
-    <div style="margin-bottom: 24px;">
+    <div class="section-label-wrapper">
       <span class="section-label">Crosswalk</span>
     </div>
 
     <table class="crosswalk-table">
+      <caption class="sr-only">EFI Curriculum to ICF Competency Crosswalk</caption>
       <thead>
         <tr>
           <th class="col-module">EFI Module</th>
@@ -307,6 +331,8 @@
         </tr>
       </tbody>
     </table>
+
+    <p class="table-note">* Module 5 does not have a dedicated ICF competency mapping in this version of the crosswalk.</p>
 
     <div class="references">
       <h2 class="section-title">Evidence References</h2>

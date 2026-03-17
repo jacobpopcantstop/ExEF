@@ -777,3 +777,53 @@ body.has-topic-clusters.has-topic-clusters-plain main {
     justify-content: center;
   }
 }
+
+@media (max-width: 640px) {
+  .artifact-grid,
+  .artifact-board,
+  .store-ledger {
+    grid-template-columns: 1fr;
+  }
+
+  .artifact-grid {
+    gap: var(--space-md);
+  }
+
+  .artifact-card {
+    padding: var(--space-lg);
+    border-radius: var(--border-radius);
+  }
+
+  .artifact-card__label {
+    margin-bottom: var(--space-sm);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+  }
+
+  .artifact-card h3 {
+    font-size: 1.55rem;
+    line-height: 1.14;
+    margin-bottom: var(--space-sm);
+  }
+
+  .artifact-card p {
+    font-size: 0.98rem;
+    line-height: 1.65;
+  }
+
+  .artifact-card__links {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .artifact-card__links .btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .artifact-preview,
+  .visual-slot__frame {
+    min-height: 0;
+  }
+}

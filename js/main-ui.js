@@ -368,29 +368,60 @@ window.EFI.registerMainModule(function (shared) {
     }
   })();
 
-  var hamburgerSVG = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>';
-  var closeSVG = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
   var navToggle = document.querySelector('.nav__toggle');
   var navLinks = document.querySelector('.nav__links');
 
+  function buildNavIcon(isOpen) {
+    var svgNS = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '2');
+
+    function appendLine(x1, y1, x2, y2) {
+      var line = document.createElementNS(svgNS, 'line');
+      line.setAttribute('x1', x1);
+      line.setAttribute('y1', y1);
+      line.setAttribute('x2', x2);
+      line.setAttribute('y2', y2);
+      svg.appendChild(line);
+    }
+
+    if (isOpen) {
+      appendLine('18', '6', '6', '18');
+      appendLine('6', '6', '18', '18');
+    } else {
+      appendLine('3', '6', '21', '6');
+      appendLine('3', '12', '21', '12');
+      appendLine('3', '18', '21', '18');
+    }
+
+    return svg;
+  }
+
+  function setNavState(isOpen) {
+    if (!navToggle || !navLinks) return;
+    navLinks.classList.toggle('open', isOpen);
+    navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    navToggle.replaceChildren(buildNavIcon(isOpen));
+  }
+
   function closeNav() {
     if (navToggle && navLinks) {
-      navLinks.classList.remove('open');
-      navToggle.setAttribute('aria-expanded', 'false');
-      navToggle.innerHTML = hamburgerSVG;
+      setNavState(false);
     }
   }
 
   if (navToggle && navLinks) {
-    navToggle.addEventListener('click', function () {
+    setNavState(navLinks.classList.contains('open'));
+
+    navToggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
       var isOpen = navLinks.classList.contains('open');
-      if (isOpen) {
-        closeNav();
-      } else {
-        navLinks.classList.add('open');
-        navToggle.setAttribute('aria-expanded', 'true');
-        navToggle.innerHTML = closeSVG;
-      }
+      setNavState(!isOpen);
     });
 
     navLinks.querySelectorAll('.nav__link').forEach(function (link) {
@@ -408,12 +439,12 @@ window.EFI.registerMainModule(function (shared) {
 
     document.addEventListener('click', function (e) {
       if (!navLinks.classList.contains('open')) return;
-      if (navLinks.contains(e.target) || navToggle.contains(e.target)) return;
+      if (navLinks.contains(e.target) || e.target.closest('.nav__toggle')) return;
       closeNav();
     });
 
     window.addEventListener('resize', function () {
-      if (window.innerWidth > 900 && navLinks.classList.contains('open')) {
+      if (window.innerWidth > 1024 && navLinks.classList.contains('open')) {
         closeNav();
       }
     });

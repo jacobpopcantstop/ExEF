@@ -318,6 +318,65 @@
   }
 }
 
+@media (max-width: 640px) {
+  .artifact-grid,
+  .curriculum-proof-grid,
+  .artifact-board,
+  .store-ledger,
+  .curriculum-sequence,
+  .about-cluster-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .artifact-grid,
+  .curriculum-proof-grid {
+    gap: var(--space-md);
+  }
+
+  .artifact-card,
+  .curriculum-proof-card {
+    padding: var(--space-lg);
+    border-radius: var(--border-radius);
+  }
+
+  .artifact-card__label {
+    margin-bottom: var(--space-sm);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+  }
+
+  .artifact-card h3,
+  .curriculum-proof-card h3 {
+    font-size: 1.55rem;
+    line-height: 1.14;
+    margin-bottom: var(--space-sm);
+  }
+
+  .artifact-card p,
+  .curriculum-proof-card p {
+    font-size: 0.98rem;
+    line-height: 1.65;
+  }
+
+  .artifact-card__links,
+  .curriculum-proof-card__links {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .artifact-card__links .btn,
+  .curriculum-proof-card__links a {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .artifact-preview,
+  .visual-slot__frame {
+    min-height: 0;
+  }
+}
+
 @media (max-width: 480px) {
   .hero__title {
     font-size: 1.85rem;

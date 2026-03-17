@@ -219,6 +219,7 @@
   padding: var(--space-sm);
   color: var(--color-text);
   grid-column: 4;
+  touch-action: manipulation;
 }
 
 .nav__toggle svg {

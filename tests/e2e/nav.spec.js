@@ -19,6 +19,27 @@ test.describe('Navigation — Search link', () => {
     }
   });
 
+  test('mobile hamburger toggles open and closed reliably across repeated taps', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('.nav__toggle', { timeout: 10000 });
+
+    const toggle = page.locator('.nav__toggle');
+    const links = page.locator('.nav__links');
+
+    await toggle.click();
+    await expect(links).toHaveClass(/open/);
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await toggle.click();
+    await expect(links).not.toHaveClass(/open/);
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+
+    await toggle.click();
+    await expect(links).toHaveClass(/open/);
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  });
+
 });
 
 test.describe('Dark Mode', () => {

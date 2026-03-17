@@ -20,7 +20,7 @@ Add a Playwright E2E suite targeting a local Python static server. Three test fi
 ## Approach: Minimal package.json + Playwright (Option B)
 
 - `package.json` with `@playwright/test` as the only devDependency
-- `playwright.config.js` at repo root — Chromium, local server, screenshots on failure
+- `playwright.config.js` at repo root — Chromium, local Python server, screenshots on failure
 - Tests in `tests/e2e/` — separate from existing `tests/*.test.mjs` unit tests
 - CI: new `e2e` job in `.github/workflows/ci.yml`
 - Fix existing CI glob bug: `tests/*.test.js` → `tests/*.test.mjs`
@@ -63,6 +63,7 @@ Add a Playwright E2E suite targeting a local Python static server. Three test fi
 
 ```js
 const { defineConfig } = require('@playwright/test');
+const path = require('path');
 
 module.exports = defineConfig({
   testDir: './tests/e2e',
@@ -79,6 +80,7 @@ module.exports = defineConfig({
   webServer: {
     command: 'python3 -m http.server 8888',
     port: 8888,
+    cwd: path.resolve(__dirname),   // ensure server serves from repo root
     reuseExistingServer: !process.env.CI,
     timeout: 10000,
   },
@@ -91,26 +93,32 @@ module.exports = defineConfig({
 
 **Scope:** ESQ-R assessment flow on `esqr.html`
 
+**Key facts from codebase:**
+- 25 questions across 5 areas (5 per area)
+- Ratings 1–5 rendered as radio inputs inside `.esqr-item` elements
+- Results rendered into `#esqr-results` (element ID, not class)
+- Draft persisted to `localStorage` key `efi_esqr_draft_v2`
+
 ### Tests
 
 **1. Full quiz completion renders result card**
 - Navigate to `esqr.html`
-- For each of the 30 questions: select rating option "3" (middle value)
-- Assert progress bar advances
-- After final question, assert `.esqr-results` is visible
-- Assert at least one area score is rendered
-- Assert action plan section is present
+- Count all `.esqr-item` elements — drive the loop from the actual DOM count, not a hardcoded number
+- For each item: select the radio with value "3" (middle rating)
+- Assert `#esqr-results` becomes visible after the final answer
+- Assert at least one area score element is rendered within `#esqr-results`
+- Assert an action plan section is present
 
 **2. Draft persists across page reload**
 - Navigate to `esqr.html`
-- Answer the first 5 questions
+- Answer the first 5 questions (select value "3")
 - Reload the page
-- Assert the first 5 questions still show the previously selected values (localStorage draft)
+- Assert the first 5 questions show the previously selected values (localStorage key `efi_esqr_draft_v2` survives reload)
 
 **3. Progress bar reflects completion percentage**
 - Navigate to `esqr.html`
-- Answer 15 of 30 questions
-- Assert progress bar width is approximately 50%
+- Count total `.esqr-item` elements, answer exactly half
+- Assert the progress bar's fill width is approximately 50% (within ±10%)
 
 ---
 
@@ -118,26 +126,39 @@ module.exports = defineConfig({
 
 **Scope:** Module quiz pass/fail on `module-1.html`
 
+**Key facts from codebase:**
+- Quiz results rendered into `#quiz-results` with class `module-quiz__results`
+- Pass state: `#quiz-results` contains text "Passed"
+- Fail state: `#quiz-results` contains text "Needs Retake"
+- Pass threshold: 80%
+- Correct answer index varies per question — do not assume index 0 is always correct
+- Strategy: inject a seeded answer state via `page.evaluate()` / `localStorage` before navigating, OR interact with the rendered quiz and parse correct answers from `data-*` attributes if exposed
+
+**Approach for correct answers:** The quiz data (including `correct` indices) is loaded via `fetch('/data/module-quizzes.json')` into a module-local closure — it is not exposed on `window.EFI` and there are no `data-correct` attributes on option elements. The correct strategy is to fetch the quiz data directly in the test using `page.evaluate(() => fetch('/data/module-quizzes.json').then(r => r.json()))`, extract the correct answer index per question, then select the matching radio input for each rendered question by index.
+
 ### Tests
 
-**1. Passing the quiz (all correct answers)**
+**1. Passing the quiz renders pass state**
 - Navigate to `module-1.html`
 - Scroll to the quiz section
-- For each question, select the correct answer (first option, index 0 — quizzes are structured with correct answer first in the data)
+- For each question: select the correct answer by reading the `data-correct` attribute (or equivalent) on each option element, or drive from the quiz data loaded on the window object
 - Submit the quiz
-- Assert a pass state indicator is visible (`.quiz-result--pass` or similar)
-- Assert score displayed is ≥ 80%
+- Assert `#quiz-results` is visible
+- Assert `#quiz-results` contains text "Passed"
+- Assert displayed score is ≥ 80%
 
-**2. Failing the quiz (all wrong answers)**
+**2. Failing the quiz renders fail state and retry affordance**
 - Navigate to `module-1.html`
-- For each question, select index 1 (wrong answer)
+- For each question, deliberately select a wrong answer (not the correct one)
 - Submit
-- Assert fail state indicator is visible
-- Assert a "Try Again" or retry affordance is present
+- Assert `#quiz-results` is visible
+- Assert `#quiz-results` contains text "Needs Retake"
+- Assert a retry button or link is visible
 
-**3. Quiz progress is recorded in localStorage**
-- Complete quiz with passing score
-- Assert `localStorage.getItem('efi_action_plans_v1')` is non-null (quiz completion persisted)
+**3. Action plan is generated and written to localStorage after completion**
+- Complete quiz with any answers (pass or fail)
+- Assert `localStorage.getItem('efi_action_plans_v1')` is non-null
+- Note: this confirms action plan generation only — auth-gated progress syncing to Supabase is not testable in the static server context
 
 ---
 
@@ -145,28 +166,40 @@ module.exports = defineConfig({
 
 **Scope:** Navigation correctness, dark mode, search link, skip link
 
+**Key facts from codebase:**
+- Dark toggle: `.dark-toggle` button, injected dynamically by `main-ui.js`
+- Theme stored as `data-theme` on `<html>`, persisted to `localStorage` key `efi_theme`
+- Dark mode hero background: the cream value is `rgb(247, 243, 235)` — must NOT appear in dark mode
+- Skip link: `.skip-link` — first interactive element in the DOM, but `.dark-toggle` is injected dynamically which could affect tab order
+
 ### Tests
 
 **1. Search link present in nav on representative pages**
 - Load `index.html`, `curriculum.html`, `resources.html`
-- On each: assert nav contains `<a href="search.html">` with text "Search"
+- On each: assert nav contains an `<a>` with `href="search.html"` and visible text "Search"
 
-**2. Dark mode toggle switches theme and persists**
+**2. Dark mode toggle switches theme attribute**
 - Navigate to `index.html`
-- Assert `html[data-theme]` is not "dark" initially (or absent)
-- Click `.dark-toggle`
+- Assert `html` element does not have `data-theme="dark"` initially
+- Click `.dark-toggle` (wait for it — element is dynamically injected)
 - Assert `html[data-theme="dark"]`
-- Reload page
-- Assert `html[data-theme="dark"]` still set (localStorage persistence)
 
-**3. Dark mode hero background is dark (regression guard)**
-- Navigate to `index.html` in dark mode (set `data-theme="dark"` via localStorage before load)
-- Assert `.hero` computed background-color is not the cream value `rgb(247, 243, 235)`
-
-**4. Skip link is focusable**
+**3. Dark mode theme persists across page reload**
+- Set `localStorage.setItem('efi_theme', 'dark')` via `page.evaluate()` before navigating
 - Navigate to `index.html`
+- Assert `html[data-theme="dark"]` is set on load (before any interaction)
+
+**4. Dark mode hero background is dark (regression guard)**
+- Set `localStorage.setItem('efi_theme', 'dark')` via `page.evaluate()` before navigating
+- Navigate to `index.html`
+- Assert the computed background-color of `.hero` is NOT `rgb(247, 243, 235)` (the cream light-mode value)
+
+**5. Skip link is the first focusable element**
+- Navigate to `index.html`
+- Wait for page to be fully loaded (including dynamic script injection)
 - Press Tab once
-- Assert `.skip-link` is focused and visible
+- Assert `.skip-link` has focus
+- Note: if `.dark-toggle` injection shifts tab order, this test should be updated to reflect actual intended tab order, not assumed order
 
 ---
 
@@ -177,6 +210,7 @@ Add to `.github/workflows/ci.yml`:
 ```yaml
 e2e:
   runs-on: ubuntu-latest
+  needs: [test]   # only run if unit tests pass
   steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -188,7 +222,7 @@ e2e:
     - run: npx playwright test
 ```
 
-Also fix existing unit test glob:
+Fix existing unit test glob (tests are `.mjs`, not `.js`):
 ```yaml
 # Before:
 run: node --test tests/*.test.js || true
@@ -200,8 +234,8 @@ run: node --test 'tests/*.test.mjs' || true
 
 ## Out of Scope
 
-- Firefox and Safari (Chromium only for now)
-- Auth flows requiring Supabase credentials (no live backend in CI)
-- Store/payment flows (Stripe not available in static server context)
-- Visual regression screenshots (can be added later)
-- Page object models (only 3 test files — abstraction not warranted yet)
+- Firefox and Safari (Chromium only for speed — can be expanded later)
+- Auth flows requiring Supabase credentials (no live backend in static server context)
+- Store/payment flows (Stripe not available without backend)
+- Visual regression screenshots (can be added later with `toHaveScreenshot`)
+- Page object models (3 test files — abstraction not warranted yet)

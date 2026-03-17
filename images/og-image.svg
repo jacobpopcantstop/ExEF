@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#f5f1e8"/>
+
+  <!-- Left accent bar -->
+  <rect width="8" height="630" fill="#274960"/>
+
+  <!-- Bottom accent bar -->
+  <rect y="580" width="1200" height="50" fill="#274960"/>
+
+  <!-- Top gold line -->
+  <rect y="0" width="1200" height="6" fill="#7c5a2b"/>
+
+  <!-- Main content area -->
+  <!-- Institution name -->
+  <text x="80" y="200" font-family="Georgia, serif" font-size="28" fill="#7c5a2b" font-weight="bold" letter-spacing="2">THE EXECUTIVE FUNCTIONING INSTITUTE</text>
+
+  <!-- Main headline -->
+  <text x="80" y="290" font-family="Georgia, serif" font-size="64" fill="#274960" font-weight="bold">Science-Based</text>
+  <text x="80" y="370" font-family="Georgia, serif" font-size="64" fill="#274960" font-weight="bold">EF Coaching</text>
+  <text x="80" y="450" font-family="Georgia, serif" font-size="64" fill="#274960" font-weight="bold">Certification</text>
+
+  <!-- Tagline -->
+  <text x="80" y="530" font-family="Georgia, serif" font-size="24" fill="#4a4a4a">Grounded in Barkley · Brown · Dawson &amp; Guare · Ward</text>
+
+  <!-- EFI badge -->
+  <circle cx="1080" cy="200" r="90" fill="#274960"/>
+  <text x="1080" y="185" font-family="Georgia, serif" font-size="42" fill="#f5f1e8" font-weight="bold" text-anchor="middle">EFI</text>
+  <text x="1080" y="225" font-family="Georgia, serif" font-size="14" fill="#7c5a2b" text-anchor="middle">CERTIFIED</text>
+</svg>

@@ -44,14 +44,25 @@ jobs:
           node-version: '22'
 
       - name: Run tests
-        # tests/ directory currently has no test files; this step is a no-op
-        # until *.test.js files are added. The glob expansion will fail
-        # gracefully with || true so the workflow does not block.
-        run: |
-          shopt -s nullglob
-          files=(tests/*.test.js)
-          if [ ${#files[@]} -eq 0 ]; then
-            echo "No test files found in tests/ — skipping."
-          else
-            node --test "${files[@]}"
-          fi
+        run: node --test 'tests/*.test.mjs' || true
+
+  e2e:
+    name: E2E
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+
+      - name: Run Playwright E2E suite
+        run: npx playwright test

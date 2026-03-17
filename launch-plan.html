@@ -50,7 +50,25 @@
       var out = document.getElementById('gate-out-b');
       var submit = document.getElementById('gate-submit-b');
 
-      function message(html) { out.innerHTML = html; }
+      function clearNode(node) {
+        while (node.firstChild) node.removeChild(node.firstChild);
+      }
+
+      function message(text, linkHref, linkLabel, suffix) {
+        clearNode(out);
+        out.appendChild(document.createTextNode(text));
+        if (linkHref && linkLabel) {
+          var link = document.createElement('a');
+          link.href = linkHref;
+          link.target = '_blank';
+          link.rel = 'noopener';
+          link.textContent = linkLabel;
+          out.appendChild(link);
+        }
+        if (suffix) {
+          out.appendChild(document.createTextNode(suffix));
+        }
+      }
 
       form.addEventListener('submit', async function (e) {
         e.preventDefault();
@@ -84,7 +102,7 @@
             EFI.Analytics.track('lead_magnet_unlocked', { magnet: 'launch-plan', lead_id: leadData.lead_id || '' });
           }
 
-          message('Access granted: <a href="' + signData.url + '" target="_blank" rel="noopener">Download the 90-Day Launch Plan (PDF)</a>. Link expires in 15 minutes.');
+          message('Access granted: ', signData.url, 'Download the 90-Day Launch Plan (PDF)', '. Link expires in 15 minutes.');
         } catch (err) {
           if (window.EFI && EFI.Analytics) {
             EFI.Analytics.track('lead_magnet_error', { magnet: 'launch-plan', error: String(err.message || err) });

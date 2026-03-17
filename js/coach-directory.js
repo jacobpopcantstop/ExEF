@@ -65,6 +65,60 @@
     return div.innerHTML;
   }
 
+  function clearNode(node) {
+    while (node && node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function renderEmptyBody(targetBody, colspan, text) {
+    if (!targetBody) return;
+    clearNode(targetBody);
+    var row = document.createElement('tr');
+    var cell = document.createElement('td');
+    cell.colSpan = colspan;
+    cell.textContent = text;
+    row.appendChild(cell);
+    targetBody.appendChild(row);
+  }
+
+  function appendCell(row, text) {
+    var cell = document.createElement('td');
+    cell.textContent = text;
+    row.appendChild(cell);
+    return cell;
+  }
+
+  function appendCoachNameCell(row, record) {
+    var cell = document.createElement('td');
+    var strong = document.createElement('strong');
+    strong.textContent = record.name || '';
+    cell.appendChild(strong);
+    cell.appendChild(document.createElement('br'));
+    var meta = document.createElement('span');
+    meta.style.fontSize = '0.85rem';
+    meta.style.color = 'var(--color-text-muted)';
+    meta.textContent = 'ID: ' + (record.credential_id || '');
+    cell.appendChild(meta);
+    row.appendChild(cell);
+  }
+
+  function appendProfileCell(row, record) {
+    var cell = document.createElement('td');
+    if (record.website) {
+      var link = document.createElement('a');
+      link.href = record.website;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = 'Profile';
+      cell.appendChild(link);
+    } else {
+      var verifyLink = document.createElement('a');
+      verifyLink.href = 'verify.html?credential=' + encodeURIComponent(record.credential_id || '');
+      verifyLink.textContent = 'Verify ID';
+      cell.appendChild(verifyLink);
+    }
+    row.appendChild(cell);
+  }
+
   function formatDelivery(modes) {
     if (!Array.isArray(modes) || !modes.length) return 'Not listed';
     return modes.map(function (mode) {
@@ -94,26 +148,21 @@
     var filtered = publicRecords.filter(matchesFilters);
 
     if (!filtered.length) {
-      body.innerHTML = '<tr><td colspan="5">No coaches found for those filters.</td></tr>';
+      renderEmptyBody(body, 5, 'No coaches found for those filters.');
       countEl.textContent = '0 results';
       return;
     }
 
-    body.innerHTML = filtered.map(function (record) {
-      var profile = record.website
-        ? '<a href="' + escapeHTML(record.website) + '" target="_blank" rel="noopener">Profile</a>'
-        : '<a href="verify.html?credential=' + encodeURIComponent(record.credential_id) + '">Verify ID</a>';
-      var location = [record.city, record.state, record.zip].filter(Boolean).map(escapeHTML).join(', ');
-      return (
-        '<tr>' +
-          '<td><strong>' + escapeHTML(record.name) + '</strong><br><span style="font-size:0.85rem;color:var(--color-text-muted);">ID: ' + escapeHTML(record.credential_id) + '</span></td>' +
-          '<td>' + location + '</td>' +
-          '<td>' + escapeHTML(record.specialty) + '</td>' +
-          '<td>' + formatDelivery(record.delivery_modes) + '</td>' +
-          '<td>' + profile + '</td>' +
-        '</tr>'
-      );
-    }).join('');
+    clearNode(body);
+    filtered.forEach(function (record) {
+      var row = document.createElement('tr');
+      appendCoachNameCell(row, record);
+      appendCell(row, [record.city, record.state, record.zip].filter(Boolean).join(', '));
+      appendCell(row, record.specialty || '');
+      appendCell(row, formatDelivery(record.delivery_modes));
+      appendProfileCell(row, record);
+      body.appendChild(row);
+    });
 
     countEl.textContent = filtered.length + ' result' + (filtered.length === 1 ? '' : 's');
   }
@@ -199,21 +248,22 @@
           .then(function (payload) {
             var rows = payload.records || [];
             if (!rows.length) {
-              statusBody.innerHTML = '<tr><td colspan="4">No listing requests found for this email.</td></tr>';
+              renderEmptyBody(statusBody, 4, 'No listing requests found for this email.');
               return;
             }
-            statusBody.innerHTML = rows.map(function (row) {
+            clearNode(statusBody);
+            rows.forEach(function (row) {
               var reviewed = row.last_reviewed || row.updated_at;
-              return '<tr>' +
-                '<td>' + (row.credential_id || 'Pending') + '</td>' +
-                '<td>' + (row.moderation_status || 'pending') + '</td>' +
-                '<td>' + (row.verification_status || 'pending') + '</td>' +
-                '<td>' + (reviewed ? new Date(reviewed).toLocaleString() : 'N/A') + '</td>' +
-                '</tr>';
-            }).join('');
+              var tr = document.createElement('tr');
+              appendCell(tr, row.credential_id || 'Pending');
+              appendCell(tr, row.moderation_status || 'pending');
+              appendCell(tr, row.verification_status || 'pending');
+              appendCell(tr, reviewed ? new Date(reviewed).toLocaleString() : 'N/A');
+              statusBody.appendChild(tr);
+            });
           })
           .catch(function (err) {
-            statusBody.innerHTML = '<tr><td colspan="4">' + (err.message || 'Unable to load status.') + '</td></tr>';
+            renderEmptyBody(statusBody, 4, err.message || 'Unable to load status.');
           })
           .finally(function () {
             if (statusBtn) statusBtn.disabled = false;
@@ -249,7 +299,7 @@
       init({ records: payload.records }, payload.stats || null);
     })
     .catch(function () {
-      body.innerHTML = '<tr><td colspan="5">Directory is temporarily unavailable. Please try again shortly.</td></tr>';
+      renderEmptyBody(body, 5, 'Directory is temporarily unavailable. Please try again shortly.');
       countEl.textContent = 'Unavailable';
       if (statsEl) statsEl.textContent = 'Live directory source could not be reached.';
       bindEvents();

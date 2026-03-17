@@ -2,8 +2,9 @@
 
 Canonical outstanding roadmap: `docs/progress.md`
 
-1. Run consolidated gate: `python3 scripts/release_gate.py`.
-2. Confirm launch-blocker checks pass: `python3 scripts/check_launch_blockers.py`.
+1. Rebuild CSS bundle: `python3 scripts/build_css.py`.
+2. Run consolidated gate: `python3 scripts/release_gate.py`.
+3. Confirm launch-blocker checks pass: `python3 scripts/check_launch_blockers.py`.
 3. Validate role-restricted pages (`admin.html`, `telemetry.html`) with reviewer/admin and learner accounts.
 4. Verify checkout and post-purchase certificate route behavior.
 5. Verify ESQ-R export/share (PNG/PDF/share file) behavior.

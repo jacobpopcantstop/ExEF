@@ -1,6 +1,6 @@
 # Progress Tracker (Canonical)
 
-Last updated: March 13, 2026
+Last updated: March 17, 2026
 
 This is the single source of truth for **active needed changes**. Roadmaps/audits/todo wave logs are archived snapshots unless explicitly marked active here.
 
@@ -23,6 +23,17 @@ Requires Deployment/Operator Input
 
 ### Release gate
 - [ ] Run `python3 scripts/release_gate.py` and resolve all blockers.
+
+## External critique follow-up (Gemini review, March 17, 2026)
+
+Critique was directionally useful, but not every point is current. In particular, authenticated progress sync already exists; the remaining work is to audit which learner states are still local-only and harden those paths.
+
+- [ ] Refactor `js/main.js` into focused modules. Start by separating analytics/event delivery, shared UI behaviors, and dashboard learning-loop logic so future changes stop accumulating in one file.
+- [ ] Break `css/styles.css` into maintainable partials or layered files by concern (`base`, `layout`, `components`, `page/feature`) without changing the existing visual system.
+- [ ] Audit progress durability end to end. Confirm which states already sync for signed-in users and move any remaining high-value local-only state (`efi_action_plans_v1`, mastery/recheck queues, related dashboard data) onto the authenticated sync path or clearly label them as device-local.
+- [ ] Replace unsafe string-built UI rendering on user-adjacent surfaces with DOM construction (`createElement`, `textContent`). Prioritize `js/main.js`, then expand the audit to other files that still rely on `innerHTML`.
+- [ ] Run a mobile touch-target pass and enforce a 44x44 px minimum on inline utility links, pagination, and compact controls that currently require precision taps.
+- [ ] Add stylesheet preload on the main entry pages and verify it improves the critical rendering path without causing duplicate fetches or priority regressions.
 
 ## Recently Completed
 - ✅ Certificate review state now persists on purchase records and appears directly in the certificate review queue.

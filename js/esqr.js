@@ -193,19 +193,51 @@
     card.style.borderLeft = '4px solid var(--color-primary)';
 
     var dueLabel = plan.recheck && plan.recheck.due_at ? new Date(plan.recheck.due_at).toLocaleString() : 'upcoming';
-    var links = (plan.remediation_links || []).map(function (link) {
-      return '<li><a href="' + link.href + '">' + link.label + '</a></li>';
-    }).join('');
+    var heading = document.createElement('h4');
+    heading.style.marginTop = '0';
+    heading.textContent = 'Your 7-Day Action Plan';
+    card.appendChild(heading);
 
-    card.innerHTML =
-      '<h4 style="margin-top:0;">Your 7-Day Action Plan</h4>' +
-      '<p style="margin-bottom:var(--space-sm);"><strong>' + plan.focus.title + '</strong></p>' +
-      '<p style="color:var(--color-text-light);">' + plan.focus.summary + '</p>' +
-      '<p><strong>Do today:</strong> ' + (plan.actions.today[0] || '') + '</p>' +
-      '<p><strong>Do this week:</strong> ' + (plan.actions.this_week[0] || '') + '</p>' +
-      '<p><strong>Re-check by:</strong> ' + dueLabel + ' (' + plan.recheck.cadence + ')</p>' +
-      '<p style="color:var(--color-text-light);"><strong>Evidence prompt:</strong> ' + plan.actions.evidence_prompt + '</p>' +
-      (links ? '<ul class="checklist">' + links + '</ul>' : '');
+    var focusTitle = document.createElement('p');
+    focusTitle.style.marginBottom = 'var(--space-sm)';
+    var focusStrong = document.createElement('strong');
+    focusStrong.textContent = plan.focus.title || '';
+    focusTitle.appendChild(focusStrong);
+    card.appendChild(focusTitle);
+
+    var summary = document.createElement('p');
+    summary.style.color = 'var(--color-text-light)';
+    summary.textContent = plan.focus.summary || '';
+    card.appendChild(summary);
+
+    function appendLabeledParagraph(label, value, color) {
+      var p = document.createElement('p');
+      if (color) p.style.color = color;
+      var strong = document.createElement('strong');
+      strong.textContent = label;
+      p.appendChild(strong);
+      p.appendChild(document.createTextNode(' ' + (value || '')));
+      card.appendChild(p);
+    }
+
+    appendLabeledParagraph('Do today:', plan.actions.today[0] || '');
+    appendLabeledParagraph('Do this week:', plan.actions.this_week[0] || '');
+    appendLabeledParagraph('Re-check by:', dueLabel + ' (' + plan.recheck.cadence + ')');
+    appendLabeledParagraph('Evidence prompt:', plan.actions.evidence_prompt || '', 'var(--color-text-light)');
+
+    if (Array.isArray(plan.remediation_links) && plan.remediation_links.length) {
+      var linksList = document.createElement('ul');
+      linksList.className = 'checklist';
+      plan.remediation_links.forEach(function (linkData) {
+        var item = document.createElement('li');
+        var link = document.createElement('a');
+        link.href = linkData.href;
+        link.textContent = linkData.label;
+        item.appendChild(link);
+        linksList.appendChild(item);
+      });
+      card.appendChild(linksList);
+    }
 
     var row = document.createElement('div');
     row.className = 'button-group';
@@ -228,12 +260,50 @@
 
     var checkinWrap = document.createElement('div');
     checkinWrap.style.marginTop = 'var(--space-sm)';
-    checkinWrap.innerHTML =
-      '<p style="margin:0 0 var(--space-xs) 0;"><strong>Quick check-in</strong> (capture transfer evidence)</p>' +
-      '<div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:end;">' +
-      '<label style="display:flex;flex-direction:column;gap:4px;min-width:140px;">Self-rating (1-5)<select class="esqr-plan-checkin-rating"><option value="">Select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label>' +
-      '<label style="display:flex;flex-direction:column;gap:4px;min-width:220px;">Observable metric<input class="esqr-plan-checkin-metric" type="text" placeholder="ex: used support 3/5 days"></label>' +
-      '</div>';
+    var checkinTitle = document.createElement('p');
+    checkinTitle.style.margin = '0 0 var(--space-xs) 0';
+    var checkinStrong = document.createElement('strong');
+    checkinStrong.textContent = 'Quick check-in';
+    checkinTitle.appendChild(checkinStrong);
+    checkinTitle.appendChild(document.createTextNode(' (capture transfer evidence)'));
+    checkinWrap.appendChild(checkinTitle);
+
+    var checkinRow = document.createElement('div');
+    checkinRow.style.display = 'flex';
+    checkinRow.style.gap = 'var(--space-sm)';
+    checkinRow.style.flexWrap = 'wrap';
+    checkinRow.style.alignItems = 'end';
+
+    var ratingLabel = document.createElement('label');
+    ratingLabel.style.display = 'flex';
+    ratingLabel.style.flexDirection = 'column';
+    ratingLabel.style.gap = '4px';
+    ratingLabel.style.minWidth = '140px';
+    ratingLabel.textContent = 'Self-rating (1-5)';
+    var ratingSelect = document.createElement('select');
+    ratingSelect.className = 'esqr-plan-checkin-rating';
+    ['', '1', '2', '3', '4', '5'].forEach(function (value) {
+      var option = document.createElement('option');
+      option.value = value;
+      option.textContent = value || 'Select';
+      ratingSelect.appendChild(option);
+    });
+    ratingLabel.appendChild(ratingSelect);
+    checkinRow.appendChild(ratingLabel);
+
+    var metricLabel = document.createElement('label');
+    metricLabel.style.display = 'flex';
+    metricLabel.style.flexDirection = 'column';
+    metricLabel.style.gap = '4px';
+    metricLabel.style.minWidth = '220px';
+    metricLabel.textContent = 'Observable metric';
+    var metricInput = document.createElement('input');
+    metricInput.className = 'esqr-plan-checkin-metric';
+    metricInput.type = 'text';
+    metricInput.placeholder = 'ex: used support 3/5 days';
+    metricLabel.appendChild(metricInput);
+    checkinRow.appendChild(metricLabel);
+    checkinWrap.appendChild(checkinRow);
     var checkinBtn = document.createElement('button');
     checkinBtn.type = 'button';
     checkinBtn.className = 'btn btn--secondary btn--sm';
@@ -344,21 +414,46 @@
     card.className = 'card';
     card.style.marginTop = 'var(--space-md)';
     card.style.borderLeft = '4px solid var(--color-accent)';
-    card.innerHTML =
-      '<h4 style="margin-top:0;">48-Hour Reflection Prompt</h4>' +
-      '<p style="color:var(--color-text-light);">Edit or replace the starter text below, then save your commitment.</p>' +
-      '<textarea id="esqr-reflection-input" rows="5" style="width:100%;padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--border-radius);"></textarea>' +
-      '<div class="button-group" style="margin-top:var(--space-sm);">' +
-      '<button type="button" id="esqr-reflection-save" class="btn btn--secondary btn--sm">Save Reflection</button>' +
-      '</div>' +
-      '<p id="esqr-reflection-status" style="margin-top:var(--space-xs);font-size:0.9rem;color:var(--color-text-light);"></p>';
+    var heading = document.createElement('h4');
+    heading.style.marginTop = '0';
+    heading.textContent = '48-Hour Reflection Prompt';
+    card.appendChild(heading);
+
+    var intro = document.createElement('p');
+    intro.style.color = 'var(--color-text-light)';
+    intro.textContent = 'Edit or replace the starter text below, then save your commitment.';
+    card.appendChild(intro);
+
+    var input = document.createElement('textarea');
+    input.id = 'esqr-reflection-input';
+    input.rows = 5;
+    input.style.width = '100%';
+    input.style.padding = 'var(--space-sm)';
+    input.style.border = '1px solid var(--color-border)';
+    input.style.borderRadius = 'var(--border-radius)';
+    card.appendChild(input);
+
+    var buttonRow = document.createElement('div');
+    buttonRow.className = 'button-group';
+    buttonRow.style.marginTop = 'var(--space-sm)';
+    var save = document.createElement('button');
+    save.type = 'button';
+    save.id = 'esqr-reflection-save';
+    save.className = 'btn btn--secondary btn--sm';
+    save.textContent = 'Save Reflection';
+    buttonRow.appendChild(save);
+    card.appendChild(buttonRow);
+
+    var status = document.createElement('p');
+    status.id = 'esqr-reflection-status';
+    status.style.marginTop = 'var(--space-xs)';
+    status.style.fontSize = '0.9rem';
+    status.style.color = 'var(--color-text-light)';
+    card.appendChild(status);
 
     resultsSection.appendChild(card);
 
-    var input = card.querySelector('#esqr-reflection-input');
     if (input && prefill) { input.value = prefill; }
-    var save = card.querySelector('#esqr-reflection-save');
-    var status = card.querySelector('#esqr-reflection-status');
     if (!input || !save || !status) return;
 
     save.addEventListener('click', function () {
@@ -467,31 +562,64 @@
       grouped[question.areaId].push(question);
     });
 
-    var html = '';
+    clearNode(questionsWrap);
     config.areas.forEach(function (area, areaIndex) {
       var questions = grouped[area.id] || [];
-      html += '<fieldset class="esqr-skill-group fade-in visible" data-area="' + area.id + '">';
-      html += '<legend class="esqr-skill-group__legend">' + area.name + '</legend>';
-      html += '<p class="esqr-area-intro">' + area.intro + '</p>';
+      var fieldset = document.createElement('fieldset');
+      fieldset.className = 'esqr-skill-group fade-in visible';
+      fieldset.setAttribute('data-area', area.id);
+      var legend = document.createElement('legend');
+      legend.className = 'esqr-skill-group__legend';
+      legend.textContent = area.name;
+      fieldset.appendChild(legend);
+      var intro = document.createElement('p');
+      intro.className = 'esqr-area-intro';
+      intro.textContent = area.intro;
+      fieldset.appendChild(intro);
       questions.forEach(function (question, questionIndex) {
         var itemNumber = areaIndex * 5 + questionIndex + 1;
-        html += '<div class="esqr-item">';
-        html += '<p class="esqr-item__text"><span class="esqr-item__number">' + itemNumber + '.</span> ' + question.prompt + '</p>';
-        html += '<div class="esqr-rating" role="radiogroup" aria-label="Rating for question ' + itemNumber + '">';
-        html += '<span class="esqr-rating__label">' + scale.labels[0] + '</span>';
+        var item = document.createElement('div');
+        item.className = 'esqr-item';
+        var text = document.createElement('p');
+        text.className = 'esqr-item__text';
+        var number = document.createElement('span');
+        number.className = 'esqr-item__number';
+        number.textContent = itemNumber + '.';
+        text.appendChild(number);
+        text.appendChild(document.createTextNode(' ' + question.prompt));
+        item.appendChild(text);
+
+        var rating = document.createElement('div');
+        rating.className = 'esqr-rating';
+        rating.setAttribute('role', 'radiogroup');
+        rating.setAttribute('aria-label', 'Rating for question ' + itemNumber);
+        var lowLabel = document.createElement('span');
+        lowLabel.className = 'esqr-rating__label';
+        lowLabel.textContent = scale.labels[0];
+        rating.appendChild(lowLabel);
         for (var value = scale.min; value <= scale.max; value++) {
-          html += '<label class="esqr-rating__option">';
-          html += '<input type="radio" name="' + question.id + '" value="' + value + '" required>';
-          html += '<span>' + value + '</span>';
-          html += '</label>';
+          var label = document.createElement('label');
+          label.className = 'esqr-rating__option';
+          var input = document.createElement('input');
+          input.type = 'radio';
+          input.name = question.id;
+          input.value = value;
+          input.required = true;
+          label.appendChild(input);
+          var span = document.createElement('span');
+          span.textContent = String(value);
+          label.appendChild(span);
+          rating.appendChild(label);
         }
-        html += '<span class="esqr-rating__label">' + scale.labels[scale.labels.length - 1] + '</span>';
-        html += '</div>';
-        html += '</div>';
+        var highLabel = document.createElement('span');
+        highLabel.className = 'esqr-rating__label';
+        highLabel.textContent = scale.labels[scale.labels.length - 1];
+        rating.appendChild(highLabel);
+        item.appendChild(rating);
+        fieldset.appendChild(item);
       });
-      html += '</fieldset>';
+      questionsWrap.appendChild(fieldset);
     });
-    questionsWrap.innerHTML = html;
   }
 
   function applyDraft() {
@@ -717,45 +845,91 @@
   function renderChart(result) {
     var container = document.getElementById('esqr-chart');
     if (!container) return;
-    var html = '<div class="esqr-bars esqr-bars--single">';
+    clearNode(container);
+    var bars = document.createElement('div');
+    bars.className = 'esqr-bars esqr-bars--single';
     result.areas.slice().reverse().forEach(function (area) {
       var pct = (area.score / 5) * 100;
       var barClass = area.signal === 'regulation' ? 'esqr-bar--doing' : 'esqr-bar--thinking';
-      html += '<div class="esqr-bar-group">';
-      html += '<div class="esqr-bar-wrapper">';
-      html += '<div class="esqr-bar ' + barClass + '" style="height:' + pct + '%;" title="' + area.name + ': ' + area.score + '/5">';
-      html += '<span class="esqr-bar__value">' + area.score.toFixed(1) + '</span>';
-      html += '</div>';
-      html += '</div>';
-      html += '<div class="esqr-bar__label">' + area.name + '</div>';
-      html += '</div>';
+      var group = document.createElement('div');
+      group.className = 'esqr-bar-group';
+      var wrapper = document.createElement('div');
+      wrapper.className = 'esqr-bar-wrapper';
+      var bar = document.createElement('div');
+      bar.className = 'esqr-bar ' + barClass;
+      bar.style.height = pct + '%';
+      bar.title = area.name + ': ' + area.score + '/5';
+      var value = document.createElement('span');
+      value.className = 'esqr-bar__value';
+      value.textContent = area.score.toFixed(1);
+      bar.appendChild(value);
+      wrapper.appendChild(bar);
+      group.appendChild(wrapper);
+      var label = document.createElement('div');
+      label.className = 'esqr-bar__label';
+      label.textContent = area.name;
+      group.appendChild(label);
+      bars.appendChild(group);
     });
-    html += '</div>';
-    html += '<div class="esqr-chart-legend">';
-    html += '<span class="esqr-legend-item"><span class="esqr-legend-dot" style="background:var(--color-primary-light);"></span> Planning, activation, and attention systems</span>';
-    html += '<span class="esqr-legend-item"><span class="esqr-legend-dot" style="background:var(--color-accent);"></span> Regulation and flexibility</span>';
-    html += '</div>';
-    container.innerHTML = html;
+    container.appendChild(bars);
+    var legend = document.createElement('div');
+    legend.className = 'esqr-chart-legend';
+    [
+      { color: 'var(--color-primary-light)', text: 'Planning, activation, and attention systems' },
+      { color: 'var(--color-accent)', text: 'Regulation and flexibility' }
+    ].forEach(function (item) {
+      var legendItem = document.createElement('span');
+      legendItem.className = 'esqr-legend-item';
+      var dot = document.createElement('span');
+      dot.className = 'esqr-legend-dot';
+      dot.style.background = item.color;
+      legendItem.appendChild(dot);
+      legendItem.appendChild(document.createTextNode(' ' + item.text));
+      legend.appendChild(legendItem);
+    });
+    container.appendChild(legend);
   }
 
-  function renderAreaCards(items, type) {
-    return items.map(function (area) {
-      var cardClass = type === 'strength' ? 'esqr-result-card--strength' : 'esqr-result-card--weakness';
-      var summary = type === 'strength' ? area.strengthSummary : area.growthSummary;
-      var html = '<div class="esqr-result-card ' + cardClass + '">';
-      html += '<div class="esqr-result-card__header"><strong>' + area.name + '</strong><span class="esqr-result-card__score">' + area.score.toFixed(1) + '/5</span></div>';
-      html += '<span class="esqr-result-card__domain">' + area.band + '</span>';
-      html += '<p class="esqr-result-card__summary">' + summary + '</p>';
+  function clearNode(node) {
+    while (node && node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function renderAreaCards(container, items, type) {
+    if (!container) return;
+    clearNode(container);
+    (items || []).forEach(function (area) {
+      var card = document.createElement('div');
+      card.className = 'esqr-result-card ' + (type === 'strength' ? 'esqr-result-card--strength' : 'esqr-result-card--weakness');
+      var header = document.createElement('div');
+      header.className = 'esqr-result-card__header';
+      var strong = document.createElement('strong');
+      strong.textContent = area.name;
+      header.appendChild(strong);
+      var score = document.createElement('span');
+      score.className = 'esqr-result-card__score';
+      score.textContent = area.score.toFixed(1) + '/5';
+      header.appendChild(score);
+      card.appendChild(header);
+      var domain = document.createElement('span');
+      domain.className = 'esqr-result-card__domain';
+      domain.textContent = area.band;
+      card.appendChild(domain);
+      var summary = document.createElement('p');
+      summary.className = 'esqr-result-card__summary';
+      summary.textContent = type === 'strength' ? area.strengthSummary : area.growthSummary;
+      card.appendChild(summary);
       if (Array.isArray(area.strategies) && area.strategies.length) {
-        html += '<ul class="esqr-result-card__strategies">';
+        var list = document.createElement('ul');
+        list.className = 'esqr-result-card__strategies';
         area.strategies.forEach(function (strategy) {
-          html += '<li>' + strategy + '</li>';
+          var item = document.createElement('li');
+          item.textContent = strategy;
+          list.appendChild(item);
         });
-        html += '</ul>';
+        card.appendChild(list);
       }
-      html += '</div>';
-      return html;
-    }).join('');
+      container.appendChild(card);
+    });
   }
 
   function renderHistory() {
@@ -763,17 +937,24 @@
     var history = readJson(HISTORY_KEY, []);
     if (!history.length) {
       historyEl.style.display = 'none';
-      historyEl.innerHTML = '';
+      clearNode(historyEl);
       return;
     }
-    var html = '<h3 style="margin-top:0;">Recent ESQ-R snapshots</h3><ul class="checklist">';
+    clearNode(historyEl);
+    var heading = document.createElement('h3');
+    heading.style.marginTop = '0';
+    heading.textContent = 'Recent ESQ-R snapshots';
+    historyEl.appendChild(heading);
+    var list = document.createElement('ul');
+    list.className = 'checklist';
     history.slice(-5).reverse().forEach(function (entry) {
       var growth = Array.isArray(entry.growthAreas) && entry.growthAreas.length ? entry.growthAreas[0].name : 'No growth area';
       var strength = Array.isArray(entry.strengths) && entry.strengths.length ? entry.strengths[0].name : 'No strength';
-      html += '<li>' + new Date(entry.generatedAt).toLocaleString() + ' - strongest: ' + strength + '; main leverage point: ' + growth + '.</li>';
+      var item = document.createElement('li');
+      item.textContent = new Date(entry.generatedAt).toLocaleString() + ' - strongest: ' + strength + '; main leverage point: ' + growth + '.';
+      list.appendChild(item);
     });
-    html += '</ul>';
-    historyEl.innerHTML = html;
+    historyEl.appendChild(list);
     historyEl.style.display = 'block';
   }
 
@@ -854,18 +1035,38 @@
     if (titleEl) titleEl.textContent = narrative.title;
     if (ledeEl) ledeEl.textContent = narrative.lede;
     if (summaryEl) {
-      summaryEl.innerHTML =
-        '<p><strong>Overall score:</strong> ' + result.overallScore.toFixed(1) + '/5</p>' +
-        '<p><strong>Strongest current base:</strong> ' + result.strengths[0].name + '</p>' +
-        '<p style="margin-bottom:0;"><strong>Main leverage point:</strong> ' + result.growthAreas[0].name + '</p>';
+      clearNode(summaryEl);
+      [
+        { label: 'Overall score:', value: result.overallScore.toFixed(1) + '/5' },
+        { label: 'Strongest current base:', value: result.strengths[0].name },
+        { label: 'Main leverage point:', value: result.growthAreas[0].name, marginBottom: '0' }
+      ].forEach(function (item) {
+        var p = document.createElement('p');
+        if (item.marginBottom) p.style.marginBottom = item.marginBottom;
+        var strong = document.createElement('strong');
+        strong.textContent = item.label;
+        p.appendChild(strong);
+        p.appendChild(document.createTextNode(' ' + item.value));
+        summaryEl.appendChild(p);
+      });
     }
     if (signalSummaryEl) signalSummaryEl.textContent = signalSummary;
-    if (strengthsEl) strengthsEl.innerHTML = renderAreaCards(result.strengths, 'strength');
-    if (growthEl) growthEl.innerHTML = renderAreaCards(result.growthAreas, 'growth');
+    if (strengthsEl) renderAreaCards(strengthsEl, result.strengths, 'strength');
+    if (growthEl) renderAreaCards(growthEl, result.growthAreas, 'growth');
     if (nextToolsEl) {
-      nextToolsEl.innerHTML = nextTools.map(function (tool) {
-        return '<li><strong><a href="' + tool.href + '">' + tool.label + '</a>:</strong> ' + tool.copy + '</li>';
-      }).join('');
+      clearNode(nextToolsEl);
+      nextTools.forEach(function (tool) {
+        var item = document.createElement('li');
+        var strong = document.createElement('strong');
+        var link = document.createElement('a');
+        link.href = tool.href;
+        link.textContent = tool.label;
+        strong.appendChild(link);
+        strong.appendChild(document.createTextNode(':'));
+        item.appendChild(strong);
+        item.appendChild(document.createTextNode(' ' + tool.copy));
+        nextToolsEl.appendChild(item);
+      });
     }
     if (leadOfferPreview) {
       leadOfferPreview.hidden = false;

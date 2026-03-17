@@ -113,6 +113,7 @@ def check_netlify_headers() -> None:
 
 def main() -> int:
     try:
+        run_command(["python3", "scripts/build_css.py"], "css build")
         run_command(["node", "--check", "js/main.js", "js/auth.js", "js/esqr.js"], "js syntax")
         run_command(["python3", "scripts/check_links.py"], "local link check")
         run_command(["python3", "scripts/check_accessibility.py"], "accessibility check")

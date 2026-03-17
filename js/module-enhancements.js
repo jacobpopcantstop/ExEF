@@ -1,4 +1,56 @@
 (function () {
+  function clearNode(node) {
+    while (node && node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function appendTextLink(container, item, className) {
+    var link = document.createElement('a');
+    link.href = item.href;
+    if (item.external) {
+      link.target = '_blank';
+      link.rel = 'noopener';
+    }
+    if (className) link.className = className;
+    link.textContent = item.label;
+    container.appendChild(link);
+    return link;
+  }
+
+  function buildHighlightTitle(titleText, badgeText) {
+    var titleWrap = document.createElement('div');
+    titleWrap.className = 'module-reading-highlight__title';
+    var title = document.createElement('h3');
+    title.style.marginBottom = '0';
+    title.textContent = titleText;
+    var badge = document.createElement('span');
+    badge.className = 'module-reading-highlight__badge';
+    badge.textContent = badgeText;
+    titleWrap.appendChild(title);
+    titleWrap.appendChild(badge);
+    return titleWrap;
+  }
+
+  function buildChecklist(items, mapper) {
+    var list = document.createElement('ul');
+    list.className = 'checklist';
+    list.style.marginTop = 'var(--space-md)';
+    items.forEach(function (item) {
+      var li = document.createElement('li');
+      mapper(li, item);
+      list.appendChild(li);
+    });
+    return list;
+  }
+
+  function appendInfoParagraph(container, text) {
+    var p = document.createElement('p');
+    p.style.marginTop = 'var(--space-sm)';
+    p.style.color = 'var(--color-text-light)';
+    p.textContent = text;
+    container.appendChild(p);
+    return p;
+  }
+
   (function injectSectionCitationFootnotes() {
     var currentPage = window.location.pathname.split('/').pop() || 'index.html';
     if (!/^module-(1|2|3|4|5|6)\.html$/.test(currentPage)) return;
@@ -90,16 +142,20 @@
     var card = document.createElement('div');
     card.id = 'module-reading-highlight';
     card.className = 'card module-reading-highlight';
-    var html = '<div class="module-reading-highlight__title"><h3 style="margin-bottom:0;">Required Further Reading</h3><span class="module-reading-highlight__badge">Required</span></div>';
-    html += '<p style="margin-top:var(--space-sm);color:var(--color-text-light);">Complete these references before marking this module done. They are used by rubric-based grading and capstone evaluation.</p>';
-    html += '<ul class="checklist" style="margin-top:var(--space-md);">';
-    requiredReadings.forEach(function (reading) {
-      var external = /^https?:/.test(reading.url);
-      html += '<li><a href="' + reading.url + '"' + (external ? ' target="_blank" rel="noopener"' : '') + '>' + reading.title + '</a></li>';
-    });
-    html += '</ul>';
-    html += '<a href="resources.html#reading" class="btn btn--secondary btn--sm" style="margin-top:var(--space-md);">Open Complete Reading Packet</a>';
-    card.innerHTML = html;
+    card.appendChild(buildHighlightTitle('Required Further Reading', 'Required'));
+    appendInfoParagraph(card, 'Complete these references before marking this module done. They are used by rubric-based grading and capstone evaluation.');
+    card.appendChild(buildChecklist(requiredReadings, function (li, reading) {
+      appendTextLink(li, {
+        href: reading.url,
+        label: reading.title,
+        external: /^https?:/.test(reading.url)
+      });
+    }));
+    var packetLink = appendTextLink(card, {
+      href: 'resources.html#reading',
+      label: 'Open Complete Reading Packet'
+    }, 'btn btn--secondary btn--sm');
+    packetLink.style.marginTop = 'var(--space-md)';
 
     anchorSection.parentNode.insertBefore(card, anchorSection);
   })();
@@ -121,11 +177,16 @@
     var panel = document.createElement('div');
     panel.id = 'module-citation-panel';
     panel.className = 'card module-reading-highlight';
-    var html = '<div class="module-reading-highlight__title"><h3 style="margin-bottom:0;">Evidence & Citation Check</h3><span class="module-reading-highlight__badge">Reviewed</span></div>';
-    html += '<p style="margin-top:var(--space-sm);color:var(--color-text-light);">This module currently maps to the following foundational references:</p><ul class="checklist" style="margin-top:var(--space-md);">';
-    citations.forEach(function (item) { html += '<li>' + item + '</li>'; });
-    html += '</ul><a href="resources.html#reading" class="btn btn--secondary btn--sm" style="margin-top:var(--space-md);">Open Reading Citations</a>';
-    panel.innerHTML = html;
+    panel.appendChild(buildHighlightTitle('Evidence & Citation Check', 'Reviewed'));
+    appendInfoParagraph(panel, 'This module currently maps to the following foundational references:');
+    panel.appendChild(buildChecklist(citations, function (li, item) {
+      li.textContent = item;
+    }));
+    var citationsLink = appendTextLink(panel, {
+      href: 'resources.html#reading',
+      label: 'Open Reading Citations'
+    }, 'btn btn--secondary btn--sm');
+    citationsLink.style.marginTop = 'var(--space-md)';
     anchorSection.parentNode.insertBefore(panel, anchorSection);
   })();
 
@@ -148,17 +209,23 @@
     var panel = document.createElement('div');
     panel.id = 'module-assessment-preview';
     panel.className = 'card module-reading-highlight';
-    panel.innerHTML =
-      '<div class="module-reading-highlight__title"><h3 style="margin-bottom:0;">Tests + Assignments Preview</h3><span class="module-reading-highlight__badge">Enrollment Required</span></div>' +
-      '<p style="margin-top:var(--space-sm);color:var(--color-text-light);">This module includes one graded unit test and one applied assignment. Public pages show the framework; full assessment tools, scoring, and credential feedback unlock after paid enrollment.</p>' +
-      '<ul class="checklist" style="margin-top:var(--space-md);">' +
-      '<li><strong>Test Preview:</strong> ' + item.test + '</li>' +
-      '<li><strong>Assignment Preview:</strong> ' + item.assignment + '</li>' +
-      '</ul>' +
-      '<div class="button-group" style="margin-top:var(--space-md);">' +
-      '<a href="store.html" class="btn btn--primary btn--sm">View Paid Path</a>' +
-      '<a href="store.html" class="btn btn--secondary btn--sm">View Certification Pricing</a>' +
-      '</div>';
+    panel.appendChild(buildHighlightTitle('Tests + Assignments Preview', 'Enrollment Required'));
+    appendInfoParagraph(panel, 'This module includes one graded unit test and one applied assignment. Public pages show the framework; full assessment tools, scoring, and credential feedback unlock after paid enrollment.');
+    panel.appendChild(buildChecklist([
+      { label: 'Test Preview:', value: item.test },
+      { label: 'Assignment Preview:', value: item.assignment }
+    ], function (li, entry) {
+      var strong = document.createElement('strong');
+      strong.textContent = entry.label;
+      li.appendChild(strong);
+      li.appendChild(document.createTextNode(' ' + entry.value));
+    }));
+    var buttonGroup = document.createElement('div');
+    buttonGroup.className = 'button-group';
+    buttonGroup.style.marginTop = 'var(--space-md)';
+    appendTextLink(buttonGroup, { href: 'store.html', label: 'View Paid Path' }, 'btn btn--primary btn--sm');
+    appendTextLink(buttonGroup, { href: 'store.html', label: 'View Certification Pricing' }, 'btn btn--secondary btn--sm');
+    panel.appendChild(buttonGroup);
     anchorSection.parentNode.insertBefore(panel, anchorSection);
   })();
 
@@ -357,39 +424,57 @@
     var wrap = document.createElement('div');
     wrap.id = 'module-knowledge-check';
     wrap.className = 'card module-quiz';
-
-    var html =
-      '<div class="module-reading-highlight__title">' +
-        '<h3 style="margin-bottom:0;">Quick Knowledge Drill</h3>' +
-        '<span class="module-reading-highlight__badge">3 Questions</span>' +
-      '</div>' +
-      '<p style="color:var(--color-text-light);">Mixed recall, apply, and discriminate prompts. Answer all three to see your score and rationale.</p>';
+    wrap.appendChild(buildHighlightTitle('Quick Knowledge Drill', '3 Questions'));
+    appendInfoParagraph(wrap, 'Mixed recall, apply, and discriminate prompts. Answer all three to see your score and rationale.');
 
     check.items.forEach(function(item, idx) {
-      var optionsHtml = '';
-      item.options.forEach(function(option, optionIndex) {
-        optionsHtml +=
-          '<label class="module-quiz__option">' +
-            '<input type="radio" name="knowledge-check-' + idx + '" value="' + optionIndex + '">' +
-            '<span>' + option + '</span>' +
-          '</label>';
-      });
+      var group = document.createElement('div');
+      group.className = 'module-quiz__question-group';
+      group.style.marginTop = 'var(--space-md)';
 
-      html +=
-        '<div class="module-quiz__question-group" style="margin-top:var(--space-md);">' +
-          '<p class="module-quiz__question"><strong>' + (idx + 1) + '. ' + item.type + ':</strong> ' + item.question + '</p>' +
-          '<div class="module-quiz__options">' + optionsHtml + '</div>' +
-        '</div>';
+      var question = document.createElement('p');
+      question.className = 'module-quiz__question';
+      var strong = document.createElement('strong');
+      strong.textContent = (idx + 1) + '. ' + item.type + ':';
+      question.appendChild(strong);
+      question.appendChild(document.createTextNode(' ' + item.question));
+      group.appendChild(question);
+
+      var options = document.createElement('div');
+      options.className = 'module-quiz__options';
+      item.options.forEach(function(option, optionIndex) {
+        var label = document.createElement('label');
+        label.className = 'module-quiz__option';
+        var input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'knowledge-check-' + idx;
+        input.value = String(optionIndex);
+        var span = document.createElement('span');
+        span.textContent = option;
+        label.appendChild(input);
+        label.appendChild(span);
+        options.appendChild(label);
+      });
+      group.appendChild(options);
+      wrap.appendChild(group);
     });
 
-    html +=
-      '<div class="button-group" style="margin-top:var(--space-md);">' +
-        '<button type="button" class="btn btn--secondary btn--sm" id="knowledge-check-submit">Check Answers</button>' +
-        '<a href="store.html" class="btn btn--primary btn--sm">View Graded Path</a>' +
-      '</div>' +
-      '<div id="knowledge-check-result" aria-live="polite"></div>';
+    var actions = document.createElement('div');
+    actions.className = 'button-group';
+    actions.style.marginTop = 'var(--space-md)';
+    var submitButton = document.createElement('button');
+    submitButton.type = 'button';
+    submitButton.className = 'btn btn--secondary btn--sm';
+    submitButton.id = 'knowledge-check-submit';
+    submitButton.textContent = 'Check Answers';
+    actions.appendChild(submitButton);
+    appendTextLink(actions, { href: 'store.html', label: 'View Graded Path' }, 'btn btn--primary btn--sm');
+    wrap.appendChild(actions);
 
-    wrap.innerHTML = html;
+    var resultBox = document.createElement('div');
+    resultBox.id = 'knowledge-check-result';
+    resultBox.setAttribute('aria-live', 'polite');
+    wrap.appendChild(resultBox);
     anchor.parentNode.insertBefore(wrap, anchor);
 
     var submit = document.getElementById('knowledge-check-submit');
@@ -399,7 +484,7 @@
     submit.addEventListener('click', function () {
       var unanswered = [];
       var correctCount = 0;
-      var feedbackHtml = '<div style="margin-top:var(--space-sm);">';
+      var feedbackEntries = [];
 
       check.items.forEach(function(item, idx) {
         var selected = wrap.querySelector('input[name="knowledge-check-' + idx + '"]:checked');
@@ -410,9 +495,10 @@
         var chosen = Number(selected.value);
         var correct = chosen === item.answer;
         if (correct) correctCount += 1;
-        feedbackHtml +=
-          '<p style="margin:0 0 var(--space-xs) 0;"><strong>Q' + (idx + 1) + ':</strong> ' +
-          (correct ? '✅ Correct. ' : '❌ Not quite. ') + item.rationale + '</p>';
+        feedbackEntries.push({
+          label: 'Q' + (idx + 1) + ':',
+          message: (correct ? '✅ Correct. ' : '❌ Not quite. ') + item.rationale
+        });
       });
 
       if (unanswered.length) {
@@ -424,10 +510,30 @@
       var scorePct = Math.round((correctCount / check.items.length) * 100);
       var passed = correctCount >= 2;
       result.className = 'module-quiz__result ' + (passed ? 'module-quiz__result--ok' : 'module-quiz__result--no');
-      result.innerHTML =
-        '<p style="margin:0 0 var(--space-xs) 0;"><strong>Score:</strong> ' + correctCount + ' / ' + check.items.length + ' (' + scorePct + '%)</p>' +
-        '<p style="margin:0 0 var(--space-sm) 0;">' + (passed ? 'Strong understanding. Continue to applied assignments.' : 'Review module highlights, then retake this drill.') + '</p>' +
-        feedbackHtml + '</div>';
+      clearNode(result);
+      var scoreLine = document.createElement('p');
+      scoreLine.style.margin = '0 0 var(--space-xs) 0';
+      var scoreStrong = document.createElement('strong');
+      scoreStrong.textContent = 'Score:';
+      scoreLine.appendChild(scoreStrong);
+      scoreLine.appendChild(document.createTextNode(' ' + correctCount + ' / ' + check.items.length + ' (' + scorePct + '%)'));
+      result.appendChild(scoreLine);
+      var summaryLine = document.createElement('p');
+      summaryLine.style.margin = '0 0 var(--space-sm) 0';
+      summaryLine.textContent = passed ? 'Strong understanding. Continue to applied assignments.' : 'Review module highlights, then retake this drill.';
+      result.appendChild(summaryLine);
+      var feedbackWrap = document.createElement('div');
+      feedbackWrap.style.marginTop = 'var(--space-sm)';
+      feedbackEntries.forEach(function (entry) {
+        var p = document.createElement('p');
+        p.style.margin = '0 0 var(--space-xs) 0';
+        var label = document.createElement('strong');
+        label.textContent = entry.label;
+        p.appendChild(label);
+        p.appendChild(document.createTextNode(' ' + entry.message));
+        feedbackWrap.appendChild(p);
+      });
+      result.appendChild(feedbackWrap);
 
       try {
         localStorage.setItem('efi_quiz_' + currentPage, JSON.stringify({
@@ -785,23 +891,45 @@
       if (sectionKey) usedSections[sectionKey] = true;
 
       var panelId = 'learn-more-' + Math.random().toString(36).slice(2, 8);
-      var links = model.links.map(function (item) {
-        var external = /^https?:\/\//.test(item.href);
-        return '<a href="' + item.href + '"' + (external ? ' target="_blank" rel="noopener"' : '') + '>' + item.label + '</a>';
-      }).join(' &bull; ');
 
       var wrap = document.createElement('div');
       wrap.style.marginTop = 'var(--space-sm)';
-      wrap.innerHTML =
-        '<button type="button" class="btn btn--secondary btn--sm learn-more-toggle" aria-expanded="false" aria-controls="' + panelId + '">' + buildLearnMoreLabel(el, model) + '</button>' +
-        '<div id="' + panelId + '" class="notice" style="display:none;margin-top:var(--space-sm);">' +
-          '<p style="margin-bottom:var(--space-sm);">' + model.text + '</p>' +
-          '<p style="margin-bottom:0;font-size:0.86rem;">Sources: ' + links + '</p>' +
-        '</div>';
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'btn btn--secondary btn--sm learn-more-toggle';
+      button.setAttribute('aria-expanded', 'false');
+      button.setAttribute('aria-controls', panelId);
+      button.textContent = buildLearnMoreLabel(el, model);
+      wrap.appendChild(button);
+
+      var panel = document.createElement('div');
+      panel.id = panelId;
+      panel.className = 'notice';
+      panel.style.display = 'none';
+      panel.style.marginTop = 'var(--space-sm)';
+      var textP = document.createElement('p');
+      textP.style.marginBottom = 'var(--space-sm)';
+      textP.textContent = model.text;
+      panel.appendChild(textP);
+      var sourcesP = document.createElement('p');
+      sourcesP.style.marginBottom = '0';
+      sourcesP.style.fontSize = '0.86rem';
+      sourcesP.appendChild(document.createTextNode('Sources: '));
+      model.links.forEach(function (item, idx) {
+        appendTextLink(sourcesP, {
+          href: item.href,
+          label: item.label,
+          external: /^https?:\/\//.test(item.href)
+        });
+        if (idx < model.links.length - 1) {
+          sourcesP.appendChild(document.createTextNode(' • '));
+        }
+      });
+      panel.appendChild(sourcesP);
+      wrap.appendChild(panel);
       el.appendChild(wrap);
 
       var toggle = wrap.querySelector('.learn-more-toggle');
-      var panel = wrap.querySelector('#' + panelId);
       if (!toggle || !panel) return;
 
       (function bindLearnMoreToggle(localToggle, localPanel) {
@@ -838,12 +966,16 @@
     var toc = document.createElement('aside');
     toc.className = 'module-toc';
     toc.setAttribute('aria-label', 'Table of contents');
-    var list = '<h3>On This Page</h3><ul>';
+    var tocHeading = document.createElement('h3');
+    tocHeading.textContent = 'On This Page';
+    toc.appendChild(tocHeading);
+    var list = document.createElement('ul');
     targets.forEach(function (item) {
-      list += '<li><a href="#' + item.id + '">' + item.label + '</a></li>';
+      var li = document.createElement('li');
+      appendTextLink(li, { href: '#' + item.id, label: item.label });
+      list.appendChild(li);
     });
-    list += '</ul>';
-    toc.innerHTML = list;
+    toc.appendChild(list);
 
     var content = document.createElement('div');
     content.className = 'module-main';
@@ -926,22 +1058,51 @@
       banner.style.borderLeft = '4px solid #FF9800';
       banner.style.marginBottom = 'var(--space-lg)';
       banner.style.background = 'rgba(255, 152, 0, 0.06)';
-
-      banner.innerHTML =
-        '<h5 style="margin-top:0;color:#e65100;">Checking In With You</h5>' +
-        '<p style="color:var(--color-text-light);">' +
-        'It looks like recent sessions haven\'t been completed. That\'s okay — everyone hits friction. ' +
-        'Here are three things that often help:' +
-        '</p>' +
-        '<ul class="checklist" style="margin-top:0;">' +
-        '<li><a href="coaching-services.html">Schedule a check-in with a coach</a> — 20 minutes can reset momentum.</li>' +
-        '<li><a href="dashboard.html">Review your goals on the dashboard</a> — sometimes goals need updating, not more effort.</li>' +
-        '<li><a href="coaching-contact.html">Contact the EFI team</a> — we can help you troubleshoot what\'s getting in the way.</li>' +
-        '</ul>' +
-        '<div class="button-group" style="margin-top:var(--space-sm);">' +
-        '<button type="button" class="btn btn--secondary btn--sm" id="efi-intervention-dismiss">I\'m back on track — dismiss</button>' +
-        '</div>' +
-        '<p id="efi-intervention-status" style="margin-top:var(--space-xs);font-size:0.85rem;color:var(--color-text-muted);"></p>';
+      var bannerTitle = document.createElement('h5');
+      bannerTitle.style.marginTop = '0';
+      bannerTitle.style.color = '#e65100';
+      bannerTitle.textContent = 'Checking In With You';
+      banner.appendChild(bannerTitle);
+      var bannerIntro = document.createElement('p');
+      bannerIntro.style.color = 'var(--color-text-light)';
+      bannerIntro.textContent = 'It looks like recent sessions haven\'t been completed. That\'s okay — everyone hits friction. Here are three things that often help:';
+      banner.appendChild(bannerIntro);
+      banner.appendChild(buildChecklist([
+        {
+          href: 'coaching-services.html',
+          label: 'Schedule a check-in with a coach',
+          suffix: ' — 20 minutes can reset momentum.'
+        },
+        {
+          href: 'dashboard.html',
+          label: 'Review your goals on the dashboard',
+          suffix: ' — sometimes goals need updating, not more effort.'
+        },
+        {
+          href: 'coaching-contact.html',
+          label: 'Contact the EFI team',
+          suffix: ' — we can help you troubleshoot what\'s getting in the way.'
+        }
+      ], function (li, item) {
+        appendTextLink(li, { href: item.href, label: item.label });
+        li.appendChild(document.createTextNode(item.suffix));
+      }));
+      var dismissGroup = document.createElement('div');
+      dismissGroup.className = 'button-group';
+      dismissGroup.style.marginTop = 'var(--space-sm)';
+      var dismissButton = document.createElement('button');
+      dismissButton.type = 'button';
+      dismissButton.className = 'btn btn--secondary btn--sm';
+      dismissButton.id = 'efi-intervention-dismiss';
+      dismissButton.textContent = 'I\'m back on track — dismiss';
+      dismissGroup.appendChild(dismissButton);
+      banner.appendChild(dismissGroup);
+      var statusP = document.createElement('p');
+      statusP.id = 'efi-intervention-status';
+      statusP.style.marginTop = 'var(--space-xs)';
+      statusP.style.fontSize = '0.85rem';
+      statusP.style.color = 'var(--color-text-muted)';
+      banner.appendChild(statusP);
 
       anchor.insertBefore(banner, anchor.firstChild);
 

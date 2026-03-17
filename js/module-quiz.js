@@ -35,6 +35,9 @@
 
   function writeAdherenceData(data) {
     try { localStorage.setItem(ADHERENCE_STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+    if (window.EFI && window.EFI.Auth && typeof window.EFI.Auth.syncLearningLoopState === 'function') {
+      window.EFI.Auth.syncLearningLoopState();
+    }
   }
 
   function recordAdherenceSession(moduleId, completed) {
@@ -487,6 +490,27 @@
 
   function writeActionPlans(plans) {
     localStorage.setItem(ACTION_PLAN_STORAGE_KEY, JSON.stringify((plans || []).slice(-50)));
+    if (window.EFI && window.EFI.Auth && typeof window.EFI.Auth.syncLearningLoopState === 'function') {
+      window.EFI.Auth.syncLearningLoopState();
+    }
+  }
+
+  function clearNode(node) {
+    while (node && node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function appendLabeledParagraph(container, label, text, options) {
+    var p = document.createElement('p');
+    if (options && options.marginTop) p.style.marginTop = options.marginTop;
+    if (options && options.marginBottom) p.style.marginBottom = options.marginBottom;
+    if (options && options.color) p.style.color = options.color;
+    if (options && options.fontSize) p.style.fontSize = options.fontSize;
+    var strong = document.createElement('strong');
+    strong.textContent = label;
+    p.appendChild(strong);
+    p.appendChild(document.createTextNode(' ' + text));
+    container.appendChild(p);
+    return p;
   }
 
   function getAdaptiveCadence(baselineCadence) {
@@ -650,19 +674,51 @@
     card.style.borderLeft = '4px solid var(--color-primary)';
 
     var dueLabel = plan.recheck && plan.recheck.due_at ? new Date(plan.recheck.due_at).toLocaleString() : 'upcoming';
-    var linksHtml = (plan.remediation_links || []).map(function(link) {
-      return '<li><a href="' + link.href + '">' + link.label + '</a></li>';
-    }).join('');
 
-    card.innerHTML =
-      '<h5 style="margin-top:0;">Next Action Plan</h5>' +
-      '<p style="margin-bottom:var(--space-sm);"><strong>' + plan.focus.title + '</strong></p>' +
-      '<p style="margin-top:0;color:var(--color-text-light);">' + plan.focus.summary + '</p>' +
-      '<p><strong>Do today:</strong> ' + (plan.actions.today[0] || '') + '</p>' +
-      '<p><strong>Do this week:</strong> ' + (plan.actions.this_week[0] || '') + '</p>' +
-      '<p><strong>Re-check:</strong> ' + dueLabel + ' (' + plan.recheck.cadence + ')</p>' +
-      '<p style="color:var(--color-text-light);"><strong>Evidence prompt:</strong> ' + plan.actions.evidence_prompt + '</p>' +
-      (linksHtml ? '<p style="margin-bottom:var(--space-xs);"><strong>Targeted review links</strong></p><ul class="checklist" style="margin-top:0;">' + linksHtml + '</ul>' : '');
+    var title = document.createElement('h5');
+    title.style.marginTop = '0';
+    title.textContent = 'Next Action Plan';
+    card.appendChild(title);
+
+    var focusTitle = document.createElement('p');
+    focusTitle.style.marginBottom = 'var(--space-sm)';
+    var focusStrong = document.createElement('strong');
+    focusStrong.textContent = plan.focus.title;
+    focusTitle.appendChild(focusStrong);
+    card.appendChild(focusTitle);
+
+    var focusSummary = document.createElement('p');
+    focusSummary.style.marginTop = '0';
+    focusSummary.style.color = 'var(--color-text-light)';
+    focusSummary.textContent = plan.focus.summary;
+    card.appendChild(focusSummary);
+
+    appendLabeledParagraph(card, 'Do today:', plan.actions.today[0] || '');
+    appendLabeledParagraph(card, 'Do this week:', plan.actions.this_week[0] || '');
+    appendLabeledParagraph(card, 'Re-check:', dueLabel + ' (' + plan.recheck.cadence + ')');
+    appendLabeledParagraph(card, 'Evidence prompt:', plan.actions.evidence_prompt, { color: 'var(--color-text-light)' });
+
+    if (plan.remediation_links && plan.remediation_links.length) {
+      var linksHeading = document.createElement('p');
+      linksHeading.style.marginBottom = 'var(--space-xs)';
+      var linksStrong = document.createElement('strong');
+      linksStrong.textContent = 'Targeted review links';
+      linksHeading.appendChild(linksStrong);
+      card.appendChild(linksHeading);
+
+      var linkList = document.createElement('ul');
+      linkList.className = 'checklist';
+      linkList.style.marginTop = '0';
+      plan.remediation_links.forEach(function(link) {
+        var item = document.createElement('li');
+        var anchor = document.createElement('a');
+        anchor.href = link.href;
+        anchor.textContent = link.label;
+        item.appendChild(anchor);
+        linkList.appendChild(item);
+      });
+      card.appendChild(linkList);
+    }
 
     var buttonRow = document.createElement('div');
     buttonRow.className = 'button-group';
@@ -685,12 +741,50 @@
 
     var checkinWrap = document.createElement('div');
     checkinWrap.style.marginTop = 'var(--space-sm)';
-    checkinWrap.innerHTML =
-      '<p style="margin:0 0 var(--space-xs) 0;"><strong>Quick check-in</strong> (captures transfer evidence)</p>' +
-      '<div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:end;">' +
-      '<label style="display:flex;flex-direction:column;gap:4px;min-width:140px;">Self-rating (1-5)<select class="quiz-plan-checkin-rating"><option value="">Select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label>' +
-      '<label style="display:flex;flex-direction:column;gap:4px;min-width:220px;">Observable metric<input class="quiz-plan-checkin-metric" type="text" placeholder="ex: started within 10 min 3/4 days"></label>' +
-      '</div>';
+    var checkinTitle = document.createElement('p');
+    checkinTitle.style.margin = '0 0 var(--space-xs) 0';
+    var checkinStrong = document.createElement('strong');
+    checkinStrong.textContent = 'Quick check-in';
+    checkinTitle.appendChild(checkinStrong);
+    checkinTitle.appendChild(document.createTextNode(' (captures transfer evidence)'));
+    checkinWrap.appendChild(checkinTitle);
+
+    var checkinRow = document.createElement('div');
+    checkinRow.style.display = 'flex';
+    checkinRow.style.gap = 'var(--space-sm)';
+    checkinRow.style.flexWrap = 'wrap';
+    checkinRow.style.alignItems = 'end';
+
+    var ratingLabel = document.createElement('label');
+    ratingLabel.style.display = 'flex';
+    ratingLabel.style.flexDirection = 'column';
+    ratingLabel.style.gap = '4px';
+    ratingLabel.style.minWidth = '140px';
+    ratingLabel.textContent = 'Self-rating (1-5)';
+    var ratingSelect = document.createElement('select');
+    ratingSelect.className = 'quiz-plan-checkin-rating';
+    ['', '1', '2', '3', '4', '5'].forEach(function(value, index) {
+      var option = document.createElement('option');
+      option.value = value;
+      option.textContent = index === 0 ? 'Select' : value;
+      ratingSelect.appendChild(option);
+    });
+    ratingLabel.appendChild(ratingSelect);
+    checkinRow.appendChild(ratingLabel);
+
+    var metricLabel = document.createElement('label');
+    metricLabel.style.display = 'flex';
+    metricLabel.style.flexDirection = 'column';
+    metricLabel.style.gap = '4px';
+    metricLabel.style.minWidth = '220px';
+    metricLabel.textContent = 'Observable metric';
+    var metricInput = document.createElement('input');
+    metricInput.className = 'quiz-plan-checkin-metric';
+    metricInput.type = 'text';
+    metricInput.placeholder = 'ex: started within 10 min 3/4 days';
+    metricLabel.appendChild(metricInput);
+    checkinRow.appendChild(metricLabel);
+    checkinWrap.appendChild(checkinRow);
     var checkinBtn = document.createElement('button');
     checkinBtn.type = 'button';
     checkinBtn.className = 'btn btn--secondary btn--sm';
@@ -797,32 +891,72 @@
     wrap.style.marginTop = 'var(--space-lg)';
     wrap.style.borderLeft = '4px solid var(--color-accent)';
 
-    var html = '<h5 style="margin-top:0;">Targeted Remediation</h5>' +
-      '<p style="color:var(--color-text-light);">Your missed items cluster around the patterns below. Review these first, then retake.</p>';
+    var heading = document.createElement('h5');
+    heading.style.marginTop = '0';
+    heading.textContent = 'Targeted Remediation';
+    wrap.appendChild(heading);
+
+    var intro = document.createElement('p');
+    intro.style.color = 'var(--color-text-light)';
+    intro.textContent = 'Your missed items cluster around the patterns below. Review these first, then retake.';
+    wrap.appendChild(intro);
 
     rankedKeys.slice(0, 2).forEach(function(key) {
       var item = grouped[key];
       var rem = item.remediation;
       var actions = rem.default_actions || [];
-      var links = (rem.module_targets || []).slice(0, 2).map(function(target) {
-        return '<li><a href="' + target.href + '">' + target.label + '</a></li>';
-      }).join('');
 
       var diffLevel = getMissedDifficultyLevel(missedQuestions, key);
       var ladder = rem.difficulty_ladder && rem.difficulty_ladder[diffLevel];
       var diffLabel = diffLevel === 'easy' ? 'Foundational' : (diffLevel === 'hard' ? 'Advanced' : 'Applied');
       var diffGuidance = ladder && ladder.guidance ? ladder.guidance : '';
 
-      html += '<div style="margin-top:var(--space-md);padding-top:var(--space-sm);border-top:1px solid var(--color-border);">' +
-        '<p style="margin:0 0 var(--space-xs) 0;"><strong>' + rem.title + '</strong> <span style="color:var(--color-text-muted);font-size:0.9rem;">(' + item.count + ' missed \u00b7 ' + diffLabel + ' level)</span></p>' +
-        '<p style="margin:0 0 var(--space-xs) 0;color:var(--color-text-light);">' + rem.summary + '</p>' +
-        (diffGuidance ? '<p style="margin:0 0 var(--space-xs) 0;"><strong>Where to focus:</strong> ' + diffGuidance + '</p>' : '') +
-        (actions[0] ? '<p style="margin:0 0 var(--space-xs) 0;"><strong>Try next:</strong> ' + actions[0] + '</p>' : '') +
-        (links ? '<ul class="checklist" style="margin-top:0;">' + links + '</ul>' : '') +
-      '</div>';
-    });
+      var section = document.createElement('div');
+      section.style.marginTop = 'var(--space-md)';
+      section.style.paddingTop = 'var(--space-sm)';
+      section.style.borderTop = '1px solid var(--color-border)';
 
-    wrap.innerHTML = html;
+      var titleLine = document.createElement('p');
+      titleLine.style.margin = '0 0 var(--space-xs) 0';
+      var titleStrong = document.createElement('strong');
+      titleStrong.textContent = rem.title;
+      titleLine.appendChild(titleStrong);
+      var meta = document.createElement('span');
+      meta.style.color = 'var(--color-text-muted)';
+      meta.style.fontSize = '0.9rem';
+      meta.textContent = ' (' + item.count + ' missed · ' + diffLabel + ' level)';
+      titleLine.appendChild(document.createTextNode(' '));
+      titleLine.appendChild(meta);
+      section.appendChild(titleLine);
+
+      var summary = document.createElement('p');
+      summary.style.margin = '0 0 var(--space-xs) 0';
+      summary.style.color = 'var(--color-text-light)';
+      summary.textContent = rem.summary;
+      section.appendChild(summary);
+
+      if (diffGuidance) {
+        appendLabeledParagraph(section, 'Where to focus:', diffGuidance, { marginBottom: 'var(--space-xs)' });
+      }
+      if (actions[0]) {
+        appendLabeledParagraph(section, 'Try next:', actions[0], { marginBottom: 'var(--space-xs)' });
+      }
+      if (rem.module_targets && rem.module_targets.length) {
+        var linksList = document.createElement('ul');
+        linksList.className = 'checklist';
+        linksList.style.marginTop = '0';
+        rem.module_targets.slice(0, 2).forEach(function(target) {
+          var listItem = document.createElement('li');
+          var anchor = document.createElement('a');
+          anchor.href = target.href;
+          anchor.textContent = target.label;
+          listItem.appendChild(anchor);
+          linksList.appendChild(listItem);
+        });
+        section.appendChild(linksList);
+      }
+      wrap.appendChild(section);
+    });
     container.appendChild(wrap);
   }
 
@@ -832,6 +966,9 @@
     try { items = JSON.parse(localStorage.getItem(REFLECTION_STORAGE_KEY)) || []; } catch (e) { items = []; }
     items.push(entry);
     localStorage.setItem(REFLECTION_STORAGE_KEY, JSON.stringify(items.slice(-100)));
+    if (window.EFI && window.EFI.Auth && typeof window.EFI.Auth.syncLearningLoopState === 'function') {
+      window.EFI.Auth.syncLearningLoopState();
+    }
   }
 
   function buildReflectionPrefill(plan) {
@@ -873,23 +1010,50 @@
     // Build prefill text from stored plan/reflection history
     var prefill = buildReflectionPrefill(context);
 
-    var html =
-      '<h5 style="margin-top:0;">48-Hour Reflection Prompt</h5>' +
-      (prefill
-        ? '<p style="color:var(--color-text-light);font-size:0.9rem;">Pre-filled from your recent plan history — edit or replace as needed.</p>'
-        : '<p style="color:var(--color-text-light);">What will you test in the next 48 hours?</p>') +
-      '<textarea id="quiz-reflection-input" rows="4" style="width:100%;padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--border-radius);font-family:inherit;line-height:1.5;"></textarea>' +
-      '<div class="button-group" style="margin-top:var(--space-sm);">' +
-      '<button type="button" id="quiz-reflection-save" class="btn btn--secondary btn--sm">Save Reflection</button>' +
-      '</div>' +
-      '<p id="quiz-reflection-status" style="margin-top:var(--space-xs);font-size:0.9rem;color:var(--color-text-light);"></p>';
-    card.innerHTML = html;
+    var heading = document.createElement('h5');
+    heading.style.marginTop = '0';
+    heading.textContent = '48-Hour Reflection Prompt';
+    card.appendChild(heading);
+
+    var intro = document.createElement('p');
+    intro.style.color = 'var(--color-text-light)';
+    if (prefill) intro.style.fontSize = '0.9rem';
+    intro.textContent = prefill
+      ? 'Pre-filled from your recent plan history — edit or replace as needed.'
+      : 'What will you test in the next 48 hours?';
+    card.appendChild(intro);
+
+    var input = document.createElement('textarea');
+    input.id = 'quiz-reflection-input';
+    input.rows = 4;
+    input.style.width = '100%';
+    input.style.padding = 'var(--space-sm)';
+    input.style.border = '1px solid var(--color-border)';
+    input.style.borderRadius = 'var(--border-radius)';
+    input.style.fontFamily = 'inherit';
+    input.style.lineHeight = '1.5';
+    card.appendChild(input);
+
+    var actions = document.createElement('div');
+    actions.className = 'button-group';
+    actions.style.marginTop = 'var(--space-sm)';
+    var saveBtn = document.createElement('button');
+    saveBtn.type = 'button';
+    saveBtn.id = 'quiz-reflection-save';
+    saveBtn.className = 'btn btn--secondary btn--sm';
+    saveBtn.textContent = 'Save Reflection';
+    actions.appendChild(saveBtn);
+    card.appendChild(actions);
+
+    var status = document.createElement('p');
+    status.id = 'quiz-reflection-status';
+    status.style.marginTop = 'var(--space-xs)';
+    status.style.fontSize = '0.9rem';
+    status.style.color = 'var(--color-text-light)';
+    card.appendChild(status);
     container.appendChild(card);
 
-    var input = card.querySelector('#quiz-reflection-input');
     if (input && prefill) { input.value = prefill; }
-    var saveBtn = card.querySelector('#quiz-reflection-save');
-    var status = card.querySelector('#quiz-reflection-status');
     if (!input || !saveBtn || !status) return;
 
     // Apply prefill
@@ -1025,7 +1189,7 @@
     var container = document.getElementById('module-quiz');
     if (!container) return;
 
-    container.innerHTML = '';
+    clearNode(container);
 
     var intensityLabels = {
       high: 'Focused review (high adherence — harder concepts, fewer questions)',
@@ -1036,12 +1200,22 @@
 
     var header = document.createElement('div');
     header.className = 'module-quiz__header';
-    header.innerHTML = '<h3 style="margin-bottom:var(--space-sm);">Module Mastery Test</h3>' +
-      '<p style="margin:0;color:var(--color-text-light);font-size:0.9rem;">' +
-      'Finish this assessment to check for module mastery. Scores of ' + PASSING_SCORE + '% or higher ' +
-      'save as passed progress when you are logged in.' +
-      '</p>' +
-      '<p style="margin:var(--space-xs) 0 0 0;font-size:0.82rem;color:var(--color-text-muted);">Practice mode: ' + intensityLabel + '</p>';
+    var heading = document.createElement('h3');
+    heading.style.marginBottom = 'var(--space-sm)';
+    heading.textContent = 'Module Mastery Test';
+    header.appendChild(heading);
+    var intro = document.createElement('p');
+    intro.style.margin = '0';
+    intro.style.color = 'var(--color-text-light)';
+    intro.style.fontSize = '0.9rem';
+    intro.textContent = 'Finish this assessment to check for module mastery. Scores of ' + PASSING_SCORE + '% or higher save as passed progress when you are logged in.';
+    header.appendChild(intro);
+    var mode = document.createElement('p');
+    mode.style.margin = 'var(--space-xs) 0 0 0';
+    mode.style.fontSize = '0.82rem';
+    mode.style.color = 'var(--color-text-muted)';
+    mode.textContent = 'Practice mode: ' + intensityLabel;
+    header.appendChild(mode);
     container.appendChild(header);
     renderSavedStatus(container);
 
@@ -1102,7 +1276,7 @@
     var container = document.getElementById('quiz-questions');
     if (!container) return;
 
-    container.innerHTML = '';
+    clearNode(container);
 
     var questionDiv = document.createElement('div');
     questionDiv.className = 'module-quiz__question';
@@ -1293,7 +1467,7 @@
     if (!resultsDiv) return;
 
     resultsDiv.style.display = 'block';
-    resultsDiv.innerHTML = '';
+    clearNode(resultsDiv);
 
     var title = document.createElement('h4');
     title.style.marginBottom = 'var(--space-md)';
@@ -1304,9 +1478,9 @@
     scoreDiv.style.fontSize = '1.1rem';
     scoreDiv.style.marginBottom = 'var(--space-md)';
     scoreDiv.style.lineHeight = '1.8';
-    scoreDiv.innerHTML = '<strong>Score:</strong> ' + correct + ' of ' + total + ' (' + percentage + '%)<br>' +
-      '<strong>Status:</strong> ' + (passed ? 'Passed' : 'Needs Retake') + '<br>' +
-      '<strong>Feedback:</strong> ' + getResultsMessage(percentage);
+    appendLabeledParagraph(scoreDiv, 'Score:', correct + ' of ' + total + ' (' + percentage + '%)');
+    appendLabeledParagraph(scoreDiv, 'Status:', passed ? 'Passed' : 'Needs Retake');
+    appendLabeledParagraph(scoreDiv, 'Feedback:', getResultsMessage(percentage));
     resultsDiv.appendChild(scoreDiv);
 
     var note = document.createElement('p');

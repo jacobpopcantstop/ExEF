@@ -45,6 +45,18 @@
     return 'var(--color-error, #c62828)';
   }
 
+  function clearNode(node) {
+    while (node && node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function appendParagraph(container, text, styles) {
+    var p = document.createElement('p');
+    if (styles) Object.keys(styles).forEach(function (key) { p.style[key] = styles[key]; });
+    p.textContent = text;
+    container.appendChild(p);
+    return p;
+  }
+
   function renderScenario(container, scenario, moduleId, index, total) {
     var card = document.createElement('div');
     card.className = 'card';
@@ -52,30 +64,51 @@
     card.style.borderLeft = '4px solid var(--color-accent)';
 
     var progressText = 'Scenario ' + (index + 1) + ' of ' + total;
-
-    var html =
-      '<p style="margin:0 0 var(--space-xs) 0;font-size:0.85rem;color:var(--color-text-muted);">' + progressText + '</p>' +
-      '<h5 style="margin-top:0;">Situation</h5>' +
-      '<p>' + scenario.situation + '</p>' +
-      '<p style="margin-top:var(--space-md);"><strong>' + scenario.question + '</strong></p>' +
-      '<div id="scenario-branches-' + scenario.id + '" style="display:flex;flex-direction:column;gap:var(--space-sm);margin-top:var(--space-sm);">';
-
-    scenario.branches.forEach(function (branch, bi) {
-      html += '<button type="button" class="btn btn--secondary btn--sm" ' +
-        'data-scenario-id="' + scenario.id + '" ' +
-        'data-branch-index="' + bi + '" ' +
-        'style="text-align:left;white-space:normal;">' +
-        branch.label + '</button>';
+    appendParagraph(card, progressText, {
+      margin: '0 0 var(--space-xs) 0',
+      fontSize: '0.85rem',
+      color: 'var(--color-text-muted)'
     });
 
-    html += '</div>' +
-      '<div id="scenario-outcome-' + scenario.id + '" hidden style="margin-top:var(--space-md);"></div>';
+    var title = document.createElement('h5');
+    title.style.marginTop = '0';
+    title.textContent = 'Situation';
+    card.appendChild(title);
 
-    card.innerHTML = html;
+    appendParagraph(card, scenario.situation);
+
+    var questionP = document.createElement('p');
+    questionP.style.marginTop = 'var(--space-md)';
+    var questionStrong = document.createElement('strong');
+    questionStrong.textContent = scenario.question;
+    questionP.appendChild(questionStrong);
+    card.appendChild(questionP);
+
+    var branchesDiv = document.createElement('div');
+    branchesDiv.id = 'scenario-branches-' + scenario.id;
+    branchesDiv.style.display = 'flex';
+    branchesDiv.style.flexDirection = 'column';
+    branchesDiv.style.gap = 'var(--space-sm)';
+    branchesDiv.style.marginTop = 'var(--space-sm)';
+    scenario.branches.forEach(function (branch, bi) {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'btn btn--secondary btn--sm';
+      button.setAttribute('data-scenario-id', scenario.id);
+      button.setAttribute('data-branch-index', String(bi));
+      button.style.textAlign = 'left';
+      button.style.whiteSpace = 'normal';
+      button.textContent = branch.label;
+      branchesDiv.appendChild(button);
+    });
+    card.appendChild(branchesDiv);
+
+    var outcomeDiv = document.createElement('div');
+    outcomeDiv.id = 'scenario-outcome-' + scenario.id;
+    outcomeDiv.hidden = true;
+    outcomeDiv.style.marginTop = 'var(--space-md)';
+    card.appendChild(outcomeDiv);
     container.appendChild(card);
-
-    var branchesDiv = card.querySelector('#scenario-branches-' + scenario.id);
-    var outcomeDiv = card.querySelector('#scenario-outcome-' + scenario.id);
 
     branchesDiv.addEventListener('click', function (e) {
       var btn = e.target.closest('button[data-branch-index]');
@@ -91,16 +124,32 @@
       btn.style.opacity = '1';
       btn.style.fontWeight = '600';
 
-      var outcomeHtml =
-        '<p style="margin:0 0 var(--space-xs) 0;font-weight:700;color:' + qualityColor(branch.quality) + ';">' +
-          qualityLabel(branch.quality) +
-        '</p>' +
-        '<p style="margin:0 0 var(--space-xs) 0;">' + branch.outcome + '</p>' +
-        '<p style="margin:0 0 var(--space-xs) 0;"><strong>Practice move:</strong> ' + branch.action + '</p>' +
-        '<hr style="margin:var(--space-sm) 0;border:none;border-top:1px solid var(--color-border);">' +
-        '<p style="margin:0;font-style:italic;color:var(--color-text-light);">' + scenario.reflection + '</p>';
-
-      outcomeDiv.innerHTML = outcomeHtml;
+      clearNode(outcomeDiv);
+      appendParagraph(outcomeDiv, qualityLabel(branch.quality), {
+        margin: '0 0 var(--space-xs) 0',
+        fontWeight: '700',
+        color: qualityColor(branch.quality)
+      });
+      appendParagraph(outcomeDiv, branch.outcome, {
+        margin: '0 0 var(--space-xs) 0'
+      });
+      var actionP = document.createElement('p');
+      actionP.style.margin = '0 0 var(--space-xs) 0';
+      var actionStrong = document.createElement('strong');
+      actionStrong.textContent = 'Practice move:';
+      actionP.appendChild(actionStrong);
+      actionP.appendChild(document.createTextNode(' ' + branch.action));
+      outcomeDiv.appendChild(actionP);
+      var divider = document.createElement('hr');
+      divider.style.margin = 'var(--space-sm) 0';
+      divider.style.border = 'none';
+      divider.style.borderTop = '1px solid var(--color-border)';
+      outcomeDiv.appendChild(divider);
+      appendParagraph(outcomeDiv, scenario.reflection, {
+        margin: '0',
+        fontStyle: 'italic',
+        color: 'var(--color-text-light)'
+      });
       outcomeDiv.hidden = false;
 
       saveScenarioResult({
@@ -120,12 +169,17 @@
   }
 
   function renderModuleScenarios(container, moduleData, moduleId) {
-    container.innerHTML = '';
+    clearNode(container);
 
     var header = document.createElement('div');
-    header.innerHTML =
-      '<h4 style="margin-top:0;">' + moduleData.title + '</h4>' +
-      '<p style="color:var(--color-text-light);margin-bottom:var(--space-md);">' + moduleData.description + '</p>';
+    var heading = document.createElement('h4');
+    heading.style.marginTop = '0';
+    heading.textContent = moduleData.title;
+    header.appendChild(heading);
+    appendParagraph(header, moduleData.description, {
+      color: 'var(--color-text-light)',
+      marginBottom: 'var(--space-md)'
+    });
     container.appendChild(header);
 
     var scenarios = moduleData.scenarios || [];
@@ -152,7 +206,10 @@
         renderModuleScenarios(container, moduleData, moduleId);
       })
       .catch(function () {
-        container.innerHTML = '<p style="color:var(--color-text-muted);">Scenario simulations could not load. Refresh to try again.</p>';
+        clearNode(container);
+        appendParagraph(container, 'Scenario simulations could not load. Refresh to try again.', {
+          color: 'var(--color-text-muted)'
+        });
       });
   }
 

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | The Executive Functioning Institute</title>
   <meta name="description" content="Your EFI dashboard — track certification progress, view purchases, and access your coaching tools.">
+  <link rel="preload" href="css/styles.css" as="style">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="favicon.svg">
   <meta property="og:title" content="Dashboard | The Executive Functioning Institute">
@@ -414,7 +415,7 @@
       if (!latestUser) return;
       var status = EFI.Auth.getCertificationStatus(latestUser);
       var list = document.getElementById('readiness-list');
-      list.innerHTML = '';
+      while (list.firstChild) list.removeChild(list.firstChild);
 
       var checks = [
         { label: 'Modules completed: ' + status.modulesCompleted + '/6', done: status.allModulesCompleted },
@@ -430,6 +431,16 @@
         li.textContent = marker + item.label;
         list.appendChild(li);
       });
+    }
+
+    function appendTextLine(parent, label, value) {
+      var p = document.createElement('p');
+      var strong = document.createElement('strong');
+      strong.textContent = label;
+      p.appendChild(strong);
+      p.appendChild(document.createTextNode(' ' + value));
+      parent.appendChild(p);
+      return p;
     }
 
     function renderOutcomeMetrics() {
@@ -472,28 +483,65 @@
       listEl.style.display = 'none';
     } else {
       noEl.style.display = 'none';
-      var html = '';
+      while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
+      listEl.style.display = 'block';
       purchases.forEach(function(p) {
-        html += '<div class="card" style="margin-bottom:var(--space-md);">';
-        html += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-sm);">';
-        html += '<div><strong>Order ' + p.id.toUpperCase() + '</strong> &mdash; ' + new Date(p.date).toLocaleDateString() + '</div>';
-        html += '<div style="font-weight:700;">$' + p.total + '</div>';
-        html += '</div>';
+        var card = document.createElement('div');
+        card.className = 'card';
+        card.style.marginBottom = 'var(--space-md)';
+
+        var header = document.createElement('div');
+        header.style.display = 'flex';
+        header.style.justifyContent = 'space-between';
+        header.style.alignItems = 'center';
+        header.style.flexWrap = 'wrap';
+        header.style.gap = 'var(--space-sm)';
+
+        var orderMeta = document.createElement('div');
+        var orderStrong = document.createElement('strong');
+        orderStrong.textContent = 'Order ' + String(p.id || '').toUpperCase();
+        orderMeta.appendChild(orderStrong);
+        orderMeta.appendChild(document.createTextNode(' - ' + new Date(p.date).toLocaleDateString()));
+        header.appendChild(orderMeta);
+
+        var total = document.createElement('div');
+        total.style.fontWeight = '700';
+        total.textContent = '$' + p.total;
+        header.appendChild(total);
+        card.appendChild(header);
+
         if (p.verification && p.verification.mode) {
-          html += '<p style="margin:var(--space-sm) 0 0;color:var(--color-text-muted);font-size:0.9rem;">Verification mode: ' + p.verification.mode.replace(/_/g, ' ') + '.</p>';
+          var verification = document.createElement('p');
+          verification.style.margin = 'var(--space-sm) 0 0';
+          verification.style.color = 'var(--color-text-muted)';
+          verification.style.fontSize = '0.9rem';
+          verification.textContent = 'Verification mode: ' + String(p.verification.mode).replace(/_/g, ' ') + '.';
+          card.appendChild(verification);
         }
-        html += '<ul style="margin-top:var(--space-sm);padding-left:var(--space-lg);">';
+
+        var items = document.createElement('ul');
+        items.style.marginTop = 'var(--space-sm)';
+        items.style.paddingLeft = 'var(--space-lg)';
         p.items.forEach(function(item) {
-          html += '<li>' + item.name + ' ($' + item.price + ')';
+          var li = document.createElement('li');
+          li.appendChild(document.createTextNode(item.name + ' ($' + item.price + ')'));
           if (item.id === 'certificate') {
-            html += ' &mdash; <a href="certificate.html" style="color:var(--color-accent);font-weight:600;">View Certificate</a>';
-            if (p.credentialId) html += ' &mdash; Credential ID: ' + p.credentialId;
+            li.appendChild(document.createTextNode(' - '));
+            var link = document.createElement('a');
+            link.href = 'certificate.html';
+            link.style.color = 'var(--color-accent)';
+            link.style.fontWeight = '600';
+            link.textContent = 'View Certificate';
+            li.appendChild(link);
+            if (p.credentialId) {
+              li.appendChild(document.createTextNode(' - Credential ID: ' + p.credentialId));
+            }
           }
-          html += '</li>';
+          items.appendChild(li);
         });
-        html += '</ul></div>';
+        card.appendChild(items);
+        listEl.appendChild(card);
       });
-      listEl.innerHTML = html;
     }
 
     // Module progress
@@ -585,9 +633,64 @@
       }
 
       if (guidanceHtml) {
-        var div = document.createElement('div');
-        div.innerHTML = guidanceHtml;
-        container.parentNode.insertBefore(div.firstChild, container);
+        var guidance = document.getElementById('near-mastery-guidance');
+        if (guidance) guidance.remove();
+        guidance = document.createElement('div');
+        guidance.id = 'near-mastery-guidance';
+        guidance.className = 'card';
+        guidance.style.gridColumn = '1 / -1';
+
+        var heading = document.createElement('h3');
+        heading.style.marginBottom = 'var(--space-sm)';
+        var body = document.createElement('p');
+        var cta = document.createElement('a');
+        cta.className = 'btn btn--sm';
+
+        if (completed.length === 6 && !capstonePassed) {
+          guidance.style.borderLeft = '4px solid var(--color-accent)';
+          guidance.style.background = 'linear-gradient(135deg,rgba(39,174,96,0.04),rgba(41,128,185,0.04))';
+          heading.style.color = 'var(--color-accent)';
+          heading.textContent = 'All Modules Complete - Capstone Is Your Final Step';
+          body.appendChild(document.createTextNode('You have passed all six modules. Submit your capstone practicum to complete the certification pathway. Review the '));
+          var rubricLink = document.createElement('a');
+          rubricLink.href = 'certification.html#transparency-rubric';
+          rubricLink.textContent = 'rubric expectations';
+          body.appendChild(rubricLink);
+          body.appendChild(document.createTextNode(' before submitting.'));
+          cta.className += ' btn--primary';
+          cta.href = '#submit-capstone-btn';
+          cta.textContent = 'Go to Capstone Submission';
+          cta.addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('submit-capstone-btn').scrollIntoView({ behavior: 'smooth' });
+          });
+        } else if (completed.length === 5 && incomplete.length === 1) {
+          var moduleNames = { '1': 'Neuropsychology', '2': 'Assessment', '3': 'Coaching Architecture', '4': 'Applied Methods', '5': 'Special Populations', '6': 'Professional Practice' };
+          var missing = incomplete[0];
+          var nearInfo = nearPass.find(function (n) { return n.id === missing; });
+          guidance.style.borderLeft = '4px solid var(--module-' + missing + ')';
+          guidance.style.background = 'linear-gradient(135deg,rgba(142,68,173,0.04),rgba(41,128,185,0.04))';
+          heading.style.color = 'var(--module-' + missing + ')';
+          heading.textContent = 'One Module Away - Module ' + missing + ': ' + moduleNames[missing];
+          body.textContent = 'You have completed 5 of 6 modules. Pass Module ' + missing + ' to unlock capstone eligibility.' + (nearInfo ? (' Your last attempt scored ' + nearInfo.score + '% - you are close.') : '');
+          cta.className += ' btn--primary';
+          cta.href = 'module-' + missing + '.html';
+          cta.textContent = 'Open Module ' + missing;
+        } else if (completed.length >= 4 && nearPass.length > 0) {
+          var closest = nearPass.sort(function (a, b) { return b.score - a.score; })[0];
+          guidance.style.borderLeft = '4px solid var(--module-' + closest.id + ')';
+          guidance.style.background = 'linear-gradient(135deg,rgba(230,126,34,0.04),rgba(41,128,185,0.04))';
+          heading.textContent = 'Almost There - Module ' + closest.id + ' Scored ' + closest.score + '%';
+          body.textContent = 'You are ' + incomplete.length + ' module(s) from capstone eligibility. Module ' + closest.id + ' is your closest near-pass - a focused review session could push it over the threshold.';
+          cta.className += ' btn--secondary';
+          cta.href = 'module-' + closest.id + '.html';
+          cta.textContent = 'Review Module ' + closest.id;
+        }
+
+        guidance.appendChild(heading);
+        guidance.appendChild(body);
+        guidance.appendChild(cta);
+        container.parentNode.insertBefore(guidance, container);
       }
     })();
 

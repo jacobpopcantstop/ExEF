@@ -45,15 +45,49 @@
     return Math.round((num / denom) * 100) + '%';
   }
 
-  function statRow(label, value) {
-    return '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--color-border);">' +
-      '<span>' + label + '</span>' +
-      '<strong>' + value + '</strong>' +
-      '</div>';
+  function clearNode(node) {
+    while (node && node.firstChild) node.removeChild(node.firstChild);
   }
 
-  function sectionTitle(text) {
-    return '<p style="font-weight:600;margin:var(--space-sm) 0 var(--space-xs) 0;font-size:0.9rem;">' + text + '</p>';
+  function buildSection(title) {
+    return { title: title, rows: [], empty: '' };
+  }
+
+  function pushStatRow(section, label, value) {
+    section.rows.push({ label: label, value: value });
+  }
+
+  function renderSection(container, section) {
+    var heading = document.createElement('p');
+    heading.style.fontWeight = '600';
+    heading.style.margin = 'var(--space-sm) 0 var(--space-xs) 0';
+    heading.style.fontSize = '0.9rem';
+    heading.textContent = section.title;
+    container.appendChild(heading);
+
+    if (!section.rows.length) {
+      var empty = document.createElement('p');
+      empty.style.color = 'var(--color-text-muted)';
+      empty.style.fontSize = '0.85rem';
+      empty.textContent = section.empty || 'No data yet.';
+      container.appendChild(empty);
+      return;
+    }
+
+    section.rows.forEach(function (row) {
+      var wrap = document.createElement('div');
+      wrap.style.display = 'flex';
+      wrap.style.justifyContent = 'space-between';
+      wrap.style.padding = '4px 0';
+      wrap.style.borderBottom = '1px solid var(--color-border)';
+      var label = document.createElement('span');
+      label.textContent = row.label;
+      var value = document.createElement('strong');
+      value.textContent = String(row.value);
+      wrap.appendChild(label);
+      wrap.appendChild(value);
+      container.appendChild(wrap);
+    });
   }
 
   // ── Curriculum completion ───────────────────────────────────────────────────
@@ -81,33 +115,36 @@
     var passes = plans.filter(function(p) { return p && p.recheck && p.recheck.cadence === '7d'; }).length;
     var retakes = plans.filter(function(p) { return p && p.recheck && p.recheck.cadence === '72h'; }).length;
 
-    var html = sectionTitle('Quiz outcomes (this browser)');
-    html += statRow('Total plans generated', plans.length);
-    html += statRow('Passing results (7d cadence)', passes);
-    html += statRow('Needs-retake results (72h cadence)', retakes);
-    html += statRow('Pass rate', pct(passes, plans.length));
+    var sections = [];
+    var quizSection = buildSection('Quiz outcomes (this browser)');
+    pushStatRow(quizSection, 'Total plans generated', plans.length);
+    pushStatRow(quizSection, 'Passing results (7d cadence)', passes);
+    pushStatRow(quizSection, 'Needs-retake results (72h cadence)', retakes);
+    pushStatRow(quizSection, 'Pass rate', pct(passes, plans.length));
+    sections.push(quizSection);
 
-    html += sectionTitle('Module page views');
+    var viewsSection = buildSection('Module page views');
     var moduleKeys = Object.keys(viewsByModule).sort();
     if (moduleKeys.length) {
       moduleKeys.forEach(function(k) {
-        html += statRow(k, viewsByModule[k] + ' view' + (viewsByModule[k] === 1 ? '' : 's'));
+        pushStatRow(viewsSection, k, viewsByModule[k] + ' view' + (viewsByModule[k] === 1 ? '' : 's'));
       });
     } else {
-      html += '<p style="color:var(--color-text-muted);font-size:0.85rem;">No module page views recorded yet.</p>';
+      viewsSection.empty = 'No module page views recorded yet.';
     }
+    sections.push(viewsSection);
 
-    html += sectionTitle('Quiz completions by module');
+    var completionsSection = buildSection('Quiz completions by module');
     var completedKeys = Object.keys(completedModules).sort();
     if (completedKeys.length) {
       completedKeys.forEach(function(k) {
-        html += statRow(k, completedModules[k] + ' quiz run' + (completedModules[k] === 1 ? '' : 's'));
+        pushStatRow(completionsSection, k, completedModules[k] + ' quiz run' + (completedModules[k] === 1 ? '' : 's'));
       });
     } else {
-      html += '<p style="color:var(--color-text-muted);font-size:0.85rem;">No quiz completions recorded yet.</p>';
+      completionsSection.empty = 'No quiz completions recorded yet.';
     }
-
-    return html;
+    sections.push(completionsSection);
+    return sections;
   }
 
   // ── Coaching engagement ─────────────────────────────────────────────────────
@@ -130,21 +167,24 @@
     });
     var avgRating = ratings.length ? (ratings.reduce(function(a, b) { return a + b; }, 0) / ratings.length).toFixed(1) : '—';
 
-    var html = sectionTitle('Plan engagement');
-    html += statRow('Plans started', planStarts);
-    html += statRow('Check-ins completed', checkins);
-    html += statRow('Transfer evidence logs', transferLogs);
-    html += statRow('Spaced rechecks triggered', rechecksDue);
-    html += statRow('Avg self-rating (1-5)', avgRating + (ratings.length ? ' (' + ratings.length + ' ratings)' : ''));
+    var sections = [];
+    var engagementSection = buildSection('Plan engagement');
+    pushStatRow(engagementSection, 'Plans started', planStarts);
+    pushStatRow(engagementSection, 'Check-ins completed', checkins);
+    pushStatRow(engagementSection, 'Transfer evidence logs', transferLogs);
+    pushStatRow(engagementSection, 'Spaced rechecks triggered', rechecksDue);
+    pushStatRow(engagementSection, 'Avg self-rating (1-5)', avgRating + (ratings.length ? ' (' + ratings.length + ' ratings)' : ''));
+    sections.push(engagementSection);
 
-    html += sectionTitle('Reflections');
-    html += statRow('Total reflections saved', reflections.length);
+    var reflectionsSection = buildSection('Reflections');
+    pushStatRow(reflectionsSection, 'Total reflections saved', reflections.length);
 
     // Reflections by source tool
     var bySource = countByProp(reflections, 'source_tool');
     Object.keys(bySource).sort().forEach(function(k) {
-      html += statRow('  from ' + k, bySource[k]);
+      pushStatRow(reflectionsSection, '  from ' + k, bySource[k]);
     });
+    sections.push(reflectionsSection);
 
     // Authenticated user breakdown (from events carrying user_id via #9)
     var authedEvents = events.filter(function(e) { return e.user_id; });
@@ -152,11 +192,11 @@
     authedEvents.forEach(function(e) { uniqueUsers[e.user_id] = true; });
     var userCount = Object.keys(uniqueUsers).length;
 
-    html += sectionTitle('User attribution');
-    html += statRow('Events with user_id attached', authedEvents.length);
-    html += statRow('Distinct authenticated users', userCount || '—');
-
-    return html;
+    var usersSection = buildSection('User attribution');
+    pushStatRow(usersSection, 'Events with user_id attached', authedEvents.length);
+    pushStatRow(usersSection, 'Distinct authenticated users', userCount || '—');
+    sections.push(usersSection);
+    return sections;
   }
 
   // ── Adherence & intervention signals ───────────────────────────────────────
@@ -178,36 +218,39 @@
     var intervShown    = events.filter(function(e) { return e.event_name === 'low_adherence_intervention_shown'; }).length;
     var intervDismissed = events.filter(function(e) { return e.event_name === 'low_adherence_intervention_dismissed'; }).length;
 
-    var html = sectionTitle('Session adherence');
-    html += statRow('Total sessions recorded', totalSessions);
-    html += statRow('Completed sessions', completedSessions);
-    html += statRow('Overall completion rate', pct(completedSessions, totalSessions));
-    html += statRow('Recent 10 sessions completed', recentCompleted + ' / ' + recentSessions.length);
-    html += statRow('Current adherence level', computed.level ? computed.level.toUpperCase() : '—');
-    html += statRow('Adherence score (0–1)', typeof computed.score === 'number' ? computed.score.toFixed(2) : '—');
+    var sections = [];
+    var adherenceSection = buildSection('Session adherence');
+    pushStatRow(adherenceSection, 'Total sessions recorded', totalSessions);
+    pushStatRow(adherenceSection, 'Completed sessions', completedSessions);
+    pushStatRow(adherenceSection, 'Overall completion rate', pct(completedSessions, totalSessions));
+    pushStatRow(adherenceSection, 'Recent 10 sessions completed', recentCompleted + ' / ' + recentSessions.length);
+    pushStatRow(adherenceSection, 'Current adherence level', computed.level ? computed.level.toUpperCase() : '—');
+    pushStatRow(adherenceSection, 'Adherence score (0–1)', typeof computed.score === 'number' ? computed.score.toFixed(2) : '—');
+    sections.push(adherenceSection);
 
-    html += sectionTitle('Intervention history');
-    html += statRow('Times intervention shown', intervShown);
-    html += statRow('Times dismissed', intervDismissed);
+    var interventionSection = buildSection('Intervention history');
+    pushStatRow(interventionSection, 'Times intervention shown', intervShown);
+    pushStatRow(interventionSection, 'Times dismissed', intervDismissed);
     if (intervMeta.last_shown_at) {
-      html += statRow('Last shown', new Date(intervMeta.last_shown_at).toLocaleString());
+      pushStatRow(interventionSection, 'Last shown', new Date(intervMeta.last_shown_at).toLocaleString());
     }
     if (intervMeta.show_count) {
-      html += statRow('Total show count (meta)', intervMeta.show_count);
+      pushStatRow(interventionSection, 'Total show count (meta)', intervMeta.show_count);
     }
+    sections.push(interventionSection);
 
-    html += sectionTitle('Module breakdown (last 20 sessions)');
+    var moduleSection = buildSection('Module breakdown (last 20 sessions)');
     var byModule = countByProp(sessions.slice(-20), 'moduleId');
     var mkeys = Object.keys(byModule).sort();
     if (mkeys.length) {
       mkeys.forEach(function(k) {
-        html += statRow(k || 'unknown', byModule[k] + ' session' + (byModule[k] === 1 ? '' : 's'));
+        pushStatRow(moduleSection, k || 'unknown', byModule[k] + ' session' + (byModule[k] === 1 ? '' : 's'));
       });
     } else {
-      html += '<p style="color:var(--color-text-muted);font-size:0.85rem;">No session data yet.</p>';
+      moduleSection.empty = 'No session data yet.';
     }
-
-    return html;
+    sections.push(moduleSection);
+    return sections;
   }
 
   // ── Render ──────────────────────────────────────────────────────────────────
@@ -218,9 +261,18 @@
     var adhrEl  = document.getElementById('analytics-adherence-body');
     var statusEl = document.getElementById('analytics-refresh-status');
 
-    if (currEl)  currEl.innerHTML  = buildCurriculumStats();
-    if (coachEl) coachEl.innerHTML = buildCoachingStats();
-    if (adhrEl)  adhrEl.innerHTML  = buildAdherenceStats();
+    if (currEl) {
+      clearNode(currEl);
+      buildCurriculumStats().forEach(function (section) { renderSection(currEl, section); });
+    }
+    if (coachEl) {
+      clearNode(coachEl);
+      buildCoachingStats().forEach(function (section) { renderSection(coachEl, section); });
+    }
+    if (adhrEl) {
+      clearNode(adhrEl);
+      buildAdherenceStats().forEach(function (section) { renderSection(adhrEl, section); });
+    }
     if (statusEl) statusEl.textContent = 'Last refreshed: ' + new Date().toLocaleTimeString();
   }
 

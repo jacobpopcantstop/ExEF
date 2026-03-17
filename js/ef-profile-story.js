@@ -162,6 +162,20 @@
     return (config && config.dimensions && config.dimensions[key]) || key;
   }
 
+  function clearNode(node) {
+    while (node && node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function renderListItems(container, items) {
+    if (!container) return;
+    clearNode(container);
+    (items || []).forEach(function (item) {
+      var li = document.createElement('li');
+      li.textContent = String(item);
+      container.appendChild(li);
+    });
+  }
+
   function renderHistory() {
     if (!historyEl) return;
     var history = [];
@@ -172,15 +186,22 @@
     }
     if (!history.length) {
       historyEl.hidden = true;
-      historyEl.innerHTML = '';
+      clearNode(historyEl);
       return;
     }
-    var html = '<h3 style="margin-top:0;">Recent EF Profile Stories</h3><ul class="checklist">';
+    clearNode(historyEl);
+    var heading = document.createElement('h3');
+    heading.style.marginTop = '0';
+    heading.textContent = 'Recent EF Profile Stories';
+    historyEl.appendChild(heading);
+    var list = document.createElement('ul');
+    list.className = 'checklist';
     history.slice(-5).reverse().forEach(function (entry) {
-      html += '<li>' + new Date(entry.generatedAt).toLocaleString() + ' &mdash; ' + entry.profile + ' (' + entry.primaryDimensionLabel + ' highest friction)</li>';
+      var item = document.createElement('li');
+      item.textContent = new Date(entry.generatedAt).toLocaleString() + ' - ' + entry.profile + ' (' + entry.primaryDimensionLabel + ' highest friction)';
+      list.appendChild(item);
     });
-    html += '</ul>';
-    historyEl.innerHTML = html;
+    historyEl.appendChild(list);
     historyEl.hidden = false;
   }
 
@@ -203,21 +224,51 @@
     var labels = (config.scale && config.scale.labels) || ['Strongly disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly agree'];
     var min = Number(config.scale && config.scale.min) || 1;
     var max = Number(config.scale && config.scale.max) || 5;
-    var html = '';
+    clearNode(questionsWrap);
     config.questions.forEach(function (question, idx) {
-      html += '<fieldset class="esqr-skill-group fade-in visible" style="margin-bottom:var(--space-md);">';
-      html += '<legend class="esqr-skill-group__legend">Question ' + (idx + 1) + '</legend>';
-      html += '<div class="esqr-item">';
-      html += '<p class="esqr-item__text">' + question.prompt + '</p>';
-      html += '<div class="esqr-rating" role="radiogroup" aria-label="Rating for question ' + (idx + 1) + '">';
-      html += '<span class="esqr-rating__label">' + labels[0] + '</span>';
+      var fieldset = document.createElement('fieldset');
+      fieldset.className = 'esqr-skill-group fade-in visible';
+      fieldset.style.marginBottom = 'var(--space-md)';
+      var legend = document.createElement('legend');
+      legend.className = 'esqr-skill-group__legend';
+      legend.textContent = 'Question ' + (idx + 1);
+      fieldset.appendChild(legend);
+      var itemWrap = document.createElement('div');
+      itemWrap.className = 'esqr-item';
+      var prompt = document.createElement('p');
+      prompt.className = 'esqr-item__text';
+      prompt.textContent = question.prompt;
+      itemWrap.appendChild(prompt);
+      var rating = document.createElement('div');
+      rating.className = 'esqr-rating';
+      rating.setAttribute('role', 'radiogroup');
+      rating.setAttribute('aria-label', 'Rating for question ' + (idx + 1));
+      var minLabel = document.createElement('span');
+      minLabel.className = 'esqr-rating__label';
+      minLabel.textContent = labels[0];
+      rating.appendChild(minLabel);
       for (var value = min; value <= max; value++) {
-        html += '<label class="esqr-rating__option"><input type="radio" name="' + question.id + '" value="' + value + '" required><span>' + value + '</span></label>';
+        var label = document.createElement('label');
+        label.className = 'esqr-rating__option';
+        var input = document.createElement('input');
+        input.type = 'radio';
+        input.name = question.id;
+        input.value = String(value);
+        input.required = true;
+        var span = document.createElement('span');
+        span.textContent = String(value);
+        label.appendChild(input);
+        label.appendChild(span);
+        rating.appendChild(label);
       }
-      html += '<span class="esqr-rating__label">' + labels[labels.length - 1] + '</span>';
-      html += '</div></div></fieldset>';
+      var maxLabel = document.createElement('span');
+      maxLabel.className = 'esqr-rating__label';
+      maxLabel.textContent = labels[labels.length - 1];
+      rating.appendChild(maxLabel);
+      itemWrap.appendChild(rating);
+      fieldset.appendChild(itemWrap);
+      questionsWrap.appendChild(fieldset);
     });
-    questionsWrap.innerHTML = html;
     questionsWrap.querySelectorAll('.fade-in').forEach(function (el) {
       el.classList.add('visible');
     });
@@ -341,22 +392,43 @@
     if (titleEl) titleEl.textContent = result.profile;
     if (ledeEl) ledeEl.textContent = result.lede;
     if (narrativeEl) narrativeEl.textContent = result.narrative;
-    if (stuckEl) stuckEl.innerHTML = result.stuck.map(function (item) { return '<li>' + item + '</li>'; }).join('');
-    if (worksEl) worksEl.innerHTML = result.works.map(function (item) { return '<li>' + item + '</li>'; }).join('');
-    if (experimentEl) experimentEl.innerHTML = result.experiment.map(function (item) { return '<li>' + item + '</li>'; }).join('');
+    renderListItems(stuckEl, result.stuck);
+    renderListItems(worksEl, result.works);
+    renderListItems(experimentEl, result.experiment);
 
     if (dimensionsEl) {
-      var html = '<div style="display:grid;gap:var(--space-sm);">';
+      clearNode(dimensionsEl);
+      var wrap = document.createElement('div');
+      wrap.style.display = 'grid';
+      wrap.style.gap = 'var(--space-sm)';
       result.dimensions.forEach(function (dimension) {
-        html += '<div>';
-        html += '<div style="display:flex;justify-content:space-between;font-size:0.9rem;margin-bottom:4px;">';
-        html += '<span>' + dimension.label + '</span><strong>' + dimension.friction + '/100</strong></div>';
-        html += '<div style="height:10px;background:var(--color-border);border-radius:999px;overflow:hidden;">';
-        html += '<div style="height:100%;width:' + dimension.friction + '%;background:var(--color-accent);"></div>';
-        html += '</div></div>';
+        var row = document.createElement('div');
+        var top = document.createElement('div');
+        top.style.display = 'flex';
+        top.style.justifyContent = 'space-between';
+        top.style.fontSize = '0.9rem';
+        top.style.marginBottom = '4px';
+        var label = document.createElement('span');
+        label.textContent = dimension.label;
+        var score = document.createElement('strong');
+        score.textContent = dimension.friction + '/100';
+        top.appendChild(label);
+        top.appendChild(score);
+        row.appendChild(top);
+        var bar = document.createElement('div');
+        bar.style.height = '10px';
+        bar.style.background = 'var(--color-border)';
+        bar.style.borderRadius = '999px';
+        bar.style.overflow = 'hidden';
+        var fill = document.createElement('div');
+        fill.style.height = '100%';
+        fill.style.width = dimension.friction + '%';
+        fill.style.background = 'var(--color-accent)';
+        bar.appendChild(fill);
+        row.appendChild(bar);
+        wrap.appendChild(row);
       });
-      html += '</div>';
-      dimensionsEl.innerHTML = html;
+      dimensionsEl.appendChild(wrap);
     }
   }
 

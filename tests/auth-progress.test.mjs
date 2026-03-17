@@ -212,3 +212,60 @@ test('getReleaseMetrics summarizes pending releases and average score', async ()
   assert.equal(metrics.averageScore, 90);
   assert.equal(metrics.nextReleaseAt, future);
 });
+
+test('syncLearningLoopState merges local learning-loop records into persisted progress', async () => {
+  const user = {
+    email: 'loop@example.com',
+    name: 'Loop Learner',
+    role: 'learner',
+    progress: {
+      modules: {},
+      moduleAssessments: {},
+      submissions: {},
+      esqrCompleted: false,
+      capstone: { status: 'not_submitted' },
+      learningLoop: {
+        actionPlans: [
+          {
+            plan_id: 'remote-plan',
+            state: { created_at: '2026-03-09T00:00:00.000Z' }
+          }
+        ],
+        reflections: [],
+        adherence: { sessions: [] }
+      }
+    },
+    purchases: []
+  };
+
+  const { auth, storage } = loadAuthWithUser(user);
+  storage.setItem('efi_action_plans_v1', JSON.stringify([
+    {
+      plan_id: 'local-plan',
+      state: { created_at: '2026-03-10T00:00:00.000Z' }
+    }
+  ]));
+  storage.setItem('efi_reflections_v1', JSON.stringify([
+    {
+      id: 'reflection-1',
+      at: '2026-03-10T01:00:00.000Z',
+      reflection_48h: 'Test one transfer behavior.'
+    }
+  ]));
+  storage.setItem('efi_adherence_v1', JSON.stringify({
+    sessions: [
+      { at: '2026-03-10T02:00:00.000Z', moduleId: 'module-1', completed: true }
+    ]
+  }));
+
+  assert.equal(auth.syncLearningLoopState(), true);
+
+  const session = JSON.parse(storage.getItem('efi_session'));
+  assert.equal(session.progress.learningLoop.actionPlans.length, 2);
+  assert.equal(session.progress.learningLoop.reflections.length, 1);
+  assert.equal(session.progress.learningLoop.adherence.sessions.length, 1);
+  assert.equal(session.progress.learningLoop.adherence.computed.level, 'high');
+
+  const savedUsers = JSON.parse(storage.getItem('efi_users'));
+  assert.equal(savedUsers['loop@example.com'].progress.learningLoop.actionPlans.length, 2);
+});

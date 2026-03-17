@@ -110,7 +110,25 @@
       var monthlyBillableHours = annualBillableHours / 12;
       var clients = monthlyBillableHours / monthlyHours;
       var rounded = Math.ceil(clients);
-      document.getElementById('roi-output').innerHTML = 'At <strong>$' + rate + '/hr</strong>, replacing <strong>$' + salary.toLocaleString() + '</strong> requires about <strong>' + Math.ceil(monthlyBillableHours) + ' billable hours/month</strong>, or approximately <strong>' + rounded + ' active clients</strong> at ' + monthlyHours + ' hours each.';
+      var output = document.getElementById('roi-output');
+      while (output.firstChild) output.removeChild(output.firstChild);
+      output.appendChild(document.createTextNode('At '));
+      var rateStrong = document.createElement('strong');
+      rateStrong.textContent = '$' + rate + '/hr';
+      output.appendChild(rateStrong);
+      output.appendChild(document.createTextNode(', replacing '));
+      var salaryStrong = document.createElement('strong');
+      salaryStrong.textContent = '$' + salary.toLocaleString();
+      output.appendChild(salaryStrong);
+      output.appendChild(document.createTextNode(' requires about '));
+      var hoursStrong = document.createElement('strong');
+      hoursStrong.textContent = Math.ceil(monthlyBillableHours) + ' billable hours/month';
+      output.appendChild(hoursStrong);
+      output.appendChild(document.createTextNode(', or approximately '));
+      var clientsStrong = document.createElement('strong');
+      clientsStrong.textContent = rounded + ' active clients';
+      output.appendChild(clientsStrong);
+      output.appendChild(document.createTextNode(' at ' + monthlyHours + ' hours each.'));
       if (window.EFI && EFI.Analytics) {
         EFI.Analytics.track('roi_calculated', {
           salary: salary,

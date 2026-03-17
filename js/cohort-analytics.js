@@ -67,30 +67,22 @@
   }
 
   function kpiRow(label, k) {
-    return '<tr>' +
-      '<td><strong>' + label + '</strong></td>' +
-      '<td>' + k.generated + '</td>' +
-      '<td>' + k.activation + '</td>' +
-      '<td>' + k.adherence + '</td>' +
-      '<td>' + k.recheck + '</td>' +
-      '<td>' + k.transfer + '</td>' +
-      '<td>' + k.mastery + '</td>' +
-      '</tr>';
+    return {
+      label: label,
+      generated: k.generated,
+      activation: k.activation,
+      adherence: k.adherence,
+      recheck: k.recheck,
+      transfer: k.transfer,
+      mastery: k.mastery
+    };
   }
 
   function tableWrap(rows, caption) {
-    if (!rows.length) return '<p style="color:var(--color-text-muted);">No data recorded yet.</p>';
-    return '<p style="color:var(--color-text-light);font-size:0.85rem;margin-bottom:var(--space-sm);">' + caption + '</p>' +
-      '<div class="table-wrapper">' +
-      '<table>' +
-      '<thead><tr>' +
-      '<th>Slice</th><th>Plans</th>' +
-      '<th>Activation</th><th>Adherence</th>' +
-      '<th>Recheck</th><th>Transfer</th><th>Mastery</th>' +
-      '</tr></thead>' +
-      '<tbody>' + rows.join('') + '</tbody>' +
-      '</table>' +
-      '</div>';
+    return {
+      rows: rows,
+      caption: caption
+    };
   }
 
   function operatorSlice(data) {
@@ -123,17 +115,18 @@
       rows.push(kpiRow(TOOL_LABELS[tool] || tool, kpiFor(toolPlans, toolEvents, toolReflections)));
     });
 
-    rows.push('<tr style="border-top:2px solid var(--color-border);">' +
-      '<td><strong>All tools</strong></td>' +
-      '<td>' + allKpi.generated + '</td>' +
-      '<td>' + allKpi.activation + '</td>' +
-      '<td>' + allKpi.adherence + '</td>' +
-      '<td>' + allKpi.recheck + '</td>' +
-      '<td>' + allKpi.transfer + '</td>' +
-      '<td>' + allKpi.mastery + '</td>' +
-      '</tr>');
+    rows.push({
+      label: 'All tools',
+      generated: allKpi.generated,
+      activation: allKpi.activation,
+      adherence: allKpi.adherence,
+      recheck: allKpi.recheck,
+      transfer: allKpi.transfer,
+      mastery: allKpi.mastery,
+      divider: true
+    });
 
-    return tableWrap(rows.filter(function (r) { return !r.includes('All tools'); }).length ? rows : [],
+    return tableWrap(rows.length ? rows : [],
       'KPIs by source tool. Activation = plans started / plans generated. Adherence = check-ins / plans started.');
   }
 
@@ -205,31 +198,89 @@
       { id: 'coaching', label: 'Coaching', content: coachingSlice(data) }
     ];
 
-    var tabBtnHtml = tabs.map(function (t, i) {
-      return '<button type="button" class="btn btn--secondary btn--sm" ' +
-        'id="cohort-tab-btn-' + t.id + '" ' +
-        'aria-selected="' + (i === 0 ? 'true' : 'false') + '" ' +
-        'style="' + (i === 0 ? 'font-weight:700;' : '') + '">' +
-        t.label + '</button>';
-    }).join('');
+    while (container.firstChild) container.removeChild(container.firstChild);
+    var title = document.createElement('h2');
+    title.style.marginTop = '0';
+    title.textContent = 'Cohort Analytics';
+    container.appendChild(title);
+    var intro = document.createElement('p');
+    intro.style.color = 'var(--color-text-light)';
+    intro.textContent = 'KPI views aggregated from local assessment event and plan data. Values reflect the data in this browser session. Production cohort analytics require server-side aggregation.';
+    container.appendChild(intro);
 
-    var tabPanelHtml = tabs.map(function (t, i) {
-      return '<div id="cohort-panel-' + t.id + '" role="tabpanel" ' +
-        (i === 0 ? '' : 'hidden') + ' style="margin-top:var(--space-md);">' +
-        t.content +
-        '</div>';
-    }).join('');
+    var tabList = document.createElement('div');
+    tabList.className = 'button-group';
+    tabList.style.marginBottom = 'var(--space-md)';
+    tabList.setAttribute('role', 'tablist');
+    container.appendChild(tabList);
 
-    container.innerHTML =
-      '<h2 style="margin-top:0;">Cohort Analytics</h2>' +
-      '<p style="color:var(--color-text-light);">KPI views aggregated from local assessment event and plan data. ' +
-      'Values reflect the data in this browser session. Production cohort analytics require server-side aggregation.</p>' +
-      '<div class="button-group" style="margin-bottom:var(--space-md);" role="tablist">' + tabBtnHtml + '</div>' +
-      tabPanelHtml;
+    function renderContentPanel(panel, content) {
+      while (panel.firstChild) panel.removeChild(panel.firstChild);
+      if (!content.rows.length) {
+        var empty = document.createElement('p');
+        empty.style.color = 'var(--color-text-muted)';
+        empty.textContent = 'No data recorded yet.';
+        panel.appendChild(empty);
+        return;
+      }
+      var caption = document.createElement('p');
+      caption.style.color = 'var(--color-text-light)';
+      caption.style.fontSize = '0.85rem';
+      caption.style.marginBottom = 'var(--space-sm)';
+      caption.textContent = content.caption;
+      panel.appendChild(caption);
+
+      var wrap = document.createElement('div');
+      wrap.className = 'table-wrapper';
+      var table = document.createElement('table');
+      var thead = document.createElement('thead');
+      var headRow = document.createElement('tr');
+      ['Slice', 'Plans', 'Activation', 'Adherence', 'Recheck', 'Transfer', 'Mastery'].forEach(function (label) {
+        var th = document.createElement('th');
+        th.textContent = label;
+        headRow.appendChild(th);
+      });
+      thead.appendChild(headRow);
+      table.appendChild(thead);
+      var tbody = document.createElement('tbody');
+      content.rows.forEach(function (rowData) {
+        var tr = document.createElement('tr');
+        if (rowData.divider) tr.style.borderTop = '2px solid var(--color-border)';
+        var labelCell = document.createElement('td');
+        var strong = document.createElement('strong');
+        strong.textContent = rowData.label;
+        labelCell.appendChild(strong);
+        tr.appendChild(labelCell);
+        [rowData.generated, rowData.activation, rowData.adherence, rowData.recheck, rowData.transfer, rowData.mastery].forEach(function (value) {
+          var td = document.createElement('td');
+          td.textContent = String(value);
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+      panel.appendChild(wrap);
+    }
 
     tabs.forEach(function (t) {
-      var btn = container.querySelector('#cohort-tab-btn-' + t.id);
-      if (!btn) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn btn--secondary btn--sm';
+      btn.id = 'cohort-tab-btn-' + t.id;
+      btn.setAttribute('aria-selected', t.id === 'operator' ? 'true' : 'false');
+      if (t.id === 'operator') btn.style.fontWeight = '700';
+      btn.textContent = t.label;
+      tabList.appendChild(btn);
+
+      var panel = document.createElement('div');
+      panel.id = 'cohort-panel-' + t.id;
+      panel.setAttribute('role', 'tabpanel');
+      panel.style.marginTop = 'var(--space-md)';
+      if (t.id !== 'operator') panel.hidden = true;
+      renderContentPanel(panel, t.content);
+      container.appendChild(panel);
+
       btn.addEventListener('click', function () {
         tabs.forEach(function (other) {
           var ob = container.querySelector('#cohort-tab-btn-' + other.id);

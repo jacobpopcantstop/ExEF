@@ -74,6 +74,55 @@
       localStorage.setItem(TIME_KEY, JSON.stringify(entries.slice(-25)));
     }
 
+    function clearNode(node) {
+      while (node && node.firstChild) node.removeChild(node.firstChild);
+    }
+
+    function setSelectOptions(selectEl, placeholder, options) {
+      if (!selectEl) return;
+      clearNode(selectEl);
+      var placeholderOption = document.createElement('option');
+      placeholderOption.value = '';
+      placeholderOption.textContent = placeholder;
+      selectEl.appendChild(placeholderOption);
+      (options || []).forEach(function (item) {
+        var option = document.createElement('option');
+        option.value = item.value;
+        option.textContent = item.label;
+        selectEl.appendChild(option);
+      });
+    }
+
+    function appendParagraph(container, text, styleOverrides) {
+      var p = document.createElement('p');
+      p.textContent = text;
+      if (styleOverrides) Object.keys(styleOverrides).forEach(function (key) { p.style[key] = styleOverrides[key]; });
+      container.appendChild(p);
+      return p;
+    }
+
+    function appendStrongLabelParagraph(container, label, text, styleOverrides) {
+      var p = document.createElement('p');
+      var strong = document.createElement('strong');
+      strong.textContent = label;
+      p.appendChild(strong);
+      p.appendChild(document.createTextNode(' ' + text));
+      if (styleOverrides) Object.keys(styleOverrides).forEach(function (key) { p.style[key] = styleOverrides[key]; });
+      container.appendChild(p);
+      return p;
+    }
+
+    function renderTableMessage(targetBody, colspan, text) {
+      if (!targetBody) return;
+      clearNode(targetBody);
+      var row = document.createElement('tr');
+      var cell = document.createElement('td');
+      cell.colSpan = colspan;
+      cell.textContent = text;
+      row.appendChild(cell);
+      targetBody.appendChild(row);
+    }
+
     function findCategory(categoryKey) {
       return TIME_BENCHMARKS.find(function (item) { return item.key === categoryKey; }) || null;
     }
@@ -94,25 +143,21 @@
 
     function populateTimeCategories() {
       if (!tbCategory) return;
-      var html = '<option value="">Choose a context...</option>';
-      TIME_BENCHMARKS.forEach(function (item) {
-        html += '<option value="' + item.key + '">' + item.label + '</option>';
-      });
-      tbCategory.innerHTML = html;
+      setSelectOptions(tbCategory, 'Choose a context...', TIME_BENCHMARKS.map(function (item) {
+        return { value: item.key, label: item.label };
+      }));
     }
 
     function populateTimeBenchmarks() {
       if (!tbTask) return;
       var category = findCategory(tbCategory ? tbCategory.value : '');
       if (!category) {
-        tbTask.innerHTML = '<option value="">Choose a context first...</option>';
+        setSelectOptions(tbTask, 'Choose a context first...', []);
         return;
       }
-      var html = '<option value="">Choose a common task...</option>';
-      category.tasks.forEach(function (item) {
-        html += '<option value="' + item.key + '">' + item.label + '</option>';
-      });
-      tbTask.innerHTML = html;
+      setSelectOptions(tbTask, 'Choose a common task...', category.tasks.map(function (item) {
+        return { value: item.key, label: item.label };
+      }));
     }
 
     function describeSelectedBenchmark() {
@@ -261,12 +306,22 @@
       card.className = 'card';
       card.style.marginTop = 'var(--space-md)';
       card.style.borderLeft = '4px solid var(--color-accent)';
-      card.innerHTML =
-        '<h5 style="margin-top:0;">What Changed (Before/After)</h5>' +
-        '<p style="margin:0 0 var(--space-xs) 0;">Early entries (first ' + midpoint + ') were off by about <strong>' + Math.round(earlyAbs) + ' min</strong>. ' +
-        'Recent entries (last ' + (entries.length - midpoint) + ') are off by about <strong>' + Math.round(recentAbs) + ' min</strong>.</p>' +
-        '<p style="margin:0;color:var(--color-text-light);">Interpretation: your timing accuracy has <strong>' + direction + '</strong>' +
-        (improvement !== 0 ? ' by about ' + Math.abs(improvement) + ' minutes.' : '.') + '</p>';
+      var title = document.createElement('h5');
+      title.style.marginTop = '0';
+      title.textContent = 'What Changed (Before/After)';
+      card.appendChild(title);
+      appendParagraph(
+        card,
+        'Early entries (first ' + midpoint + ') were off by about ' + Math.round(earlyAbs) +
+          ' min. Recent entries (last ' + (entries.length - midpoint) + ') are off by about ' + Math.round(recentAbs) + ' min.',
+        { margin: '0 0 var(--space-xs) 0' }
+      );
+      appendParagraph(
+        card,
+        'Interpretation: your timing accuracy has ' + direction +
+          (improvement !== 0 ? ' by about ' + Math.abs(improvement) + ' minutes.' : '.'),
+        { margin: '0', color: 'var(--color-text-light)' }
+      );
       tbSummary.insertAdjacentElement('afterend', card);
     }
 
@@ -274,7 +329,7 @@
       var entries = readEntries();
       if (!tbBody || !tbMessage) return;
       if (!entries.length) {
-        tbBody.innerHTML = '<tr><td colspan="4">No rows yet</td></tr>';
+        renderTableMessage(tbBody, 4, 'No rows yet');
         tbMessage.textContent = 'No entries yet. Try 3 to 5 tasks and the tool will start showing how your internal timing tends to drift.';
         if (tbPattern) tbPattern.textContent = 'Your timing pattern will start to show after the first entry.';
         if (tbConfidence) tbConfidence.textContent = 'Confidence: unavailable (add entries)';
@@ -283,19 +338,23 @@
         return;
       }
 
-      var html = '';
+      clearNode(tbBody);
       entries.forEach(function (entry) {
         var benchmark = Number(entry.benchmark || entry.actual || 0);
         var delta = Number(entry.delta);
         if (!Number.isFinite(delta)) delta = Number(entry.estimated || 0) - benchmark;
-        html += '<tr>' +
-          '<td>' + (entry.taskLabel || 'Saved task') + '</td>' +
-          '<td>' + Number(entry.estimated).toFixed(0) + ' min</td>' +
-          '<td>' + benchmark.toFixed(0) + ' min</td>' +
-          '<td>' + (delta === 0 ? 'On target' : ((delta > 0 ? '+' : '') + Math.round(delta) + ' min')) + '</td>' +
-        '</tr>';
+        var row = document.createElement('tr');
+        [entry.taskLabel || 'Saved task',
+         Number(entry.estimated).toFixed(0) + ' min',
+         benchmark.toFixed(0) + ' min',
+         (delta === 0 ? 'On target' : ((delta > 0 ? '+' : '') + Math.round(delta) + ' min'))]
+          .forEach(function (text) {
+            var cell = document.createElement('td');
+            cell.textContent = text;
+            row.appendChild(cell);
+          });
+        tbBody.appendChild(row);
       });
-      tbBody.innerHTML = html;
 
       var metrics = computeTimeMetrics(entries);
       if (!metrics) {
@@ -423,21 +482,45 @@
       card.style.borderLeft = '4px solid var(--color-primary)';
 
       var dueLabel = plan.recheck && plan.recheck.due_at ? new Date(plan.recheck.due_at).toLocaleString() : 'upcoming';
-      var linksHtml = (plan.remediation_links || []).map(function (link) {
-        return '<li><a href="' + link.href + '">' + link.label + '</a></li>';
-      }).join('');
-
-      card.innerHTML =
-        '<h5 style="margin-top:0;">Action Plan</h5>' +
-        '<p style="margin-bottom:var(--space-xs);"><strong>' + plan.focus.title + '</strong></p>' +
-        '<p style="color:var(--color-text-light);">' + plan.focus.summary + '</p>' +
-        '<p><strong>Do today:</strong> ' + (plan.actions.today[0] || '') + '</p>' +
-        '<p><strong>Do this week:</strong> ' + (plan.actions.this_week[0] || '') + '</p>' +
-        '<p><strong>Re-check by:</strong> ' + dueLabel + ' (' + plan.recheck.cadence + ')</p>' +
-        '<p style="color:var(--color-text-light);"><strong>Evidence prompt:</strong> ' + plan.actions.evidence_prompt + '</p>' +
-        (linksHtml ? '<ul class="checklist">' + linksHtml + '</ul>' : '') +
-        '<p style="margin-top:var(--space-sm);"><strong>48-hour reflection:</strong> What will you test in the next 48 hours?</p>' +
-        '<textarea class="assessment-reflection-input" rows="3" style="width:100%;padding:var(--space-sm);border:1px solid var(--color-border);border-radius:var(--border-radius);font-family:inherit;line-height:1.5;"></textarea>';
+      var title = document.createElement('h5');
+      title.style.marginTop = '0';
+      title.textContent = 'Action Plan';
+      card.appendChild(title);
+      var focusLine = document.createElement('p');
+      focusLine.style.marginBottom = 'var(--space-xs)';
+      var focusStrong = document.createElement('strong');
+      focusStrong.textContent = plan.focus.title || '';
+      focusLine.appendChild(focusStrong);
+      card.appendChild(focusLine);
+      appendParagraph(card, plan.focus.summary || '', { color: 'var(--color-text-light)' });
+      appendStrongLabelParagraph(card, 'Do today:', plan.actions.today[0] || '');
+      appendStrongLabelParagraph(card, 'Do this week:', plan.actions.this_week[0] || '');
+      appendStrongLabelParagraph(card, 'Re-check by:', dueLabel + ' (' + plan.recheck.cadence + ')');
+      appendStrongLabelParagraph(card, 'Evidence prompt:', plan.actions.evidence_prompt || '', { color: 'var(--color-text-light)' });
+      if (Array.isArray(plan.remediation_links) && plan.remediation_links.length) {
+        var linkList = document.createElement('ul');
+        linkList.className = 'checklist';
+        plan.remediation_links.forEach(function (link) {
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          a.href = link.href;
+          a.textContent = link.label;
+          li.appendChild(a);
+          linkList.appendChild(li);
+        });
+        card.appendChild(linkList);
+      }
+      appendStrongLabelParagraph(card, '48-hour reflection:', 'What will you test in the next 48 hours?', { marginTop: 'var(--space-sm)' });
+      var reflectionInput = document.createElement('textarea');
+      reflectionInput.className = 'assessment-reflection-input';
+      reflectionInput.rows = 3;
+      reflectionInput.style.width = '100%';
+      reflectionInput.style.padding = 'var(--space-sm)';
+      reflectionInput.style.border = '1px solid var(--color-border)';
+      reflectionInput.style.borderRadius = 'var(--border-radius)';
+      reflectionInput.style.fontFamily = 'inherit';
+      reflectionInput.style.lineHeight = '1.5';
+      card.appendChild(reflectionInput);
 
       var row = document.createElement('div');
       row.className = 'button-group';
@@ -457,8 +540,6 @@
       status.style.marginTop = 'var(--space-xs)';
       status.style.fontSize = '0.9rem';
       status.style.color = 'var(--color-text-light)';
-
-      var reflectionInput = card.querySelector('.assessment-reflection-input');
 
       // #3  Prefill reflection textarea from stored plan focus / reflection history
       (function prefillReflection() {
@@ -499,12 +580,44 @@
 
       var checkinWrap = document.createElement('div');
       checkinWrap.style.marginTop = 'var(--space-sm)';
-      checkinWrap.innerHTML =
-        '<p style="margin:0 0 var(--space-xs) 0;"><strong>Quick check-in</strong> (capture transfer evidence)</p>' +
-        '<div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:end;">' +
-        '<label style="display:flex;flex-direction:column;gap:4px;min-width:140px;">Self-rating (1-5)<select class="assessment-plan-checkin-rating"><option value="">Select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></label>' +
-        '<label style="display:flex;flex-direction:column;gap:4px;min-width:220px;">Observable metric<input class="assessment-plan-checkin-metric" type="text" placeholder="ex: started within 5 min on 2/3 tries"></label>' +
-        '</div>';
+      appendStrongLabelParagraph(checkinWrap, 'Quick check-in', '(capture transfer evidence)', { margin: '0 0 var(--space-xs) 0' });
+      var checkinFields = document.createElement('div');
+      checkinFields.style.display = 'flex';
+      checkinFields.style.gap = 'var(--space-sm)';
+      checkinFields.style.flexWrap = 'wrap';
+      checkinFields.style.alignItems = 'end';
+
+      var ratingLabel = document.createElement('label');
+      ratingLabel.style.display = 'flex';
+      ratingLabel.style.flexDirection = 'column';
+      ratingLabel.style.gap = '4px';
+      ratingLabel.style.minWidth = '140px';
+      ratingLabel.appendChild(document.createTextNode('Self-rating (1-5)'));
+      var ratingSelect = document.createElement('select');
+      ratingSelect.className = 'assessment-plan-checkin-rating';
+      setSelectOptions(ratingSelect, 'Select', [
+        { value: '1', label: '1' },
+        { value: '2', label: '2' },
+        { value: '3', label: '3' },
+        { value: '4', label: '4' },
+        { value: '5', label: '5' }
+      ]);
+      ratingLabel.appendChild(ratingSelect);
+      checkinFields.appendChild(ratingLabel);
+
+      var metricLabel = document.createElement('label');
+      metricLabel.style.display = 'flex';
+      metricLabel.style.flexDirection = 'column';
+      metricLabel.style.gap = '4px';
+      metricLabel.style.minWidth = '220px';
+      metricLabel.appendChild(document.createTextNode('Observable metric'));
+      var metricInput = document.createElement('input');
+      metricInput.className = 'assessment-plan-checkin-metric';
+      metricInput.type = 'text';
+      metricInput.placeholder = 'ex: started within 5 min on 2/3 tries';
+      metricLabel.appendChild(metricInput);
+      checkinFields.appendChild(metricLabel);
+      checkinWrap.appendChild(checkinFields);
       var checkinBtn = document.createElement('button');
       checkinBtn.type = 'button';
       checkinBtn.className = 'btn btn--secondary btn--sm';
@@ -1244,21 +1357,48 @@
       if (!tfGuidedList) return;
       var scenario = getActiveScenario();
       if (tfScenarioNote) tfScenarioNote.textContent = scenario.note;
-      var html = '';
+      clearNode(tfGuidedList);
       getScenarioDimensions().forEach(function (item, index) {
         var prompt = (scenario.prompts && scenario.prompts[item.key]) || item.defaultPrompt;
-        html += '<div class="guided-diagnostic-card">';
-        html += '<span class="guided-diagnostic-card__title">' + (index + 1) + '. ' + item.label + '</span>';
-        html += '<p class="guided-diagnostic-card__hint">' + prompt + '</p>';
-        html += '<div class="esqr-rating" role="radiogroup" aria-label="' + item.label + '">';
-        html += '<span class="esqr-rating__label">Not at all</span>';
+        var card = document.createElement('div');
+        card.className = 'guided-diagnostic-card';
+        var title = document.createElement('span');
+        title.className = 'guided-diagnostic-card__title';
+        title.textContent = (index + 1) + '. ' + item.label;
+        card.appendChild(title);
+        var hint = document.createElement('p');
+        hint.className = 'guided-diagnostic-card__hint';
+        hint.textContent = prompt;
+        card.appendChild(hint);
+        var ratingGroup = document.createElement('div');
+        ratingGroup.className = 'esqr-rating';
+        ratingGroup.setAttribute('role', 'radiogroup');
+        ratingGroup.setAttribute('aria-label', item.label);
+        var lowLabel = document.createElement('span');
+        lowLabel.className = 'esqr-rating__label';
+        lowLabel.textContent = 'Not at all';
+        ratingGroup.appendChild(lowLabel);
         for (var value = 1; value <= 5; value++) {
-          html += '<label class="esqr-rating__option"><input type="radio" name="tf-' + item.key + '" value="' + value + '"' + (value === 3 ? ' checked' : '') + '><span>' + value + '</span></label>';
+          var optionLabel = document.createElement('label');
+          optionLabel.className = 'esqr-rating__option';
+          var input = document.createElement('input');
+          input.type = 'radio';
+          input.name = 'tf-' + item.key;
+          input.value = String(value);
+          input.checked = value === 3;
+          optionLabel.appendChild(input);
+          var span = document.createElement('span');
+          span.textContent = String(value);
+          optionLabel.appendChild(span);
+          ratingGroup.appendChild(optionLabel);
         }
-        html += '<span class="esqr-rating__label">Very much</span>';
-        html += '</div></div>';
+        var highLabel = document.createElement('span');
+        highLabel.className = 'esqr-rating__label';
+        highLabel.textContent = 'Very much';
+        ratingGroup.appendChild(highLabel);
+        card.appendChild(ratingGroup);
+        tfGuidedList.appendChild(card);
       });
-      tfGuidedList.innerHTML = html;
     }
 
     function getTaskFrictionScores() {
@@ -1417,13 +1557,13 @@
       card.className = 'card';
       card.style.marginTop = 'var(--space-md)';
       card.style.borderLeft = '4px solid var(--color-accent)';
-      card.innerHTML =
-        '<h5 style="margin-top:0;">What Changed (Before/After)</h5>' +
-        '<p style="margin:0 0 var(--space-xs) 0;">Early friction average: <strong>' + Math.round(earlyAvg) + '%</strong>. ' +
-        'Recent friction average: <strong>' + Math.round(recentAvg) + '%</strong>.</p>' +
-        '<p style="margin:0 0 var(--space-xs) 0;color:var(--color-text-light);">Interpretation: start friction has <strong>' + direction + '</strong>' +
-        (delta !== 0 ? ' by about ' + Math.abs(delta) + ' percentage points.' : '.') + '</p>' +
-        '<p style="margin:0;color:var(--color-text-light);">Theme shift: <strong>' + earlyTheme + '</strong> → <strong>' + recentTheme + '</strong>.</p>';
+      var heading = document.createElement('h5');
+      heading.style.marginTop = '0';
+      heading.textContent = 'What Changed (Before/After)';
+      card.appendChild(heading);
+      appendParagraph(card, 'Early friction average: ' + Math.round(earlyAvg) + '%. Recent friction average: ' + Math.round(recentAvg) + '%.', { margin: '0 0 var(--space-xs) 0' });
+      appendParagraph(card, 'Interpretation: start friction has ' + direction + (delta !== 0 ? ' by about ' + Math.abs(delta) + ' percentage points.' : '.'), { margin: '0 0 var(--space-xs) 0', color: 'var(--color-text-light)' });
+      appendParagraph(card, 'Theme shift: ' + earlyTheme + ' -> ' + recentTheme + '.', { margin: '0', color: 'var(--color-text-light)' });
       tfResult.insertAdjacentElement('afterend', card);
     }
 
@@ -1482,19 +1622,32 @@
         lastProtocol = latestResult.protocol;
       }
 
-      tfResult.innerHTML =
-        '<strong>Start story for ' + taskName + ': ' + frictionPercent + '% friction (' + riskLabel + ')</strong>' +
-        '<p style="margin:var(--space-sm) 0 0;"><strong>Pattern:</strong> ' + archetype.title + '</p>' +
-        '<p style="margin:var(--space-sm) 0 0;">' + archetype.why + '</p>' +
-        '<p style="margin:var(--space-sm) 0 0;">The heaviest pressure points right now are <strong>' + top[0].label + '</strong>, <strong>' + top[1].label + '</strong>, and <strong>' + top[2].label + '</strong>.</p>' +
-        '<ul style="margin:var(--space-sm) 0 0;padding-left:var(--space-lg);">' +
-          '<li><strong>First 2-minute move:</strong> ' + script.quickWin + '</li>' +
-          '<li><strong>10-minute move:</strong> ' + script.tenMinuteMove + '</li>' +
-          '<li><strong>Start script:</strong> ' + script.firstStep + '</li>' +
-          '<li><strong>Do not do this:</strong> ' + script.avoidLine + '</li>' +
-        '</ul>';
+      clearNode(tfResult);
+      var resultStrong = document.createElement('strong');
+      resultStrong.textContent = 'Start story for ' + taskName + ': ' + frictionPercent + '% friction (' + riskLabel + ')';
+      tfResult.appendChild(resultStrong);
+      appendStrongLabelParagraph(tfResult, 'Pattern:', archetype.title, { margin: 'var(--space-sm) 0 0' });
+      appendParagraph(tfResult, archetype.why, { margin: 'var(--space-sm) 0 0' });
+      appendParagraph(tfResult, 'The heaviest pressure points right now are ' + top[0].label + ', ' + top[1].label + ', and ' + top[2].label + '.', { margin: 'var(--space-sm) 0 0' });
+      var steps = document.createElement('ul');
+      steps.style.margin = 'var(--space-sm) 0 0';
+      steps.style.paddingLeft = 'var(--space-lg)';
+      [
+        ['First 2-minute move:', script.quickWin],
+        ['10-minute move:', script.tenMinuteMove],
+        ['Start script:', script.firstStep],
+        ['Do not do this:', script.avoidLine]
+      ].forEach(function (item) {
+        var li = document.createElement('li');
+        var strong = document.createElement('strong');
+        strong.textContent = item[0];
+        li.appendChild(strong);
+        li.appendChild(document.createTextNode(' ' + item[1]));
+        steps.appendChild(li);
+      });
+      tfResult.appendChild(steps);
       if (recurringTheme) {
-        tfResult.innerHTML += '<p style="margin:var(--space-sm) 0 0;"><strong>Recurring pattern:</strong> ' + recurringTheme + '</p>';
+        appendStrongLabelParagraph(tfResult, 'Recurring pattern:', recurringTheme, { margin: 'var(--space-sm) 0 0' });
       }
       renderTaskFrictionBeforeAfterPanel(savedHistory);
       if (tfMessage) tfMessage.textContent = 'Your start script is ready. Copy it if you want it beside you while you begin.';

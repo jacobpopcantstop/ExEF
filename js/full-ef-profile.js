@@ -57,6 +57,20 @@
     URL.revokeObjectURL(url);
   }
 
+  function clearNode(node) {
+    while (node && node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function renderListItems(container, items, formatter) {
+    if (!container) return;
+    clearNode(container);
+    (items || []).forEach(function (item, index) {
+      var li = document.createElement('li');
+      li.textContent = formatter ? formatter(item, index) : String(item);
+      container.appendChild(li);
+    });
+  }
+
   function computeTimeMetrics(entries) {
     if (!entries || !entries.length) return null;
     var deltas = [];
@@ -408,18 +422,18 @@
       { name: 'Task Start Friction diagnostic', ok: completion.hasTask },
       { name: timeLabel, ok: completion.hasTime }
     ];
-    statusEl.innerHTML = items.map(function (item) {
-      return '<li>' + (item.ok ? 'Complete' : 'Pending') + ': ' + item.name + '</li>';
-    }).join('');
+    renderListItems(statusEl, items, function (item) {
+      return (item.ok ? 'Complete' : 'Pending') + ': ' + item.name;
+    });
   }
 
   function renderSignalMap(signalMap) {
     if (!signalsEl || !signalMap) return;
     var ranked = rankedSignals(signalMap);
-    signalsEl.innerHTML = ranked.map(function (item) {
+    renderListItems(signalsEl, ranked, function (item) {
       var strength = item.score >= 4 ? 'High' : (item.score >= 2 ? 'Moderate' : (item.score > 0 ? 'Light' : 'Not detected yet'));
-      return '<li><strong>' + item.label + ':</strong> ' + strength + ' signal (' + item.score + ')</li>';
-    }).join('');
+      return item.label + ': ' + strength + ' signal (' + item.score + ')';
+    });
   }
 
   function init() {
@@ -453,9 +467,9 @@
     if (corePatternEl) corePatternEl.textContent = mergedResult.corePattern;
     if (leverageEl) leverageEl.textContent = 'Best leverage point: ' + mergedResult.leverage;
     renderSignalMap(mergedResult.signalMap);
-    if (prioritiesEl) prioritiesEl.innerHTML = mergedResult.priorities.map(function (item) { return '<li>' + item + '</li>'; }).join('');
-    if (strengthsEl) strengthsEl.innerHTML = mergedResult.strengths.map(function (item) { return '<li>' + item + '</li>'; }).join('');
-    if (planEl) planEl.innerHTML = mergedResult.plan.map(function (item) { return '<li>' + item + '</li>'; }).join('');
+    renderListItems(prioritiesEl, mergedResult.priorities);
+    renderListItems(strengthsEl, mergedResult.strengths);
+    renderListItems(planEl, mergedResult.plan);
     setMessage('Your full profile is ready to copy or export.');
   }
 

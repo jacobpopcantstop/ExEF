@@ -17,6 +17,60 @@
     return div.innerHTML;
   }
 
+  function escapeHtml(str) {
+    return escapeHTML(str);
+  }
+
+  function clearNode(node) {
+    if (!node) return;
+    while (node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function renderEmptyBody(body, colspan, message) {
+    if (!body) return;
+    clearNode(body);
+    var tr = document.createElement('tr');
+    var td = document.createElement('td');
+    td.colSpan = colspan;
+    td.textContent = message;
+    tr.appendChild(td);
+    body.appendChild(tr);
+  }
+
+  function appendTextCell(row, text) {
+    var cell = document.createElement('td');
+    cell.textContent = text;
+    row.appendChild(cell);
+    return cell;
+  }
+
+  function appendCodeCell(row, text) {
+    var cell = document.createElement('td');
+    var code = document.createElement('code');
+    code.textContent = text;
+    cell.appendChild(code);
+    row.appendChild(cell);
+    return cell;
+  }
+
+  function appendButtonGroup(cell, buttons) {
+    var group = document.createElement('div');
+    group.className = 'button-group';
+    (buttons || []).forEach(function (config) {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = config.className;
+      button.textContent = config.label;
+      if (config.dataset) {
+        Object.keys(config.dataset).forEach(function (key) {
+          button.setAttribute('data-' + key, config.dataset[key]);
+        });
+      }
+      group.appendChild(button);
+    });
+    cell.appendChild(group);
+  }
+
   function setStatus(message) {
     var status = byId('directory-moderation-status');
     if (status) status.textContent = message;
@@ -131,83 +185,117 @@
     if (!body) return;
 
     if (!records.length) {
-      body.innerHTML = '<tr><td colspan="7">No pending listings.</td></tr>';
+      renderEmptyBody(body, 7, 'No pending listings.');
       setStatus('No pending listings in moderation queue.');
       return;
     }
 
     setStatus(records.length + ' pending listing' + (records.length === 1 ? '' : 's') + ' loaded.');
-    body.innerHTML = records.map(function (row) {
-      var location = [row.city, row.state, row.zip].filter(Boolean).map(escapeHTML).join(', ');
-      return (
-        '<tr data-directory-id="' + escapeHTML(row.id) + '">' +
-          '<td><strong>' + escapeHTML(row.name || 'Unknown') + '</strong><br><span style="font-size:0.85rem;color:var(--color-text-muted);">ID: ' + escapeHTML(row.credential_id || 'Pending') + '</span></td>' +
-          '<td>' + (location || 'Unspecified') + '</td>' +
-          '<td>' + escapeHTML(row.specialty || 'Unspecified') + '</td>' +
-          '<td>' + escapeHTML(row.verification_status || 'pending') + '</td>' +
-          '<td>' + escapeHTML(row.moderation_status || 'pending') + '</td>' +
-          '<td><input class="form-control js-dir-note" type="text" placeholder="Add moderation note" value="' + escapeHTML(row.moderation_notes || '') + '" /></td>' +
-          '<td>' +
-            '<div class="button-group">' +
-              '<button type="button" class="btn btn--sm btn--secondary js-dir-approve">Approve</button>' +
-              '<button type="button" class="btn btn--sm btn--ghost js-dir-reject">Reject</button>' +
-              '<button type="button" class="btn btn--sm btn--ghost js-dir-edit">Edit</button>' +
-            '</div>' +
-          '</td>' +
-        '</tr>'
-      );
-    }).join('');
+    clearNode(body);
+    records.forEach(function (row) {
+      var location = [row.city, row.state, row.zip].filter(Boolean).join(', ');
+      var tr = document.createElement('tr');
+      tr.setAttribute('data-directory-id', String(row.id || ''));
+
+      var nameCell = document.createElement('td');
+      var strong = document.createElement('strong');
+      strong.textContent = row.name || 'Unknown';
+      nameCell.appendChild(strong);
+      nameCell.appendChild(document.createElement('br'));
+      var meta = document.createElement('span');
+      meta.style.fontSize = '0.85rem';
+      meta.style.color = 'var(--color-text-muted)';
+      meta.textContent = 'ID: ' + (row.credential_id || 'Pending');
+      nameCell.appendChild(meta);
+      tr.appendChild(nameCell);
+
+      appendTextCell(tr, location || 'Unspecified');
+      appendTextCell(tr, row.specialty || 'Unspecified');
+      appendTextCell(tr, row.verification_status || 'pending');
+      appendTextCell(tr, row.moderation_status || 'pending');
+
+      var noteCell = document.createElement('td');
+      var input = document.createElement('input');
+      input.className = 'form-control js-dir-note';
+      input.type = 'text';
+      input.placeholder = 'Add moderation note';
+      input.value = row.moderation_notes || '';
+      noteCell.appendChild(input);
+      tr.appendChild(noteCell);
+
+      var actionCell = document.createElement('td');
+      appendButtonGroup(actionCell, [
+        { className: 'btn btn--sm btn--secondary js-dir-approve', label: 'Approve' },
+        { className: 'btn btn--sm btn--ghost js-dir-reject', label: 'Reject' },
+        { className: 'btn btn--sm btn--ghost js-dir-edit', label: 'Edit' }
+      ]);
+      tr.appendChild(actionCell);
+
+      body.appendChild(tr);
+    });
   }
 
   function renderHistory(records) {
     var body = byId('directory-history-body');
     if (!body) return;
     if (!records.length) {
-      body.innerHTML = '<tr><td colspan="5">No reviewed records yet.</td></tr>';
+      renderEmptyBody(body, 5, 'No reviewed records yet.');
       return;
     }
-    body.innerHTML = records.map(function (row) {
-      var status = escapeHTML((row.moderation_status || 'pending') + ' / ' + (row.verification_status || 'pending'));
+    clearNode(body);
+    records.forEach(function (row) {
+      var tr = document.createElement('tr');
       var reviewedAt = row.last_reviewed || row.updated_at || '';
-      return (
-        '<tr>' +
-          '<td>' + escapeHTML(row.name || 'Unknown') + '</td>' +
-          '<td>' + status + '</td>' +
-          '<td>' + escapeHTML(row.reviewer_email || 'Unassigned') + '</td>' +
-          '<td>' + (reviewedAt ? escapeHTML(new Date(reviewedAt).toLocaleString()) : 'N/A') + '</td>' +
-          '<td>' + escapeHTML(row.moderation_notes || 'None') + '</td>' +
-        '</tr>'
-      );
-    }).join('');
+      appendTextCell(tr, row.name || 'Unknown');
+      appendTextCell(tr, (row.moderation_status || 'pending') + ' / ' + (row.verification_status || 'pending'));
+      appendTextCell(tr, row.reviewer_email || 'Unassigned');
+      appendTextCell(tr, reviewedAt ? new Date(reviewedAt).toLocaleString() : 'N/A');
+      appendTextCell(tr, row.moderation_notes || 'None');
+      body.appendChild(tr);
+    });
   }
 
   function renderCmsRecords(records) {
     var body = byId('cms-body');
     if (!body) return;
     if (!records.length) {
-      body.innerHTML = '<tr><td colspan="8">No records match current filters.</td></tr>';
+      renderEmptyBody(body, 8, 'No records match current filters.');
       return;
     }
-    body.innerHTML = records.map(function (row) {
+    clearNode(body);
+    records.forEach(function (row) {
       var location = [row.city, row.state, row.zip].filter(Boolean).join(', ');
       var updated = row.updated_at ? new Date(row.updated_at).toLocaleString() : 'N/A';
-      return (
-        '<tr data-cms-id="' + escapeHtml(row.id) + '">' +
-          '<td><strong>' + escapeHtml(row.name || 'Unknown') + '</strong><br><small>' + escapeHtml(row.credential_id || 'No credential') + '</small></td>' +
-          '<td>' + escapeHtml(row.email || '') + '</td>' +
-          '<td>' + escapeHtml(location) + '</td>' +
-          '<td>' + escapeHtml(row.specialty || '') + '</td>' +
-          '<td>' + escapeHtml(row.verification_status || 'pending') + '</td>' +
-          '<td>' + escapeHtml(row.moderation_status || 'pending') + '</td>' +
-          '<td>' + escapeHtml(updated) + '</td>' +
-          '<td><div class="button-group">' +
-            '<button type="button" class="btn btn--sm btn--ghost js-cms-edit">Edit</button>' +
-            '<button type="button" class="btn btn--sm btn--secondary js-cms-approve">Approve</button>' +
-            '<button type="button" class="btn btn--sm btn--ghost js-cms-archive">Archive</button>' +
-          '</div></td>' +
-        '</tr>'
-      );
-    }).join('');
+      var tr = document.createElement('tr');
+      tr.setAttribute('data-cms-id', String(row.id || ''));
+
+      var nameCell = document.createElement('td');
+      var strong = document.createElement('strong');
+      strong.textContent = row.name || 'Unknown';
+      nameCell.appendChild(strong);
+      nameCell.appendChild(document.createElement('br'));
+      var small = document.createElement('small');
+      small.textContent = row.credential_id || 'No credential';
+      nameCell.appendChild(small);
+      tr.appendChild(nameCell);
+
+      appendTextCell(tr, row.email || '');
+      appendTextCell(tr, location);
+      appendTextCell(tr, row.specialty || '');
+      appendTextCell(tr, row.verification_status || 'pending');
+      appendTextCell(tr, row.moderation_status || 'pending');
+      appendTextCell(tr, updated);
+
+      var actionCell = document.createElement('td');
+      appendButtonGroup(actionCell, [
+        { className: 'btn btn--sm btn--ghost js-cms-edit', label: 'Edit' },
+        { className: 'btn btn--sm btn--secondary js-cms-approve', label: 'Approve' },
+        { className: 'btn btn--sm btn--ghost js-cms-archive', label: 'Archive' }
+      ]);
+      tr.appendChild(actionCell);
+
+      body.appendChild(tr);
+    });
   }
 
   function bindModerationActions() {
@@ -362,9 +450,9 @@
       })
       .catch(function (err) {
         var body = byId('directory-moderation-body');
-        if (body) body.innerHTML = '<tr><td colspan="7">Queue unavailable.</td></tr>';
+        renderEmptyBody(body, 7, 'Queue unavailable.');
         var history = byId('directory-history-body');
-        if (history) history.innerHTML = '<tr><td colspan="5">History unavailable.</td></tr>';
+        renderEmptyBody(history, 5, 'History unavailable.');
         setStatus(err.message || 'Unable to load queue.');
       });
   }
@@ -409,19 +497,18 @@
     lastConfigChecks = checks.slice();
     if (!checks.length) {
       status.textContent = 'No config data returned.';
-      body.innerHTML = '<tr><td colspan="3">No config data.</td></tr>';
+      renderEmptyBody(body, 3, 'No config data.');
       return;
     }
 
-    body.innerHTML = checks.map(function (item) {
-      return (
-        '<tr>' +
-          '<td><code>' + escapeHtml(item.name) + '</code></td>' +
-          '<td>' + (item.exists ? 'Yes' : 'No') + '</td>' +
-          '<td>' + (item.exists ? (item.strong ? 'Pass' : 'Weak') : 'N/A') + '</td>' +
-        '</tr>'
-      );
-    }).join('');
+    clearNode(body);
+    checks.forEach(function (item) {
+      var tr = document.createElement('tr');
+      appendCodeCell(tr, item.name || '');
+      appendTextCell(tr, item.exists ? 'Yes' : 'No');
+      appendTextCell(tr, item.exists ? (item.strong ? 'Pass' : 'Weak') : 'N/A');
+      body.appendChild(tr);
+    });
 
     if (payload.summary && payload.summary.launch_ready) {
       status.textContent = 'All required launch variables are configured.';
@@ -449,7 +536,7 @@
       .then(renderOpsConfig)
       .catch(function (err) {
         status.textContent = err.message || 'Unable to load config checks.';
-        body.innerHTML = '<tr><td colspan="3">Config checks unavailable.</td></tr>';
+        renderEmptyBody(body, 3, 'Config checks unavailable.');
       });
   }
 
@@ -457,82 +544,111 @@
     var body = byId('ops-audit-body');
     if (!body) return;
     if (!logs.length) {
-      body.innerHTML = '<tr><td colspan="5">No ops audit events loaded.</td></tr>';
+      renderEmptyBody(body, 5, 'No ops audit events loaded.');
       return;
     }
-    body.innerHTML = logs.map(function (log) {
+    clearNode(body);
+    logs.forEach(function (log) {
       var metadata = log.metadata || {};
       var note = metadata.reason || metadata.error || metadata.email || metadata.verification_mode || JSON.stringify(metadata || {});
-      return (
-        '<tr>' +
-          '<td>' + escapeHTML(log.created_at ? new Date(log.created_at).toLocaleString() : 'N/A') + '</td>' +
-          '<td><code>' + escapeHTML(log.action || '') + '</code></td>' +
-          '<td>' + escapeHTML((log.actor_role || 'unknown') + (log.actor_email ? ' / ' + log.actor_email : '')) + '</td>' +
-          '<td>' + escapeHTML((log.target_type || 'n/a') + (log.target_id ? ' / ' + log.target_id : '')) + '</td>' +
-          '<td>' + escapeHTML(note) + '</td>' +
-        '</tr>'
-      );
-    }).join('');
+      var tr = document.createElement('tr');
+      appendTextCell(tr, log.created_at ? new Date(log.created_at).toLocaleString() : 'N/A');
+      appendCodeCell(tr, log.action || '');
+      appendTextCell(tr, (log.actor_role || 'unknown') + (log.actor_email ? ' / ' + log.actor_email : ''));
+      appendTextCell(tr, (log.target_type || 'n/a') + (log.target_id ? ' / ' + log.target_id : ''));
+      appendTextCell(tr, note);
+      body.appendChild(tr);
+    });
   }
 
   function renderSubmissionQueue(records) {
     var body = byId('submission-queue-body');
     if (!body) return;
     if (!records.length) {
-      body.innerHTML = '<tr><td colspan="6">No submissions match current filters.</td></tr>';
+      renderEmptyBody(body, 6, 'No submissions match current filters.');
       return;
     }
-    body.innerHTML = records.map(function (row) {
+    clearNode(body);
+    records.forEach(function (row) {
       var label = row.kind === 'capstone'
         ? 'Capstone'
-        : ('Module ' + escapeHTML(row.module_id || '?'));
+        : ('Module ' + String(row.module_id || '?'));
       var releaseText = row.release_at ? new Date(row.release_at).toLocaleString() : 'Immediate';
       var scoreText = row.feedback_available && typeof row.score === 'number' ? (row.score + '%') : 'Held';
-      return (
-        '<tr data-submission-id="' + escapeHTML(row.id) + '">' +
-          '<td><strong>' + escapeHTML(row.email || 'Unknown') + '</strong><br><small>' + escapeHTML(row.id || '') + '</small></td>' +
-          '<td>' + label + '</td>' +
-          '<td>' + escapeHTML(row.status || '') + '</td>' +
-          '<td>' + escapeHTML(scoreText) + '</td>' +
-          '<td>' + escapeHTML(releaseText) + '</td>' +
-          '<td><div class="button-group">' +
-            '<button type="button" class="btn btn--sm btn--secondary js-submission-release">Release</button>' +
-            '<button type="button" class="btn btn--sm btn--ghost js-submission-pass">Pass</button>' +
-            '<button type="button" class="btn btn--sm btn--ghost js-submission-revise">Revise</button>' +
-          '</div></td>' +
-        '</tr>'
-      );
-    }).join('');
+      var tr = document.createElement('tr');
+      tr.setAttribute('data-submission-id', String(row.id || ''));
+
+      var learnerCell = document.createElement('td');
+      var strong = document.createElement('strong');
+      strong.textContent = row.email || 'Unknown';
+      learnerCell.appendChild(strong);
+      learnerCell.appendChild(document.createElement('br'));
+      var small = document.createElement('small');
+      small.textContent = row.id || '';
+      learnerCell.appendChild(small);
+      tr.appendChild(learnerCell);
+
+      appendTextCell(tr, label);
+      appendTextCell(tr, row.status || '');
+      appendTextCell(tr, scoreText);
+      appendTextCell(tr, releaseText);
+
+      var actionCell = document.createElement('td');
+      appendButtonGroup(actionCell, [
+        { className: 'btn btn--sm btn--secondary js-submission-release', label: 'Release' },
+        { className: 'btn btn--sm btn--ghost js-submission-pass', label: 'Pass' },
+        { className: 'btn btn--sm btn--ghost js-submission-revise', label: 'Revise' }
+      ]);
+      tr.appendChild(actionCell);
+
+      body.appendChild(tr);
+    });
   }
 
   function renderCertificateQueue(records) {
     var body = byId('certificate-queue-body');
     if (!body) return;
     if (!records.length) {
-      body.innerHTML = '<tr><td colspan="7">No certificate purchases match current filters.</td></tr>';
+      renderEmptyBody(body, 7, 'No certificate purchases match current filters.');
       return;
     }
-    body.innerHTML = records.map(function (row) {
+    clearNode(body);
+    records.forEach(function (row) {
       var items = (row.items || []).map(function (item) { return item.name || item.id || 'item'; }).join(', ');
       var decision = row.reviewerDecision
         ? (row.reviewerDecision + (row.reviewedAt ? ' (' + new Date(row.reviewedAt).toLocaleDateString() + ')' : ''))
         : 'Pending';
-      return (
-        '<tr data-purchase-id="' + escapeHTML(row.id) + '" data-credential-id="' + escapeHTML(row.credentialId || '') + '" data-email="' + escapeHTML(row.email || '') + '">' +
-          '<td><strong>' + escapeHTML(row.email || 'Unknown') + '</strong><br><small>' + escapeHTML(row.id || '') + '</small></td>' +
-          '<td>' + escapeHTML(row.credentialId || 'Pending') + '</td>' +
-          '<td>' + escapeHTML(row.date ? new Date(row.date).toLocaleString() : 'N/A') + '</td>' +
-          '<td>$' + escapeHTML(String(row.total || 0)) + '</td>' +
-          '<td>' + escapeHTML(decision) + '</td>' +
-          '<td>' + escapeHTML(items || 'Certificate') + '</td>' +
-          '<td><div class="button-group">' +
-            '<button type="button" class="btn btn--sm btn--secondary js-certificate-approve">Approve</button>' +
-            '<button type="button" class="btn btn--sm btn--ghost js-certificate-hold">Hold</button>' +
-            '<button type="button" class="btn btn--sm btn--ghost js-certificate-reject">Reject</button>' +
-          '</div></td>' +
-        '</tr>'
-      );
-    }).join('');
+      var tr = document.createElement('tr');
+      tr.setAttribute('data-purchase-id', String(row.id || ''));
+      tr.setAttribute('data-credential-id', String(row.credentialId || ''));
+      tr.setAttribute('data-email', String(row.email || ''));
+
+      var learnerCell = document.createElement('td');
+      var strong = document.createElement('strong');
+      strong.textContent = row.email || 'Unknown';
+      learnerCell.appendChild(strong);
+      learnerCell.appendChild(document.createElement('br'));
+      var small = document.createElement('small');
+      small.textContent = row.id || '';
+      learnerCell.appendChild(small);
+      tr.appendChild(learnerCell);
+
+      appendTextCell(tr, row.credentialId || 'Pending');
+      appendTextCell(tr, row.date ? new Date(row.date).toLocaleString() : 'N/A');
+      appendTextCell(tr, '$' + String(row.total || 0));
+      appendTextCell(tr, decision);
+      appendTextCell(tr, items || 'Certificate');
+
+      var actionCell = document.createElement('td');
+      appendButtonGroup(actionCell, [
+        { className: 'btn btn--sm btn--secondary js-certificate-approve', label: 'Approve' },
+        { className: 'btn btn--sm btn--ghost js-certificate-hold', label: 'Hold' },
+        { className: 'btn btn--sm btn--ghost js-certificate-reject', label: 'Reject' }
+      ]);
+      tr.appendChild(actionCell);
+
+      body.appendChild(tr);
+    });
   }
 
   function loadOpsAudit() {

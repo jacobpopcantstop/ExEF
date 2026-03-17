@@ -194,6 +194,28 @@
     var certSection = document.getElementById('cert-section');
     var gateMsg = document.getElementById('gate-message');
     var gateActions = document.getElementById('gate-actions');
+    var gateLogin = document.getElementById('gate-login');
+
+    function clearNode(node) {
+      while (node && node.firstChild) node.removeChild(node.firstChild);
+    }
+
+    function setGateMessage(parts) {
+      clearNode(gateMsg);
+      (parts || []).forEach(function (part) {
+        if (!part) return;
+        if (part.type === 'text') {
+          gateMsg.appendChild(document.createTextNode(part.text));
+          return;
+        }
+        if (part.type === 'link') {
+          var link = document.createElement('a');
+          link.href = part.href;
+          link.textContent = part.text;
+          gateMsg.appendChild(link);
+        }
+      });
+    }
 
     if (!EFI.Auth.isLoggedIn()) {
       gateMsg.textContent = 'Please log in to view your certificate.';
@@ -207,11 +229,15 @@
     var hasCertificatePurchase = certStatus.certificatePurchased;
 
     if (!certStatus.eligibleForCertificate && !hasCertificatePurchase) {
-      gateMsg.innerHTML = 'You still need to complete certification requirements before your certificate can be issued. Visit your <a href="dashboard.html">dashboard</a> to submit module work and capstone evidence.';
+      setGateMessage([
+        { type: 'text', text: 'You still need to complete certification requirements before your certificate can be issued. Visit your ' },
+        { type: 'link', href: 'dashboard.html', text: 'dashboard' },
+        { type: 'text', text: ' to submit module work and capstone evidence.' }
+      ]);
       gateActions.style.display = 'flex';
       gateActions.style.justifyContent = 'center';
       gateActions.style.gap = 'var(--space-md)';
-      document.getElementById('gate-login').style.display = 'none';
+      gateLogin.style.display = 'none';
       return;
     }
 
@@ -220,16 +246,20 @@
       gateActions.style.display = 'flex';
       gateActions.style.justifyContent = 'center';
       gateActions.style.gap = 'var(--space-md)';
-      document.getElementById('gate-login').style.display = 'none';
+      gateLogin.style.display = 'none';
       return;
     }
 
     if (!certStatus.eligibleForCertificate) {
-      gateMsg.innerHTML = 'A certificate purchase record was found, but your released readiness record is not complete yet. Refresh grading status from your <a href="dashboard.html">dashboard</a> or contact EFI support before treating this certificate as issued.';
+      setGateMessage([
+        { type: 'text', text: 'A certificate purchase record was found, but your released readiness record is not complete yet. Refresh grading status from your ' },
+        { type: 'link', href: 'dashboard.html', text: 'dashboard' },
+        { type: 'text', text: ' or contact EFI support before treating this certificate as issued.' }
+      ]);
       gateActions.style.display = 'flex';
       gateActions.style.justifyContent = 'center';
       gateActions.style.gap = 'var(--space-md)';
-      document.getElementById('gate-login').style.display = 'none';
+      gateLogin.style.display = 'none';
       return;
     }
 
@@ -252,7 +282,17 @@
     document.getElementById('cert-date').textContent = issueDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     if (!certStatus.framedCertificatePurchased) {
-      document.getElementById('cert-id').insertAdjacentHTML('afterend', '<p style=\"font-size:0.85rem;color:var(--color-text-muted);margin-top:var(--space-sm);\">Digital certificate issued. Want print + frame shipping? <a href=\"store.html\">Purchase framed fulfillment</a>.</p>');
+      var certId = document.getElementById('cert-id');
+      var note = document.createElement('p');
+      note.style.fontSize = '0.85rem';
+      note.style.color = 'var(--color-text-muted)';
+      note.style.marginTop = 'var(--space-sm)';
+      note.appendChild(document.createTextNode('Digital certificate issued. Want print + frame shipping? '));
+      var purchaseLink = document.createElement('a');
+      purchaseLink.href = 'store.html';
+      purchaseLink.textContent = 'Purchase framed fulfillment';
+      note.appendChild(purchaseLink);
+      certId.insertAdjacentElement('afterend', note);
     }
 
     var hash = 0;

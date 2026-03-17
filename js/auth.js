@@ -14,6 +14,16 @@ EFI.Auth = (function () {
   var PURCHASES_KEY = 'efi_purchases';
   var ACCESS_TOKEN_KEY = 'efi_access_token';
   var REFRESH_TOKEN_KEY = 'efi_refresh_token';
+  var ACTION_PLAN_STORAGE_KEY = 'efi_action_plans_v1';
+  var REFLECTION_STORAGE_KEY = 'efi_reflections_v1';
+  var ADHERENCE_STORAGE_KEY = 'efi_adherence_v1';
+  var LEARNING_LOOP_SYNC_MS = 15000;
+  var learningLoopSyncTimer = null;
+  var learningLoopSyncBound = false;
+  var lastLearningLoopSignature = '';
+  var ACTION_PLAN_STORAGE_KEY = 'efi_action_plans_v1';
+  var REFLECTION_STORAGE_KEY = 'efi_reflections_v1';
+  var ADHERENCE_STORAGE_KEY = 'efi_adherence_v1';
 
   function apiFetch(path, opts) {
     if (!window.fetch) return Promise.reject(new Error('Browser does not support fetch.'));
@@ -111,8 +121,31 @@ EFI.Auth = (function () {
       moduleAssessments: {},
       esqrCompleted: false,
       submissions: {},
-      capstone: { status: 'not_submitted' }
+      capstone: { status: 'not_submitted' },
+      learningLoop: {
+        actionPlans: [],
+        reflections: [],
+        adherence: { sessions: [] }
+      }
     };
+  }
+
+  function readStorageJson(key, fallback) {
+    try {
+      var parsed = JSON.parse(localStorage.getItem(key));
+      return parsed || fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function writeStorageJson(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   function normalizeProgress(progress) {
@@ -123,7 +156,155 @@ EFI.Auth = (function () {
     if (!merged.capstone) merged.capstone = { status: 'not_submitted' };
     if (!merged.capstone.status) merged.capstone.status = 'not_submitted';
     if (typeof merged.esqrCompleted !== 'boolean') merged.esqrCompleted = false;
+    if (!merged.learningLoop || typeof merged.learningLoop !== 'object') merged.learningLoop = {};
+    if (!Array.isArray(merged.learningLoop.actionPlans)) merged.learningLoop.actionPlans = [];
+    if (!Array.isArray(merged.learningLoop.reflections)) merged.learningLoop.reflections = [];
+    if (!merged.learningLoop.adherence || typeof merged.learningLoop.adherence !== 'object') {
+      merged.learningLoop.adherence = { sessions: [] };
+    }
+    if (!Array.isArray(merged.learningLoop.adherence.sessions)) merged.learningLoop.adherence.sessions = [];
     return merged;
+  }
+
+  function cloneJson(value, fallback) {
+    try {
+      return JSON.parse(JSON.stringify(value));
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function getLearningLoopKey(record, fallbackPrefix, index) {
+    if (!record || typeof record !== 'object') return fallbackPrefix + '_' + index;
+    if (record.plan_id) return 'plan_' + record.plan_id;
+    if (record.id) return 'id_' + record.id;
+    if (record.at) return 'at_' + record.at;
+    if (record.state && record.state.created_at) return 'created_' + record.state.created_at;
+    return fallbackPrefix + '_' + index + '_' + JSON.stringify(record);
+  }
+
+  function mergeLearningLoopCollection(primary, secondary, limit, fallbackPrefix) {
+    var merged = [];
+    var seen = {};
+    [primary, secondary].forEach(function (list) {
+      if (!Array.isArray(list)) return;
+      list.forEach(function (item, index) {
+        var key = getLearningLoopKey(item, fallbackPrefix, index);
+        if (seen[key]) return;
+        seen[key] = true;
+        merged.push(cloneJson(item, item));
+      });
+    });
+    return merged.slice(-limit);
+  }
+
+  function buildAdherenceComputed(sessions) {
+    var safeSessions = Array.isArray(sessions) ? sessions.slice(-30) : [];
+    var recent = safeSessions.slice(-10);
+    var doneCount = recent.filter(function (session) {
+      return !!(session && session.completed);
+    }).length;
+    var ratio = recent.length ? doneCount / recent.length : 0;
+    return {
+      level: ratio >= 0.7 ? 'high' : (ratio >= 0.4 ? 'medium' : 'low'),
+      score: ratio,
+      sample_size: recent.length
+    };
+  }
+
+  function mergeAdherence(primary, secondary) {
+    var seen = {};
+    var sessions = [];
+    [primary, secondary].forEach(function (item) {
+      var list = item && Array.isArray(item.sessions) ? item.sessions : [];
+      list.forEach(function (session, index) {
+        var key = getLearningLoopKey(session, 'session', index) + '_' + String(!!(session && session.completed));
+        if (seen[key]) return;
+        seen[key] = true;
+        sessions.push(cloneJson(session, session));
+      });
+    });
+    sessions = sessions.slice(-30);
+    return {
+      sessions: sessions,
+      computed: buildAdherenceComputed(sessions)
+    };
+  }
+
+  function readLearningLoopFromLocal() {
+    return {
+      actionPlans: readStorageJson(ACTION_PLAN_STORAGE_KEY, []),
+      reflections: readStorageJson(REFLECTION_STORAGE_KEY, []),
+      adherence: readStorageJson(ADHERENCE_STORAGE_KEY, { sessions: [] })
+    };
+  }
+
+  function mergeLearningLoop(progressArg, localLoopArg) {
+    var progress = normalizeProgress(progressArg || getDefaultProgress());
+    var localLoop = localLoopArg || readLearningLoopFromLocal();
+    progress.learningLoop = {
+      actionPlans: mergeLearningLoopCollection(progress.learningLoop.actionPlans, localLoop.actionPlans, 50, 'plan'),
+      reflections: mergeLearningLoopCollection(progress.learningLoop.reflections, localLoop.reflections, 100, 'reflection'),
+      adherence: mergeAdherence(progress.learningLoop.adherence, localLoop.adherence)
+    };
+    return progress;
+  }
+
+  function getLearningLoopSignature(progressArg) {
+    var progress = normalizeProgress(progressArg || getDefaultProgress());
+    try {
+      return JSON.stringify(progress.learningLoop || {});
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function mergeLearningLoopFromLocal(progressArg) {
+    return mergeLearningLoop(progressArg, readLearningLoopFromLocal());
+  }
+
+  function hydrateLearningLoopToLocal(progressArg) {
+    var progress = normalizeProgress(progressArg || getDefaultProgress());
+    if (progress.learningLoop) {
+      writeStorageJson(ACTION_PLAN_STORAGE_KEY, (progress.learningLoop.actionPlans || []).slice(-50));
+      writeStorageJson(REFLECTION_STORAGE_KEY, (progress.learningLoop.reflections || []).slice(-100));
+      writeStorageJson(ADHERENCE_STORAGE_KEY, progress.learningLoop.adherence || { sessions: [] });
+    }
+    lastLearningLoopSignature = getLearningLoopSignature(progress);
+  }
+
+  function syncLearningLoopState(force) {
+    var user = getCurrentUser();
+    if (!user) return false;
+    user.progress = mergeLearningLoopFromLocal(user.progress);
+    if (!force) {
+      var signature = getLearningLoopSignature(user.progress);
+      if (signature && signature === lastLearningLoopSignature) return true;
+    }
+    return updateUser({ progress: user.progress });
+  }
+
+  function startLearningLoopSync() {
+    if (learningLoopSyncTimer) return;
+    learningLoopSyncTimer = window.setInterval(function () {
+      if (!isLoggedIn()) return;
+      syncLearningLoopState(false);
+    }, LEARNING_LOOP_SYNC_MS);
+  }
+
+  function bindLearningLoopSyncEvents() {
+    if (learningLoopSyncBound) return;
+    learningLoopSyncBound = true;
+
+    window.addEventListener('beforeunload', function () {
+      if (!isLoggedIn()) return;
+      syncLearningLoopState(true);
+    });
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState !== 'hidden' || !isLoggedIn()) return;
+      syncLearningLoopState(true);
+    });
   }
 
   function normalizeModuleId(moduleId) {
@@ -204,15 +385,18 @@ EFI.Auth = (function () {
       });
       if (managed && managed.ok && managed.user) {
         setManagedTokens(managed.access_token || '', managed.refresh_token || '');
+        var managedProgress = mergeLearningLoopFromLocal(managed.user.progress || getDefaultProgress());
+        hydrateLearningLoopToLocal(managedProgress);
         setSession({
           email: managed.user.email,
           name: managed.user.name || managed.user.email,
           mode: 'managed',
           role: managed.user.role || 'learner',
           createdAt: managed.user.createdAt || new Date().toISOString(),
-          progress: managed.user.progress || getDefaultProgress(),
+          progress: managedProgress,
           purchases: managed.user.purchases || []
         });
+        syncLearningLoopState(true);
         return { ok: true, user: getCurrentUser() };
       }
     } catch (managedErr) {}
@@ -238,6 +422,7 @@ EFI.Auth = (function () {
       purchases: []
     };
     saveUsers(users);
+    hydrateLearningLoopToLocal(users[key].progress);
     setSession(users[key]);
     apiFetch('/api/sync-progress', {
       method: 'POST',
@@ -260,15 +445,18 @@ EFI.Auth = (function () {
       });
       if (managed && managed.ok && managed.user) {
         setManagedTokens(managed.access_token || '', managed.refresh_token || '');
+        var managedProgress = mergeLearningLoopFromLocal(managed.user.progress || getDefaultProgress());
+        hydrateLearningLoopToLocal(managedProgress);
         setSession({
           email: managed.user.email,
           name: managed.user.name || managed.user.email,
           mode: 'managed',
           role: managed.user.role || 'learner',
           createdAt: managed.user.createdAt || new Date().toISOString(),
-          progress: managed.user.progress || getDefaultProgress(),
+          progress: managedProgress,
           purchases: managed.user.purchases || []
         });
+        syncLearningLoopState(true);
         return { ok: true, user: getCurrentUser() };
       }
     } catch (managedErr) {}
@@ -301,11 +489,15 @@ EFI.Auth = (function () {
     apiFetch('/api/sync-progress?email=' + encodeURIComponent(key))
       .then(function (remote) {
         if (remote && remote.ok && remote.progress) {
-          user.progress = normalizeProgress(remote.progress);
+          user.progress = mergeLearningLoopFromLocal(remote.progress);
           users[key] = user;
           saveUsers(users);
+          hydrateLearningLoopToLocal(user.progress);
+          setSession(user);
+          syncLearningLoopState(true);
         }
       }).catch(function () {});
+    hydrateLearningLoopToLocal(user.progress || getDefaultProgress());
     setSession(user);
     return { ok: true, user: user };
   }
@@ -421,16 +613,20 @@ EFI.Auth = (function () {
     var session = getSession();
     if (!session) return false;
     if (session.mode === 'managed') {
+      var nextProgress = updates && updates.progress
+        ? mergeLearningLoopFromLocal(updates.progress)
+        : mergeLearningLoopFromLocal(session.progress || getDefaultProgress());
       var next = {
         email: session.email,
         name: updates && updates.name ? updates.name : session.name,
         mode: 'managed',
         role: session.role || 'learner',
         createdAt: session.createdAt || new Date().toISOString(),
-        progress: updates && updates.progress ? normalizeProgress(updates.progress) : normalizeProgress(session.progress || getDefaultProgress()),
+        progress: nextProgress,
         purchases: updates && updates.purchases ? updates.purchases : (session.purchases || [])
       };
       setSession(next);
+      hydrateLearningLoopToLocal(next.progress);
       if (next.progress) {
         apiFetch('/api/sync-progress', {
           method: 'POST',
@@ -448,13 +644,28 @@ EFI.Auth = (function () {
         user[key] = updates[key];
       }
     }
+    if (updates && updates.progress) {
+      user.progress = mergeLearningLoopFromLocal(updates.progress);
+    }
     users[session.email] = user;
     saveUsers(users);
+    setSession({
+      email: user.email,
+      name: user.name,
+      mode: session.mode || 'prototype',
+      role: user.role || 'learner',
+      createdAt: user.createdAt || session.createdAt || new Date().toISOString(),
+      progress: user.progress || getDefaultProgress(),
+      purchases: user.purchases || []
+    });
+    if (user.progress) {
+      hydrateLearningLoopToLocal(user.progress);
+    }
     if (updates && updates.progress) {
       apiFetch('/api/sync-progress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user.email, progress: updates.progress })
+        body: JSON.stringify({ email: user.email, progress: user.progress })
       }).catch(function () {});
     }
     return true;
@@ -761,18 +972,31 @@ EFI.Auth = (function () {
   }
 
   /* --- Nav Auth UI --- */
+  function clearNode(node) {
+    while (node && node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function appendNavLink(container, href, label) {
+    var link = document.createElement('a');
+    link.href = href;
+    link.className = 'nav__link';
+    link.textContent = label;
+    container.appendChild(link);
+  }
+
   function initNavAuth() {
     var session = getSession();
     var authLinks = document.querySelectorAll('.nav__auth');
     authLinks.forEach(function (el) {
+      clearNode(el);
       if (session) {
         var user = getCurrentUser();
-        var opsLink = (user && (user.role === 'admin' || user.role === 'reviewer'))
-          ? '<a href="admin.html" class="nav__link">Admin</a>'
-          : '';
-        el.innerHTML = '<a href="dashboard.html" class="nav__link">Dashboard</a>' + opsLink;
+        appendNavLink(el, 'dashboard.html', 'Dashboard');
+        if (user && (user.role === 'admin' || user.role === 'reviewer')) {
+          appendNavLink(el, 'admin.html', 'Admin');
+        }
       } else {
-        el.innerHTML = '<a href="login.html" class="nav__link">Login</a>';
+        appendNavLink(el, 'login.html', 'Login');
       }
       updateCartBadge();
     });
@@ -797,14 +1021,21 @@ EFI.Auth = (function () {
         mode: 'managed',
         role: res.user.role || 'learner',
         createdAt: res.user.createdAt || session.createdAt,
-        progress: res.user.progress || session.progress || getDefaultProgress(),
+        progress: normalizeProgress(res.user.progress || session.progress || getDefaultProgress()),
         purchases: res.user.purchases || session.purchases || []
       });
+      hydrateLearningLoopToLocal(res.user.progress || session.progress || getDefaultProgress());
     }).catch(function () {});
   }
 
   /* Init on page load */
   document.addEventListener('DOMContentLoaded', function () {
+    var existingUser = getCurrentUser();
+    if (existingUser && existingUser.progress) {
+      hydrateLearningLoopToLocal(existingUser.progress);
+    }
+    bindLearningLoopSyncEvents();
+    startLearningLoopSync();
     refreshManagedSession().finally(function () {
       initNavAuth();
       updateCartBadge();
@@ -817,7 +1048,9 @@ EFI.Auth = (function () {
     logout: logout,
     getSession: getSession,
     getCurrentUser: getCurrentUser,
+    getUser: getCurrentUser,
     updateUser: updateUser,
+    syncLearningLoopState: syncLearningLoopState,
     isLoggedIn: isLoggedIn,
     requireAuth: requireAuth,
     getCart: getCart,

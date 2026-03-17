@@ -329,18 +329,18 @@ p {
 .nav__logo-icon {
   width: 40px;
   height: 40px;
-  background: #162b3c;
-  border: 1px solid #c9a84c;
+  background: linear-gradient(135deg, #1a5276, #1e8449);
+  border: none;
   border-radius: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #d4aa50;
+  color: #ffffff;
   font-size: 0.92rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   flex-shrink: 0;
-  box-shadow: 0 1px 4px rgba(22, 43, 60, 0.18);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.22);
 }
 
 .nav-pixel-wave {
@@ -5385,7 +5385,8 @@ body.has-topic-clusters.has-topic-clusters-plain main {
   color: var(--color-primary-light);
 }
 
-[data-theme="dark"] .hero {
+[data-theme="dark"] .hero,
+[data-theme="dark"] body.page-home .hero {
   background:
     linear-gradient(180deg, rgba(18, 24, 39, 0.98), rgba(14, 18, 30, 0.98)),
     repeating-linear-gradient(
@@ -5395,6 +5396,12 @@ body.has-topic-clusters.has-topic-clusters-plain main {
       transparent 1px,
       transparent 84px
     );
+}
+
+[data-theme="dark"] body.page-about .page-header,
+[data-theme="dark"] body.page-curriculum .page-header,
+[data-theme="dark"] body.page-resources .page-header {
+  background: #141922;
 }
 
 [data-theme="dark"] .hero__title {

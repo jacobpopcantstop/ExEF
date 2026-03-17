@@ -120,7 +120,8 @@
   color: var(--color-primary-light);
 }
 
-[data-theme="dark"] .hero {
+[data-theme="dark"] .hero,
+[data-theme="dark"] body.page-home .hero {
   background:
     linear-gradient(180deg, rgba(18, 24, 39, 0.98), rgba(14, 18, 30, 0.98)),
     repeating-linear-gradient(
@@ -130,6 +131,12 @@
       transparent 1px,
       transparent 84px
     );
+}
+
+[data-theme="dark"] body.page-about .page-header,
+[data-theme="dark"] body.page-curriculum .page-header,
+[data-theme="dark"] body.page-resources .page-header {
+  background: #141922;
 }
 
 [data-theme="dark"] .hero__title {

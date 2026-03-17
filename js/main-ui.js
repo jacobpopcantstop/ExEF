@@ -147,12 +147,13 @@ window.EFI.registerMainModule(function (shared) {
     var currentPage = window.location.pathname.split('/').pop() || 'index.html';
     if (currentPage === 'admin.html') return;
 
-    var primaryLinks = [
-      { href: 'index.html', label: 'Home' },
-      { href: 'curriculum.html', label: 'Curriculum' },
-      { href: 'resources.html', label: 'Resources' },
-      { href: 'certification.html', label: 'Certification' }
-    ];
+  var primaryLinks = [
+    { href: 'index.html', label: 'Home' },
+    { href: 'curriculum.html', label: 'Curriculum' },
+    { href: 'resources.html', label: 'Resources' },
+    { href: 'certification.html', label: 'Certification' },
+    { href: 'search.html', label: 'Search' }
+  ];
 
     var audienceLinks = [
       { href: 'coaching-home.html', label: 'Parents' },

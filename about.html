@@ -17,16 +17,7 @@
   <meta property="og:image:type" content="image/svg+xml">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:image" content="https://executivefunctioninginstitute.com/images/efi-og-card.svg">  <link rel="canonical" href="https://executivefunctioninginstitute.com/about.html" />
-  <script>
-    (function () {
-      try {
-        var savedTheme = localStorage.getItem('efi_theme');
-        if (savedTheme) {
-          document.documentElement.setAttribute('data-theme', savedTheme);
-        }
-      } catch (err) {}
-    })();
-  </script>
+  <script src="js/theme-init.min.js"></script>
 </head>
 <body class="page-about">
 
@@ -78,7 +69,7 @@
             <li><span>Leadership</span><strong>Founder-led with public rubric and crosswalk artifacts</strong></li>
           </ul>
           <figure class="artifact-preview">
-            <img src="images/certification-pipeline.svg" alt="EFI certification pipeline showing the progression from public curriculum to reviewed capstone and verification.">
+            <img src="images/certification-pipeline.svg" alt="EFI certification pipeline showing the progression from public curriculum to reviewed capstone and verification." loading="lazy">
             <figcaption>The institute boundary is visible in public: open study first, reviewed evaluation only when accountable human judgment begins.</figcaption>
           </figure>
         </aside>
@@ -131,11 +122,11 @@
         </div>
         <aside class="artifact-board__rail">
           <figure class="artifact-preview">
-            <img src="images/barkley-inhibition-cascade.svg" alt="Barkley inhibition cascade visual used to explain EFI's foundational model.">
+            <img src="images/barkley-inhibition-cascade.svg" alt="Barkley inhibition cascade visual used to explain EFI's foundational model." loading="lazy">
             <figcaption>Barkley gives EFI a causal explanation for why the gap is often between knowing and doing.</figcaption>
           </figure>
           <figure class="artifact-preview">
-            <img src="images/ward-gdd-flow.svg" alt="Ward Get Ready Do Done visual showing EFI's practical workflow structure.">
+            <img src="images/ward-gdd-flow.svg" alt="Ward Get Ready Do Done visual showing EFI's practical workflow structure." loading="lazy">
             <figcaption>Ward anchors the practical execution layer: how a coach translates theory into visible routines and transitions.</figcaption>
           </figure>
         </aside>
@@ -187,7 +178,7 @@
         </div>
         <div class="fade-in">
           <figure class="artifact-preview">
-            <img src="images/launch-kit-preview.svg" alt="Preview of EFI launch kit materials including public-facing operational artifacts and reviewed workflow files.">
+            <img src="images/launch-kit-preview.svg" alt="Preview of EFI launch kit materials including public-facing operational artifacts and reviewed workflow files." loading="lazy">
             <figcaption>Founder accountability at EFI shows up as visible operating documents: launch materials, rubric language, route logic, and standards artifacts that can be inspected in public.</figcaption>
           </figure>
           <div class="callout callout--accent mt-lg">
@@ -228,11 +219,11 @@
         </div>
         <aside class="artifact-board__rail">
           <figure class="artifact-preview">
-            <img src="images/brown-clusters-map.svg" alt="Brown executive function clusters map used on the EFI about page.">
+            <img src="images/brown-clusters-map.svg" alt="Brown executive function clusters map used on the EFI about page." loading="lazy">
             <figcaption>Brown gives EFI a client-facing map of activation, focus, effort, emotion, memory, and action.</figcaption>
           </figure>
           <figure class="artifact-preview">
-            <img src="images/dawson-thinking-doing-matrix.svg" alt="Dawson and Guare thinking and doing matrix used in EFI's curriculum.">
+            <img src="images/dawson-thinking-doing-matrix.svg" alt="Dawson and Guare thinking and doing matrix used in EFI's curriculum." loading="lazy">
             <figcaption>The thinking-versus-doing distinction keeps EFI from confusing planning skill with real-world execution capacity.</figcaption>
           </figure>
         </aside>
@@ -539,7 +530,7 @@
   </footer>
 
   <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
-  <script src="js/nav-auth.js" defer></script>
-  <script src="js/main.js" defer></script>
+  <script src="js/nav-auth.min.js" defer></script>
+  <script src="js/main.min.js" defer></script>
 </body>
 </html>

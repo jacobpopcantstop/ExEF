@@ -28,32 +28,7 @@
     <section class="section section--alt"><div class="container container--narrow"><div class="hub-card sources-block"><h3>Further Sources: Brown Citations</h3><ul class="checklist"><li><a href="https://chadd.org/wp-content/uploads/2018/06/ATTN_02_08_Executive_Functions_by_Thomas_Brown.pdf" target="_blank" rel="noopener">CHADD article: six aspects of executive function</a></li><li><a href="https://www.brownadhdclinic.com/brown-ef-model-adhd" target="_blank" rel="noopener">Brown EF model summary</a></li><li><a href="https://www.pearsonclinical.ca/content/dam/school/global/clinical/ca/assets/brown-efa/brown-efa-webinar-handouts-18-04-23.pdf" target="_blank" rel="noopener">Brown EF/A scales overview handout</a></li><li><a href="open-ef-resources-directory.html#citations">Open citations and source trails</a></li></ul></div></div></section>
   </main>
   <footer class="footer"><div class="container"><div class="footer__bottom"><span>© 2026 Executive Functioning Institute</span></div></div></footer>
-  <script src="js/main.js" defer></script>
-  <script>
-    document.getElementById('brown-form').addEventListener('submit', function (e) {
-      e.preventDefault();
-      var data = new FormData(e.target);
-      var scored = [];
-      var total = 0;
-      data.forEach(function (value, key) {
-        var v = Number(value);
-        total += v;
-        scored.push({ key: key, value: v });
-      });
-      scored.sort(function (a, b) { return b.value - a.value; });
-      var top = scored.slice(0, 2).map(function (i) { return i.key; }).join(', ');
-      var tier = total >= 12 ? 'high-complexity support need' : (total >= 7 ? 'targeted support need' : 'light support need');
-      var output = document.getElementById('brown-output');
-      while (output.firstChild) output.removeChild(output.firstChild);
-      var strong = document.createElement('strong');
-      strong.textContent = 'Pattern Summary:';
-      output.appendChild(strong);
-      output.appendChild(document.createTextNode(' Top concern areas: ' + top + '. Overall profile indicates '));
-      var tierStrong = document.createElement('strong');
-      tierStrong.textContent = tier;
-      output.appendChild(tierStrong);
-      output.appendChild(document.createTextNode('. Use this to guide conversation, then run formal assessment workflows.'));
-    });
-  </script>
+  <script src="js/main.min.js" defer></script>
+  <script src="js/brown-clusters-inline.min.js"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 'use strict';
 
-var STATIC_CACHE = 'efi-static-v1';
+var STATIC_CACHE = 'efi-static-v2';
 var PAGE_CACHE = 'efi-pages-v1';
 var ALL_CACHES = [STATIC_CACHE, PAGE_CACHE];
 
@@ -20,13 +20,10 @@ var SHARED_ASSETS = [
   '/css/styles.css',
   '/favicon.svg',
   '/images/og-image.svg',
-  '/js/main.js',
+  '/js/main.min.js',
   '/js/main.bundle.min.js',
-  '/js/main.bundle.js',
-  '/js/main-analytics.js',
-  '/js/main-learning-loop.js',
-  '/js/main-ui.js',
-  '/js/search.js',
+  '/js/nav-auth.min.js',
+  '/js/search.min.js',
   '/data/search-index.json'
 ];
 

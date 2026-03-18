@@ -17,16 +17,7 @@
   <meta property="og:image:type" content="image/svg+xml">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:image" content="https://executivefunctioninginstitute.com/images/efi-og-card.svg">  <link rel="canonical" href="https://executivefunctioninginstitute.com/resources.html">
-  <script>
-    (function () {
-      try {
-        var savedTheme = localStorage.getItem('efi_theme');
-        if (savedTheme) {
-          document.documentElement.setAttribute('data-theme', savedTheme);
-        }
-      } catch (err) {}
-    })();
-  </script>
+  <script src="js/theme-init.min.js"></script>
 </head>
 <body class="page-resources">
 
@@ -82,11 +73,11 @@
             <li><span>Visible Material</span><strong>This page should show actual EFI tools, diagrams, and planning artifacts instead of describing them abstractly.</strong></li>
           </ul>
           <figure class="artifact-preview">
-            <img src="images/launch-kit-preview.svg" alt="Launch kit preview showing EFI planning and implementation materials.">
+            <img src="images/launch-kit-preview.svg" alt="Launch kit preview showing EFI planning and implementation materials." loading="lazy">
             <figcaption>The resource hub works best when it feels like an open desk: planning sheets, launch tools, and forms already in view.</figcaption>
           </figure>
           <figure class="artifact-preview">
-            <img src="images/brown-clusters-map.svg" alt="Brown executive functioning clusters map used as a documentary resource preview.">
+            <img src="images/brown-clusters-map.svg" alt="Brown executive functioning clusters map used as a documentary resource preview." loading="lazy">
             <figcaption>Theory diagrams and practical tools sit side by side here so visitors can move from explanation to action without context switching.</figcaption>
           </figure>
         </aside>
@@ -218,11 +209,11 @@
         </div>
         <aside class="artifact-board__rail fade-in">
           <figure class="artifact-preview">
-            <img src="images/time-correction-chart.svg" alt="Time correction chart preview used as a quick diagnostic artifact.">
+            <img src="images/time-correction-chart.svg" alt="Time correction chart preview used as a quick diagnostic artifact." loading="lazy">
             <figcaption>EFI's most useful public tools are concrete. They let a visitor test a planning assumption before being told to read more pages.</figcaption>
           </figure>
           <figure class="artifact-preview">
-            <img src="images/dawson-thinking-doing-matrix.svg" alt="Dawson thinking versus doing matrix shown as a study artifact.">
+            <img src="images/dawson-thinking-doing-matrix.svg" alt="Dawson thinking versus doing matrix shown as a study artifact." loading="lazy">
             <figcaption>The archive keeps the explanatory layer visible too: study aids, model diagrams, and framework references that support the applied tools.</figcaption>
           </figure>
         </aside>
@@ -266,7 +257,7 @@
         </div>
         <aside class="artifact-board__rail">
           <figure class="artifact-preview">
-            <img src="images/certification-pipeline.svg" alt="EFI certification pipeline diagram shown as a documentary archive preview.">
+            <img src="images/certification-pipeline.svg" alt="EFI certification pipeline diagram shown as a documentary archive preview." loading="lazy">
             <figcaption>Some visitors use this page to inspect the full system boundary: open reading, practical tools, operational forms, and the reviewed layer beyond them.</figcaption>
           </figure>
           <div class="card">
@@ -379,7 +370,7 @@
         </div>
         <aside class="artifact-board__rail fade-in">
           <figure class="artifact-preview">
-            <img src="images/certification-pipeline.svg" alt="EFI certification pipeline diagram showing the path from open curriculum to reviewed standards.">
+            <img src="images/certification-pipeline.svg" alt="EFI certification pipeline diagram showing the path from open curriculum to reviewed standards." loading="lazy">
             <figcaption>Practice resources are tied to the same public pipeline as the credential: open learning first, reviewed evaluation second.</figcaption>
           </figure>
         </aside>
@@ -434,7 +425,7 @@
       <div class="resources-library-shell">
         <aside class="resources-library-nav">
           <figure class="artifact-preview">
-            <img src="images/ward-gdd-flow.svg" alt="Ward Get Ready Do Done flow used as a study-library preview.">
+            <img src="images/ward-gdd-flow.svg" alt="Ward Get Ready Do Done flow used as a study-library preview." loading="lazy">
             <figcaption>The library holds the slower explanatory surface: framework diagrams, reading packets, and the sequence behind EFI's quicker tools.</figcaption>
           </figure>
           <div class="card">
@@ -593,7 +584,7 @@
 
   <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
 
-  <script src="js/nav-auth.js" defer></script>
-  <script src="js/main.js" defer></script>
+  <script src="js/nav-auth.min.js" defer></script>
+  <script src="js/main.min.js" defer></script>
 </body>
 </html>

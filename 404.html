@@ -104,26 +104,8 @@
     </div>
   </footer>
 
-  <script src="js/nav-auth.js" defer></script>
-  <script src="js/main.js" defer></script>
-  <script>
-  (function () {
-    var btn = document.getElementById('report-broken-link');
-    var status = document.getElementById('report-status');
-    if (!btn || !status) return;
-    btn.addEventListener('click', function () {
-      if (!(window.EFI && EFI.Analytics && EFI.Analytics.track)) {
-        status.textContent = 'Unable to submit report right now.';
-        return;
-      }
-      EFI.Analytics.track('broken_link_reported', {
-        missing_path: window.location.pathname,
-        referrer: document.referrer || 'direct'
-      }).then(function () {
-        status.textContent = 'Thanks. We logged this broken link report.';
-      });
-    });
-  })();
-  </script>
+  <script src="js/nav-auth.min.js" defer></script>
+  <script src="js/main.min.js" defer></script>
+  <script src="js/404-inline.min.js"></script>
 </body>
 </html>

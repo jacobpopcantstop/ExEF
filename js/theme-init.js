@@ -1,0 +1,8 @@
+(function () {
+  try {
+    var savedTheme = localStorage.getItem('efi_theme');
+    if (savedTheme) {
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+  } catch (err) {}
+})();

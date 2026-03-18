@@ -1,0 +1,36 @@
+(function () {
+  var form = document.getElementById('community-question-form');
+  if (!form) return;
+  var status = document.getElementById('community-status');
+  function setStatus(message) {
+    if (status) status.textContent = message || '';
+  }
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    var payload = {
+      topic: document.getElementById('community-topic').value,
+      priority: document.getElementById('community-priority').value,
+      question: document.getElementById('community-question').value,
+      consent: !!document.getElementById('community-consent').checked
+    };
+    setStatus('Submitting...');
+    fetch('/api/community-question', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (data) {
+          if (!res.ok || data.ok === false) throw new Error(data.error || 'Unable to submit question');
+          return data;
+        });
+      })
+      .then(function () {
+        form.reset();
+        setStatus('Question captured for monthly recap review.');
+      })
+      .catch(function (err) {
+        setStatus(err.message || 'Unable to submit question.');
+      });
+  });
+})();

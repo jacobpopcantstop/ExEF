@@ -1,0 +1,24 @@
+document.getElementById('brown-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var data = new FormData(e.target);
+  var scored = [];
+  var total = 0;
+  data.forEach(function (value, key) {
+    var v = Number(value);
+    total += v;
+    scored.push({ key: key, value: v });
+  });
+  scored.sort(function (a, b) { return b.value - a.value; });
+  var top = scored.slice(0, 2).map(function (i) { return i.key; }).join(', ');
+  var tier = total >= 12 ? 'high-complexity support need' : (total >= 7 ? 'targeted support need' : 'light support need');
+  var output = document.getElementById('brown-output');
+  while (output.firstChild) output.removeChild(output.firstChild);
+  var strong = document.createElement('strong');
+  strong.textContent = 'Pattern Summary:';
+  output.appendChild(strong);
+  output.appendChild(document.createTextNode(' Top concern areas: ' + top + '. Overall profile indicates '));
+  var tierStrong = document.createElement('strong');
+  tierStrong.textContent = tier;
+  output.appendChild(tierStrong);
+  output.appendChild(document.createTextNode('. Use this to guide conversation, then run formal assessment workflows.'));
+});

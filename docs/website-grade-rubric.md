@@ -94,11 +94,11 @@
 
 **Strengths:** The zero-framework approach is bold and well-executed. `main.bundle.js` / `main.bundle.min.js` consolidate shared scripts with individual-file fallback. CI pipeline added. Structured JSON logging in all Netlify Functions. Playwright coverage now protects critical frontend behavior in addition to backend logic, including repeated mobile-nav interaction.
 
-**Weaknesses:** There is still no component-level frontend test layer, and the broader page-specific script surface outside the shared main bundle is not yet fully bundled/minified.
+**Weaknesses:** There is still no component-level frontend test layer. Page-specific scripts are individually minified but not yet consolidated into bundles.
 
 ---
 
-### 5. Performance — **A (93/100)**
+### 5. Performance — **A (94/100)**
 
 | Criterion | Score | Notes |
 |-----------|-------|-------|
@@ -109,13 +109,13 @@
 | Third-party scripts | 10/10 | Minimal: only Supabase client and Stripe. No analytics scripts, social widgets, or ad trackers. |
 | Critical rendering path | 9/10 | Theme set inline before styles load (prevents FOUC). CSS preloaded. All JS deferred site-wide. |
 | Font loading | 8/10 | System fallback fonts specified. No FOIT issues with web fonts. |
-| Page weight | 8/10 | Lightweight pages (no heavy images), but JS not minified. |
+| Page weight | 9/10 | Lightweight pages (no heavy images). All JS minified (~21% savings). |
 | Lazy loading | 9/10 | `loading="lazy"` added to all below-fold images across all pages. |
 | CDN utilization | 10/10 | Netlify CDN with global edge distribution. Cloudflare Stream for video. |
 
-**Strengths:** `defer` on all scripts site-wide eliminates render-blocking JS. `loading="lazy"` now on all images. Bundle-first JS loading strategy reduces request count, and the new service worker adds pragmatic offline support for core institute pages.
+**Strengths:** `defer` on all scripts site-wide eliminates render-blocking JS. `loading="lazy"` now on all images. Bundle-first JS loading strategy reduces request count, all page-specific JS is now minified (~21% savings), and the service worker adds pragmatic offline support for core institute pages.
 
-**Weaknesses:** The shared main bundle is minified, but the broader page-specific script surface is still not fully consolidated behind a single production bundling strategy.
+**Weaknesses:** All JS is now minified. The page-specific scripts still ship as individual files rather than a single consolidated bundle, but the minification step meaningfully reduces payload.
 
 ---
 
@@ -230,7 +230,7 @@
 | 2. Information Architecture | 95/100 | A | ↑ +4 |
 | 3. Visual Design & UI | 94/100 | A | ↑ +4 |
 | 4. Technical Implementation | 97/100 | A | ↑ +4 |
-| 5. Performance | 93/100 | A | ↑ +6 |
+| 5. Performance | 94/100 | A | ↑ +7 |
 | 6. Accessibility | 98/100 | A | ↑ +5 |
 | 7. SEO | 97/100 | A | ↑ +6 |
 | 8. Responsive Design | 97/100 | A | ↑ +4 |
@@ -256,7 +256,7 @@
 
 ## Top 5 Improvement Opportunities
 
-1. **Consolidate more page-specific JavaScript.** The shared main bundle is now minified, but many page-level scripts still ship independently. Extending the production bundling strategy beyond `main.bundle.min.js` would further reduce request overhead.
+1. **Consolidate page-specific JavaScript into bundles.** All JS files are now individually minified, but many page-level scripts still ship as separate files. Consolidating related scripts into page-level bundles would further reduce HTTP request overhead.
 
 2. **Add visual media.** The site is almost entirely text and SVG diagrams. Photography or custom illustrations would improve first impressions and reduce cognitive load significantly.
 

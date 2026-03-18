@@ -1,0 +1,385 @@
+(function() {
+  if (!EFI.Auth.requireAuth()) return;
+
+  var user = EFI.Auth.getCurrentUser();
+  if (!user) return;
+
+  // Greeting
+  document.getElementById('dash-greeting').textContent = 'Welcome, ' + user.name.split(' ')[0];
+
+  // Account info
+  document.getElementById('acct-name').textContent = user.name;
+  document.getElementById('acct-email').textContent = user.email;
+  document.getElementById('acct-since').textContent = new Date(user.createdAt).toLocaleDateString();
+
+  // Logout
+  document.getElementById('logout-btn').addEventListener('click', function() { EFI.Auth.logout(); });
+  document.getElementById('logout-link').addEventListener('click', function(e) { e.preventDefault(); EFI.Auth.logout(); });
+
+  var isOpsRole = EFI.Auth.hasRole(['admin', 'reviewer']);
+  document.getElementById('ops-tools-card').style.display = isOpsRole ? 'block' : 'none';
+
+  function setOpsStatus(msg) {
+    document.getElementById('ops-status').textContent = msg;
+  }
+
+  if (isOpsRole) {
+  document.getElementById('export-data-btn').addEventListener('click', function () {
+    var payload = EFI.Auth.exportPrototypeData();
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'efi-prototype-data-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    setOpsStatus('Data exported.');
+  });
+
+  document.getElementById('import-data-btn').addEventListener('click', function () {
+    document.getElementById('import-data-file').click();
+  });
+
+  document.getElementById('import-data-file').addEventListener('change', function () {
+    var file = this.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var data = JSON.parse(reader.result);
+        var res = EFI.Auth.importPrototypeData(data);
+        if (!res.ok) throw new Error(res.error || 'Import failed.');
+        setOpsStatus('Data imported. Reloading...');
+        setTimeout(function () { window.location.reload(); }, 400);
+      } catch (err) {
+        setOpsStatus('Import failed: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  document.getElementById('reset-data-btn').addEventListener('click', function () {
+    EFI.Auth.resetPrototypeData();
+    setOpsStatus('Prototype data reset. Redirecting to login...');
+    setTimeout(function () { window.location.href = 'login.html'; }, 600);
+  });
+  }
+
+  function renderCertificationReadiness() {
+    var latestUser = EFI.Auth.getCurrentUser();
+    if (!latestUser) return;
+    var status = EFI.Auth.getCertificationStatus(latestUser);
+    var list = document.getElementById('readiness-list');
+    while (list.firstChild) list.removeChild(list.firstChild);
+
+    var checks = [
+      { label: 'Modules completed: ' + status.modulesCompleted + '/6', done: status.allModulesCompleted },
+      { label: 'Capstone review passed', done: status.capstonePassed },
+      { label: 'Certificate purchased', done: status.certificatePurchased },
+      { label: 'Framed certificate purchased (optional)', done: status.framedCertificatePurchased, optional: true }
+    ];
+
+    checks.forEach(function (item) {
+      var li = document.createElement('li');
+      li.style.marginBottom = 'var(--space-xs)';
+      var marker = item.done ? '[Done] ' : (item.optional ? '[Optional] ' : '[Pending] ');
+      li.textContent = marker + item.label;
+      list.appendChild(li);
+    });
+  }
+
+  function appendTextLine(parent, label, value) {
+    var p = document.createElement('p');
+    var strong = document.createElement('strong');
+    strong.textContent = label;
+    p.appendChild(strong);
+    p.appendChild(document.createTextNode(' ' + value));
+    parent.appendChild(p);
+    return p;
+  }
+
+  function renderOutcomeMetrics() {
+    var latestUser = EFI.Auth.getCurrentUser();
+    if (!latestUser) return;
+    var progress = latestUser.progress || {};
+    var moduleIds = ['1', '2', '3', '4', '5', '6'];
+    var completed = moduleIds.filter(function(id) { return EFI.Auth.isModuleComplete(id, progress); }).length;
+    var completionPct = Math.round((completed / moduleIds.length) * 100);
+    document.getElementById('metric-completion-trend').textContent = completed + '/6 modules passed (' + completionPct + '%)';
+
+    var metrics = EFI.Auth.getReleaseMetrics(progress);
+    document.getElementById('stat-avg-score').textContent = metrics.averageScore == null ? 'N/A' : (metrics.averageScore + '%');
+    document.getElementById('metric-pending-release').textContent = metrics.pendingReleaseCount + ' submission(s) waiting for release';
+
+    if (!metrics.nextReleaseAt) {
+      document.getElementById('metric-next-release').textContent = 'No pending feedback release windows.';
+    } else {
+      document.getElementById('metric-next-release').textContent = new Date(metrics.nextReleaseAt).toLocaleString();
+    }
+  }
+
+  // Purchase stats
+  var purchases = user.purchases || [];
+  var totalSpent = purchases.reduce(function(s, p) { return s + p.total; }, 0);
+  var totalItems = purchases.reduce(function(s, p) { return s + p.items.length; }, 0);
+  var certStatus = EFI.Auth.getCertificationStatus(user);
+
+  document.getElementById('stat-purchases').textContent = totalItems;
+  document.getElementById('stat-spent').textContent = '$' + totalSpent;
+  document.getElementById('stat-cert').textContent = certStatus.fullyCertified ? 'Earned' : (certStatus.eligibleForCertificate ? 'Ready to Purchase' : 'In Progress');
+  if (certStatus.fullyCertified) document.getElementById('stat-cert').style.color = 'var(--color-accent)';
+  renderOutcomeMetrics();
+
+  // Purchase history
+  var listEl = document.getElementById('purchase-list');
+  var noEl = document.getElementById('no-purchases');
+  if (purchases.length === 0) {
+    noEl.style.display = 'block';
+    listEl.style.display = 'none';
+  } else {
+    noEl.style.display = 'none';
+    while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
+    listEl.style.display = 'block';
+    purchases.forEach(function(p) {
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.style.marginBottom = 'var(--space-md)';
+
+      var header = document.createElement('div');
+      header.style.display = 'flex';
+      header.style.justifyContent = 'space-between';
+      header.style.alignItems = 'center';
+      header.style.flexWrap = 'wrap';
+      header.style.gap = 'var(--space-sm)';
+
+      var orderMeta = document.createElement('div');
+      var orderStrong = document.createElement('strong');
+      orderStrong.textContent = 'Order ' + String(p.id || '').toUpperCase();
+      orderMeta.appendChild(orderStrong);
+      orderMeta.appendChild(document.createTextNode(' - ' + new Date(p.date).toLocaleDateString()));
+      header.appendChild(orderMeta);
+
+      var total = document.createElement('div');
+      total.style.fontWeight = '700';
+      total.textContent = '$' + p.total;
+      header.appendChild(total);
+      card.appendChild(header);
+
+      if (p.verification && p.verification.mode) {
+        var verification = document.createElement('p');
+        verification.style.margin = 'var(--space-sm) 0 0';
+        verification.style.color = 'var(--color-text-muted)';
+        verification.style.fontSize = '0.9rem';
+        verification.textContent = 'Verification mode: ' + String(p.verification.mode).replace(/_/g, ' ') + '.';
+        card.appendChild(verification);
+      }
+
+      var items = document.createElement('ul');
+      items.style.marginTop = 'var(--space-sm)';
+      items.style.paddingLeft = 'var(--space-lg)';
+      p.items.forEach(function(item) {
+        var li = document.createElement('li');
+        li.appendChild(document.createTextNode(item.name + ' ($' + item.price + ')'));
+        if (item.id === 'certificate') {
+          li.appendChild(document.createTextNode(' - '));
+          var link = document.createElement('a');
+          link.href = 'certificate.html';
+          link.style.color = 'var(--color-accent)';
+          link.style.fontWeight = '600';
+          link.textContent = 'View Certificate';
+          li.appendChild(link);
+          if (p.credentialId) {
+            li.appendChild(document.createTextNode(' - Credential ID: ' + p.credentialId));
+          }
+        }
+        items.appendChild(li);
+      });
+      card.appendChild(items);
+      listEl.appendChild(card);
+    });
+  }
+
+  // Module progress
+  var progress = user.progress || { modules: {} };
+  document.querySelectorAll('.module-progress-card').forEach(function(card) {
+    var mod = card.getAttribute('data-module');
+    var path = card.getAttribute('data-module-path');
+    var check = card.querySelector('.progress-check');
+    var statusText = card.querySelector('.module-progress-status');
+    var assessment = EFI.Auth.getModuleAssessment(mod, progress);
+    var isComplete = EFI.Auth.isModuleComplete(mod, progress);
+    if (isComplete) {
+      check.textContent = '\u2611';
+      check.style.color = 'var(--color-accent)';
+      check.style.fontSize = '1.5rem';
+    } else {
+      check.textContent = '\u2610';
+      check.style.color = '';
+      check.style.fontSize = '';
+    }
+    if (statusText) {
+      if (assessment && typeof assessment.score === 'number') {
+        var completedAt = assessment.completedAt ? new Date(assessment.completedAt).toLocaleDateString() : 'today';
+        statusText.textContent = (assessment.passed ? 'Passed' : 'Needs retake') + ' - Score: ' + assessment.score + '% - Saved ' + completedAt + '.';
+      } else {
+        statusText.textContent = 'No saved test result yet.';
+      }
+    }
+
+    card.addEventListener('click', function() {
+      window.location.href = path || ('module-' + mod + '.html');
+    });
+  });
+
+  // Near-mastery guidance state (V2 backlog #1)
+  (function renderNearMasteryGuidance() {
+    var latestUser = EFI.Auth.getCurrentUser();
+    if (!latestUser) return;
+    var prog = latestUser.progress || {};
+    var moduleIds = ['1', '2', '3', '4', '5', '6'];
+    var completed = [];
+    var incomplete = [];
+    var nearPass = [];
+    moduleIds.forEach(function (id) {
+      if (EFI.Auth.isModuleComplete(id, prog)) {
+        completed.push(id);
+      } else {
+        incomplete.push(id);
+        var assessment = EFI.Auth.getModuleAssessment(id, prog);
+        if (assessment && typeof assessment.score === 'number' && assessment.score >= 60) {
+          nearPass.push({ id: id, score: assessment.score });
+        }
+      }
+    });
+
+    var container = document.getElementById('module-progress');
+    if (!container) return;
+
+    var capstone = prog.capstone || {};
+    var capstonePassed = capstone.passed === true;
+
+    if (completed.length === 6 && !capstonePassed) {
+      var guidance = document.createElement('div');
+      guidance.id = 'near-mastery-guidance';
+      guidance.className = 'card';
+      guidance.style.gridColumn = '1 / -1';
+      guidance.style.borderLeft = '4px solid var(--color-accent)';
+      guidance.style.background = 'linear-gradient(135deg,rgba(39,174,96,0.04),rgba(41,128,185,0.04))';
+      var heading = document.createElement('h3');
+      heading.style.marginBottom = 'var(--space-sm)';
+      heading.style.color = 'var(--color-accent)';
+      heading.textContent = 'All Modules Complete - Capstone Is Your Final Step';
+      var body = document.createElement('p');
+      body.appendChild(document.createTextNode('You have passed all six modules. Submit your capstone practicum to complete the certification pathway. Review the '));
+      var rubricLink = document.createElement('a');
+      rubricLink.href = 'certification.html#transparency-rubric';
+      rubricLink.textContent = 'rubric expectations';
+      body.appendChild(rubricLink);
+      body.appendChild(document.createTextNode(' before submitting.'));
+      var cta = document.createElement('a');
+      cta.className = 'btn btn--primary btn--sm';
+      cta.href = '#submit-capstone-btn';
+      cta.textContent = 'Go to Capstone Submission';
+      cta.addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('submit-capstone-btn').scrollIntoView({ behavior: 'smooth' });
+      });
+      guidance.appendChild(heading);
+      guidance.appendChild(body);
+      guidance.appendChild(cta);
+      container.parentNode.insertBefore(guidance, container);
+    } else if (completed.length === 5 && incomplete.length === 1) {
+      var moduleNames = { '1': 'Neuropsychology', '2': 'Assessment', '3': 'Coaching Architecture', '4': 'Applied Methods', '5': 'Special Populations', '6': 'Professional Practice' };
+      var missing = incomplete[0];
+      var nearInfo = nearPass.find(function (n) { return n.id === missing; });
+      var guidance = document.createElement('div');
+      guidance.id = 'near-mastery-guidance';
+      guidance.className = 'card';
+      guidance.style.gridColumn = '1 / -1';
+      guidance.style.borderLeft = '4px solid var(--module-' + missing + ')';
+      guidance.style.background = 'linear-gradient(135deg,rgba(142,68,173,0.04),rgba(41,128,185,0.04))';
+      var heading = document.createElement('h3');
+      heading.style.marginBottom = 'var(--space-sm)';
+      heading.style.color = 'var(--module-' + missing + ')';
+      heading.textContent = 'One Module Away - Module ' + missing + ': ' + moduleNames[missing];
+      var body = document.createElement('p');
+      body.textContent = 'You have completed 5 of 6 modules. Pass Module ' + missing + ' to unlock capstone eligibility.' + (nearInfo ? (' Your last attempt scored ' + nearInfo.score + '% - you are close.') : '');
+      var cta = document.createElement('a');
+      cta.className = 'btn btn--primary btn--sm';
+      cta.href = 'module-' + missing + '.html';
+      cta.textContent = 'Open Module ' + missing;
+      guidance.appendChild(heading);
+      guidance.appendChild(body);
+      guidance.appendChild(cta);
+      container.parentNode.insertBefore(guidance, container);
+    } else if (completed.length >= 4 && nearPass.length > 0) {
+      var closest = nearPass.sort(function (a, b) { return b.score - a.score; })[0];
+      var guidance = document.createElement('div');
+      guidance.id = 'near-mastery-guidance';
+      guidance.className = 'card';
+      guidance.style.gridColumn = '1 / -1';
+      guidance.style.borderLeft = '4px solid var(--module-' + closest.id + ')';
+      guidance.style.background = 'linear-gradient(135deg,rgba(230,126,34,0.04),rgba(41,128,185,0.04))';
+      var heading = document.createElement('h3');
+      heading.style.marginBottom = 'var(--space-sm)';
+      heading.textContent = 'Almost There - Module ' + closest.id + ' Scored ' + closest.score + '%';
+      var body = document.createElement('p');
+      body.textContent = 'You are ' + incomplete.length + ' module(s) from capstone eligibility. Module ' + closest.id + ' is your closest near-pass - a focused review session could push it over the threshold.';
+      var cta = document.createElement('a');
+      cta.className = 'btn btn--secondary btn--sm';
+      cta.href = 'module-' + closest.id + '.html';
+      cta.textContent = 'Review Module ' + closest.id;
+      guidance.appendChild(heading);
+      guidance.appendChild(body);
+      guidance.appendChild(cta);
+      container.parentNode.insertBefore(guidance, container);
+    }
+  })();
+
+  document.querySelectorAll('[data-submit-module]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var url = document.getElementById('submission-url').value;
+      var notes = document.getElementById('submission-notes').value;
+      var msg = document.getElementById('grading-message');
+      var moduleId = this.getAttribute('data-submit-module');
+      Promise.resolve(EFI.Auth.saveModuleSubmission(moduleId, url, notes)).then(function (result) {
+        msg.textContent = result.ok
+          ? ('Module ' + moduleId + ' submitted. Rubric-engine feedback is queued for release after 24 hours (' + new Date(result.release_at).toLocaleString() + ').')
+          : result.error;
+      });
+    });
+  });
+
+  document.getElementById('submit-capstone-btn').addEventListener('click', function () {
+    var url = document.getElementById('submission-url').value;
+    var notes = document.getElementById('submission-notes').value;
+    Promise.resolve(EFI.Auth.submitCapstone(url, notes)).then(function (result) {
+      document.getElementById('grading-message').textContent = result.ok
+        ? ('Capstone submitted. Rubric-engine feedback will unlock in dashboard after 24 hours (' + new Date(result.release_at).toLocaleString() + ').')
+        : result.error;
+      renderCertificationReadiness();
+      renderOutcomeMetrics();
+    });
+  });
+
+  document.getElementById('run-grading-btn').addEventListener('click', function () {
+    Promise.resolve(EFI.Auth.runAutoGrading()).then(function (result) {
+      if (!result.ok) {
+        document.getElementById('grading-message').textContent = result.error;
+        return;
+      }
+      var statusText = result.status.capstonePassed
+        ? 'Feedback refresh complete. Released grading feedback applied to your readiness.'
+        : 'Feedback refresh complete. Some submissions may still be waiting for 24-hour release.';
+      document.getElementById('grading-message').textContent = statusText;
+      window.location.reload();
+    });
+  });
+
+  Promise.resolve(EFI.Auth.runAutoGrading()).finally(function () {
+    renderCertificationReadiness();
+    renderOutcomeMetrics();
+  });
+})();

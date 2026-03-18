@@ -1,0 +1,132 @@
+(async function() {
+  var gate = document.getElementById('cert-gate');
+  var certSection = document.getElementById('cert-section');
+  var gateMsg = document.getElementById('gate-message');
+  var gateActions = document.getElementById('gate-actions');
+  var gateLogin = document.getElementById('gate-login');
+
+  function clearNode(node) {
+    while (node && node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function setGateMessage(parts) {
+    clearNode(gateMsg);
+    (parts || []).forEach(function (part) {
+      if (!part) return;
+      if (part.type === 'text') {
+        gateMsg.appendChild(document.createTextNode(part.text));
+        return;
+      }
+      if (part.type === 'link') {
+        var link = document.createElement('a');
+        link.href = part.href;
+        link.textContent = part.text;
+        gateMsg.appendChild(link);
+      }
+    });
+  }
+
+  if (!EFI.Auth.isLoggedIn()) {
+    gateMsg.textContent = 'Please log in to view your certificate.';
+    gateActions.style.display = 'flex';
+    gateActions.style.justifyContent = 'center';
+    gateActions.style.gap = 'var(--space-md)';
+    return;
+  }
+
+  var certStatus = EFI.Auth.getCertificationStatus();
+  var hasCertificatePurchase = certStatus.certificatePurchased;
+
+  if (!certStatus.eligibleForCertificate && !hasCertificatePurchase) {
+    setGateMessage([
+      { type: 'text', text: 'You still need to complete certification requirements before your certificate can be issued. Visit your ' },
+      { type: 'link', href: 'dashboard.html', text: 'dashboard' },
+      { type: 'text', text: ' to submit module work and capstone evidence.' }
+    ]);
+    gateActions.style.display = 'flex';
+    gateActions.style.justifyContent = 'center';
+    gateActions.style.gap = 'var(--space-md)';
+    gateLogin.style.display = 'none';
+    return;
+  }
+
+  if (!hasCertificatePurchase) {
+    gateMsg.textContent = 'You are certification-eligible, but you have not purchased your Certificate of Completion yet.';
+    gateActions.style.display = 'flex';
+    gateActions.style.justifyContent = 'center';
+    gateActions.style.gap = 'var(--space-md)';
+    gateLogin.style.display = 'none';
+    return;
+  }
+
+  if (!certStatus.eligibleForCertificate) {
+    setGateMessage([
+      { type: 'text', text: 'A certificate purchase record was found, but your released readiness record is not complete yet. Refresh grading status from your ' },
+      { type: 'link', href: 'dashboard.html', text: 'dashboard' },
+      { type: 'text', text: ' or contact EFI support before treating this certificate as issued.' }
+    ]);
+    gateActions.style.display = 'flex';
+    gateActions.style.justifyContent = 'center';
+    gateActions.style.gap = 'var(--space-md)';
+    gateLogin.style.display = 'none';
+    return;
+  }
+
+  // Show certificate
+  gate.style.display = 'none';
+  certSection.style.display = 'block';
+
+  var user = EFI.Auth.getCurrentUser();
+  document.getElementById('cert-name').textContent = user.name;
+
+  // Find the purchase date for the certificate
+  var certPurchase = null;
+  (user.purchases || []).forEach(function(p) {
+    p.items.forEach(function(item) {
+      if (item.id === 'certificate') certPurchase = p;
+    });
+  });
+
+  var issueDate = certPurchase ? new Date(certPurchase.date) : new Date();
+  document.getElementById('cert-date').textContent = issueDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  if (!certStatus.framedCertificatePurchased) {
+    var certId = document.getElementById('cert-id');
+    var note = document.createElement('p');
+    note.style.fontSize = '0.85rem';
+    note.style.color = 'var(--color-text-muted)';
+    note.style.marginTop = 'var(--space-sm)';
+    note.appendChild(document.createTextNode('Digital certificate issued. Want print + frame shipping? '));
+    var purchaseLink = document.createElement('a');
+    purchaseLink.href = 'store.html';
+    purchaseLink.textContent = 'Purchase framed fulfillment';
+    note.appendChild(purchaseLink);
+    certId.insertAdjacentElement('afterend', note);
+  }
+
+  var hash = 0;
+  for (var i = 0; i < user.email.length; i++) {
+    hash = ((hash << 5) - hash) + user.email.charCodeAt(i);
+    hash |= 0;
+  }
+  var fallbackId = 'EFI-CEFC-' + Math.abs(hash).toString(36).toUpperCase().substring(0, 8);
+  var signedCheck = await EFI.Auth.verifyPurchasedProduct('certificate', fallbackId);
+  if (!signedCheck || !signedCheck.verified) {
+    gate.style.display = 'block';
+    certSection.style.display = 'none';
+    gateMsg.textContent = 'Certificate purchase could not be validated against the server-signed verification record.';
+    gateActions.style.display = 'flex';
+    gateActions.style.justifyContent = 'center';
+    gateActions.style.gap = 'var(--space-md)';
+    return;
+  }
+  var credentialId = (signedCheck.receipt && signedCheck.receipt.credential_id) || fallbackId;
+  var receipt = EFI.Auth.getLatestReceiptFor('certificate');
+  document.getElementById('cert-id').textContent = credentialId;
+  document.getElementById('cert-verify-link').href = 'verify.html?id=' + encodeURIComponent(credentialId) + (receipt ? '&receipt=' + encodeURIComponent(receipt) : '');
+
+  // Print button
+  document.getElementById('print-cert').addEventListener('click', function() {
+    window.print();
+  });
+})();

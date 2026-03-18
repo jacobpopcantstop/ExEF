@@ -1,0 +1,79 @@
+document.getElementById('roi-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var salary = Number(document.getElementById('salary').value || 0);
+  var monthlyHours = Number(document.getElementById('hours').value || 1);
+  var rate = Number(document.getElementById('rate').value || 200);
+  var annualBillableHours = salary / rate;
+  var monthlyBillableHours = annualBillableHours / 12;
+  var clients = monthlyBillableHours / monthlyHours;
+  var rounded = Math.ceil(clients);
+  var output = document.getElementById('roi-output');
+  while (output.firstChild) output.removeChild(output.firstChild);
+  output.appendChild(document.createTextNode('At '));
+  var rateStrong = document.createElement('strong');
+  rateStrong.textContent = '$' + rate + '/hr';
+  output.appendChild(rateStrong);
+  output.appendChild(document.createTextNode(', replacing '));
+  var salaryStrong = document.createElement('strong');
+  salaryStrong.textContent = '$' + salary.toLocaleString();
+  output.appendChild(salaryStrong);
+  output.appendChild(document.createTextNode(' requires about '));
+  var hoursStrong = document.createElement('strong');
+  hoursStrong.textContent = Math.ceil(monthlyBillableHours) + ' billable hours/month';
+  output.appendChild(hoursStrong);
+  output.appendChild(document.createTextNode(', or approximately '));
+  var clientsStrong = document.createElement('strong');
+  clientsStrong.textContent = rounded + ' active clients';
+  output.appendChild(clientsStrong);
+  output.appendChild(document.createTextNode(' at ' + monthlyHours + ' hours each.'));
+  if (window.EFI && EFI.Analytics) {
+    EFI.Analytics.track('roi_calculated', {
+      salary: salary,
+      rate: rate,
+      monthly_hours_per_client: monthlyHours,
+      estimated_clients: rounded
+    });
+  }
+});
+
+(function () {
+  var form = document.getElementById('launchpad-form');
+  var out = document.getElementById('launchpad-output');
+  var submit = document.getElementById('launchpad-submit');
+  if (!form || !out || !submit) return;
+
+  function setMessage(msg, ok) {
+    out.style.display = 'block';
+    out.textContent = msg;
+    out.style.borderColor = ok ? 'rgba(30, 132, 73, 0.25)' : 'rgba(192,57,43,0.4)';
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    submit.disabled = true;
+    submit.textContent = 'Submitting...';
+    try {
+      var res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: document.getElementById('lp-name').value.trim(),
+          email: document.getElementById('lp-email').value.trim(),
+          consent: document.getElementById('lp-consent').checked,
+          lead_type: 'launchpad_email_course',
+          source: 'teacher-to-coach.html'
+        })
+      });
+      var data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Signup failed');
+      setMessage('You are enrolled. Check your inbox for Day 1 and the full 5-day outline.', true);
+      form.reset();
+    } catch (err) {
+      setMessage(err.message || 'Unable to submit right now. Please try again.', false);
+    } finally {
+      submit.disabled = false;
+      submit.textContent = 'Start Free Course';
+    }
+  });
+})();

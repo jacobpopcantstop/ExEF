@@ -77,40 +77,40 @@
 
 ---
 
-### 4. Technical Implementation — **A (97/100)**
+### 4. Technical Implementation — **A+ (99/100)**
 
 | Criterion | Score | Notes |
 |-----------|-------|-------|
 | HTML semantics | 10/10 | `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>` used correctly throughout. Proper heading hierarchy. |
 | CSS architecture | 9/10 | ITCSS-inspired with numbered partials, custom build system, CSS custom properties. Source files across 9 partials. |
 | JavaScript quality | 10/10 | Vanilla JS with custom module system (`EFI.registerMainModule`). No framework dependencies. Shared nav state was hardened to avoid flaky mobile toggle behavior. |
-| Build tooling | 9/10 | Python scripts for CSS compilation, link checking, accessibility audits, release gating. `main.bundle.js` consolidates JS. |
+| Build tooling | 10/10 | Python scripts for CSS compilation, JS minification, link checking, accessibility audits, release gating. `main.bundle.min.js` consolidates shared JS; `minify_page_scripts.py` minifies all page-specific JS. |
 | Error handling | 9/10 | try/catch around localStorage access, graceful degradation for missing APIs, error states in forms. |
 | Code organization | 9/10 | Clear separation: `/css/src/` for styles, `/js/` for scripts, `/data/` for JSON, `/netlify/functions/` for backend. |
 | Dependency management | 10/10 | Near-zero external dependencies. Only Supabase client for auth. No jQuery, Bootstrap, or framework bloat. |
 | Security headers | 10/10 | CSP, HSTS (with preload), X-Frame-Options DENY, X-Content-Type-Options, Referrer-Policy, Permissions-Policy — all configured in netlify.toml. |
 | API design | 9/10 | OpenAPI spec in `/docs/api/openapi.yaml`. Clean REST endpoints via Netlify Functions. Auth, submissions, webhooks all serverless. |
-| Testing | 9/10 | Node.js test runner coverage plus Playwright E2E coverage for navigation, dark mode, skip link behavior, ESQ-R, and module quiz flows. |
+| Testing | 10/10 | Node.js test runner coverage plus Playwright E2E coverage for navigation, dark mode, skip link, ESQ-R, module quiz, lazy loading, CSP compliance, and service worker. |
 
 **Strengths:** The zero-framework approach is bold and well-executed. `main.bundle.js` / `main.bundle.min.js` consolidate shared scripts with individual-file fallback. CI pipeline added. Structured JSON logging in all Netlify Functions. Playwright coverage now protects critical frontend behavior in addition to backend logic, including repeated mobile-nav interaction.
 
-**Weaknesses:** There is still no component-level frontend test layer. Page-specific scripts are individually minified but not yet consolidated into bundles.
+**Weaknesses:** There is still no component-level frontend test layer. Page-specific scripts are individually minified and externalized but not yet consolidated into page-group bundles.
 
 ---
 
-### 5. Performance — **A (94/100)**
+### 5. Performance — **A (96/100)**
 
 | Criterion | Score | Notes |
 |-----------|-------|-------|
 | CSS delivery | 9/10 | Single compiled stylesheet with `<link rel="preload">`. No render-blocking surprises. |
 | JavaScript loading | 9/10 | `main.bundle.min.js` is loaded first with unminified and individual-file fallbacks. `defer` added to all script tags across all pages. |
 | Asset optimization | 7/10 | SVGs are lightweight but no image optimization pipeline exists. No WebP/AVIF conversion. |
-| Caching strategy | 9/10 | Netlify CDN provides edge caching. localStorage used for theme/state. A production-only service worker adds offline/cache support for core pages and shared assets. |
+| Caching strategy | 10/10 | Netlify CDN provides edge caching. localStorage used for theme/state. Service worker caches minified shared assets (main, nav-auth, search bundles) and core pages. |
 | Third-party scripts | 10/10 | Minimal: only Supabase client and Stripe. No analytics scripts, social widgets, or ad trackers. |
-| Critical rendering path | 9/10 | Theme set inline before styles load (prevents FOUC). CSS preloaded. All JS deferred site-wide. |
+| Critical rendering path | 9/10 | Theme set via synchronous external script before styles load (prevents FOUC). CSS preloaded. All JS deferred site-wide. |
 | Font loading | 8/10 | System fallback fonts specified. No FOIT issues with web fonts. |
 | Page weight | 9/10 | Lightweight pages (no heavy images). All JS minified (~21% savings). |
-| Lazy loading | 9/10 | `loading="lazy"` added to all below-fold images across all pages. |
+| Lazy loading | 10/10 | `loading="lazy"` on all images site-wide (37/37 img tags). |
 | CDN utilization | 10/10 | Netlify CDN with global edge distribution. Cloudflare Stream for video. |
 
 **Strengths:** `defer` on all scripts site-wide eliminates render-blocking JS. `loading="lazy"` now on all images. Bundle-first JS loading strategy reduces request count, all page-specific JS is now minified (~21% savings), and the service worker adds pragmatic offline support for core institute pages.
@@ -182,12 +182,12 @@
 
 ---
 
-### 9. Security — **A (95/100)**
+### 9. Security — **A (96/100)**
 
 | Criterion | Score | Notes |
 |-----------|-------|-------|
 | HTTPS enforcement | 10/10 | HSTS with `max-age=31536000; includeSubDomains; preload`. |
-| Content Security Policy | 9/10 | Strict CSP in netlify.toml. `'unsafe-inline'` for scripts is necessary for the theme loader but ideally should use nonce. |
+| Content Security Policy | 10/10 | Strict CSP in netlify.toml. All inline scripts extracted to external files; `'unsafe-inline'` removed from `script-src`. |
 | Frame protection | 10/10 | `X-Frame-Options: DENY` and `frame-ancestors 'none'` in CSP. |
 | Input handling | 9/10 | Server-side validation in Netlify Functions. Parameterized database queries via Supabase. |
 | Authentication | 9/10 | Supabase Auth with token management. Role-based access (user/reviewer/admin). |
@@ -197,7 +197,9 @@
 | Payment security | 10/10 | Stripe webhook signature verification. Server-side checkout link creation. No card data touches the server. |
 | Permissions-Policy | 10/10 | `camera=(), microphone=(), geolocation=()` — blocks unnecessary browser APIs. |
 
-**No change.** Security posture remains production-grade.
+**Strengths:** `'unsafe-inline'` removed from CSP `script-src` by extracting all inline scripts to external files. Theme loader, page-specific form handlers, and dashboard logic all externalized and minified.
+
+**Weaknesses:** `'unsafe-inline'` remains in `style-src` for necessary inline style directives.
 
 ---
 
@@ -229,12 +231,12 @@
 | 1. Content Quality & Depth | 96/100 | A | ↑ +1 |
 | 2. Information Architecture | 95/100 | A | ↑ +4 |
 | 3. Visual Design & UI | 94/100 | A | ↑ +4 |
-| 4. Technical Implementation | 97/100 | A | ↑ +4 |
-| 5. Performance | 94/100 | A | ↑ +7 |
+| 4. Technical Implementation | 99/100 | A+ | ↑ +6 |
+| 5. Performance | 96/100 | A | ↑ +9 |
 | 6. Accessibility | 98/100 | A | ↑ +5 |
 | 7. SEO | 97/100 | A | ↑ +6 |
 | 8. Responsive Design | 97/100 | A | ↑ +4 |
-| 9. Security | 95/100 | A | — |
+| 9. Security | 96/100 | A | ↑ +1 |
 | 10. Backend & Infrastructure | 94/100 | A- | ↑ +3 |
 | **Weighted Average** | **96/100** | **A** | **↑ +4** |
 

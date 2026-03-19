@@ -1,6 +1,6 @@
 # Progress Tracker (Canonical)
 
-Last updated: March 17, 2026
+Last updated: March 19, 2026
 
 This is the single source of truth for **active needed changes**. Roadmaps/audits/todo wave logs are archived snapshots unless explicitly marked active here.
 
@@ -36,6 +36,11 @@ Critique was directionally useful, but not every point is current. In particular
 - [ ] Add stylesheet preload on the main entry pages and verify it improves the critical rendering path without causing duplicate fetches or priority regressions.
 
 ## Recently Completed
+- ✅ 19 real photos added to all 6 modules — each contextually matched to section content (BarkleyTrajectory, limbicGap, airtraffic2, wallofawful in M1; goodnessoffit, discrepancyasdata, referralredflags in M2; 2tiered, coachsupport, coachingvstherapy in M3; getreadydodone, timeblindness, analogvdigital, timecorrection, airtraffic2 in M4; specialpopulations in M5; curriculumpipeline, certificates in M6).
+- ✅ Image placement corrected by filename semantics — leakybucket moved to M4 cognitive offloading section; limbicGap repositioned to M1 adolescent gap section.
+- ✅ Rubric links in certification.html and store.html updated from PDF to HTML page.
+- ✅ Accordion flicker bug fixed — coachingvstherapy image moved outside accordion in module-3 (max-height/scrollHeight race condition on open).
+- ✅ Sales conversion audit created — see `docs/sales-conversion-audit.md`.
 - ✅ Certificate review state now persists on purchase records and appears directly in the certificate review queue.
 - ✅ Reviewer-only submission override/release actions and certificate decision logging added with required notes and admin controls.
 - ✅ Server-side audit logging added for purchase issuance/denials, verification checks, submission events, and feedback release notifications, with admin audit-trail visibility.

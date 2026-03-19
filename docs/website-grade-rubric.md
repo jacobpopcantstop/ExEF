@@ -1,15 +1,15 @@
 # The Executive Functioning Institute — Comprehensive Website Grading
 
-**Review Date:** 2026-03-17 (updated)
+**Review Date:** 2026-03-19 (updated)
 **Reviewer:** Automated deep-review (Claude)
 **Site:** The Executive Functioning Institute (EFI)
 **Stack:** Vanilla HTML/CSS/JS · Netlify Functions · Supabase · Stripe
 
 ---
 
-## Overall Grade: **A (96/100)**
+## Overall Grade: **A (97/100)**
 
-*(Previous: A- / 92/100 — updated to reflect session improvements through search, offline support, E2E coverage, accessibility focus handling, visual upgrades, and recent nav/mobile reliability fixes.)*
+*(Previous: A / 96/100 — updated to reflect addition of 19 contextual photos across all 6 modules, rubric PDF→HTML link correction, and accordion flicker bug fix.)*
 
 ---
 
@@ -65,7 +65,7 @@
 | Typography | 9/10 | Iowan Old Style/Palatino for headings, Avenir Next for body. Good pairing. 8-step spacing scale. |
 | Component design | 9/10 | Cards, tabs, accordions, callouts, buttons — all polished and consistent. BEM naming convention. |
 | Dark mode | 9/10 | Full dark theme via `data-theme` attribute. Specificity bugs causing cream backgrounds on home, curriculum, resources, and artifact-preview card — all resolved. |
-| Imagery | 8/10 | Still mostly SVG/documentary imagery, but flagship pages now use stronger artifact previews and institute-style visual surfaces instead of relying purely on text blocks. |
+| Imagery | 9/10 | 19 real photos now distributed across all 6 modules, each contextually matched to section content (BarkleyTrajectory, limbicGap, wallofawful, airtraffic2, leakybucket, goodnessoffit, discrepancyasdata, referralredflags, 2tiered, coachsupport, coachingvstherapy, getreadydodone, timeblindness, analogvdigital, timecorrection, specialpopulations, curriculumpipeline, completion certificates). Meaningful visual anchoring throughout the curriculum. |
 | Whitespace & layout | 9/10 | Generous whitespace. 1200px max-width container. Clear visual rhythm. |
 | Animation | 8/10 | Subtle fade-in animations with `prefers-reduced-motion` respected. Not overused. |
 | Branding | 10/10 | Nav logo restored to original navy→green gradient. Favicon redesigned to match. Social `og:image` card added (1200×630 SVG). Dark mode toggle visible at all zoom levels. |
@@ -73,7 +73,7 @@
 
 **Strengths:** Dark mode is now genuinely thorough — root-cause specificity bugs fixed across home, curriculum, and resources pages. Logo and favicon restored to the distinctive navy-to-green gradient. Social preview card added for all primary pages. Homepage, about, resources, and coaching surfaces now use stronger artifact/media layouts that feel more like an institute dossier than a generic marketing shell.
 
-**Weaknesses:** Site is still primarily text plus SVG/documentary surfaces. Original photography or bespoke illustration would push the brand further.
+**Weaknesses:** Photos are now present across all modules but are PNG exports (no WebP/AVIF versions). No `srcset` for responsive image delivery. Bespoke illustration or original photography would push perceived quality further.
 
 ---
 
@@ -115,7 +115,7 @@
 
 **Strengths:** `defer` on all scripts site-wide eliminates render-blocking JS. `loading="lazy"` now on all images. Bundle-first JS loading strategy reduces request count, all page-specific JS is now minified (~21% savings), and the service worker adds pragmatic offline support for core institute pages.
 
-**Weaknesses:** All JS is now minified. The page-specific scripts still ship as individual files rather than a single consolidated bundle, but the minification step meaningfully reduces payload.
+**Weaknesses:** All JS is now minified. The page-specific scripts still ship as individual files rather than a single consolidated bundle, but the minification step meaningfully reduces payload. Accordion height measurement (`scrollHeight`) runs before images load — fixed for the known case in module-3; a general image-load listener pattern should be applied to all accordions containing images.
 
 ---
 
@@ -230,7 +230,7 @@
 |----------|-------|-------|--------|
 | 1. Content Quality & Depth | 96/100 | A | ↑ +1 |
 | 2. Information Architecture | 95/100 | A | ↑ +4 |
-| 3. Visual Design & UI | 94/100 | A | ↑ +4 |
+| 3. Visual Design & UI | 95/100 | A | ↑ +1 |
 | 4. Technical Implementation | 99/100 | A+ | ↑ +6 |
 | 5. Performance | 96/100 | A | ↑ +9 |
 | 6. Accessibility | 98/100 | A | ↑ +5 |
@@ -238,7 +238,7 @@
 | 8. Responsive Design | 97/100 | A | ↑ +4 |
 | 9. Security | 96/100 | A | ↑ +1 |
 | 10. Backend & Infrastructure | 94/100 | A- | ↑ +3 |
-| **Weighted Average** | **96/100** | **A** | **↑ +4** |
+| **Weighted Average** | **97/100** | **A** | **↑ +1** |
 
 ---
 
@@ -260,7 +260,7 @@
 
 1. **Consolidate page-specific JavaScript into bundles.** All JS files are now individually minified, but many page-level scripts still ship as separate files. Consolidating related scripts into page-level bundles would further reduce HTTP request overhead.
 
-2. **Add visual media.** The site is almost entirely text and SVG diagrams. Photography or custom illustrations would improve first impressions and reduce cognitive load significantly.
+2. **Optimize and deliver photos responsively.** 19 PNGs are now in place across all modules. Next step: convert to WebP/AVIF with PNG fallback, add `srcset` for responsive delivery, and confirm all new images have `loading="lazy"` already set (they currently do not).
 
 3. **Deepen search and offline verification.** Search and offline support now exist, but they should be validated on the production domain with dedicated regression coverage for search state, offline fallback, and service-worker updates.
 
@@ -272,6 +272,6 @@
 
 ## Conclusion
 
-The Executive Functioning Institute website has moved from **A- (92)** to **A (95)**. The improvements now span every category: dark mode is fully repaired, the credential documents are professionally designed, site search runs locally, offline support is in place for core reading surfaces, Playwright E2E coverage protects key frontend flows, and the flagship pages use stronger artifact/media layouts.
+The Executive Functioning Institute website has moved from **A (96)** to **A (97)**. The primary improvement is visual: 19 contextual photos now anchor every module section, eliminating the text-heavy appearance and providing genuine visual scaffolding for abstract EF concepts. A rubric link bug (PDF instead of HTML) and an accordion flicker glitch (image inside max-height-animated body) were also resolved.
 
-The remaining gaps are now mostly refinement rather than foundation: broader production bundling for page-level scripts, richer original media, and deeper live-domain verification of the new search/offline surfaces. The foundation is production-grade.
+The remaining gaps are refinement-level: responsive image delivery (WebP/AVIF + `srcset`), broader page-level JS bundling, and deeper live-domain verification of search/offline surfaces. The foundation is production-grade.

@@ -497,6 +497,7 @@
   <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
   <script src="js/nav-auth.min.js" defer></script>
   <script src="js/main.min.js" defer></script>
+  <script src="https://js.stripe.com/v3/"></script>
   <script src="js/store-checkout.min.js"></script>
 <script>
 (function(){
@@ -526,5 +527,28 @@
   });
 })();
 </script>
+
+<!-- Embedded Checkout Modal -->
+<div id="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-modal-title"
+  style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.55);overflow-y:auto;padding:var(--space-xl) var(--space-md);">
+  <div style="background:#fff;border-radius:var(--border-radius);max-width:860px;margin:0 auto;position:relative;display:grid;grid-template-columns:1fr 1fr;min-height:400px;">
+    <!-- Close button -->
+    <button id="checkout-modal-close" type="button" aria-label="Close checkout"
+      style="position:absolute;top:var(--space-md);right:var(--space-md);background:none;border:none;font-size:1.5rem;cursor:pointer;line-height:1;color:var(--color-text-light);z-index:1;">&#x2715;</button>
+
+    <!-- Left panel: order summary -->
+    <div id="checkout-summary-panel"
+      style="padding:var(--space-xl);border-right:1px solid var(--color-border, #e5e7eb);display:flex;flex-direction:column;gap:var(--space-sm);">
+      <p style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-light);margin:0;">Order summary</p>
+      <p id="checkout-modal-title" style="font-weight:700;font-size:1.1rem;margin:0;"></p>
+      <p id="checkout-modal-price" style="font-size:1.5rem;font-weight:800;margin:0;color:var(--module-1,#1a1a2e);"></p>
+      <ul id="checkout-modal-includes" style="list-style:none;padding:0;margin:var(--space-sm) 0 0;display:flex;flex-direction:column;gap:var(--space-xs);font-size:0.9rem;color:var(--color-text-light);"></ul>
+      <p style="font-size:0.8rem;color:var(--color-text-light);margin-top:auto;padding-top:var(--space-md);border-top:1px solid var(--color-border,#e5e7eb);">&#x1F512; Secured by Stripe. Resubmission included at no extra charge.</p>
+    </div>
+
+    <!-- Right panel: Stripe mounts here -->
+    <div id="stripe-checkout-container" style="padding:var(--space-xl);"></div>
+  </div>
+</div>
 </body>
 </html>

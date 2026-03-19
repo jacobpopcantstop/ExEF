@@ -1,6 +1,88 @@
 const crypto = require('crypto');
-const { json, requiredEnv, log } = require('./_common');
+const { json, requiredEnv, log, normalizeEmail } = require('./_common');
 const db = require('./_db');
+
+const OFFER_PURCHASES = {
+  cefc_enrollment: [{ id: 'cefc-enrollment', name: 'CEFC Enrollment Access', price: 695 }],
+  capstone_review: [{ id: 'capstone-review', name: 'Capstone Review & Credentialing', price: 350 }],
+  cefc_bundle: [
+    { id: 'cefc-enrollment', name: 'CEFC Enrollment Access', price: 695 },
+    { id: 'capstone-review', name: 'Capstone Review & Credentialing', price: 200 }
+  ],
+  esqr_analysis: [{ id: 'esqr-analysis', name: 'ESQ-R Professional Analysis', price: 199 }]
+};
+
+function b64urlEncode(input) {
+  return Buffer.from(input).toString('base64url');
+}
+
+function signingSecret() {
+  return requiredEnv('EFI_PURCHASE_SIGNING_SECRET') || requiredEnv('EFI_DOWNLOAD_SIGNING_SECRET') || 'efi-dev-signing-secret';
+}
+
+function sign(payload) {
+  return crypto.createHmac('sha256', signingSecret()).update(payload).digest('base64url');
+}
+
+function makeReceipt(payloadObj) {
+  const payload = b64urlEncode(JSON.stringify(payloadObj));
+  const sig = sign(payload);
+  return `${payload}.${sig}`;
+}
+
+function makeCredentialId(email) {
+  const lower = String(email || '').toLowerCase();
+  let h = 0;
+  for (let i = 0; i < lower.length; i++) {
+    h = ((h << 5) - h) + lower.charCodeAt(i);
+    h |= 0;
+  }
+  return 'EFI-CEFC-' + Math.abs(h).toString(36).toUpperCase().substring(0, 8);
+}
+
+async function fulfillCheckoutSession(obj, paymentIntentId) {
+  const offer = String((obj.metadata && obj.metadata.offer) || '').trim();
+  const email = normalizeEmail(
+    (obj.customer_details && obj.customer_details.email) ||
+    obj.customer_email ||
+    (obj.metadata && obj.metadata.email) ||
+    ''
+  );
+
+  if (!offer || !email || !paymentIntentId) return { fulfilled: false, reason: 'missing_offer_email_or_payment_intent' };
+  const items = OFFER_PURCHASES[offer];
+  if (!items) return { fulfilled: false, reason: 'unsupported_offer' };
+
+  const existing = await db.findPurchaseByPaymentIntent(paymentIntentId).catch(() => ({ found: false }));
+  if (existing && existing.found) {
+    return { fulfilled: true, existing: true, purchaseId: existing.purchase && existing.purchase.id };
+  }
+
+  const now = new Date().toISOString();
+  const purchaseId = 'ord_' + crypto.randomBytes(6).toString('hex');
+  const credentialId = makeCredentialId(email);
+  const receipt = makeReceipt({
+    v: 1,
+    purchase_id: purchaseId,
+    issued_at: now,
+    email,
+    items: items.map((item) => String(item.id || '')),
+    credential_id: credentialId
+  });
+
+  await db.addPurchase(email, {
+    id: purchaseId,
+    date: now,
+    total: items.reduce((sum, item) => sum + Number(item.price || 0), 0),
+    items: items.map((item) => ({ ...item })),
+    receipt,
+    credentialId,
+    paymentIntentId,
+    offerCode: offer
+  });
+
+  return { fulfilled: true, existing: false, purchaseId };
+}
 
 function verifyStripeSignature(rawBody, headerValue, secret) {
   if (!headerValue || !secret) return false;
@@ -87,6 +169,20 @@ exports.handler = async function (event) {
       currency,
       raw: payload
     });
+  }
+
+  if (eventType === 'checkout.session.completed' && paymentIntentId && status === 'succeeded') {
+    const fulfillment = await fulfillCheckoutSession(obj, paymentIntentId).catch((err) => {
+      log.error('stripe fulfillment error', { payment_intent_id: paymentIntentId, error: err.message });
+      return { fulfilled: false, reason: 'exception' };
+    });
+    if (fulfillment.fulfilled) {
+      log.info('stripe fulfillment complete', {
+        payment_intent_id: paymentIntentId,
+        purchase_id: fulfillment.purchaseId || null,
+        existing: !!fulfillment.existing
+      });
+    }
   }
 
   return json(200, { ok: true, received: true, event_type: eventType, payment_intent_id: paymentIntentId || null });

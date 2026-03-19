@@ -1,12 +1,33 @@
 (function () {
-  // Stripe initialized once at module scope — never re-instantiate per click
-  var stripe = (typeof window.Stripe !== 'undefined')
-    ? Stripe('pk_test_51T1fIQAH2ps6zpq4R8fh4Uvx1oQHMynW3GEJoJwtuq048Sgv4H539HuzEJSmR76rrPruJxY0HZgcPvJCi4Wr3San00kiK6KzZ6')
-    : null;
+  var stripe = null;
+  var stripeInitPromise = null;
   var checkoutInstance = null;
   var checkoutFormTouched = false;
   var hasStartedPurchaseIntent = false;
   var hasSubmittedPurchaseIntent = false;
+
+  async function getStripe() {
+    if (stripe) return stripe;
+    if (stripeInitPromise) return stripeInitPromise;
+    stripeInitPromise = (async function () {
+      if (typeof window.Stripe === 'undefined') {
+        throw new Error('Stripe.js is unavailable on this page.');
+      }
+
+      var response = await fetch('/api/public-config');
+      var config = await response.json().catch(function () { return {}; });
+      if (!response.ok || !config.ok || !config.stripePublicKey) {
+        throw new Error('Stripe checkout is not configured.');
+      }
+
+      stripe = Stripe(config.stripePublicKey);
+      return stripe;
+    })().catch(function (err) {
+      stripeInitPromise = null;
+      throw err;
+    });
+    return stripeInitPromise;
+  }
 
   function showMessage(node, text, isError) {
     if (!node) return;
@@ -134,10 +155,6 @@
       showMessage(message, 'Enter a valid email to prefill checkout.', true);
       return;
     }
-    if (!stripe) {
-      showMessage(message, 'Checkout unavailable — contact info@theexecutivefunctioninginstitute.com to complete your purchase.', false);
-      return;
-    }
     if (!checkoutBtn) return;
 
     var original = checkoutBtn.textContent;
@@ -156,6 +173,8 @@
         throw new Error((result && result.error) || 'Could not open checkout.');
       }
 
+      var stripeClient = await getStripe();
+
       if (window.EFI && EFI.Analytics && EFI.Analytics.track) {
         EFI.Analytics.track('store_embedded_checkout_opened', {
           offer: payload.offer,
@@ -165,7 +184,7 @@
 
       openModal(result);
 
-      checkoutInstance = await stripe.initEmbeddedCheckout({ clientSecret: result.clientSecret });
+      checkoutInstance = await stripeClient.initEmbeddedCheckout({ clientSecret: result.clientSecret });
       var container = document.getElementById('stripe-checkout-container');
       if (!container) throw new Error('Checkout container not found.');
       checkoutInstance.mount(container);

@@ -86,6 +86,24 @@ function isPrivilegedRole(role) {
   return role === 'admin' || role === 'reviewer';
 }
 
+function hasManagedAuth() {
+  return !!(requiredEnv('SUPABASE_URL') && requiredEnv('SUPABASE_ANON_KEY'));
+}
+
+async function authorizeLearnerEmail(event, email) {
+  const actor = await getActor(event).catch(() => ({ role: 'guest', email: null }));
+  if (!hasManagedAuth()) return { ok: true, actor };
+  if (!actor || !actor.email) {
+    return { ok: false, statusCode: 401, error: 'Managed authentication required', actor };
+  }
+  const normalizedActor = String(actor.email || '').trim().toLowerCase();
+  const normalizedEmail = String(email || '').trim().toLowerCase();
+  if (!isPrivilegedRole(actor.role) && normalizedActor !== normalizedEmail) {
+    return { ok: false, statusCode: 403, error: 'You may only access your own submissions', actor };
+  }
+  return { ok: true, actor };
+}
+
 async function notifyRelease(row, reason) {
   if (!row || row.notified_at) return;
   await fanout({
@@ -107,7 +125,9 @@ async function submit(body, event) {
   const moduleId = body.module_id ? String(body.module_id) : null;
   const evidenceUrl = String(body.evidence_url || '').trim();
   const notes = String(body.notes || '').trim();
-  const actor = await getActor(event).catch(() => ({ role: 'guest', email: null }));
+  const authz = await authorizeLearnerEmail(event, email);
+  if (!authz.ok) return json(authz.statusCode, { ok: false, error: authz.error });
+  const actor = authz.actor;
   const ip = getClientIp(event);
   const userAgent = event.headers['user-agent'] || null;
 
@@ -178,7 +198,9 @@ async function submit(body, event) {
   });
 }
 
-async function listForUser(email) {
+async function listForUser(email, event) {
+  const authz = await authorizeLearnerEmail(event, email);
+  if (!authz.ok) return json(authz.statusCode, { ok: false, error: authz.error });
   const now = new Date().toISOString();
   const rows = await db.listSubmissions(email);
   return json(200, {
@@ -349,7 +371,7 @@ exports.handler = async function (event) {
     }
     const email = String(qs.email || '').trim().toLowerCase();
     if (!email || !email.includes('@')) return json(400, { ok: false, error: 'Valid email query parameter is required' });
-    return listForUser(email);
+    return listForUser(email, event);
   }
 
   if (event.httpMethod === 'POST') {

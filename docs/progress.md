@@ -24,7 +24,7 @@ Requires Deployment/Operator Input
 - [ ] Finalize/publish jurisdiction + principal-office legal metadata (if required for go-live policy).
 
 ### Release gate
-- [ ] Run `python3 scripts/release_gate.py` and resolve all blockers.
+- [x] Run `python3 scripts/release_gate.py` and resolve all blockers.
 
 ## External critique follow-up (Gemini review, March 17, 2026)
 
@@ -38,6 +38,11 @@ Critique was directionally useful, but not every point is current. In particular
 - [ ] Add stylesheet preload on the main entry pages and verify it improves the critical rendering path without causing duplicate fetches or priority regressions.
 
 ## Recently Completed
+- ✅ Release gate now passes end to end (`python3 scripts/release_gate.py`) after fixing checkout-return asset/link drift, credential-doc landmarks/canonicals, and store-page quote corruption.
+- ✅ Managed-auth enforcement added to learner progress and submission endpoints so `/api/sync-progress` and learner-facing `/api/submissions` access are bound to the authenticated Supabase user when managed auth is enabled.
+- ✅ Stripe purchase fulfillment now persists from checkout completion: webhook fulfillment issues durable purchase records/receipts, return-page sync hydrates the logged-in account, and purchases are idempotent by `payment_intent_id`.
+- ✅ Supabase payment-tracking migration pushed (`supabase/migrations/20260319202500_add_purchase_payment_tracking.sql`) for `payment_intent_id` / `offer_code` purchase persistence.
+- ✅ Store checkout no longer ships with a hardcoded Stripe test publishable key; public checkout config now comes from `netlify/functions/public-config.js`.
 - ✅ Netlify env audit completed via CLI; core Supabase, Stripe, Gemini, signing, video, and submissions vars verified in the linked EFI site.
 - ✅ `EFI_ADMIN_API_KEY` added to Netlify production and dev contexts.
 - ✅ Dev webhook parity configured by pointing `EFI_CRM_WEBHOOK_URL` and `EFI_ESP_WEBHOOK_URL` at the same Zapier endpoints currently used in production.

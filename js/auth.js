@@ -27,7 +27,14 @@ EFI.Auth = (function () {
 
   function apiFetch(path, opts) {
     if (!window.fetch) return Promise.reject(new Error('Browser does not support fetch.'));
-    return fetch(path, opts || {}).then(function (res) {
+    var nextOpts = Object.assign({}, opts || {});
+    var nextHeaders = Object.assign({}, (nextOpts && nextOpts.headers) || {});
+    var token = getAccessToken();
+    if (token && !nextHeaders.Authorization && !nextHeaders.authorization) {
+      nextHeaders.Authorization = 'Bearer ' + token;
+    }
+    nextOpts.headers = nextHeaders;
+    return fetch(path, nextOpts).then(function (res) {
       return res.json().catch(function () { return {}; }).then(function (data) {
         if (!res.ok || data.ok === false) {
           throw new Error(data.error || 'Request failed');
@@ -765,6 +772,41 @@ EFI.Auth = (function () {
     });
   }
 
+  function addOfferPurchase(offer, paymentIntentId, purchaseEmail) {
+    var user = getCurrentUser();
+    if (!user) return Promise.reject(new Error('Please log in first.'));
+    var email = String(purchaseEmail || user.email || '').trim().toLowerCase();
+    if (!email || email !== String(user.email || '').trim().toLowerCase()) {
+      return Promise.reject(new Error('Log in with the purchasing email to finalize this checkout.'));
+    }
+
+    return apiFetch('/api/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'issue_purchase',
+        email: email,
+        offer: offer,
+        payment_intent_id: paymentIntentId
+      })
+    }).then(function (res) {
+      var purchase = res.purchase || null;
+      if (!purchase) throw new Error('Purchase record could not be created.');
+      purchase.receipt = res.receipt || purchase.receipt || null;
+      purchase.credentialId = res.credential_id || purchase.credentialId || null;
+
+      var purchases = user.purchases || [];
+      var alreadyExists = purchases.some(function (entry) {
+        return String(entry.id || '') === String(purchase.id || '');
+      });
+      if (!alreadyExists) {
+        purchases.push(purchase);
+      }
+      updateUser({ purchases: purchases });
+      return purchase;
+    });
+  }
+
   function hasPurchased(productId) {
     var purchases = getPurchases();
     return purchases.some(function (p) {
@@ -1060,6 +1102,7 @@ EFI.Auth = (function () {
     getCartTotal: getCartTotal,
     getPurchases: getPurchases,
     addPurchase: addPurchase,
+    addOfferPurchase: addOfferPurchase,
     hasPurchased: hasPurchased,
     getLatestReceiptFor: getLatestReceiptFor,
     verifyPurchasedProduct: verifyPurchasedProduct,

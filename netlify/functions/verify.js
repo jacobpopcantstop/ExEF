@@ -3,6 +3,24 @@ const { json, parseBody, requiredEnv } = require('./_common');
 const { getActor } = require('./_authz');
 const db = require('./_db');
 
+const OFFER_PURCHASES = {
+  cefc_enrollment: {
+    items: [{ id: 'cefc-enrollment', name: 'CEFC Enrollment Access', price: 695 }]
+  },
+  capstone_review: {
+    items: [{ id: 'capstone-review', name: 'Capstone Review & Credentialing', price: 350 }]
+  },
+  cefc_bundle: {
+    items: [
+      { id: 'cefc-enrollment', name: 'CEFC Enrollment Access', price: 695 },
+      { id: 'capstone-review', name: 'Capstone Review & Credentialing', price: 200 }
+    ]
+  },
+  esqr_analysis: {
+    items: [{ id: 'esqr-analysis', name: 'ESQ-R Professional Analysis', price: 199 }]
+  }
+};
+
 function b64urlEncode(input) {
   return Buffer.from(input).toString('base64url');
 }
@@ -111,6 +129,43 @@ function isPrivilegedRole(role) {
   return role === 'admin' || role === 'reviewer';
 }
 
+function hasManagedAuth() {
+  return !!(requiredEnv('SUPABASE_URL') && requiredEnv('SUPABASE_ANON_KEY'));
+}
+
+async function authorizePurchaseActor(event, email) {
+  const actor = await getActor(event).catch(() => ({ role: 'guest', email: null }));
+  if (!hasManagedAuth()) return { ok: true, actor };
+  if (!actor || !actor.email) {
+    return { ok: false, statusCode: 401, error: 'Managed authentication required', actor };
+  }
+  const normalizedActor = String(actor.email || '').trim().toLowerCase();
+  const normalizedEmail = String(email || '').trim().toLowerCase();
+  if (!isPrivilegedRole(actor.role) && normalizedActor !== normalizedEmail) {
+    return { ok: false, statusCode: 403, error: 'You may only issue purchases for your own account', actor };
+  }
+  return { ok: true, actor };
+}
+
+function resolvePurchaseItems(body) {
+  const offerCode = String(body.offer || '').trim();
+  if (offerCode) {
+    const offer = OFFER_PURCHASES[offerCode];
+    if (!offer) {
+      return { ok: false, error: 'Unsupported offer' };
+    }
+    return {
+      ok: true,
+      offerCode,
+      items: offer.items.map((item) => ({ ...item }))
+    };
+  }
+
+  const items = Array.isArray(body.items) ? body.items : [];
+  if (!items.length) return { ok: false, error: 'At least one item is required' };
+  return { ok: true, offerCode: null, items };
+}
+
 function normalizePurchaseForQueue(purchase) {
   const items = Array.isArray(purchase.items) ? purchase.items : [];
   const hasCertificate = items.some((item) => String(item.id || '') === 'certificate');
@@ -135,8 +190,12 @@ function normalizePurchaseForQueue(purchase) {
 
 async function issuePurchase(body, event) {
   const email = String(body.email || '').trim().toLowerCase();
-  const items = Array.isArray(body.items) ? body.items : [];
-  const actor = await getActor(event).catch(() => ({ role: 'guest', email: null }));
+  const purchaseSpec = resolvePurchaseItems(body);
+  if (!purchaseSpec.ok) return json(400, { ok: false, error: purchaseSpec.error });
+  const items = purchaseSpec.items;
+  const authz = await authorizePurchaseActor(event, email);
+  if (!authz.ok) return json(authz.statusCode, { ok: false, error: authz.error });
+  const actor = authz.actor;
   const auditActor = resolveAuditActor(actor, email, 'learner');
   const ip = getClientIp(event);
   const userAgent = event.headers['user-agent'] || null;
@@ -218,6 +277,7 @@ async function issuePurchase(body, event) {
     date: now,
     total,
     items,
+    offerCode: purchaseSpec.offerCode,
     verification: {
       mode: process.env.EFI_STRIPE_ENFORCE === 'true' ? 'stripe_required' : 'server_signed'
     }
@@ -238,7 +298,25 @@ async function issuePurchase(body, event) {
         error: 'Payment intent is not verified yet. Retry after webhook confirmation.'
       });
     }
-    purchase.payment_intent_id = paymentIntentId;
+    const existing = await db.findPurchaseByPaymentIntent(paymentIntentId).catch(() => ({ found: false }));
+    if (existing && existing.found && existing.purchase) {
+      return json(200, {
+        ok: true,
+        purchase: {
+          id: existing.purchase.id,
+          date: existing.purchase.date,
+          total: existing.purchase.total,
+          items: existing.purchase.items || [],
+          receipt: existing.purchase.receipt || null,
+          credentialId: existing.purchase.credentialId || null,
+          paymentIntentId: existing.purchase.paymentIntentId || null,
+          offerCode: existing.purchase.offerCode || null
+        },
+        receipt: existing.purchase.receipt || null,
+        credential_id: existing.purchase.credentialId || null
+      });
+    }
+    purchase.paymentIntentId = paymentIntentId;
   }
 
   const receiptPayload = {

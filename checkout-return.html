@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Purchase Confirmation — EFI</title>
   <meta name="robots" content="noindex">
-  <link rel="stylesheet" href="css/styles.min.css">
+  <link rel="canonical" href="https://executivefunctioninginstitute.com/checkout-return.html">
+  <link rel="preload" href="css/styles.css" as="style">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to content</a>
@@ -21,9 +23,10 @@
           <p class="callout__label">Purchase confirmed</p>
           <p id="return-offer-label" style="font-weight:600;font-size:1.1rem;"></p>
           <p>EFI will follow up within 1 business day with your next steps and onboarding details.</p>
+          <p id="return-sync-message" style="margin-top:var(--space-sm);color:var(--color-text-light);"></p>
         </div>
         <div style="margin-top:var(--space-lg);display:flex;gap:var(--space-sm);flex-wrap:wrap;">
-          <a id="return-dashboard-link" href="/dashboard.html" class="btn btn--primary btn--sm">Go to Dashboard</a>
+          <a id="return-dashboard-link" href="dashboard.html" class="btn btn--primary btn--sm">Go to Dashboard</a>
           <a href="store.html" class="btn btn--secondary btn--sm">Back to Store</a>
         </div>
       </div>
@@ -49,6 +52,7 @@
     var loading = document.getElementById('return-loading');
     var success = document.getElementById('return-success');
     var processing = document.getElementById('return-processing');
+    var syncMessage = document.getElementById('return-sync-message');
 
     function showState(state) {
       loading.style.display = 'none';
@@ -64,12 +68,28 @@
 
     fetch('/api/get-checkout-session?session_id=' + encodeURIComponent(sessionId))
       .then(function (r) { return r.json(); })
-      .then(function (data) {
+      .then(async function (data) {
         if (data.ok && data.status === 'complete') {
           var label = document.getElementById('return-offer-label');
           if (label && data.offer_label) label.textContent = data.offer_label;
           var dashLink = document.getElementById('return-dashboard-link');
           if (dashLink && data.dashboard_url) dashLink.href = data.dashboard_url;
+          if (syncMessage) {
+            syncMessage.textContent = 'Syncing your purchase to your EFI account...';
+          }
+          if (window.EFI && EFI.Auth && typeof EFI.Auth.addOfferPurchase === 'function' && data.offer && data.payment_intent_id) {
+            try {
+              await EFI.Auth.addOfferPurchase(data.offer, data.payment_intent_id, data.customer_email || '');
+              if (typeof EFI.Auth.refreshManagedSession === 'function') {
+                await EFI.Auth.refreshManagedSession();
+              }
+              if (syncMessage) syncMessage.textContent = 'Purchase synced to your dashboard and verification record.';
+            } catch (err) {
+              if (syncMessage) syncMessage.textContent = err && err.message ? err.message : 'Payment confirmed. Sign in with the purchasing email to sync access.';
+            }
+          } else if (syncMessage) {
+            syncMessage.textContent = 'Payment confirmed. Sign in with the purchasing email to sync access.';
+          }
           showState(success);
         } else {
           showState(processing);
@@ -80,6 +100,7 @@
       });
   })();
   </script>
-  <script src="js/main.min.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>

@@ -77,6 +77,7 @@ exports.handler = async function (event) {
     'line_items[0][price]': priceId,
     'line_items[0][quantity]': '1',
     'metadata[offer]': offer,
+    'metadata[email]': email,
     'metadata[customer_name]': name,
     'metadata[offer_label]': entry.label
   });

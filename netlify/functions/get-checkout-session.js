@@ -35,7 +35,9 @@ exports.handler = async function (event) {
       ok: true,
       status: data.status,
       customer_email: data.customer_details?.email || data.customer_email || null,
+      offer: data.metadata?.offer || null,
       offer_label: data.metadata?.offer_label || null,
+      payment_intent_id: data.payment_intent || null,
       dashboard_url: '/dashboard.html'
     });
   } catch (err) {

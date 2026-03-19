@@ -105,6 +105,8 @@ async function addPurchase(email, purchase) {
   const list = MEM.purchases.get(normalized) || [];
   list.push({
     ...purchase,
+    paymentIntentId: purchase.paymentIntentId || null,
+    offerCode: purchase.offerCode || null,
     reviewerDecision: purchase.reviewerDecision || null,
     reviewerNotes: purchase.reviewerNotes || null,
     reviewedAt: purchase.reviewedAt || null,
@@ -124,6 +126,8 @@ async function addPurchase(email, purchase) {
           items: purchase.items || [],
           receipt: purchase.receipt || null,
           credential_id: purchase.credentialId || null,
+          payment_intent_id: purchase.paymentIntentId || null,
+          offer_code: purchase.offerCode || null,
           reviewer_decision: purchase.reviewerDecision || null,
           reviewer_notes: purchase.reviewerNotes || null,
           reviewed_at: purchase.reviewedAt || null,
@@ -142,7 +146,9 @@ async function addPurchase(email, purchase) {
             total: Number(purchase.total || 0),
             items: purchase.items || [],
             receipt: purchase.receipt || null,
-            credential_id: purchase.credentialId || null
+            credential_id: purchase.credentialId || null,
+            payment_intent_id: purchase.paymentIntentId || null,
+            offer_code: purchase.offerCode || null
           }]
         });
         return { storage: 'supabase' };
@@ -160,7 +166,7 @@ async function listPurchases(email) {
 
   if (hasSupabase()) {
     try {
-      const rows = await supabaseRequest(`efi_user_purchases?email=eq.${encodeURIComponent(normalized)}&select=id,purchased_at,total,items,receipt,credential_id,reviewer_decision,reviewer_notes,reviewed_at,reviewed_by&order=purchased_at.desc`);
+      const rows = await supabaseRequest(`efi_user_purchases?email=eq.${encodeURIComponent(normalized)}&select=id,purchased_at,total,items,receipt,credential_id,payment_intent_id,offer_code,reviewer_decision,reviewer_notes,reviewed_at,reviewed_by&order=purchased_at.desc`);
       return {
         storage: 'supabase',
         purchases: (rows || []).map((r) => ({
@@ -170,6 +176,8 @@ async function listPurchases(email) {
           items: r.items || [],
           receipt: r.receipt || null,
           credentialId: r.credential_id || null,
+          paymentIntentId: r.payment_intent_id || null,
+          offerCode: r.offer_code || null,
           reviewerDecision: r.reviewer_decision || null,
           reviewerNotes: r.reviewer_notes || null,
           reviewedAt: r.reviewed_at || null,
@@ -178,7 +186,7 @@ async function listPurchases(email) {
       };
     } catch (err) {
       try {
-        const rows = await supabaseRequest(`efi_user_purchases?email=eq.${encodeURIComponent(normalized)}&select=id,purchased_at,total,items,receipt,credential_id&order=purchased_at.desc`);
+        const rows = await supabaseRequest(`efi_user_purchases?email=eq.${encodeURIComponent(normalized)}&select=id,purchased_at,total,items,receipt,credential_id,payment_intent_id,offer_code&order=purchased_at.desc`);
         return {
           storage: 'supabase',
           purchases: (rows || []).map((r) => ({
@@ -188,6 +196,8 @@ async function listPurchases(email) {
             items: r.items || [],
             receipt: r.receipt || null,
             credentialId: r.credential_id || null,
+            paymentIntentId: r.payment_intent_id || null,
+            offerCode: r.offer_code || null,
             reviewerDecision: null,
             reviewerNotes: null,
             reviewedAt: null,
@@ -210,7 +220,7 @@ async function listAllPurchases(options = {}) {
 
   if (hasSupabase()) {
     try {
-      const clauses = ['select=id,email,purchased_at,total,items,receipt,credential_id,reviewer_decision,reviewer_notes,reviewed_at,reviewed_by', 'order=purchased_at.desc', `limit=${limit}`];
+      const clauses = ['select=id,email,purchased_at,total,items,receipt,credential_id,payment_intent_id,offer_code,reviewer_decision,reviewer_notes,reviewed_at,reviewed_by', 'order=purchased_at.desc', `limit=${limit}`];
       if (email) clauses.push(`email=eq.${encodeURIComponent(email)}`);
       const rows = await supabaseRequest(`efi_user_purchases?${clauses.join('&')}`);
       let purchases = (rows || []).map((r) => ({
@@ -221,6 +231,8 @@ async function listAllPurchases(options = {}) {
         items: r.items || [],
         receipt: r.receipt || null,
         credentialId: r.credential_id || null,
+        paymentIntentId: r.payment_intent_id || null,
+        offerCode: r.offer_code || null,
         reviewerDecision: r.reviewer_decision || null,
         reviewerNotes: r.reviewer_notes || null,
         reviewedAt: r.reviewed_at || null,
@@ -232,7 +244,7 @@ async function listAllPurchases(options = {}) {
       return { storage: 'supabase', purchases };
     } catch (err) {
       try {
-        const clauses = ['select=id,email,purchased_at,total,items,receipt,credential_id', 'order=purchased_at.desc', `limit=${limit}`];
+        const clauses = ['select=id,email,purchased_at,total,items,receipt,credential_id,payment_intent_id,offer_code', 'order=purchased_at.desc', `limit=${limit}`];
         if (email) clauses.push(`email=eq.${encodeURIComponent(email)}`);
         const rows = await supabaseRequest(`efi_user_purchases?${clauses.join('&')}`);
         let purchases = (rows || []).map((r) => ({
@@ -243,6 +255,8 @@ async function listAllPurchases(options = {}) {
           items: r.items || [],
           receipt: r.receipt || null,
           credentialId: r.credential_id || null,
+          paymentIntentId: r.payment_intent_id || null,
+          offerCode: r.offer_code || null,
           reviewerDecision: null,
           reviewerNotes: null,
           reviewedAt: null,
@@ -273,6 +287,53 @@ async function listAllPurchases(options = {}) {
   }
   purchases.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
   return { storage: 'memory', purchases: purchases.slice(0, limit) };
+}
+
+async function findPurchaseByPaymentIntent(paymentIntentId) {
+  const id = String(paymentIntentId || '').trim();
+  if (!id) return { found: false, purchase: null, storage: 'memory' };
+
+  if (hasSupabase()) {
+    try {
+      const rows = await supabaseRequest(`efi_user_purchases?payment_intent_id=eq.${encodeURIComponent(id)}&select=id,email,purchased_at,total,items,receipt,credential_id,payment_intent_id,offer_code,reviewer_decision,reviewer_notes,reviewed_at,reviewed_by&limit=1`);
+      if (Array.isArray(rows) && rows.length) {
+        const row = rows[0];
+        return {
+          found: true,
+          storage: 'supabase',
+          purchase: {
+            id: row.id,
+            email: row.email,
+            date: row.purchased_at,
+            total: Number(row.total || 0),
+            items: row.items || [],
+            receipt: row.receipt || null,
+            credentialId: row.credential_id || null,
+            paymentIntentId: row.payment_intent_id || null,
+            offerCode: row.offer_code || null,
+            reviewerDecision: row.reviewer_decision || null,
+            reviewerNotes: row.reviewer_notes || null,
+            reviewedAt: row.reviewed_at || null,
+            reviewedBy: row.reviewed_by || null
+          }
+        };
+      }
+    } catch (err) {
+      // fall through
+    }
+  }
+
+  let match = null;
+  MEM.purchases.forEach((list, email) => {
+    if (match) return;
+    (list || []).forEach((purchase) => {
+      if (match) return;
+      if (String(purchase.paymentIntentId || '').trim() === id) {
+        match = { ...purchase, email };
+      }
+    });
+  });
+  return { found: !!match, purchase: match, storage: 'memory' };
 }
 
 async function updatePurchaseReview(email, purchaseId, patch) {
@@ -867,6 +928,7 @@ module.exports = {
   addPurchase,
   listPurchases,
   listAllPurchases,
+  findPurchaseByPaymentIntent,
   updatePurchaseReview,
   savePaymentIntent,
   hasVerifiedPayment,

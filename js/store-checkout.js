@@ -1,4 +1,10 @@
 (function () {
+  // Stripe initialized once at module scope — never re-instantiate per click
+  var stripe = (typeof window.Stripe !== 'undefined')
+    ? Stripe('pk_test_51T1fIQAH2ps6zpq4R8fh4Uvx1oQHMynW3GEJoJwtuq048Sgv4H539HuzEJSmR76rrPruJxY0HZgcPvJCi4Wr3San00kiK6KzZ6')
+    : null;
+  var checkoutInstance = null;
+  var checkoutFormTouched = false;
   var hasStartedPurchaseIntent = false;
   var hasSubmittedPurchaseIntent = false;
 
@@ -74,6 +80,47 @@
     }
   }
 
+  function openModal(summaryData) {
+    var modal = document.getElementById('checkout-modal');
+    var titleEl = document.getElementById('checkout-modal-title');
+    var priceEl = document.getElementById('checkout-modal-price');
+    var includesList = document.getElementById('checkout-modal-includes');
+    if (!modal) return;
+
+    if (titleEl) titleEl.textContent = summaryData.offerLabel || '';
+    if (priceEl) priceEl.textContent = summaryData.priceDisplay || '';
+    if (includesList) {
+      includesList.innerHTML = '';
+      (summaryData.includes || []).forEach(function (item) {
+        var li = document.createElement('li');
+        li.textContent = '✓ ' + item;
+        includesList.appendChild(li);
+      });
+    }
+
+    // Set touched immediately — Stripe iframe is cross-origin and change events
+    // don't bubble, so we treat modal-open as the commitment point.
+    checkoutFormTouched = true;
+    modal.style.display = '';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    var modal = document.getElementById('checkout-modal');
+    if (checkoutFormTouched) {
+      if (!confirm('Leave checkout? Your payment has not been submitted.')) return;
+    }
+    if (checkoutInstance) {
+      checkoutInstance.destroy();
+      checkoutInstance = null;
+    }
+    var container = document.getElementById('stripe-checkout-container');
+    if (container) container.innerHTML = '';
+    checkoutFormTouched = false;
+    if (modal) modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
   async function startDirectCheckout(form) {
     var message = document.getElementById('purchase-intent-message');
     var checkoutBtn = document.getElementById('direct-checkout-btn');
@@ -87,32 +134,45 @@
       showMessage(message, 'Enter a valid email to prefill checkout.', true);
       return;
     }
+    if (!stripe) {
+      showMessage(message, 'Checkout unavailable — <a href="mailto:info@theexecutivefunctioninginstitute.com">contact us directly</a> to complete your purchase.', false);
+      return;
+    }
+    if (!checkoutBtn) return;
 
     var original = checkoutBtn.textContent;
     checkoutBtn.disabled = true;
-    checkoutBtn.textContent = 'Opening checkout...';
+    checkoutBtn.textContent = 'Opening checkout…';
+    showMessage(message, '', false);
 
     try {
-      var response = await fetch('/api/create-checkout-link', {
+      var response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ offer: payload.offer, email: payload.email, name: payload.name })
       });
       var result = await response.json();
-      if (!response.ok || !result.ok || !result.checkout_url) {
-        throw new Error((result && result.error) || 'Direct checkout is unavailable for this offer right now.');
+      if (!response.ok || !result.ok || !result.clientSecret) {
+        throw new Error((result && result.error) || 'Could not open checkout.');
       }
 
       if (window.EFI && EFI.Analytics && EFI.Analytics.track) {
-        EFI.Analytics.track('store_direct_checkout_started', {
+        EFI.Analytics.track('store_embedded_checkout_opened', {
           offer: payload.offer,
-          destination: 'stripe_payment_link'
+          destination: 'stripe_embedded'
         });
       }
 
-      window.location.href = result.checkout_url;
+      openModal(result);
+
+      checkoutInstance = await stripe.initEmbeddedCheckout({ clientSecret: result.clientSecret });
+      var container = document.getElementById('stripe-checkout-container');
+      checkoutInstance.mount(container);
+
     } catch (err) {
       showMessage(message, err.message || 'Could not open checkout.', true);
+    } finally {
+      // checkoutBtn is guaranteed non-null here — the null guard above returns before try{}
       checkoutBtn.disabled = false;
       checkoutBtn.textContent = original;
     }
@@ -150,6 +210,19 @@
         startDirectCheckout(form);
       });
     }
+
+    var modal = document.getElementById('checkout-modal');
+    var closeBtn = document.getElementById('checkout-modal-close');
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeModal);
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modal && modal.style.display !== 'none') {
+        closeModal();
+      }
+    });
 
     initAbandonTracking(form);
   });

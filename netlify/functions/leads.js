@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { json, parseBody, normalizeEmail, fanout } = require('./_common');
+const { json, parseBody, normalizeEmail, fanout, syncToMailerLite } = require('./_common');
 const db = require('./_db');
 
 exports.handler = async function (event) {
@@ -46,11 +46,16 @@ exports.handler = async function (event) {
 
   const storage = await db.saveLead(lead);
   const delivery = await fanout({ type: 'lead_capture', lead });
+
+  const mlGroup = leadType === 'enrollment_notification' ? 'enrollment_notification' : 'purchase_intent';
+  const mlSync = await syncToMailerLite(email, name, mlGroup);
+
   return json(200, {
     ok: true,
     lead_id: lead.lead_id,
     offer_code: offerCode || null,
     storage: storage.storage,
-    delivery
+    delivery,
+    mailerlite: mlSync
   });
 };

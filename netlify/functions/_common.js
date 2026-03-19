@@ -61,6 +61,37 @@ function requiredEnv(name) {
   return v && v.trim() ? v.trim() : null;
 }
 
+const MAILERLITE_GROUPS = {
+  enrollment_notification: '182389542082315956',
+  purchase_intent:         '182389527047833032',
+};
+
+async function syncToMailerLite(email, name, groupKey) {
+  const apiKey = requiredEnv('EFI_MAILERLITE_API_KEY');
+  if (!apiKey) return { ok: false, error: 'EFI_MAILERLITE_API_KEY not set' };
+
+  const groupId = MAILERLITE_GROUPS[groupKey] || MAILERLITE_GROUPS.purchase_intent;
+
+  try {
+    const res = await fetch('https://connect.mailerlite.com/api/subscribers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        email,
+        fields: { name },
+        groups: [groupId]
+      })
+    });
+    const data = await res.json();
+    return { ok: res.ok, status: res.status, group: groupKey, subscriber_id: data?.data?.id };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+}
+
 async function fanout(payload) {
   const targets = [
     requiredEnv('EFI_CRM_WEBHOOK_URL'),
@@ -98,5 +129,6 @@ module.exports = {
   verifySignature,
   normalizeEmail,
   requiredEnv,
-  fanout
+  fanout,
+  syncToMailerLite
 };

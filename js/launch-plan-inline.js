@@ -21,6 +21,7 @@
     if (suffix) {
       out.appendChild(document.createTextNode(suffix));
     }
+    out.focus();
   }
 
   form.addEventListener('submit', async function (e) {

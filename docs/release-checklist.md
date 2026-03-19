@@ -4,9 +4,11 @@ Canonical outstanding roadmap: `docs/progress.md`
 
 1. Rebuild CSS bundle: `python3 scripts/build_css.py`.
 2. Rebuild main JS bundle: `python3 scripts/build_main_bundle.py`.
-3. Minify page-specific JS files: `python3 scripts/minify_page_scripts.py`.
-4. Verify no executable inline scripts: `grep -rn '<script>' *.html | grep -v 'src=' | grep -v 'ld+json'` (should return nothing).
-5. Run consolidated gate: `python3 scripts/release_gate.py`.
+3. Rebuild page-group JS bundles: `python3 scripts/build_page_group_bundles.py`.
+4. Rebuild responsive raster variants: `python3 scripts/build_responsive_images.py`.
+5. Minify page-specific JS files: `python3 scripts/minify_page_scripts.py`.
+6. Verify no executable inline scripts: `grep -rn '<script>' *.html | grep -v 'src=' | grep -v 'ld+json'` (should return nothing).
+7. Run consolidated gate: `python3 scripts/release_gate.py`.
 6. Confirm launch-blocker checks pass: `python3 scripts/check_launch_blockers.py`.
 7. Validate role-restricted pages (`admin.html`, `telemetry.html`) with reviewer/admin and learner accounts.
 8. Verify checkout and post-purchase certificate route behavior.

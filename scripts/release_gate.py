@@ -21,18 +21,28 @@ REQUIRED_HEADERS = [
 IGNORED_HTML = {"404.html"}
 CANONICAL_OVERRIDES = {
     "checkout.html": CANONICAL_DOMAIN + "store.html#purchase-status",
-    "coaching-about.html": CANONICAL_DOMAIN + "coaching-home.html#practice",
-    "coaching-methodology.html": CANONICAL_DOMAIN + "coaching-home.html#method",
-    "coaching-services.html": CANONICAL_DOMAIN + "coaching-home.html#services",
+    "coaching-home.html": CANONICAL_DOMAIN + "coaching/",
+    "coaching-about.html": CANONICAL_DOMAIN + "coaching/about/",
+    "coaching-contact.html": CANONICAL_DOMAIN + "coaching/contact/",
+    "coaching-methodology.html": CANONICAL_DOMAIN + "coaching/methodology/",
+    "coaching-services.html": CANONICAL_DOMAIN + "coaching/services/",
     "educator-launchpad.html": CANONICAL_DOMAIN + "teacher-to-coach.html#launchpad",
     "educator-toolkit.html": CANONICAL_DOMAIN + "resources.html#toolkits",
     "enroll.html": CANONICAL_DOMAIN + "store.html",
     "further-sources.html": CANONICAL_DOMAIN + "open-ef-resources-directory.html#citations",
     "getting-started.html": CANONICAL_DOMAIN + "index.html#start-paths",
-    "module-a-neuroscience.html": CANONICAL_DOMAIN + "module-1.html",
-    "module-b-pedagogy.html": CANONICAL_DOMAIN + "module-3.html",
-    "module-c-interventions.html": CANONICAL_DOMAIN + "module-4.html",
+    "module-1.html": CANONICAL_DOMAIN + "modules/1/",
+    "module-2.html": CANONICAL_DOMAIN + "modules/2/",
+    "module-3.html": CANONICAL_DOMAIN + "modules/3/",
+    "module-4.html": CANONICAL_DOMAIN + "modules/4/",
+    "module-5.html": CANONICAL_DOMAIN + "modules/5/",
+    "module-6.html": CANONICAL_DOMAIN + "modules/6/",
+    "module-a-neuroscience.html": CANONICAL_DOMAIN + "modules/1/",
+    "module-b-pedagogy.html": CANONICAL_DOMAIN + "modules/3/",
+    "module-c-interventions.html": CANONICAL_DOMAIN + "modules/4/",
     "parent-toolkit.html": CANONICAL_DOMAIN + "resources.html#toolkits",
+    "search.html": CANONICAL_DOMAIN + "search/",
+    "verify.html": CANONICAL_DOMAIN + "verify/",
 }
 
 
@@ -89,7 +99,7 @@ def check_sitemap() -> None:
         raise RuntimeError("Sitemap URL format check failed")
 
     expected = {
-        CANONICAL_DOMAIN + html.name
+        CANONICAL_OVERRIDES.get(html.name, CANONICAL_DOMAIN + html.name).split("#", 1)[0]
         for html in ROOT.glob("*.html")
         if html.name not in IGNORED_HTML
     }
@@ -116,7 +126,8 @@ def main() -> int:
         run_command(["python3", "scripts/build_css.py"], "css build")
         run_command(["python3", "scripts/build_sitemap.py"], "sitemap build")
         run_command(["python3", "scripts/build_main_bundle.py"], "main js bundle")
-        run_command(["node", "--check", "js/main.js", "js/main.bundle.js", "js/auth.js", "js/esqr.js"], "js syntax")
+        run_command(["python3", "scripts/build_page_group_bundles.py"], "page-group js bundles")
+        run_command(["node", "--check", "js/main.js", "js/main.bundle.js", "js/module-pages.bundle.js", "js/auth.js", "js/esqr.js"], "js syntax")
         run_command(["python3", "scripts/check_links.py"], "local link check")
         run_command(["python3", "scripts/check_accessibility.py"], "accessibility check")
         run_command(["python3", "scripts/check_pdfs.py"], "pdf integrity check")

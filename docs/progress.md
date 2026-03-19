@@ -4,9 +4,40 @@ Last updated: March 19, 2026
 
 This is the single source of truth for **active needed changes**. Roadmaps/audits/todo wave logs are archived snapshots unless explicitly marked active here.
 
-## 1) Launch blockers (do first)
+## 1) Current priorities
 
-### Platform/operator
+### Launch-critical
+
+- [ ] Verify production webhook fanout delivery + persistence.
+- [ ] Finalize/publish jurisdiction + principal-office legal metadata (if required for go-live policy).
+- [ ] Validate role-restricted pages (`admin.html`, `telemetry.html`, reviewer surfaces) with real learner, reviewer, and admin accounts on the deployed site.
+- [ ] Verify checkout and post-purchase certificate behavior on deploy with a real end-to-end purchase test.
+- [ ] Verify ESQ-R export/share flows (PNG/PDF/share file) on deploy.
+- [ ] Validate deployed API endpoints end to end, especially:
+  - `/api/auth?action=config`
+  - `/api/sync-progress`
+  - `/api/verify`
+  - `/api/submissions`
+  - `/api/coach-directory`
+  - `/api/ops-config`
+
+### Next score / growth moves
+
+## 2) Clean next 10
+
+1. Verify production webhook fanout delivery + persistence.
+2. Run a real live Stripe purchase and confirm entitlement issuance, dashboard visibility, and certificate/review routing.
+3. Validate learner, reviewer, and admin role-restricted pages on deploy.
+4. Finalize and publish jurisdiction / principal-office legal metadata.
+5. Verify ESQ-R export/share flows on deploy.
+6. Validate the deployed auth/progress/verify/submissions/admin APIs end to end.
+7. Tighten funnel reporting and use the new analytics trail to find real weak spots.
+8. Re-run live-domain smoke checks after deploy and verify the new route aliases behave correctly in production.
+9. Verify the GitHub uptime workflow can create and close alert issues in the live repo.
+10. Update the public rubric after the next deploy verification pass.
+
+## 3) Launch-blocker status
+
 Requires Deployment/Operator Input
 
 - [x] Set production Netlify env vars:
@@ -22,22 +53,19 @@ Requires Deployment/Operator Input
 - [ ] Verify production webhook fanout delivery + persistence.
 - [x] Apply Supabase `efi_user_purchases` migration for certificate review state columns (`reviewer_decision`, `reviewer_notes`, `reviewed_at`, `reviewed_by`).
 - [ ] Finalize/publish jurisdiction + principal-office legal metadata (if required for go-live policy).
-
-### Release gate
 - [x] Run `python3 scripts/release_gate.py` and resolve all blockers.
 
-## External critique follow-up (Gemini review, March 17, 2026)
-
-Critique was directionally useful, but not every point is current. In particular, authenticated progress sync already exists; the remaining work is to audit which learner states are still local-only and harden those paths.
-
-- [ ] Refactor `js/main.js` into focused modules. Start by separating analytics/event delivery, shared UI behaviors, and dashboard learning-loop logic so future changes stop accumulating in one file.
-- [ ] Break `css/styles.css` into maintainable partials or layered files by concern (`base`, `layout`, `components`, `page/feature`) without changing the existing visual system.
-- [ ] Audit progress durability end to end. Confirm which states already sync for signed-in users and move any remaining high-value local-only state (`efi_action_plans_v1`, mastery/recheck queues, related dashboard data) onto the authenticated sync path or clearly label them as device-local.
-- [ ] Replace unsafe string-built UI rendering on user-adjacent surfaces with DOM construction (`createElement`, `textContent`). Prioritize `js/main.js`, then expand the audit to other files that still rely on `innerHTML`.
-- [ ] Run a mobile touch-target pass and enforce a 44x44 px minimum on inline utility links, pagination, and compact controls that currently require precision taps.
-- [ ] Add stylesheet preload on the main entry pages and verify it improves the critical rendering path without causing duplicate fetches or priority regressions.
-
-## Recently Completed
+## 4) Recently completed
+- ✅ Store conversion surface now includes a trust anchor adjacent to the purchase form, offer-specific microcopy, and a visible urgency block tied to the active capstone review window.
+- ✅ Store checkout analytics now emit a fuller funnel trail (form started, offer selected, lead submit start/error, checkout launched, checkout mounted, abandonment) using a per-session flow id.
+- ✅ Public health monitoring surface added at `health.html`, with non-secret checks for `track-event`, auth config, and public checkout config.
+- ✅ Module-family JS bundling added via `scripts/build_page_group_bundles.py`; Modules 1-6 now load `js/module-pages.bundle.min.js` instead of separate repeated quiz/scenario assets.
+- ✅ Responsive PNG image delivery added for the raster-heavy module and certificate surfaces via `scripts/build_responsive_images.py`, generated image variants, and `srcset`/`sizes` on the main curriculum/certificate pages.
+- ✅ Secondary diagnostic/tool outputs now use stronger status/live-region handling and focus moves after result generation (`gap-analyzer`, `launch-plan`, `teacher-to-coach`, `ef-profile-story`, `full-ef-profile`).
+- ✅ Module-page and cross-profile meta descriptions were tightened to be more keyword-specific and search-legible.
+- ✅ Public route cleanup landed for modules, coaching, search, and verify surfaces: clean directory-style canonicals, sitemap URLs, and Netlify redirects/rewrite aliases now sit in front of the legacy flat files.
+- ✅ External uptime alerting is now wired into GitHub Actions via `uptime-check.yml`, with scheduled probes that open/update an `uptime-alert` issue on failure and close it after recovery.
+- ✅ A second SEO pass tightened meta descriptions on the main non-module marketing, coaching, policy, and support pages.
 - ✅ Release gate now passes end to end (`python3 scripts/release_gate.py`) after fixing checkout-return asset/link drift, credential-doc landmarks/canonicals, and store-page quote corruption.
 - ✅ Managed-auth enforcement added to learner progress and submission endpoints so `/api/sync-progress` and learner-facing `/api/submissions` access are bound to the authenticated Supabase user when managed auth is enabled.
 - ✅ Stripe purchase fulfillment now persists from checkout completion: webhook fulfillment issues durable purchase records/receipts, return-page sync hydrates the logged-in account, and purchases are idempotent by `payment_intent_id`.
@@ -72,7 +100,7 @@ Critique was directionally useful, but not every point is current. In particular
 
 ---
 
-## 2) Product learning loop priorities (next build window)
+## 5) Product learning loop priorities (completed)
 
 ### P0 (highest ROI)
 - [x] Reflection prompt prefills from plan focus/history (backlog item #3). — `js/module-quiz.js` (buildReflectionPrefill + renderReflectionPrompt), `js/assessment-tools.js` (prefillReflection IIFE).
@@ -89,7 +117,7 @@ Critique was directionally useful, but not every point is current. In particular
 
 ---
 
-## 3) Content/compliance cleanup still open
+## 6) Content/compliance cleanup
 
 - [x] Final pass on outcome/effectiveness marketing claims not yet rechecked against evidence.
 - [x] Legal/privacy/credential-verification copy pass against current backend behavior and policies.
@@ -97,7 +125,7 @@ Critique was directionally useful, but not every point is current. In particular
 
 ---
 
-## 4) Already completed recently (do not re-open)
+## 7) Already completed recently (do not re-open)
 
 - [x] One-click recheck CTA in reminder rows.
 - [x] Near-mastery guidance state.
@@ -108,14 +136,14 @@ Critique was directionally useful, but not every point is current. In particular
 
 ---
 
-## 5) Archive map
+## 8) Archive map
 
 Historical detail is preserved in:
-- `docs/production-readiness-todos.md`
-- `docs/next-10-todos.md`
-- `docs/roadmap-to-perfection.md`
-- `docs/content-gap-audit.md`
-- `docs/next-wave-v2-backlog.md`
-- `docs/assessment-interactive-audit.md`
-- `docs/business-audit-2026-03-12.md`
-- `docs/fact-check-audit.md`
+- `docs/outdated/production-readiness-todos.md`
+- `docs/outdated/next-10-todos.md`
+- `docs/outdated/roadmap-to-perfection.md`
+- `docs/outdated/content-gap-audit.md`
+- `docs/outdated/next-wave-v2-backlog.md`
+- `docs/outdated/assessment-interactive-audit.md`
+- `docs/outdated/business-audit-2026-03-12.md`
+- `docs/outdated/fact-check-audit.md`

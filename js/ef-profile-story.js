@@ -430,6 +430,7 @@
       });
       dimensionsEl.appendChild(wrap);
     }
+    resultsSection.focus();
   }
 
   function saveHistory(result) {

@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reviewed Services | The Executive Functioning Institute</title>
-  <meta name="description" content="Review EFI's reviewed services: CEFC enrollment oversight, capstone review, bundle pricing, and ESQ-R professional analysis.">
+  <meta name="description" content="Compare EFI reviewed services: CEFC enrollment, capstone review, executive function coach certification bundle pricing, and ESQ-R professional analysis.">
   <link rel="preload" href="css/styles.css" as="style">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="favicon.svg">
   <meta property="og:title" content="Reviewed Services | The Executive Functioning Institute">
-  <meta property="og:description" content="Review EFI's reviewed services for certification enrollment, capstone review, and ESQ-R professional analysis.">
+  <meta property="og:description" content="Compare EFI reviewed services for executive function coach certification enrollment, capstone review, and ESQ-R professional analysis.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="The Executive Functioning Institute">
 
@@ -357,35 +357,61 @@
             <li>Submit a purchase-intent request in under 60 seconds</li>
             <li>Get routed to onboarding + scheduling follow-up from one intake stream</li>
           </ul>
-          <p style="font-size:0.875rem;color:var(--color-text-light);margin-bottom:var(--space-sm);"><strong>Next capstone review window: July 30, 2026.</strong> Enrollment submissions received by July 23 are eligible for this window.</p>
-          <form id="purchase-intent-form" class="stack" style="margin-top:var(--space-lg);display:grid;gap:var(--space-sm);">
-            <label for="purchase-name">Full name</label>
-            <input id="purchase-name" name="name" type="text" required placeholder="Your name">
-            <label for="purchase-email">Email</label>
-            <input id="purchase-email" name="email" type="email" required placeholder="you@email.com">
-            <label for="purchase-offer">Offer</label>
-            <select id="purchase-offer" name="offer" required>
-              <option value="">Select an option...</option>
-              <option value="cefc_enrollment">CEFC Enrollment Access ($695)</option>
-              <option value="capstone_review">Capstone Review & Credentialing ($350)</option>
-              <option value="cefc_bundle">CEFC Bundle ($895)</option>
-              <option value="esqr_analysis">ESQ-R Professional Analysis ($199)</option>
-            </select>
-            <p id="offer-summary" style="font-size:0.875rem;color:var(--color-text-light);margin-top:var(--space-xs);min-height:1.4rem;"></p>
-            <label style="display:flex;gap:0.5rem;align-items:flex-start;">
-              <input id="purchase-consent" name="consent" type="checkbox" required>
-              <span>I understand this is a human-reviewed program. EFI will follow up within 1 business day to confirm my selection and next steps. Data is handled per the <a href="privacy.html">privacy policy</a>.</span>
-            </label>
-            <div class="button-group" style="margin-top:var(--space-sm);">
-              <button type="submit" class="btn btn--primary btn--sm" data-analytics-event="purchase_intent_submit_click" data-analytics-label="Store purchase intent submit">Start Purchase Request</button>
-              <button type="button" id="direct-checkout-btn" class="btn btn--secondary btn--sm" data-analytics-event="store_direct_checkout_click" data-analytics-label="Store direct checkout">Go To Secure Checkout</button>
+          <div class="store-form-urgency" aria-live="polite">
+            <p class="store-form-urgency__label">Current review window</p>
+            <p class="store-form-urgency__headline"><strong>Next capstone review window: July 30, 2026.</strong> Enrollment submissions received by July 23 are eligible for this window.</p>
+            <p class="store-form-urgency__note" id="offer-window-note">Choose your offer to see the exact next-step timing and how this window affects your route.</p>
+          </div>
+          <div class="store-conversion-surface" style="margin-top:var(--space-lg);">
+            <div class="store-conversion-surface__main">
+              <form id="purchase-intent-form" class="stack" style="display:grid;gap:var(--space-sm);">
+                <label for="purchase-name">Full name</label>
+                <input id="purchase-name" name="name" type="text" required placeholder="Your name">
+                <label for="purchase-email">Email</label>
+                <input id="purchase-email" name="email" type="email" required placeholder="you@email.com">
+                <label for="purchase-offer">Offer</label>
+                <select id="purchase-offer" name="offer" required>
+                  <option value="">Select an option...</option>
+                  <option value="cefc_enrollment">CEFC Enrollment Access ($695)</option>
+                  <option value="capstone_review">Capstone Review & Credentialing ($350)</option>
+                  <option value="cefc_bundle">CEFC Bundle ($895)</option>
+                  <option value="esqr_analysis">ESQ-R Professional Analysis ($199)</option>
+                </select>
+                <div id="offer-summary-card" class="store-offer-summary" hidden aria-live="polite">
+                  <p class="store-offer-summary__label">Selected offer</p>
+                  <p id="offer-summary" class="store-offer-summary__headline"></p>
+                  <p id="offer-next-step" class="store-offer-summary__detail"></p>
+                </div>
+                <label style="display:flex;gap:0.5rem;align-items:flex-start;">
+                  <input id="purchase-consent" name="consent" type="checkbox" required>
+                  <span>I understand this is a human-reviewed program. EFI will follow up within 1 business day to confirm my selection, payment route, and next steps. Data is handled per the <a href="privacy.html">privacy policy</a>.</span>
+                </label>
+                <div class="button-group" style="margin-top:var(--space-sm);">
+                  <button type="submit" id="purchase-intent-submit" class="btn btn--primary btn--sm" data-analytics-event="purchase_intent_submit_click" data-analytics-label="Store purchase intent submit">Start Purchase Request</button>
+                  <button type="button" id="direct-checkout-btn" class="btn btn--secondary btn--sm" data-analytics-event="store_direct_checkout_click" data-analytics-label="Store direct checkout">Go To Secure Checkout</button>
+                </div>
+                <p id="purchase-intent-message" style="margin:0;color:var(--color-text-light);"></p>
+              </form>
+              <div class="callout callout--accent" style="margin-top:var(--space-lg);">
+                <p class="callout__label">Before you submit</p>
+                <p><strong>Resubmission is included at no extra charge.</strong> If your capstone needs revision, you receive written rubric feedback and one resubmission review. Your credential is publicly verifiable at <a href="verify.html">verify.html</a> once issued.</p>
+              </div>
             </div>
-            <p id="purchase-intent-message" style="margin:0;color:var(--color-text-light);"></p>
-          </form>
-          <div class="callout callout--accent" style="margin-top:var(--space-lg);">
-  <p class="callout__label">Before you submit</p>
-  <p><strong>Resubmission is included at no extra charge.</strong> If your capstone needs revision, you receive written rubric feedback and one resubmission review. Your credential is publicly verifiable at <a href="verify.html">verify.html</a> once issued.</p>
-</div>
+            <aside class="store-trust-anchor" aria-label="Conversion trust anchor">
+              <p class="store-trust-anchor__label">What you can inspect before paying</p>
+              <ul class="artifact-ledger">
+                <li><span>Rubric Surface</span><strong>The operational capstone rubric and competency crosswalk are public before checkout.</strong></li>
+                <li><span>Verification Surface</span><strong>Certificate purchases generate a signed verification path that can be checked later at EFI's public verification page.</strong></li>
+                <li><span>Human Review</span><strong>EFI follows up within 1 business day and keeps revision logic visible instead of hiding it behind the paywall.</strong></li>
+              </ul>
+              <div class="button-group" style="margin-top:var(--space-lg);">
+                <a href="EFI-Capstone-Transparency-Rubric.html" class="btn btn--secondary btn--sm">Open Rubric</a>
+                <a href="EFI-Competency-Crosswalk-Map.html" class="btn btn--ghost btn--sm">Open Crosswalk</a>
+                <a href="verify.html" class="btn btn--ghost btn--sm">Verify Credential</a>
+              </div>
+              <p class="store-trust-anchor__meta">No hidden curriculum layer: the standards, scoring logic, and verification route stay visible before a buyer commits.</p>
+            </aside>
+          </div>
           <p style="color:var(--color-text-light);margin-top:var(--space-md);">This replaces dead-end checkout logic with one measurable conversion step. For immediate fit questions, you can still book a consultation.</p>
           <div class="button-group" style="margin-top:var(--space-lg);">
             <a href="coaching-contact.html#booking" class="btn btn--secondary btn--sm" data-analytics-event="store_book_consultation_click" data-analytics-label="Store book consultation">Book Consultation</a>
@@ -498,35 +524,7 @@
   <script src="js/nav-auth.min.js" defer></script>
   <script src="js/main.min.js" defer></script>
   <script src="https://js.stripe.com/v3/"></script>
-  <script src="js/store-checkout.min.js"></script>
-<script>
-(function(){
-  var sel = document.getElementById('purchase-offer');
-  var summary = document.getElementById('offer-summary');
-  var labels = {
-    cefc_enrollment: '$695 — six graded modules with written evaluator feedback.',
-    capstone_review: '$350 — manual capstone evaluation, revision notes, and credential processing.',
-    cefc_bundle: '$895 — full reviewed pathway: enrollment + capstone in one purchase.',
-    esqr_analysis: '$199 — 5–7 page professional ESQ-R interpretation report.'
-  };
-  if (sel && summary) {
-    sel.addEventListener('change', function(){ summary.textContent = labels[sel.value] || ''; });
-  }
-})();
-</script>
-<script>
-(function(){
-  var form = document.getElementById('notify-form');
-  var msg = document.getElementById('notify-message');
-  if (!form) return;
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    if (msg) msg.textContent = 'Request noted. Enrollment windows are announced on the store page — check back or contact us directly to confirm timing.';
-    form.reset();
-    // Wire to EFI_ESP_WEBHOOK_URL once that env var is live in Netlify
-  });
-})();
-</script>
+  <script src="js/store-checkout.min.js" defer></script>
 
 <!-- Embedded Checkout Modal -->
 <div id="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-modal-title"

@@ -5,6 +5,66 @@
   var checkoutFormTouched = false;
   var hasStartedPurchaseIntent = false;
   var hasSubmittedPurchaseIntent = false;
+  var hasTrackedFormStart = false;
+  var storeFlowId = null;
+  var OFFER_DETAILS = {
+    cefc_enrollment: {
+      label: 'CEFC Enrollment Access',
+      price: '$695',
+      nextStep: 'Best if you want the full graded pathway. EFI confirms your enrollment route within 1 business day, then you can begin module submissions on your timeline.',
+      urgency: 'To stay eligible for the July 30 capstone review window, enrollment requests should be in by July 23.'
+    },
+    capstone_review: {
+      label: 'Capstone Review & Credentialing',
+      price: '$350',
+      nextStep: 'Best if your modules are already complete. EFI confirms capstone-readiness and review routing before your final packet enters the queue.',
+      urgency: 'Capstone-only buyers should secure review routing before July 23 to stay in the current July 30 window.'
+    },
+    cefc_bundle: {
+      label: 'CEFC Bundle',
+      price: '$895',
+      nextStep: 'Best if you want the cleanest start-to-finish route. EFI confirms bundle checkout first, then keeps enrollment and capstone tracking under one account record.',
+      urgency: 'Bundle buyers who enter before July 23 are placed in the current review-cycle onboarding group.'
+    },
+    esqr_analysis: {
+      label: 'ESQ-R Professional Analysis',
+      price: '$199',
+      nextStep: 'Best if you want a lower-commitment starting point. EFI follows up within 1 business day with scoring, interpretation, and the next recommended route.',
+      urgency: 'ESQ-R analysis does not depend on the capstone window, but selecting it now keeps your intake and later upgrade path on one record.'
+    }
+  };
+
+  function getPageName() {
+    return window.location.pathname.split('/').pop() || 'store.html';
+  }
+
+  function ensureStoreFlowId() {
+    if (storeFlowId) return storeFlowId;
+    try {
+      var existing = window.sessionStorage.getItem('efi_store_flow_id');
+      if (existing) {
+        storeFlowId = existing;
+        return storeFlowId;
+      }
+      storeFlowId = 'store_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+      window.sessionStorage.setItem('efi_store_flow_id', storeFlowId);
+      return storeFlowId;
+    } catch (err) {
+      storeFlowId = 'store_' + Date.now().toString(36);
+      return storeFlowId;
+    }
+  }
+
+  function trackStoreEvent(eventName, properties) {
+    var payload = Object.assign({
+      funnel_flow_id: ensureStoreFlowId(),
+      page: getPageName()
+    }, properties || {});
+
+    if (window.EFI && EFI.Analytics && EFI.Analytics.track) {
+      EFI.Analytics.track(eventName, payload);
+    }
+  }
 
   async function getStripe() {
     if (stripe) return stripe;
@@ -46,6 +106,48 @@
     };
   }
 
+  function updateOfferState(form) {
+    if (!form) return;
+
+    var payload = getFormPayload(form);
+    var details = OFFER_DETAILS[payload.offer] || null;
+    var summaryCard = document.getElementById('offer-summary-card');
+    var summary = document.getElementById('offer-summary');
+    var nextStep = document.getElementById('offer-next-step');
+    var urgency = document.getElementById('offer-window-note');
+    var submitBtn = document.getElementById('purchase-intent-submit');
+    var checkoutBtn = document.getElementById('direct-checkout-btn');
+
+    if (!details) {
+      if (summaryCard) summaryCard.hidden = true;
+      if (summary) summary.textContent = '';
+      if (nextStep) nextStep.textContent = '';
+      if (urgency) {
+        urgency.textContent = 'Choose your offer to see the exact next-step timing and how this window affects your route.';
+      }
+      if (submitBtn) submitBtn.textContent = 'Start Purchase Request';
+      if (checkoutBtn) checkoutBtn.textContent = 'Go To Secure Checkout';
+      return;
+    }
+
+    if (summaryCard) summaryCard.hidden = false;
+    if (summary) {
+      summary.textContent = details.label + ' — ' + details.price;
+    }
+    if (nextStep) {
+      nextStep.textContent = details.nextStep;
+    }
+    if (urgency) {
+      urgency.textContent = details.urgency;
+    }
+    if (submitBtn) {
+      submitBtn.textContent = 'Request ' + details.label;
+    }
+    if (checkoutBtn) {
+      checkoutBtn.textContent = 'Open ' + details.price + ' Checkout';
+    }
+  }
+
   async function submitPurchaseIntent(form) {
     var consent = form.querySelector('#purchase-consent') && form.querySelector('#purchase-consent').checked;
     var message = document.getElementById('purchase-intent-message');
@@ -56,6 +158,11 @@
       showMessage(message, 'Please confirm consent before submitting.', true);
       return;
     }
+
+    trackStoreEvent('store_lead_submit_started', {
+      funnel_offer: payload.offer,
+      email_present: !!payload.email
+    });
 
     var original = btn.textContent;
     btn.disabled = true;
@@ -85,15 +192,17 @@
 
       hasSubmittedPurchaseIntent = true;
 
-      if (window.EFI && EFI.Analytics && EFI.Analytics.track) {
-        EFI.Analytics.track('store_purchase_intent_submitted', {
-          offer: payload.offer,
-          lead_id: result.lead_id || ''
-        });
-      }
+      trackStoreEvent('store_purchase_intent_submitted', {
+        funnel_offer: payload.offer,
+        lead_id: result.lead_id || ''
+      });
 
       showMessage(message, 'Request received. EFI will follow up with onboarding steps within 1 business day.', false);
     } catch (err) {
+      trackStoreEvent('store_lead_submit_error', {
+        funnel_offer: payload.offer,
+        error: String(err && err.message || err || 'unknown_error')
+      });
       showMessage(message, err.message || 'Submission failed. Please try again.', true);
     } finally {
       btn.disabled = false;
@@ -140,6 +249,9 @@
     checkoutFormTouched = false;
     if (modal) modal.style.display = 'none';
     document.body.style.overflow = '';
+    trackStoreEvent('store_checkout_modal_closed', {
+      stage: 'embedded_checkout'
+    });
   }
 
   async function startDirectCheckout(form) {
@@ -157,6 +269,11 @@
     }
     if (!checkoutBtn) return;
 
+    trackStoreEvent('store_checkout_launch_clicked', {
+      funnel_offer: payload.offer,
+      email_present: !!payload.email
+    });
+
     var original = checkoutBtn.textContent;
     checkoutBtn.disabled = true;
     checkoutBtn.textContent = 'Opening checkout…';
@@ -173,14 +290,17 @@
         throw new Error((result && result.error) || 'Could not open checkout.');
       }
 
+      trackStoreEvent('store_checkout_session_created', {
+        funnel_offer: payload.offer,
+        destination: 'stripe_embedded'
+      });
+
       var stripeClient = await getStripe();
 
-      if (window.EFI && EFI.Analytics && EFI.Analytics.track) {
-        EFI.Analytics.track('store_embedded_checkout_opened', {
-          offer: payload.offer,
-          destination: 'stripe_embedded'
-        });
-      }
+      trackStoreEvent('store_embedded_checkout_opened', {
+        funnel_offer: payload.offer,
+        destination: 'stripe_embedded'
+      });
 
       openModal(result);
 
@@ -188,8 +308,16 @@
       var container = document.getElementById('stripe-checkout-container');
       if (!container) throw new Error('Checkout container not found.');
       checkoutInstance.mount(container);
+      trackStoreEvent('store_checkout_mount_succeeded', {
+        funnel_offer: payload.offer,
+        destination: 'stripe_embedded'
+      });
 
     } catch (err) {
+      trackStoreEvent('store_checkout_launch_error', {
+        funnel_offer: payload.offer,
+        error: String(err && err.message || err || 'unknown_error')
+      });
       showMessage(message, err.message || 'Could not open checkout.', true);
     } finally {
       // checkoutBtn is guaranteed non-null here — the null guard above returns before try{}
@@ -200,30 +328,72 @@
 
   function initAbandonTracking(form) {
     ['input', 'change'].forEach(function (evt) {
-      form.addEventListener(evt, function () {
+      form.addEventListener(evt, function (event) {
         hasStartedPurchaseIntent = true;
+        if (!hasTrackedFormStart) {
+          hasTrackedFormStart = true;
+          trackStoreEvent('store_checkout_form_started', {
+            funnel_offer: getFormPayload(form).offer,
+            interaction_type: evt
+          });
+        }
+        if (event && event.target && event.target.id === 'purchase-offer') {
+          trackStoreEvent('store_checkout_offer_selected', {
+            funnel_offer: String(event.target.value || '').trim()
+          });
+        }
       });
     });
 
     window.addEventListener('beforeunload', function () {
-      if (!hasStartedPurchaseIntent || hasSubmittedPurchaseIntent) return;
-      if (window.EFI && EFI.Analytics && EFI.Analytics.track) {
-        EFI.Analytics.track('store_purchase_intent_abandoned', {
-          page: window.location.pathname.split('/').pop() || 'store.html'
+      if (checkoutFormTouched) {
+        trackStoreEvent('store_checkout_abandoned', {
+          funnel_offer: getFormPayload(form).offer,
+          stage: 'embedded_checkout'
         });
+        return;
       }
+      if (!hasStartedPurchaseIntent || hasSubmittedPurchaseIntent) return;
+      trackStoreEvent('store_purchase_intent_abandoned', {
+        funnel_offer: getFormPayload(form).offer
+      });
+    });
+  }
+
+  function initNotifyForm() {
+    var form = document.getElementById('notify-form');
+    var message = document.getElementById('notify-message');
+    if (!form) return;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (message) {
+        message.textContent = 'Request noted. Enrollment windows are announced on the store page — check back or contact us directly to confirm timing.';
+      }
+      trackStoreEvent('store_notify_interest_submitted', {
+        funnel_offer: getFormPayload(document.getElementById('purchase-intent-form') || form).offer || '',
+        source: 'offseason_waitlist'
+      });
+      form.reset();
     });
   }
 
   document.addEventListener('DOMContentLoaded', function () {
     var form = document.getElementById('purchase-intent-form');
     var checkoutBtn = document.getElementById('direct-checkout-btn');
+    var offerSelect = document.getElementById('purchase-offer');
     if (!form) return;
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       submitPurchaseIntent(form);
     });
+
+    if (offerSelect) {
+      offerSelect.addEventListener('change', function () {
+        updateOfferState(form);
+      });
+    }
 
     if (checkoutBtn) {
       checkoutBtn.addEventListener('click', function () {
@@ -245,5 +415,7 @@
     });
 
     initAbandonTracking(form);
+    updateOfferState(form);
+    initNotifyForm();
   });
 })();

@@ -471,6 +471,7 @@
     renderListItems(strengthsEl, mergedResult.strengths);
     renderListItems(planEl, mergedResult.plan);
     setMessage('Your full profile is ready to copy or export.');
+    if (resultsSection) resultsSection.focus();
   }
 
   if (copyBtn) {

@@ -44,63 +44,8 @@
     </div>
   </main>
 
-  <script>
-  (function () {
-    var params = new URLSearchParams(window.location.search);
-    var sessionId = params.get('session_id');
-
-    var loading = document.getElementById('return-loading');
-    var success = document.getElementById('return-success');
-    var processing = document.getElementById('return-processing');
-    var syncMessage = document.getElementById('return-sync-message');
-
-    function showState(state) {
-      loading.style.display = 'none';
-      success.style.display = 'none';
-      processing.style.display = 'none';
-      state.style.display = '';
-    }
-
-    if (!sessionId) {
-      showState(processing);
-      return;
-    }
-
-    fetch('/api/get-checkout-session?session_id=' + encodeURIComponent(sessionId))
-      .then(function (r) { return r.json(); })
-      .then(async function (data) {
-        if (data.ok && data.status === 'complete') {
-          var label = document.getElementById('return-offer-label');
-          if (label && data.offer_label) label.textContent = data.offer_label;
-          var dashLink = document.getElementById('return-dashboard-link');
-          if (dashLink && data.dashboard_url) dashLink.href = data.dashboard_url;
-          if (syncMessage) {
-            syncMessage.textContent = 'Syncing your purchase to your EFI account...';
-          }
-          if (window.EFI && EFI.Auth && typeof EFI.Auth.addOfferPurchase === 'function' && data.offer && data.payment_intent_id) {
-            try {
-              await EFI.Auth.addOfferPurchase(data.offer, data.payment_intent_id, data.customer_email || '');
-              if (typeof EFI.Auth.refreshManagedSession === 'function') {
-                await EFI.Auth.refreshManagedSession();
-              }
-              if (syncMessage) syncMessage.textContent = 'Purchase synced to your dashboard and verification record.';
-            } catch (err) {
-              if (syncMessage) syncMessage.textContent = err && err.message ? err.message : 'Payment confirmed. Sign in with the purchasing email to sync access.';
-            }
-          } else if (syncMessage) {
-            syncMessage.textContent = 'Payment confirmed. Sign in with the purchasing email to sync access.';
-          }
-          showState(success);
-        } else {
-          showState(processing);
-        }
-      })
-      .catch(function () {
-        showState(processing);
-      });
-  })();
-  </script>
   <script src="js/auth.js" defer></script>
+  <script src="js/checkout-return.min.js" defer></script>
   <script src="js/main.js" defer></script>
 </body>
 </html>

@@ -90,8 +90,14 @@ CSS now uses a tiny local build step while still shipping a single generated sty
 The shared frontend entry path also uses a small local JS bundling step:
 - Edit `js/main-analytics.js`, `js/main-learning-loop.js`, and `js/main-ui.js`
 - Rebuild with `python3 scripts/build_main_bundle.py`
+- Rebuild module-family bundles with `python3 scripts/build_page_group_bundles.py`
 - Production pages still load `js/main.js`
 - `js/main.js` now prefers the generated `js/main.bundle.js` and falls back to the individual source modules if the bundle is missing
+- Module pages now prefer the generated `js/module-pages.bundle.min.js` for quiz/scenario behavior
+
+Raster-heavy curriculum and certificate images also have a local responsive-image step:
+- Rebuild with `python3 scripts/build_responsive_images.py`
+- This generates smaller PNG variants used by `srcset` on module and certificate surfaces
 
 For managed auth + durable persistence deployment, provision Supabase tables with `docs/supabase-schema.sql`.
 Set `EFI_SUBMISSIONS_CRON_SECRET` in production and rely on `netlify/functions/process-due-feedback.js` for delayed feedback release notifications.
@@ -106,17 +112,20 @@ Set `EFI_SUBMISSIONS_CRON_SECRET` in production and rely on `netlify/functions/p
 - `python3 scripts/check_console_logs.py` — blocks `console.log` and `debugger` in production JS.
 - `python3 scripts/build_css.py` — regenerates `css/styles.css` from `css/src/manifest.txt`.
 - `python3 scripts/build_main_bundle.py` — regenerates `js/main.bundle.js` from the shared `main-*` modules.
+- `python3 scripts/build_page_group_bundles.py` — regenerates `js/module-pages.bundle.js` for repeated page families.
+- `python3 scripts/build_responsive_images.py` — regenerates smaller PNG variants for responsive image delivery.
 - `python3 scripts/release_gate.py` — consolidated deployment gate.
 - `node --test tests/ai-rubric.test.mjs` — unit tests for rubric grading utilities.
 
 ## Project Progress
 
 - Canonical tracker: `docs/progress.md`
+- Docs index: `docs/README.md`
 - Archived progress history:
-  - `docs/production-readiness-todos.md`
-  - `docs/roadmap-to-perfection.md`
-  - `docs/next-10-todos.md`
-  - `docs/content-gap-audit.md`
+  - `docs/outdated/production-readiness-todos.md`
+  - `docs/outdated/roadmap-to-perfection.md`
+  - `docs/outdated/next-10-todos.md`
+  - `docs/outdated/content-gap-audit.md`
 
 ## License
 

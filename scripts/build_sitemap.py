@@ -67,6 +67,22 @@ PRIORITIES = {
     "telemetry.html": "0.2",
 }
 
+ROUTE_MAP = {
+    "coaching-home.html": "coaching/",
+    "coaching-methodology.html": "coaching/methodology/",
+    "coaching-services.html": "coaching/services/",
+    "coaching-about.html": "coaching/about/",
+    "coaching-contact.html": "coaching/contact/",
+    "module-1.html": "modules/1/",
+    "module-2.html": "modules/2/",
+    "module-3.html": "modules/3/",
+    "module-4.html": "modules/4/",
+    "module-5.html": "modules/5/",
+    "module-6.html": "modules/6/",
+    "search.html": "search/",
+    "verify.html": "verify/",
+}
+
 
 def lastmod_for(path: Path) -> str:
     return path.stat().st_mtime_ns and path.stat().st_mtime and __import__("datetime").datetime.fromtimestamp(path.stat().st_mtime).date().isoformat()
@@ -79,7 +95,7 @@ def build() -> None:
       if html.name in IGNORED:
         continue
       url = ET.SubElement(urlset, "url")
-      ET.SubElement(url, "loc").text = DOMAIN + html.name
+      ET.SubElement(url, "loc").text = DOMAIN + ROUTE_MAP.get(html.name, html.name)
       ET.SubElement(url, "lastmod").text = lastmod_for(html)
       ET.SubElement(url, "priority").text = PRIORITIES.get(html.name, "0.5")
     tree = ET.ElementTree(urlset)

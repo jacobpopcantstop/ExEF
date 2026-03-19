@@ -26,6 +26,7 @@ document.getElementById('roi-form').addEventListener('submit', function (e) {
   clientsStrong.textContent = rounded + ' active clients';
   output.appendChild(clientsStrong);
   output.appendChild(document.createTextNode(' at ' + monthlyHours + ' hours each.'));
+  output.focus();
   if (window.EFI && EFI.Analytics) {
     EFI.Analytics.track('roi_calculated', {
       salary: salary,
@@ -46,6 +47,7 @@ document.getElementById('roi-form').addEventListener('submit', function (e) {
     out.style.display = 'block';
     out.textContent = msg;
     out.style.borderColor = ok ? 'rgba(30, 132, 73, 0.25)' : 'rgba(192,57,43,0.4)';
+    out.focus();
   }
 
   form.addEventListener('submit', async function (e) {

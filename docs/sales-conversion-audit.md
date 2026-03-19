@@ -143,4 +143,4 @@ The store is the terminal conversion surface. Certification.html functions as a 
 
 ---
 
-*Archive this file alongside `docs/business-audit-2026-03-12.md` for historical comparison.*
+*Archive this file alongside `docs/outdated/business-audit-2026-03-12.md` for historical comparison.*

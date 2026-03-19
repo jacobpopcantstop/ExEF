@@ -41,7 +41,8 @@
     grid-template-columns: 1fr;
   }
   .artifact-board,
-  .store-ledger {
+  .store-ledger,
+  .store-conversion-surface {
     grid-template-columns: 1fr;
   }
 }
@@ -323,6 +324,7 @@
   .curriculum-proof-grid,
   .artifact-board,
   .store-ledger,
+  .store-conversion-surface,
   .curriculum-sequence,
   .about-cluster-grid {
     grid-template-columns: 1fr;
@@ -374,6 +376,13 @@
   .artifact-preview,
   .visual-slot__frame {
     min-height: 0;
+  }
+
+  .store-form-urgency,
+  .store-offer-summary,
+  .store-trust-anchor {
+    padding: var(--space-lg);
+    border-radius: var(--border-radius);
   }
 }
 

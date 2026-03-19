@@ -18,6 +18,8 @@ JS_DIR = ROOT / "js"
 SKIP = {
     "main.bundle.js",
     "main.bundle.min.js",
+    "module-pages.bundle.js",
+    "module-pages.bundle.min.js",
 }
 
 

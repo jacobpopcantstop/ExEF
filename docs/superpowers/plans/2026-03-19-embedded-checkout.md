@@ -567,6 +567,7 @@ Replace the entire `startDirectCheckout` function (lines 77–119) with the foll
     } catch (err) {
       showMessage(message, err.message || 'Could not open checkout.', true);
     } finally {
+      // checkoutBtn is guaranteed non-null here — the null guard above returns before try{}
       checkoutBtn.disabled = false;
       checkoutBtn.textContent = original;
     }

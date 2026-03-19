@@ -135,7 +135,7 @@
       return;
     }
     if (!stripe) {
-      showMessage(message, 'Checkout unavailable — <a href="mailto:info@theexecutivefunctioninginstitute.com">contact us directly</a> to complete your purchase.', false);
+      showMessage(message, 'Checkout unavailable — contact info@theexecutivefunctioninginstitute.com to complete your purchase.', false);
       return;
     }
     if (!checkoutBtn) return;
@@ -167,6 +167,7 @@
 
       checkoutInstance = await stripe.initEmbeddedCheckout({ clientSecret: result.clientSecret });
       var container = document.getElementById('stripe-checkout-container');
+      if (!container) throw new Error('Checkout container not found.');
       checkoutInstance.mount(container);
 
     } catch (err) {

@@ -41,6 +41,11 @@ Critique was directionally useful, but not every point is current. In particular
 - ✅ Rubric links in certification.html and store.html updated from PDF to HTML page.
 - ✅ Accordion flicker bug fixed — coachingvstherapy image moved outside accordion in module-3 (max-height/scrollHeight race condition on open).
 - ✅ Sales conversion audit created — see `docs/sales-conversion-audit.md`.
+- ✅ All P0/P1/P2 sales conversion audit items resolved (March 19, 2026):
+  - P0: Visual placeholder replaced with certificate image; resubmission guarantee added near purchase form; rubric clarified as operational with last-reviewed date.
+  - P1: Ethics section linked from masthead dossier; grading criteria added to capstone Components 2 & 3; ESQ-R repositioned as first/start-here offer; anchor pricing context added; mini-cases expanded to narrative format.
+  - P2: Passing-submission excerpt added to rubric section; post-certification outcomes section added; homepage trust anchor added; off-season enrollment notification capture added.
+  - Deferred (operator confirmation required): installment payment language (Task 13), urgency signal with capstone window date (Task 14).
 - ✅ Certificate review state now persists on purchase records and appears directly in the certificate review queue.
 - ✅ Reviewer-only submission override/release actions and certificate decision logging added with required notes and admin controls.
 - ✅ Server-side audit logging added for purchase issuance/denials, verification checks, submission events, and feedback release notifications, with admin audit-trail visibility.

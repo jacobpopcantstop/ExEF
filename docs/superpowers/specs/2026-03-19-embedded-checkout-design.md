@@ -19,8 +19,8 @@ Replace the current off-site Stripe payment link redirect with an embedded Strip
 - `netlify/functions/get-checkout-session.js` — lightweight function called by `checkout-return.html` to verify session status and retrieve offer/email from Stripe (avoids exposing secret key to client)
 
 ### Modified files
-- `js/store-checkout.js` — `startDirectCheckout()` replaced: instead of redirecting, opens modal and mounts embedded Stripe form using `stripe.initEmbeddedCheckout({ clientSecret })`
-- `store.html` — modal container markup added; Stripe.js script tag added
+- `js/store-checkout.js` — `startDirectCheckout()` replaced: instead of redirecting, opens modal and mounts embedded Stripe form using `stripe.initEmbeddedCheckout({ clientSecret })`; analytics event updated from `store_direct_checkout_started / destination: 'stripe_payment_link'` to `store_embedded_checkout_opened / destination: 'stripe_embedded'`
+- `store.html` — modal container markup added; Stripe.js loaded via `<script src="https://js.stripe.com/v3/">` (must use this exact URL — Stripe's terms prohibit self-hosting). Load failure detected via `window.Stripe === undefined` check inside `startDirectCheckout()` before calling the API.
 
 ---
 
@@ -45,22 +45,72 @@ Buyer fills form (name, email, offer) → clicks "Go To Secure Checkout"
 
 ### `create-checkout-session.js`
 
-- Accepts `POST { offer, email }`
-- Validates offer key against `OFFER_CONFIG` (same map as `create-checkout-link.js`)
+- Accepts `POST { offer, email, name }`
+- `name` is stored as Stripe session metadata (`metadata.customer_name`) — it is not used to create a Stripe Customer object
+- Validates offer key against `OFFER_CONFIG`:
+
+```js
+const OFFER_CONFIG = {
+  cefc_enrollment: {
+    priceEnv: 'EFI_STRIPE_PRICE_CEFC_ENROLLMENT',
+    label: 'CEFC Enrollment Access',
+    price_display: '$695',
+    includes: [
+      'Six graded module assessments',
+      'Written evaluator feedback',
+      'Readiness tracking toward capstone eligibility'
+    ]
+  },
+  capstone_review: {
+    priceEnv: 'EFI_STRIPE_PRICE_CAPSTONE_REVIEW',
+    label: 'Capstone Review & Credentialing',
+    price_display: '$350',
+    includes: [
+      'Manual capstone evaluation against published rubric',
+      'Written revision notes',
+      'Credential processing on pass',
+      'Resubmission included at no extra charge'
+    ]
+  },
+  cefc_bundle: {
+    priceEnv: 'EFI_STRIPE_PRICE_CEFC_BUNDLE',
+    label: 'CEFC Bundle',
+    price_display: '$895',
+    includes: [
+      'Full enrollment access',
+      'Capstone review and credentialing',
+      'Best value for practitioners starting from scratch'
+    ]
+  },
+  esqr_analysis: {
+    priceEnv: 'EFI_STRIPE_PRICE_ESQR_ANALYSIS',
+    label: 'ESQ-R Professional Analysis',
+    price_display: '$199',
+    includes: [
+      'Professional scoring and interpretation report',
+      'Coaching application guidance',
+      'Lowest-commitment entry point'
+    ]
+  }
+};
+```
+
 - Creates Stripe Checkout Session:
   - `mode: payment`
   - `ui_mode: embedded`
-  - `return_url: https://theexecutivefunctioninginstitute.com/checkout-return.html?session_id={CHECKOUT_SESSION_ID}`
+  - `return_url`: built from `process.env.URL` (Netlify auto-injects site URL) with fallback to `https://theexecutivefunctioninginstitute.com`. Format: `${baseUrl}/checkout-return.html?session_id={CHECKOUT_SESSION_ID}`
   - `customer_email: email`
-  - `line_items` from offer price ID
+  - `metadata: { offer, customer_name: name, offer_label }`
+  - `line_items` from resolved price ID env var
 - Returns `{ ok: true, clientSecret, offer_label, price_display, includes[] }`
-- Requires env var: `STRIPE_SECRET_KEY`
+- Requires env vars: `STRIPE_SECRET_KEY`, plus the relevant `EFI_STRIPE_PRICE_*` var for the selected offer
 
 ### `get-checkout-session.js`
 
 - Accepts `GET ?session_id=cs_xxx`
-- Retrieves session from Stripe, returns `{ status, customer_email, offer_label }`
-- Only exposes: `status`, `customer_email`, `metadata.offer_label`
+- Retrieves session from Stripe, returns `{ status, customer_email, offer_label, dashboard_url }`
+- `dashboard_url` is hardcoded to `/dashboard.html` — not derived from the session
+- Only exposes: `status`, `customer_email`, `metadata.offer_label`, and the hardcoded dashboard link
 - Returns 400 if session_id missing, 404 if not found
 
 ### Modal (store.html + store-checkout.js)
@@ -72,6 +122,7 @@ Buyer fills form (name, email, offer) → clicks "Go To Secure Checkout"
 - On open: `document.body.style.overflow = 'hidden'`
 - On close: `checkoutInstance.destroy()`, restore scroll
 - Modal does not close on backdrop click (prevents accidental dismissal mid-payment)
+- Once the Stripe form has received any interaction (detected via a `change` event on the container), the × button and ESC key show a simple `confirm('Leave checkout? Your payment has not been submitted.')` dialog before destroying the session
 
 ### `checkout-return.html`
 

@@ -19,7 +19,7 @@ const OFFER_CONFIG = {
   esqr_analysis: {
     code: 'esqr_analysis',
     env: 'EFI_STRIPE_PAYMENT_LINK_ESQR_ANALYSIS',
-    fallbackPrice: '$149'
+    fallbackPrice: '$199'
   }
 };
 

@@ -1,4 +1,4 @@
-const { json, parseBody, normalizeEmail, requiredEnv } = require('./_common');
+const { json, parseBody, normalizeEmail, requiredEnv, log } = require('./_common');
 
 const OFFER_CONFIG = {
   cefc_enrollment: {
@@ -52,17 +52,19 @@ exports.handler = async function (event) {
 
   const offer = String(body.offer || '').trim();
   const email = normalizeEmail(body.email);
-  const name = String(body.name || '').trim().slice(0, 200); // Stripe metadata values max 500 chars
+  const name = String(body.name || '').trim().slice(0, 200); // capped well below Stripe's 500-char metadata limit
 
   const entry = OFFER_CONFIG[offer];
   if (!entry) return json(400, { ok: false, error: 'Unsupported offer' });
   if (!email || !email.includes('@')) return json(400, { ok: false, error: 'Valid email required' });
 
+  log.info('create-checkout-session', { offer, email_domain: email.split('@')[1] || '' });
+
   const secretKey = requiredEnv('STRIPE_SECRET_KEY');
   if (!secretKey) return json(503, { ok: false, error: 'Stripe not configured' });
 
   const priceId = requiredEnv(entry.priceEnv);
-  if (!priceId) return json(503, { ok: false, error: 'Price not configured for this offer' });
+  if (!priceId) return json(503, { ok: false, error: `Price not configured for offer: ${offer} (env: ${entry.priceEnv})` });
 
   const baseUrl = (requiredEnv('URL') || 'https://theexecutivefunctioninginstitute.com').replace(/\/$/, '');
   const returnUrl = `${baseUrl}/checkout-return.html?session_id={CHECKOUT_SESSION_ID}`; // {CHECKOUT_SESSION_ID} is a Stripe literal — Stripe replaces it at redirect time
@@ -92,14 +94,15 @@ exports.handler = async function (event) {
     const data = await res.json();
 
     if (!res.ok || !data.client_secret) {
+      log.error('stripe session error', { offer, status: res.status, error: data.error?.code || data.error?.message });
       return json(502, { ok: false, error: data.error?.message || 'Stripe session creation failed' });
     }
 
     return json(200, {
       ok: true,
       clientSecret: data.client_secret,
-      offer_label: entry.label,
-      price_display: entry.price_display,
+      offerLabel: entry.label,
+      priceDisplay: entry.price_display,
       includes: entry.includes
     });
   } catch (err) {

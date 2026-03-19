@@ -5,6 +5,8 @@ Active operating docs live at the top level of `docs/`.
 Use these first:
 - `progress.md` — canonical tracker for current launch/product work.
 - `story-of-efi.md` — narrative history of the project, its phases, and what remains.
+- `ot-clinical-review-memo.md` — review packet for OT/clinical precision and scope-of-practice feedback.
+- `ot-review-brief.md` — short reviewer-facing brief for external OT feedback.
 - `release-checklist.md` — deploy and release steps.
 - `website-grade-rubric.md` — current grading rubric and score target.
 - `deployment-baseline.md` — hosting and deployment baseline.

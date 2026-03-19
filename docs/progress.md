@@ -9,7 +9,7 @@ This is the single source of truth for **active needed changes**. Roadmaps/audit
 ### Platform/operator
 Requires Deployment/Operator Input
 
-- [ ] Set production Netlify env vars:
+- [x] Set production Netlify env vars:
   - `EFI_CRM_WEBHOOK_URL`
   - `EFI_ESP_WEBHOOK_URL`
   - `EFI_DOWNLOAD_SIGNING_SECRET`
@@ -17,8 +17,10 @@ Requires Deployment/Operator Input
   - `EFI_SUBMISSIONS_CRON_SECRET`
   - `EFI_VIDEO_PROVIDER`
   - `EFI_VIDEO_ALLOWED_HOSTS`
+- [x] Set `EFI_ADMIN_API_KEY` in Netlify production and dev contexts.
+- [x] Mirror the current Zapier webhook endpoints into Netlify dev context for `EFI_CRM_WEBHOOK_URL` and `EFI_ESP_WEBHOOK_URL`.
 - [ ] Verify production webhook fanout delivery + persistence.
-- [ ] Apply Supabase `efi_user_purchases` migration for certificate review state columns (`reviewer_decision`, `reviewer_notes`, `reviewed_at`, `reviewed_by`).
+- [x] Apply Supabase `efi_user_purchases` migration for certificate review state columns (`reviewer_decision`, `reviewer_notes`, `reviewed_at`, `reviewed_by`).
 - [ ] Finalize/publish jurisdiction + principal-office legal metadata (if required for go-live policy).
 
 ### Release gate
@@ -36,6 +38,10 @@ Critique was directionally useful, but not every point is current. In particular
 - [ ] Add stylesheet preload on the main entry pages and verify it improves the critical rendering path without causing duplicate fetches or priority regressions.
 
 ## Recently Completed
+- ✅ Netlify env audit completed via CLI; core Supabase, Stripe, Gemini, signing, video, and submissions vars verified in the linked EFI site.
+- ✅ `EFI_ADMIN_API_KEY` added to Netlify production and dev contexts.
+- ✅ Dev webhook parity configured by pointing `EFI_CRM_WEBHOOK_URL` and `EFI_ESP_WEBHOOK_URL` at the same Zapier endpoints currently used in production.
+- ✅ Supabase project `teyxrugwihczcglhkgkw` linked locally and purchase-review migration pushed (`supabase/migrations/20260319200909_add_purchase_review_columns.sql`).
 - ✅ 19 real photos added to all 6 modules — each contextually matched to section content (BarkleyTrajectory, limbicGap, airtraffic2, wallofawful in M1; goodnessoffit, discrepancyasdata, referralredflags in M2; 2tiered, coachsupport, coachingvstherapy in M3; getreadydodone, timeblindness, analogvdigital, timecorrection, airtraffic2 in M4; specialpopulations in M5; curriculumpipeline, certificates in M6).
 - ✅ Image placement corrected by filename semantics — leakybucket moved to M4 cognitive offloading section; limbicGap repositioned to M1 adolescent gap section.
 - ✅ Rubric links in certification.html and store.html updated from PDF to HTML page.

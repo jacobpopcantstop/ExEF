@@ -1054,3 +1054,17 @@
 [data-theme="dark"] .search-status {
   color: #9fb2cb;
 }
+
+[data-theme="dark"] .ef-landing {
+  background:
+    linear-gradient(165deg, #0d1b2a 0%, #162b3c 55%, #0f2d1e 100%);
+}
+
+[data-theme="dark"] .ef-landing__card {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .ef-landing__card:hover {
+  background: rgba(255, 255, 255, 0.08);
+}

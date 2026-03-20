@@ -481,55 +481,27 @@ window.EFI.registerMainModule(function (shared) {
     }, { passive: true });
   }
 
-  (function initLogoWave() {
+  (function initLogoRipple() {
     var logo = document.querySelector('.nav .nav__logo');
     if (!logo) return;
+    var logoIcon = logo.querySelector('.nav__logo-icon');
+    if (!logoIcon) return;
 
     logo.addEventListener('click', function (e) {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      var href = logo.getAttribute('href');
-      if (!href) return;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      var rect = logo.getBoundingClientRect();
-      var wave = document.createElement('span');
-      wave.className = 'nav-pixel-wave';
-      var centerX = Math.round(rect.left + rect.width / 2);
-      var centerY = Math.round(rect.top + rect.height / 2);
-      wave.style.setProperty('--wave-x', centerX + 'px');
-      wave.style.setProperty('--wave-y', centerY + 'px');
-      var savedDir = localStorage.getItem('efi_wave_direction');
-      var direction = savedDir === '-1' ? -1 : 1;
-      shared.safeSetLocalStorage('efi_wave_direction', String(direction));
+      // Remove any existing ripple elements
+      logoIcon.querySelectorAll('.nav__logo-ripple').forEach(function (el) { el.remove(); });
 
-      var count = 20;
-      var baseRadius = 10;
-      var travel = 56;
-      for (var i = 0; i < count; i += 1) {
-        var px = document.createElement('span');
-        px.className = 'nav-pixel';
-        var theta = (Math.PI * 2 * i / count) * direction;
-        var dx = Math.cos(theta) * travel;
-        var dy = Math.sin(theta) * travel;
-        var startX = Math.cos(theta) * baseRadius;
-        var startY = Math.sin(theta) * baseRadius;
-        px.style.left = (centerX + startX) + 'px';
-        px.style.top = (centerY + startY) + 'px';
-        px.style.setProperty('--dx', dx + 'px');
-        px.style.setProperty('--dy', dy + 'px');
-        px.style.setProperty('--burst-delay', (i % 5) * 14 + 'ms');
-        wave.appendChild(px);
-      }
-      document.body.appendChild(wave);
-
-      var currentPage = window.location.pathname.split('/').pop() || 'index.html';
-      if (currentPage !== href) {
-        e.preventDefault();
-        setTimeout(function () {
-          window.location.href = href;
-        }, 210);
-      }
-
-      setTimeout(function () { wave.remove(); }, 760);
+      // Create three staggered ripple rings
+      [1, 2, 3].forEach(function (n) {
+        var ripple = document.createElement('span');
+        ripple.className = 'nav__logo-ripple nav__logo-ripple--' + n;
+        ripple.setAttribute('aria-hidden', 'true');
+        logoIcon.appendChild(ripple);
+        ripple.addEventListener('animationend', function () { ripple.remove(); }, { once: true });
+      });
     });
   })();
 

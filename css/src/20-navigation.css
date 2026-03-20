@@ -87,6 +87,51 @@
   }
 }
 
+/* --- Home button ripple effect --- */
+.nav__logo {
+  overflow: visible;
+}
+
+.nav__logo-icon {
+  position: relative;
+  overflow: visible;
+}
+
+@keyframes homeRipple {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+
+.nav__logo-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: 2px;
+  background: rgba(39, 73, 96, 0.28);
+  transform: translate(-50%, -50%) scale(1);
+  animation: homeRipple 0.6s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.nav__logo-ripple--2 {
+  animation-delay: 0.12s;
+  background: rgba(39, 73, 96, 0.16);
+}
+
+.nav__logo-ripple--3 {
+  animation-delay: 0.24s;
+  background: rgba(39, 73, 96, 0.08);
+}
+
 .module-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 260px;

@@ -124,22 +124,34 @@
             <a href="store.html" class="btn btn--secondary">View Paid Path</a>
           </div>
         </div>
-        <aside class="curriculum-dossier" aria-label="Curriculum dossier">
-          <p class="curriculum-dossier__label">Curriculum Dossier</p>
-          <ul class="curriculum-facts">
-            <li><span>Format</span><strong>Asynchronous study + applied assignments</strong></li>
-            <li><span>Access</span><strong>Open curriculum pages, paid scoring and credential operations</strong></li>
-            <li><span>Sequence</span><strong>Theory, assessment, coaching architecture, interventions, practice launch</strong></li>
-            <li><span>Capstone</span><strong>Launch kit, competency review, rubric-based evaluation</strong></li>
-          </ul>
-          <figure class="artifact-preview artifact-preview--dossier">
-            <img src="images/launch-kit-preview.svg" alt="Preview of launch kit files including contract, intake, scope, rubric, and dashboard documents" loading="lazy">
-            <figcaption>Representative capstone file stack used later in the reviewed workflow.</figcaption>
-          </figure>
-          <figure class="artifact-preview artifact-preview--dossier">
-            <img src="images/certification-pipeline.svg" alt="EFI certification pipeline showing the progression from public curriculum to reviewed capstone and verification" loading="lazy">
-            <figcaption>The page shows where open study ends and evaluator review begins, rather than hiding that boundary inside the store.</figcaption>
-          </figure>
+        <aside class="curriculum-quickstart" aria-label="Quick start">
+          <p class="curriculum-quickstart__label">Jump to a Module</p>
+          <nav class="curriculum-quickstart__nav" aria-label="Module quick links">
+            <a href="#module-1" class="curriculum-quickstart__item" style="--qs-color:var(--module-1);">
+              <span class="curriculum-quickstart__num">1</span>
+              <span class="curriculum-quickstart__name">Neuropsychology</span>
+            </a>
+            <a href="#module-2" class="curriculum-quickstart__item" style="--qs-color:var(--module-2);">
+              <span class="curriculum-quickstart__num">2</span>
+              <span class="curriculum-quickstart__name">Assessment</span>
+            </a>
+            <a href="#module-3" class="curriculum-quickstart__item" style="--qs-color:var(--module-3);">
+              <span class="curriculum-quickstart__num">3</span>
+              <span class="curriculum-quickstart__name">Coaching Architecture</span>
+            </a>
+            <a href="#module-4" class="curriculum-quickstart__item" style="--qs-color:var(--module-4);">
+              <span class="curriculum-quickstart__num">4</span>
+              <span class="curriculum-quickstart__name">Applied Methods</span>
+            </a>
+            <a href="#module-5" class="curriculum-quickstart__item" style="--qs-color:var(--module-5);">
+              <span class="curriculum-quickstart__num">5</span>
+              <span class="curriculum-quickstart__name">Interventions</span>
+            </a>
+            <a href="#module-6" class="curriculum-quickstart__item" style="--qs-color:var(--module-6);">
+              <span class="curriculum-quickstart__num">6</span>
+              <span class="curriculum-quickstart__name">Professional Practice</span>
+            </a>
+          </nav>
         </aside>
       </div>
       <div class="curriculum-sequence" aria-label="Module sequence">
@@ -796,5 +808,6 @@
   <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
   <script src="js/nav-auth.min.js" defer></script>
   <script src="js/main.min.js" defer></script>
+  <script src="js/page-toc.js" defer></script>
 </body>
 </html>

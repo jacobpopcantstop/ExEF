@@ -85,19 +85,22 @@
   }
 }
 
+@media (max-width: 1200px) {
+  .artifact-grid,
+  .offer-grid,
+  .store-ledger,
+  .store-conversion-surface {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 1024px) {
   .grid--3 { grid-template-columns: repeat(2, 1fr); }
   .grid--4 { grid-template-columns: repeat(2, 1fr); }
   .footer__grid { grid-template-columns: repeat(2, 1fr); }
   .feature-list { grid-template-columns: 1fr; }
   .process-steps { grid-template-columns: repeat(2, 1fr); }
-  .artifact-grid,
-  .offer-grid {
-    grid-template-columns: 1fr;
-  }
-  .artifact-board,
-  .store-ledger,
-  .store-conversion-surface {
+  .artifact-board {
     grid-template-columns: 1fr;
   }
 }

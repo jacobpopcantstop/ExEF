@@ -79,13 +79,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 2px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 0.65rem;
+  border-radius: 999px;
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--color-white);
   margin-bottom: var(--space-md);
+  flex-shrink: 0;
+  line-height: 1;
 }
 
 .module-card:nth-child(1) .module-card__number { background: var(--module-1); }
@@ -1019,6 +1022,11 @@ select.form-control {
   justify-content: center;
   font-size: 1.3rem;
   background: var(--color-bg-alt);
+}
+
+.resource-card__icon svg {
+  width: 24px;
+  height: 24px;
 }
 
 .resource-card h4 {

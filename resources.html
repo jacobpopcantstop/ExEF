@@ -58,8 +58,16 @@
         <div class="resources-masthead__intro">
           <p class="curriculum-kicker">Resource Desk</p>
           <h1>Executive Functioning Resource Hub</h1>
-          <p>This page is the site's sorting desk. Use it to get routed to the right tool, toolkit, or next page without browsing the entire archive first.</p>
+          <p>Use this page to get to the right tool, toolkit, or next page fast without browsing the whole archive.</p>
           <p class="page-header__note">Best order: pick your role, use one free tool, then move to the next page only if you still need deeper help.</p>
+          <div class="resources-masthead__square">
+            <p class="resources-masthead__label">New to EFI?</p>
+            <p>Start with the ESQ-R, then choose the parent, educator, or professional route once the pattern is clearer.</p>
+            <div class="button-group">
+              <a href="esqr.html" class="btn btn--primary btn--sm">Take the EF Quiz</a>
+              <a href="#toolkits" class="btn btn--secondary btn--sm">Browse Routes</a>
+            </div>
+          </div>
         </div>
         <aside class="resources-masthead__panel" aria-label="Resource overview">
           <p class="resources-masthead__label">Best Uses</p>
@@ -70,7 +78,7 @@
           </ul>
           <ul class="artifact-ledger">
             <li><span>Desk Logic</span><strong>Start by naming the friction, then move to implementation only if the pattern is clear.</strong></li>
-            <li><span>Visible Material</span><strong>This page should show actual EFI tools, diagrams, and planning artifacts instead of describing them abstractly.</strong></li>
+            <li><span>Visible Material</span><strong>This page keeps EFI tools, diagrams, and planning artifacts in view so visitors can act before they have to read deeply.</strong></li>
           </ul>
           <figure class="artifact-preview">
             <img src="images/launch-kit-preview.svg" alt="Launch kit preview showing EFI planning and implementation materials." loading="lazy">
@@ -178,7 +186,7 @@
       <div class="artifact-board">
         <div class="artifact-board__intro fade-in">
           <p class="curriculum-kicker">Evidence Of Utility</p>
-          <h2>This page is a working desk, not a link graveyard</h2>
+          <h2>A working resource desk</h2>
           <p>The resource hub is strongest when it proves what is actually here: assessments, implementation kits, and source-aware reference materials that people can use immediately.</p>
           <div class="artifact-grid">
             <article class="artifact-card artifact-card--1">
@@ -282,7 +290,14 @@
       </div>
       <div id="assessment" class="resources-assessment-layout">
         <article class="resource-card resources-assessment-feature">
-          <div class="resource-card__icon resources-card__icon resources-card__icon--module2">1</div>
+          <div class="resource-card__icon resources-card__icon resources-card__icon--module2" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+              <path d="M5 5h14v14H5z"></path>
+              <path d="M8 9h8"></path>
+              <path d="M8 13h5"></path>
+              <path d="M8 17h3"></path>
+            </svg>
+          </div>
           <div>
             <h4>ESQ-R Assessment</h4>
             <p>EFI's main public-facing intake survey for quickly naming executive-skill friction patterns. Use this first if you want a structured, non-diagnostic overview before going deeper.</p>
@@ -295,7 +310,12 @@
         </article>
         <div id="interactive-tools" class="resources-assessment-stack">
           <article class="resource-card">
-            <div class="resource-card__icon resources-card__icon resources-card__icon--module6">2</div>
+            <div class="resource-card__icon resources-card__icon resources-card__icon--module6" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                <path d="M4 19c3-4 13-4 16 0"></path>
+                <circle cx="12" cy="8" r="4"></circle>
+              </svg>
+            </div>
             <div>
               <h4>EF Profile Story</h4>
               <p>A narrative-style tool for identifying high-friction dimensions and generating a short experiment plan.</p>
@@ -306,7 +326,12 @@
             </div>
           </article>
           <article class="resource-card">
-            <div class="resource-card__icon resources-card__icon resources-card__icon--module1">3</div>
+            <div class="resource-card__icon resources-card__icon resources-card__icon--module1" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                <circle cx="12" cy="12" r="8"></circle>
+                <path d="M12 8v5l3 2"></path>
+              </svg>
+            </div>
             <div>
               <h4>Time Blindness Calibrator</h4>
               <p>Compare your instinctive time estimates with realistic planning benchmarks to spot timing drift.</p>
@@ -314,7 +339,14 @@
             </div>
           </article>
           <article class="resource-card">
-            <div class="resource-card__icon resources-card__icon resources-card__icon--module3">4</div>
+            <div class="resource-card__icon resources-card__icon resources-card__icon--module3" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                <path d="M6 6h12"></path>
+                <path d="M6 12h9"></path>
+                <path d="M6 18h6"></path>
+                <path d="M17 16l2 2 3-4"></path>
+              </svg>
+            </div>
             <div>
               <h4>Task Start Friction Diagnostic</h4>
               <p>Turn procrastination and start resistance into a concrete start protocol for a real task.</p>
@@ -526,7 +558,7 @@
 
   <section class="cta-section">
     <div class="container">
-      <h2>Need the reviewed pathway, not just the free desk?</h2>
+      <h2>Need the reviewed pathway?</h2>
       <p>Use certification to inspect standards first, then use the store to compare reviewed services only after the route is clear.</p>
       <div class="cta-section__actions">
         <a href="certification.html" class="btn btn--primary btn--lg">Review Standards</a>

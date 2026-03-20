@@ -1,4 +1,4 @@
-const { json, parseBody, requiredEnv, log } = require('./_common');
+const { json, parseBody, requiredEnv, baseUrl, log } = require('./_common');
 const db = require('./_db');
 
 function hasSupabaseAuth() {
@@ -89,6 +89,7 @@ exports.handler = async function (event) {
       const email = String(body.email || '').trim().toLowerCase();
       const password = String(body.password || '');
       const name = String(body.name || '').trim();
+      const emailRedirectTo = requiredEnv('BASE_URL') || baseUrl(event);
       if (!email || !email.includes('@')) return json(400, { ok: false, error: 'Valid email required' });
       if (password.length < 6) return json(400, { ok: false, error: 'Password must be at least 6 characters' });
 
@@ -97,7 +98,8 @@ exports.handler = async function (event) {
         body: {
           email,
           password,
-          data: { full_name: name || email }
+          data: { full_name: name || email },
+          options: { emailRedirectTo }
         }
       });
 
@@ -117,7 +119,8 @@ exports.handler = async function (event) {
         ok: true,
         user,
         access_token: session ? session.access_token : null,
-        refresh_token: session ? session.refresh_token : null
+        refresh_token: session ? session.refresh_token : null,
+        needs_confirmation: !session
       });
     }
 

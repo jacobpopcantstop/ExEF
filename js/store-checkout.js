@@ -378,6 +378,20 @@
     });
   }
 
+  function applyOfferFromQuery(form) {
+    var params = new URLSearchParams(window.location.search);
+    var requested = String(params.get('offer') || '').trim();
+    if (!requested) return;
+    var offerSelect = document.getElementById('purchase-offer');
+    if (!offerSelect) return;
+    var match = Array.prototype.find.call(offerSelect.options, function (option) {
+      return option.value === requested;
+    });
+    if (!match) return;
+    offerSelect.value = requested;
+    updateOfferState(form);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     var form = document.getElementById('purchase-intent-form');
     var checkoutBtn = document.getElementById('direct-checkout-btn');
@@ -415,6 +429,7 @@
     });
 
     initAbandonTracking(form);
+    applyOfferFromQuery(form);
     updateOfferState(form);
     initNotifyForm();
   });

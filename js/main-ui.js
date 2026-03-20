@@ -209,6 +209,31 @@ window.EFI.registerMainModule(function (shared) {
     document.body.appendChild(cta);
   })();
 
+  (function injectModuleScrollProgress() {
+    var currentPage = window.location.pathname.split('/').pop() || '';
+    if (!/^module-\d+\.html$/.test(currentPage)) return;
+    if (document.querySelector('.module-scroll-progress')) return;
+
+    var shell = document.createElement('div');
+    shell.className = 'module-scroll-progress';
+    shell.setAttribute('aria-hidden', 'true');
+    var fill = document.createElement('div');
+    fill.className = 'module-scroll-progress__fill';
+    shell.appendChild(fill);
+    document.body.appendChild(shell);
+
+    function updateProgress() {
+      var doc = document.documentElement;
+      var scrollable = Math.max(doc.scrollHeight - window.innerHeight, 1);
+      var percent = Math.min(100, Math.max(0, (window.scrollY / scrollable) * 100));
+      fill.style.width = percent + '%';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+  })();
+
   (function injectSourceAccessReminder() {
     var currentPage = window.location.pathname.split('/').pop() || 'index.html';
     var sourceHeavy = [

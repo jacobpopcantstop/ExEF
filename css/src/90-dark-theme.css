@@ -136,7 +136,15 @@
 [data-theme="dark"] body.page-about .page-header,
 [data-theme="dark"] body.page-curriculum .page-header,
 [data-theme="dark"] body.page-resources .page-header {
-  background: #141922;
+  background:
+    linear-gradient(180deg, rgba(19, 26, 36, 0.98), rgba(13, 19, 28, 0.98)),
+    repeating-linear-gradient(
+      135deg,
+      rgba(159, 178, 203, 0.045) 0,
+      rgba(159, 178, 203, 0.045) 12px,
+      transparent 12px,
+      transparent 24px
+    );
 }
 
 [data-theme="dark"] .hero__title {

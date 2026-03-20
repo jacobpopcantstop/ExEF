@@ -1,11 +1,11 @@
 /* --- Responsive --- */
-@media (max-width: 1500px) {
+@media (max-width: 1680px) {
   .nav .nav__logo > span {
     display: none;
   }
 }
 
-@media (max-width: 1320px) {
+@media (max-width: 1440px) {
   .nav__inner {
     padding: 0 var(--space-lg);
   }
@@ -30,38 +30,7 @@
   }
 }
 
-@media (max-width: 1024px) {
-  .grid--3 { grid-template-columns: repeat(2, 1fr); }
-  .grid--4 { grid-template-columns: repeat(2, 1fr); }
-  .footer__grid { grid-template-columns: repeat(2, 1fr); }
-  .feature-list { grid-template-columns: 1fr; }
-  .process-steps { grid-template-columns: repeat(2, 1fr); }
-  .artifact-grid,
-  .offer-grid {
-    grid-template-columns: 1fr;
-  }
-  .artifact-board,
-  .store-ledger,
-  .store-conversion-surface {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 1024px) {
-  html { font-size: 15px; }
-
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.6rem; }
-
-  .container {
-    padding: 0 var(--space-md);
-  }
-
-  .section {
-    padding: var(--space-3xl) 0;
-  }
-
-  /* Nav mobile */
+@media (max-width: 1360px) {
   .nav__links {
     display: none;
     position: absolute;
@@ -113,6 +82,38 @@
 
   .nav__toggle {
     display: flex;
+  }
+}
+
+@media (max-width: 1024px) {
+  .grid--3 { grid-template-columns: repeat(2, 1fr); }
+  .grid--4 { grid-template-columns: repeat(2, 1fr); }
+  .footer__grid { grid-template-columns: repeat(2, 1fr); }
+  .feature-list { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: repeat(2, 1fr); }
+  .artifact-grid,
+  .offer-grid {
+    grid-template-columns: 1fr;
+  }
+  .artifact-board,
+  .store-ledger,
+  .store-conversion-surface {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1024px) {
+  html { font-size: 15px; }
+
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.6rem; }
+
+  .container {
+    padding: 0 var(--space-md);
+  }
+
+  .section {
+    padding: var(--space-3xl) 0;
   }
 
   .footer__grid--institutional {
@@ -191,6 +192,15 @@
     justify-content: center;
   }
 
+  .hero__buy-row {
+    flex-direction: column;
+  }
+
+  .hero__buy-row .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
   .hero__evidence,
   .curriculum-proof-grid {
     grid-template-columns: 1fr;
@@ -258,6 +268,10 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .esqr-intro-grid {
+    grid-template-columns: 1fr;
+  }
+
   .curriculum-masthead__actions,
   .cta-section__actions {
     flex-direction: column;
@@ -316,6 +330,17 @@
   .tabs__btn {
     padding: var(--space-sm) var(--space-md);
     font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 1180px) {
+  .resources-masthead__grid,
+  .resources-assessment-layout,
+  .resources-role-layout,
+  .resources-practice-layout,
+  .resources-library-shell,
+  .artifact-board {
+    grid-template-columns: 1fr;
   }
 }
 

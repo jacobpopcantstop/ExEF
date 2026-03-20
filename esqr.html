@@ -49,7 +49,7 @@
   <main id="main-content">
     <header class="page-header">
       <div class="container">
-        <nav aria-label="Breadcrumb">
+      <nav aria-label="Breadcrumb">
           <ol class="breadcrumb">
             <li><a href="index.html">Home</a></li>
             <li><a href="free-executive-functioning-tests.html">Assessment Hub</a></li>
@@ -57,7 +57,7 @@
           </ol>
         </nav>
         <h1>Free ESQ-R Interactive Intake</h1>
-        <p>EFI's live ESQ-R tool now matches the site's current public model: <strong>25 items</strong>, <strong>5 executive-function areas</strong>, and one result flow designed to connect cleanly with the rest of the EFI assessment suite.</p>
+        <p>EFI's live ESQ-R tool gives you a fast, structured read on five executive-function areas, then points you to the next useful tool or support path.</p>
         <p style="margin-top:var(--space-sm);">
           <a href="free-executive-functioning-tests.html" class="btn btn--sm btn--secondary">Back to Assessment Hub</a>
           <a href="full-ef-profile.html" class="btn btn--sm btn--secondary">Open Cross-Signal Profile</a>
@@ -66,11 +66,15 @@
     </header>
 
     <section class="section">
-      <div class="container container--narrow">
-        <div class="grid grid--3 stagger">
+      <div class="container">
+        <div class="esqr-intro-grid stagger">
           <div class="card">
             <h2 style="margin-top:0;">What This Measures</h2>
             <p>Planning and time management, task initiation and follow-through, attention and working memory, organization and self-monitoring, and emotional regulation and flexibility.</p>
+          </div>
+          <div class="card">
+            <h2 style="margin-top:0;">Best First Use</h2>
+            <p>Use ESQ-R first if you want a broad, non-diagnostic intake pattern before choosing a more specific EFI tool or a paid service.</p>
           </div>
           <div class="card">
             <h2 style="margin-top:0;">How To Answer</h2>
@@ -90,7 +94,7 @@
     </section>
 
     <section class="section section--alt" id="esqr-questionnaire">
-      <div class="container container--narrow">
+      <div class="container esqr-shell">
         <form id="esqr-form" novalidate>
           <div class="esqr-progress fade-in" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="25" aria-label="Assessment progress">
             <div class="esqr-progress__bar">
@@ -112,7 +116,7 @@
     </section>
 
     <section class="section" id="esqr-results" hidden>
-      <div class="container container--narrow">
+      <div class="container esqr-shell">
         <div class="section-header">
           <span class="section-header__tag">Your Result</span>
           <h2 id="esqr-result-title">Your ESQ-R profile</h2>

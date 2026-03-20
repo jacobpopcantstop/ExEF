@@ -66,6 +66,18 @@
     }
     var result = await EFI.Auth.register(name, email, pw);
     if (result.ok) {
+      if (result.requiresConfirmation) {
+        registerPanel.querySelector('h2').textContent = 'Check Your Email';
+        registerPanel.querySelector('form').style.display = 'none';
+        errEl.hidden = true;
+        heroTitle.textContent = 'Confirm Your Email';
+        heroLead.textContent = 'Open the confirmation email EFI just sent and use that link to finish activating your account.';
+        var message = document.createElement('p');
+        message.className = 'notice';
+        message.textContent = 'A confirmation link was sent to ' + result.email + '. If that link opens the wrong host, update Supabase Auth Site URL and allowed redirect URLs to the live EFI domain.';
+        registerPanel.appendChild(message);
+        return;
+      }
       window.location.href = 'dashboard.html';
     } else {
       errEl.textContent = result.error;

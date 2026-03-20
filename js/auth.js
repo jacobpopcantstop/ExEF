@@ -391,6 +391,13 @@ EFI.Auth = (function () {
         })
       });
       if (managed && managed.ok && managed.user) {
+        if (!managed.access_token) {
+          return {
+            ok: true,
+            requiresConfirmation: !!managed.needs_confirmation,
+            email: managed.user.email
+          };
+        }
         setManagedTokens(managed.access_token || '', managed.refresh_token || '');
         var managedProgress = mergeLearningLoopFromLocal(managed.user.progress || getDefaultProgress());
         hydrateLearningLoopToLocal(managedProgress);

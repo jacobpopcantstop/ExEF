@@ -24,6 +24,23 @@
   border-color: var(--color-primary-light);
 }
 
+.module-scroll-progress {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 8px;
+  background: rgba(22, 43, 60, 0.12);
+  z-index: 999;
+  pointer-events: none;
+}
+
+.module-scroll-progress__fill {
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary-dark), var(--color-accent));
+}
+
 /* ============================================
    Market Roadmap UI Additions
    ============================================ */

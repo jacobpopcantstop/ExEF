@@ -2,7 +2,8 @@
 .ef-landing {
   padding: calc(74px + var(--space-4xl)) 0 var(--space-4xl);
   background:
-    linear-gradient(165deg, #162b3c 0%, #274960 55%, #1e5c42 100%);
+    linear-gradient(165deg, #162b3c 0%, #1d3a52 30%, #274960 55%, #1e5c42 85%, #162b3c 100%);
+  background-size: 200% 200%;
   color: var(--color-white);
   overflow: hidden;
   position: relative;
@@ -186,6 +187,82 @@
   .ef-landing__stat {
     flex: 1 1 160px;
   }
+}
+
+/* --- EF Landing Animations --- */
+@media (prefers-reduced-motion: no-preference) {
+  .ef-landing--reveal .ef-landing__lead {
+    animation: landingFadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .ef-landing--reveal .ef-landing__card:nth-child(1) {
+    animation: landingFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+  }
+  .ef-landing--reveal .ef-landing__card:nth-child(2) {
+    animation: landingFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  }
+  .ef-landing--reveal .ef-landing__card:nth-child(3) {
+    animation: landingFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+  }
+  .ef-landing--reveal .ef-landing__bridge {
+    animation: landingFadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+  }
+  .ef-landing__stat-number {
+    animation: landingGlow 3s ease-in-out infinite alternate;
+  }
+  .ef-landing {
+    animation: gradientShift 12s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes landingFadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes landingGlow {
+  0%   { text-shadow: 0 0 8px rgba(255, 200, 120, 0.2); }
+  100% { text-shadow: 0 0 20px rgba(255, 200, 120, 0.45), 0 0 40px rgba(255, 200, 120, 0.15); }
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+@keyframes floatDot {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(15px, -20px); }
+}
+
+.ef-landing__card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.ef-landing__inner::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 8%;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(255, 200, 120, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatDot 8s ease-in-out infinite alternate;
+}
+
+.ef-landing__inner::after {
+  content: '';
+  position: absolute;
+  bottom: 10%;
+  right: 12%;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(30, 132, 73, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatDot 10s ease-in-out 2s infinite alternate-reverse;
 }
 
 /* --- Hero Section --- */

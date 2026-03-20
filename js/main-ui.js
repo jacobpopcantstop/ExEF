@@ -49,6 +49,21 @@ window.EFI.registerMainModule(function (shared) {
     list.appendChild(item);
   }
 
+  (function initLandingGate() {
+    if (!document.body.classList.contains('page-home')) return;
+    var landing = document.querySelector('.ef-landing');
+    if (!landing) return;
+    var seen = false;
+    try { seen = localStorage.getItem('efi_landing_seen') === '1'; } catch (e) {}
+    if (!seen) {
+      landing.style.display = '';
+      landing.classList.add('ef-landing--reveal');
+      try { localStorage.setItem('efi_landing_seen', '1'); } catch (e) {}
+    } else {
+      landing.remove();
+    }
+  })();
+
   (function normalizeInstitutionFooter() {
     var footer = document.querySelector('.footer');
     if (!footer) return;

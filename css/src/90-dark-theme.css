@@ -1068,3 +1068,32 @@
 [data-theme="dark"] .ef-landing__card:hover {
   background: rgba(255, 255, 255, 0.08);
 }
+
+[data-theme="dark"] .service-lane {
+  background: #141e2e;
+  border-color: rgba(127, 192, 255, 0.12);
+}
+
+[data-theme="dark"] .service-lane:hover {
+  border-color: rgba(127, 192, 255, 0.24);
+}
+
+[data-theme="dark"] .service-lane__badge--active {
+  background: rgba(46, 204, 113, 0.15);
+  color: #52e494;
+}
+
+[data-theme="dark"] .service-lane__badge--coming-soon {
+  background: rgba(243, 156, 18, 0.15);
+  color: #f39c12;
+}
+
+[data-theme="dark"] .creative-callout {
+  background: #1a2332;
+  border-color: rgba(127, 192, 255, 0.12);
+}
+
+[data-theme="dark"] .coaching-testimonial {
+  background: #141e2e;
+  border-color: rgba(127, 192, 255, 0.12);
+}

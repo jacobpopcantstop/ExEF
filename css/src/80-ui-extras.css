@@ -1161,6 +1161,22 @@ body.has-topic-clusters.has-topic-clusters-plain main {
   transition: max-height 0.25s ease, flex 0.25s ease;
 }
 
+.page-toc--minimized {
+  width: auto;
+  min-width: 0;
+  bottom: auto;
+  max-height: none;
+}
+
+.page-toc--minimized .page-toc__header {
+  border-bottom: none;
+  padding: 0.4rem 0.6rem;
+}
+
+.page-toc--minimized .page-toc__title {
+  display: none;
+}
+
 .page-toc--minimized .page-toc__nav {
   display: none;
 }

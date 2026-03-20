@@ -206,6 +206,25 @@
     grid-template-columns: 1fr;
   }
 
+  .full-profile-progress__head,
+  .full-profile-checklist__item {
+    grid-template-columns: 1fr;
+  }
+
+  .full-profile-checklist__item {
+    align-items: start;
+  }
+
+  .full-profile-checklist__item .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .full-profile-signal-bars__row {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+  }
+
   .hero-proof__actions {
     flex-direction: column;
   }

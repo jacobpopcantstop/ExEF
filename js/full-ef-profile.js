@@ -5,12 +5,17 @@
   if (!statusEl) return;
 
   var resultsSection = document.getElementById('full-profile-results');
+  var progressTitleEl = document.getElementById('full-profile-progress-title');
+  var progressCopyEl = document.getElementById('full-profile-progress-copy');
+  var progressFillEl = document.getElementById('full-profile-progress-fill');
+  var progressMeterEl = document.querySelector('.full-profile-progress__meter');
   var titleEl = document.getElementById('full-profile-title');
   var ledeEl = document.getElementById('full-profile-lede');
   var frameEl = document.getElementById('full-profile-frame');
   var corePatternEl = document.getElementById('full-profile-core-pattern');
   var leverageEl = document.getElementById('full-profile-leverage');
   var signalsEl = document.getElementById('full-profile-signals');
+  var signalBarsEl = document.getElementById('full-profile-signal-bars');
   var prioritiesEl = document.getElementById('full-profile-priorities');
   var strengthsEl = document.getElementById('full-profile-strengths');
   var planEl = document.getElementById('full-profile-plan');
@@ -68,6 +73,36 @@
       var li = document.createElement('li');
       li.textContent = formatter ? formatter(item, index) : String(item);
       container.appendChild(li);
+    });
+  }
+
+  function renderSignalBars(signalMap) {
+    if (!signalBarsEl || !signalMap) return;
+    clearNode(signalBarsEl);
+    rankedSignals(signalMap).forEach(function (item) {
+      var row = document.createElement('div');
+      row.className = 'full-profile-signal-bars__row';
+
+      var label = document.createElement('span');
+      label.className = 'full-profile-signal-bars__label';
+      label.textContent = item.label;
+      row.appendChild(label);
+
+      var track = document.createElement('div');
+      track.className = 'full-profile-signal-bars__track';
+
+      var fill = document.createElement('div');
+      fill.className = 'full-profile-signal-bars__fill';
+      fill.style.width = Math.max(8, (item.score / 6) * 100) + '%';
+      track.appendChild(fill);
+      row.appendChild(track);
+
+      var value = document.createElement('span');
+      value.className = 'full-profile-signal-bars__value';
+      value.textContent = String(item.score);
+      row.appendChild(value);
+
+      signalBarsEl.appendChild(row);
     });
   }
 
@@ -413,17 +448,63 @@
 
   function renderStatus(completion, timeMetrics) {
     var timeLabel = 'Time Blindness Calibrator (3+ entries recommended)';
-    if (timeMetrics && timeMetrics.entries) {
-      timeLabel += ' - current entries: ' + timeMetrics.entries;
+    if (timeMetrics && timeMetrics.count) {
+      timeLabel += ' - current entries: ' + timeMetrics.count;
     }
     var items = [
-      { name: 'ESQ-R free test', ok: completion.hasEsqr },
-      { name: 'EF Profile Story quiz', ok: completion.hasStory },
-      { name: 'Task Start Friction diagnostic', ok: completion.hasTask },
-      { name: timeLabel, ok: completion.hasTime }
+      { name: 'ESQ-R free test', ok: completion.hasEsqr, href: 'esqr.html', action: 'Take ESQ-R' },
+      { name: 'EF Profile Story quiz', ok: completion.hasStory, href: 'ef-profile-story.html', action: 'Open Story Quiz' },
+      { name: 'Task Start Friction diagnostic', ok: completion.hasTask, href: 'task-start-friction.html', action: 'Run Diagnostic' },
+      { name: timeLabel, ok: completion.hasTime, href: 'time-blindness-calibrator.html', action: 'Open Calibrator' }
     ];
-    renderListItems(statusEl, items, function (item) {
-      return (item.ok ? 'Complete' : 'Pending') + ': ' + item.name;
+    var completedCount = items.filter(function (item) { return item.ok; }).length;
+    var progressPercent = (completedCount / items.length) * 100;
+
+    if (progressTitleEl) {
+      progressTitleEl.textContent = completedCount + ' of ' + items.length + ' diagnostics complete';
+    }
+    if (progressCopyEl) {
+      progressCopyEl.textContent = completedCount >= 2
+        ? 'Your Cross-Signal Profile is unlocked. Completing all four diagnostics makes the synthesis sharper and more trustworthy.'
+        : 'Complete at least two diagnostics to unlock the Cross-Signal Profile. Finish all four for the strongest pattern read.';
+    }
+    if (progressFillEl) {
+      progressFillEl.style.width = progressPercent + '%';
+    }
+    if (progressMeterEl) {
+      progressMeterEl.setAttribute('aria-valuenow', String(completedCount));
+    }
+
+    clearNode(statusEl);
+    items.forEach(function (item) {
+      var li = document.createElement('li');
+      li.className = 'full-profile-checklist__item' + (item.ok ? ' is-complete' : '');
+
+      var icon = document.createElement('span');
+      icon.className = 'full-profile-checklist__icon';
+      icon.setAttribute('aria-hidden', 'true');
+      icon.textContent = item.ok ? '✓' : '○';
+      li.appendChild(icon);
+
+      var content = document.createElement('div');
+      content.className = 'full-profile-checklist__content';
+
+      var title = document.createElement('strong');
+      title.textContent = item.name;
+      content.appendChild(title);
+
+      var state = document.createElement('p');
+      state.textContent = item.ok ? 'Completed and included in the current synthesis.' : 'Still missing from the profile. Add it to improve the pattern read.';
+      content.appendChild(state);
+      li.appendChild(content);
+
+      var cta = document.createElement('a');
+      cta.className = 'btn btn--secondary btn--sm';
+      cta.href = item.href;
+      cta.textContent = item.ok ? 'Review' : item.action;
+      li.appendChild(cta);
+
+      statusEl.appendChild(li);
     });
   }
 
@@ -466,6 +547,7 @@
     if (frameEl) frameEl.textContent = mergedResult.profileFrame;
     if (corePatternEl) corePatternEl.textContent = mergedResult.corePattern;
     if (leverageEl) leverageEl.textContent = 'Best leverage point: ' + mergedResult.leverage;
+    renderSignalBars(mergedResult.signalMap);
     renderSignalMap(mergedResult.signalMap);
     renderListItems(prioritiesEl, mergedResult.priorities);
     renderListItems(strengthsEl, mergedResult.strengths);

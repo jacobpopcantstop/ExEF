@@ -52,23 +52,29 @@
 .esqr-skill-group {
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius-lg);
-  padding: var(--space-lg);
+  padding: calc(var(--space-lg) + var(--space-xs)) var(--space-lg) var(--space-lg);
   margin-bottom: var(--space-xl);
   background: var(--color-white);
-  /* Prevent legend from floating outside the fieldset border */
-  overflow: visible;
+  position: relative;
 }
 
 .esqr-skill-group__legend {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
   font-family: var(--font-heading);
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--color-heading);
-  /* Keep legend fully inside the fieldset */
   float: none;
-  width: 100%;
-  padding: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.2;
+  padding: 0.2rem 0.7rem;
   margin: 0 0 var(--space-md);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-white) 88%, var(--color-primary) 12%);
+  box-shadow: 0 0 0 6px var(--color-white);
 }
 
 .esqr-skill-group__domain {
@@ -536,6 +542,11 @@
 
   .esqr-skill-group {
     padding: var(--space-lg) var(--space-md);
+  }
+
+  .esqr-skill-group__legend {
+    font-size: 1rem;
+    padding-inline: 0.6rem;
   }
 
   .esqr-progress {

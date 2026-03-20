@@ -17,7 +17,7 @@
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:image" content="https://executivefunctioninginstitute.com/images/efi-og-card.svg">  <link rel="canonical" href="https://executivefunctioninginstitute.com/full-ef-profile.html">
 </head>
-<body>
+<body class="page-full-profile">
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <nav class="nav" role="navigation" aria-label="Main navigation">
@@ -75,7 +75,19 @@
               One profile frame, one leverage point, and one 7-day action plan.
             </div>
           </div>
-          <ul id="full-profile-status" class="checklist"></ul>
+          <section class="full-profile-progress" aria-labelledby="full-profile-progress-title">
+            <div class="full-profile-progress__head">
+              <div>
+                <p class="full-profile-progress__eyebrow">Diagnostic progress</p>
+                <h3 id="full-profile-progress-title">0 of 4 diagnostics complete</h3>
+                <p id="full-profile-progress-copy" class="full-profile-progress__copy">Complete at least two diagnostics to unlock the Cross-Signal Profile. Finish all four for the strongest pattern read.</p>
+              </div>
+              <div class="full-profile-progress__meter" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" aria-labelledby="full-profile-progress-title">
+                <div id="full-profile-progress-fill" class="full-profile-progress__fill"></div>
+              </div>
+            </div>
+            <ul id="full-profile-status" class="full-profile-checklist"></ul>
+          </section>
           <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-top:var(--space-sm);">
             <a href="esqr.html" class="btn btn--secondary btn--sm">Take Free ESQ-R</a>
             <a href="ef-profile-story.html" class="btn btn--secondary btn--sm">Take EF Profile Story</a>
@@ -95,14 +107,15 @@
         </div>
 
         <div class="grid grid--2 stagger">
-          <div class="card">
+          <div class="card full-profile-summary-card">
             <h3>Model Frame</h3>
             <p id="full-profile-frame" style="font-size:1.05rem;font-weight:700;color:var(--color-primary);margin-bottom:var(--space-sm);"></p>
             <p id="full-profile-core-pattern" style="color:var(--color-text-light);margin-bottom:var(--space-sm);"></p>
             <p id="full-profile-leverage" style="margin-bottom:0;"></p>
           </div>
-          <div class="card">
+          <div class="card full-profile-signals-card">
             <h3>Signal Strengths</h3>
+            <div id="full-profile-signal-bars" class="full-profile-signal-bars" aria-hidden="true"></div>
             <ul id="full-profile-signals" class="checklist"></ul>
           </div>
         </div>

@@ -121,14 +121,8 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   background-image:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0)),
-    repeating-linear-gradient(
-      180deg,
-      transparent 0,
-      transparent 45px,
-      rgba(36, 53, 67, 0.016) 45px,
-      rgba(36, 53, 67, 0.016) 46px
-    );
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0) 36%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0));
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

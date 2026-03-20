@@ -972,3 +972,85 @@
 [data-theme="dark"] tr:nth-child(even) {
   background: rgba(74, 111, 156, 0.12);
 }
+
+/* Resources "New to EFI" box */
+[data-theme="dark"] .resources-masthead__square {
+  background: rgba(20, 30, 50, 0.85);
+  border-color: rgba(127, 192, 255, 0.18);
+}
+
+/* Floating Page ToC */
+[data-theme="dark"] .page-toc {
+  background: #141e2e;
+  border-color: rgba(127, 192, 255, 0.18);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .page-toc__header {
+  border-bottom-color: rgba(127, 192, 255, 0.12);
+}
+
+[data-theme="dark"] .page-toc__title {
+  color: #9fb2cb;
+}
+
+[data-theme="dark"] .page-toc__toggle {
+  color: #7fa0c0;
+}
+
+[data-theme="dark"] .page-toc__toggle:hover {
+  background: rgba(127, 192, 255, 0.08);
+}
+
+[data-theme="dark"] .page-toc__link {
+  color: #9fb2cb;
+}
+
+[data-theme="dark"] .page-toc__link:hover {
+  color: #c8dff0;
+  background: rgba(127, 192, 255, 0.06);
+}
+
+[data-theme="dark"] .page-toc__link--active {
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
+}
+
+/* Search page */
+[data-theme="dark"] .search-hero {
+  background: linear-gradient(180deg, rgba(14, 23, 37, 0.98), rgba(18, 28, 46, 0.98));
+}
+
+[data-theme="dark"] .search-form input {
+  background: rgba(20, 30, 50, 0.85);
+  border-color: rgba(127, 192, 255, 0.22);
+  color: #f5f8ff;
+}
+
+[data-theme="dark"] .search-form input::placeholder {
+  color: #7a96b2;
+}
+
+[data-theme="dark"] .search-results-section {
+  background: transparent;
+}
+
+[data-theme="dark"] .search-result-item,
+[data-theme="dark"] .search-result {
+  background: rgba(20, 30, 50, 0.85);
+  border-color: rgba(127, 192, 255, 0.14);
+}
+
+[data-theme="dark"] .search-result-item h3,
+[data-theme="dark"] .search-result h3 {
+  color: #c8dff0;
+}
+
+[data-theme="dark"] .search-result-item p,
+[data-theme="dark"] .search-result p {
+  color: #9fb2cb;
+}
+
+[data-theme="dark"] .search-status {
+  color: #9fb2cb;
+}

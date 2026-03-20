@@ -542,6 +542,13 @@ body.page-resources .page-header {
   grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.95fr);
   gap: var(--space-xl);
   align-items: start;
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .store-conversion-surface {
+    grid-template-columns: 1fr;
+  }
 }
 
 .store-conversion-surface__main {

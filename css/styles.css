@@ -5687,6 +5687,13 @@ body.page-resources .page-header {
   grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.95fr);
   gap: var(--space-xl);
   align-items: start;
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .store-conversion-surface {
+    grid-template-columns: 1fr;
+  }
 }
 
 .store-conversion-surface__main {
@@ -6965,6 +6972,24 @@ body.has-topic-clusters.has-topic-clusters-plain main {
   border-color: var(--color-border);
 }
 
+/* Certification pricing and credential cards — improve contrast in dark mode */
+[data-theme="dark"] .page-certification #pricing .card,
+[data-theme="dark"] .page-certification #who-its-for .card {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(127, 192, 255, 0.18);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .page-certification #pricing .card p,
+[data-theme="dark"] .page-certification #who-its-for .card p {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .page-certification #pricing .card h4,
+[data-theme="dark"] .page-certification #who-its-for .card h4 {
+  color: #f5f8ff;
+}
+
 [data-theme="dark"] .footer {
   background: #0a0f1a;
 }
@@ -6982,12 +7007,15 @@ body.has-topic-clusters.has-topic-clusters-plain main {
 }
 
 [data-theme="dark"] .dark-toggle {
-  border-color: var(--color-border);
-  color: var(--color-text);
+  background: rgba(74, 158, 218, 0.12);
+  border-color: rgba(127, 192, 255, 0.24);
+  color: #f5f8ff;
 }
 
 [data-theme="dark"] .dark-toggle:hover {
-  background: #2d3748;
+  background: rgba(74, 158, 218, 0.22);
+  border-color: rgba(127, 192, 255, 0.36);
+  color: #ffffff;
 }
 
 [data-theme="dark"] .topic-clusters {

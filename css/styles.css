@@ -649,7 +649,8 @@ p {
 .ef-landing {
   padding: calc(74px + var(--space-4xl)) 0 var(--space-4xl);
   background:
-    linear-gradient(165deg, #162b3c 0%, #274960 55%, #1e5c42 100%);
+    linear-gradient(165deg, #162b3c 0%, #1d3a52 30%, #274960 55%, #1e5c42 85%, #162b3c 100%);
+  background-size: 200% 200%;
   color: var(--color-white);
   overflow: hidden;
   position: relative;
@@ -833,6 +834,82 @@ p {
   .ef-landing__stat {
     flex: 1 1 160px;
   }
+}
+
+/* --- EF Landing Animations --- */
+@media (prefers-reduced-motion: no-preference) {
+  .ef-landing--reveal .ef-landing__lead {
+    animation: landingFadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .ef-landing--reveal .ef-landing__card:nth-child(1) {
+    animation: landingFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+  }
+  .ef-landing--reveal .ef-landing__card:nth-child(2) {
+    animation: landingFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  }
+  .ef-landing--reveal .ef-landing__card:nth-child(3) {
+    animation: landingFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+  }
+  .ef-landing--reveal .ef-landing__bridge {
+    animation: landingFadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+  }
+  .ef-landing__stat-number {
+    animation: landingGlow 3s ease-in-out infinite alternate;
+  }
+  .ef-landing {
+    animation: gradientShift 12s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes landingFadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes landingGlow {
+  0%   { text-shadow: 0 0 8px rgba(255, 200, 120, 0.2); }
+  100% { text-shadow: 0 0 20px rgba(255, 200, 120, 0.45), 0 0 40px rgba(255, 200, 120, 0.15); }
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+@keyframes floatDot {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(15px, -20px); }
+}
+
+.ef-landing__card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.ef-landing__inner::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 8%;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(255, 200, 120, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatDot 8s ease-in-out infinite alternate;
+}
+
+.ef-landing__inner::after {
+  content: '';
+  position: absolute;
+  bottom: 10%;
+  right: 12%;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(30, 132, 73, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatDot 10s ease-in-out 2s infinite alternate-reverse;
 }
 
 /* --- Hero Section --- */
@@ -3648,6 +3725,153 @@ select.form-control {
   gap: var(--space-md);
 }
 
+/* --- Coaching Service Components --- */
+.service-lanes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+}
+
+.service-lane {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-2xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  transition: box-shadow var(--transition), border-color var(--transition);
+}
+
+.service-lane:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-primary-light);
+}
+
+.service-lane__badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--border-radius);
+  width: fit-content;
+}
+
+.service-lane__badge--active {
+  background: rgba(30, 132, 73, 0.1);
+  color: #1e8449;
+}
+
+.service-lane__badge--coming-soon {
+  background: rgba(124, 90, 43, 0.1);
+  color: var(--color-accent);
+}
+
+.service-lane h3 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--color-heading);
+}
+
+.service-lane p {
+  color: var(--color-text-light);
+  line-height: 1.68;
+  flex: 1;
+}
+
+.service-lane__delivery {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+  flex: none;
+}
+
+.coaching-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-xl);
+  counter-reset: step;
+}
+
+.coaching-step {
+  counter-increment: step;
+  position: relative;
+  padding-top: var(--space-xl);
+}
+
+.coaching-step::before {
+  content: counter(step);
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary-light);
+  opacity: 0.6;
+}
+
+.coaching-step h3 {
+  font-size: 1rem;
+  margin-bottom: var(--space-sm);
+}
+
+.coaching-step p {
+  font-size: 0.92rem;
+  color: var(--color-text-light);
+  line-height: 1.62;
+}
+
+.creative-callout {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-xl) var(--space-2xl);
+}
+
+.creative-callout p {
+  color: var(--color-text-light);
+  line-height: 1.62;
+}
+
+.coaching-testimonial {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-xl);
+}
+
+.coaching-testimonial blockquote {
+  font-style: italic;
+  color: var(--color-text);
+  line-height: 1.72;
+  margin-bottom: var(--space-md);
+}
+
+.coaching-testimonial cite {
+  font-style: normal;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 900px) {
+  .service-lanes {
+    grid-template-columns: 1fr;
+  }
+  .coaching-steps {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .coaching-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Source: css/src/50-accessibility-responsive.css */
 /* --- Responsive --- */
 @media (max-width: 1680px) {
@@ -6082,6 +6306,22 @@ body.has-topic-clusters.has-topic-clusters-plain main {
   transition: max-height 0.25s ease, flex 0.25s ease;
 }
 
+.page-toc--minimized {
+  width: auto;
+  min-width: 0;
+  bottom: auto;
+  max-height: none;
+}
+
+.page-toc--minimized .page-toc__header {
+  border-bottom: none;
+  padding: 0.4rem 0.6rem;
+}
+
+.page-toc--minimized .page-toc__title {
+  display: none;
+}
+
 .page-toc--minimized .page-toc__nav {
   display: none;
 }
@@ -7246,4 +7486,33 @@ body.has-topic-clusters.has-topic-clusters-plain main {
 
 [data-theme="dark"] .ef-landing__card:hover {
   background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .service-lane {
+  background: #141e2e;
+  border-color: rgba(127, 192, 255, 0.12);
+}
+
+[data-theme="dark"] .service-lane:hover {
+  border-color: rgba(127, 192, 255, 0.24);
+}
+
+[data-theme="dark"] .service-lane__badge--active {
+  background: rgba(46, 204, 113, 0.15);
+  color: #52e494;
+}
+
+[data-theme="dark"] .service-lane__badge--coming-soon {
+  background: rgba(243, 156, 18, 0.15);
+  color: #f39c12;
+}
+
+[data-theme="dark"] .creative-callout {
+  background: #1a2332;
+  border-color: rgba(127, 192, 255, 0.12);
+}
+
+[data-theme="dark"] .coaching-testimonial {
+  background: #141e2e;
+  border-color: rgba(127, 192, 255, 0.12);
 }

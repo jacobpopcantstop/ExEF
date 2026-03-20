@@ -3779,6 +3779,14 @@ select.form-control {
   }
 }
 
+@media (max-width: 1320px) {
+  .artifact-grid--stack-laptop,
+  .store-conversion-surface,
+  .offer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 640px) {
   .artifact-grid,
   .curriculum-proof-grid,
@@ -4878,6 +4886,10 @@ select.form-control {
   gap: var(--space-lg);
 }
 
+.artifact-grid--stack-laptop {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .artifact-card {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(251, 248, 242, 0.94)),
@@ -5150,6 +5162,10 @@ body.page-resources .page-header {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-xl);
+}
+
+.store-cart-btn {
+  min-width: 140px;
 }
 
 .offer-dossier {

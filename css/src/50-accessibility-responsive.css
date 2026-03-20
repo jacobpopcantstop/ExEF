@@ -344,6 +344,14 @@
   }
 }
 
+@media (max-width: 1320px) {
+  .artifact-grid--stack-laptop,
+  .store-conversion-surface,
+  .offer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 640px) {
   .artifact-grid,
   .curriculum-proof-grid,

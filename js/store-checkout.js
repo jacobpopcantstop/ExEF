@@ -392,6 +392,42 @@
     updateOfferState(form);
   }
 
+  function selectOffer(form, offerCode) {
+    var offerSelect = document.getElementById('purchase-offer');
+    if (!form || !offerSelect || !offerCode) return;
+    offerSelect.value = offerCode;
+    updateOfferState(form);
+    var paidPath = document.getElementById('paid-path');
+    if (paidPath) {
+      paidPath.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  function initOfferCartButtons(form) {
+    var feedback = document.getElementById('purchase-intent-message') || document.getElementById('store-cart-feedback');
+    document.querySelectorAll('.store-cart-btn').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var offerCode = String(button.getAttribute('data-offer-code') || '').trim();
+        var offerLabel = String(button.getAttribute('data-offer-label') || '').trim();
+        var offerPrice = Number(button.getAttribute('data-offer-price') || 0);
+        if (window.EFI && EFI.Auth && typeof EFI.Auth.addToCart === 'function') {
+          EFI.Auth.addToCart({
+            id: offerCode,
+            name: offerLabel,
+            price: offerPrice
+          });
+        }
+        selectOffer(form, offerCode);
+        if (feedback) {
+          feedback.textContent = offerLabel + ' added. The purchase form below is now set to that offer.';
+        }
+        trackStoreEvent('store_offer_added_to_cart', {
+          funnel_offer: offerCode
+        });
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     var form = document.getElementById('purchase-intent-form');
     var checkoutBtn = document.getElementById('direct-checkout-btn');
@@ -432,5 +468,6 @@
     applyOfferFromQuery(form);
     updateOfferState(form);
     initNotifyForm();
+    initOfferCartButtons(form);
   });
 })();

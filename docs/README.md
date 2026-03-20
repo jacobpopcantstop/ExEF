@@ -5,6 +5,7 @@ Active operating docs live at the top level of `docs/`.
 Use these first:
 - `progress.md` — canonical tracker for current launch/product work.
 - `story-of-efi.md` — narrative history of the project, its phases, and what remains.
+- `business-foundation-plan.md` — entity, banking, legal, collaborator, and alumni-network planning checklist.
 - `interdisciplinary-offer-ladder.md` — paid offer ideas, pricing ladder, and site integration plan for OT/SPED-backed EFI services.
 - `ot-advisor-proposal.md` — practical proposal for structuring an OT advisor relationship.
 - `ot-clinical-review-memo.md` — review packet for OT/clinical precision and scope-of-practice feedback.

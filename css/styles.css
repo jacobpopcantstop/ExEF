@@ -3779,7 +3779,7 @@ select.form-control {
   }
 }
 
-@media (max-width: 1320px) {
+@media (max-width: 1440px) {
   .artifact-grid--stack-laptop,
   .store-conversion-surface,
   .offer-grid {
@@ -5054,6 +5054,8 @@ select.form-control {
   border-top: 4px solid var(--artifact-color, var(--color-primary));
   border-radius: var(--border-radius-lg);
   padding: var(--space-xl);
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .visual-slot {

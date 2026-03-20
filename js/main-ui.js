@@ -263,7 +263,7 @@ window.EFI.registerMainModule(function (shared) {
   (function injectGettingStartedPrompts() {
     var currentPage = window.location.pathname.split('/').pop() || 'index.html';
     if (currentPage === 'index.html') return;
-    if (['resources.html', 'curriculum.html'].indexOf(currentPage) === -1) return;
+    if (currentPage !== 'curriculum.html') return;
     if (document.getElementById('getting-started-guide-card')) return;
     var headerContainer = document.querySelector('.page-header .container');
     if (!headerContainer) return;

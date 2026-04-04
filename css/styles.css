@@ -5040,7 +5040,7 @@ select.form-control {
   }
 
   .cap-legend-label {
-    width: 72px;
+    width: 88px;
     text-align: center;
     font-size: 0.72rem;
     font-weight: 700;
@@ -5056,11 +5056,11 @@ select.form-control {
 .cap-option {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
-  padding: var(--space-md);
+  gap: var(--space-md);
+  padding: var(--space-lg);
   border: 2px solid var(--color-border);
-  border-radius: var(--border-radius-lg);
-  margin-bottom: var(--space-sm);
+  border-radius: 12px;
+  margin-bottom: var(--space-md);
   background: var(--color-white);
   transition: border-color var(--transition), background-color var(--transition);
 }
@@ -5069,6 +5069,7 @@ select.form-control {
   .cap-option {
     flex-direction: row;
     align-items: center;
+    padding: var(--space-lg) var(--space-xl);
   }
 }
 
@@ -5090,10 +5091,10 @@ select.form-control {
 
 .cap-option__controls {
   display: flex;
-  gap: var(--space-sm);
+  gap: var(--space-md);
   justify-content: flex-end;
   flex-shrink: 0;
-  padding-top: var(--space-xs);
+  padding-top: var(--space-sm);
   border-top: 1px solid var(--color-border);
 }
 
@@ -5109,28 +5110,29 @@ select.form-control {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-xs);
-  width: auto;
-  min-width: 72px;
-  height: 40px;
-  padding: 0 var(--space-md);
+  gap: 0.35rem;
+  min-width: 88px;
+  height: 44px;
+  padding: 0 var(--space-lg);
   border: 2px solid var(--color-border);
-  border-radius: var(--border-radius-lg);
+  border-radius: 999px;
   background: var(--color-bg-alt);
   color: var(--color-text-muted);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
+  letter-spacing: 0.03em;
   cursor: pointer;
   transition: all var(--transition);
 }
 
 .cap-btn-choice:disabled {
-  opacity: 0.25;
+  opacity: 0.2;
   cursor: not-allowed;
 }
 
 .cap-btn-choice svg {
   opacity: 0;
+  flex-shrink: 0;
   transition: opacity var(--transition);
 }
 
@@ -5143,12 +5145,14 @@ select.form-control {
   background: var(--module-3);
   border-color: var(--module-3);
   color: var(--color-white);
+  box-shadow: 0 2px 8px rgba(30, 132, 73, 0.25);
 }
 
 .cap-btn-choice--least.cap-btn-choice--active {
   background: var(--color-warm);
   border-color: var(--color-warm);
   color: var(--color-white);
+  box-shadow: 0 2px 8px rgba(157, 78, 34, 0.25);
 }
 
 .cap-btn-choice--active svg {
@@ -5159,32 +5163,18 @@ select.form-control {
 .cap-btn-choice--most:hover:not(:disabled):not(.cap-btn-choice--active) {
   border-color: var(--module-3);
   color: var(--module-3);
+  background: rgba(30, 132, 73, 0.06);
 }
 
 .cap-btn-choice--least:hover:not(:disabled):not(.cap-btn-choice--active) {
   border-color: var(--color-warm);
   color: var(--color-warm);
+  background: rgba(211, 84, 0, 0.06);
 }
 
-/* Hide label on desktop, show on mobile */
+/* Labels always visible */
 .cap-btn-choice__label {
   display: inline;
-}
-
-@media (min-width: 640px) {
-  .cap-btn-choice__label {
-    display: none;
-  }
-
-  .cap-btn-choice {
-    width: 72px;
-    min-width: 0;
-    padding: 0;
-  }
-
-  .cap-btn-choice svg {
-    opacity: 0.3;
-  }
 }
 
 /* Navigation row */

@@ -1,0 +1,837 @@
+(function initConativeActionProfile() {
+  'use strict';
+
+  /* Gate: only run on pages that contain the CAP elements */
+  if (!document.getElementById('cap-intro')) return;
+
+  // ── Constants ──────────────────────────────────────────────────
+  var STORAGE_KEY = 'efi_conative_profile';
+  var HISTORY_KEY = 'efi_conative_profile_history';
+  var TOTAL_QUESTIONS = 36;
+
+  // ── Questions (36 forced-choice scenarios) ─────────────────────
+  // Each question has exactly one option per trait (analyzer, organizer, innovator, builder).
+  // Option order is shuffled per question to prevent pattern recognition.
+  var QUESTIONS = [
+    // ── Block 1: Work & Projects (1-6) ──
+    {
+      id: 1,
+      prompt: 'When assigned a brand new, complex project at work, what is your immediate first step?',
+      options: [
+        { id: '1a', text: 'Read all available background material and gather historical data.', trait: 'analyzer' },
+        { id: '1b', text: 'Create a detailed step-by-step schedule and organizational chart.', trait: 'organizer' },
+        { id: '1c', text: 'Brainstorm completely different, unconventional approaches.', trait: 'innovator' },
+        { id: '1d', text: 'Start building a quick physical prototype or mockup.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 2,
+      prompt: 'Your manager asks you to take over a project someone else started. What do you do first?',
+      options: [
+        { id: '2a', text: 'Audit the existing files and documentation to understand every decision made so far.', trait: 'analyzer' },
+        { id: '2b', text: 'Reorganize the project folder structure and create a new tracking system.', trait: 'organizer' },
+        { id: '2c', text: 'Scrap the old direction and pitch a fresh take you believe in more.', trait: 'innovator' },
+        { id: '2d', text: 'Find the most tangible piece and start working on it hands-on immediately.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 3,
+      prompt: 'You are facing an incredibly tight deadline and time is running out. What do you prioritize?',
+      options: [
+        { id: '3a', text: 'Power through the physical labor required and just get it out the door.', trait: 'builder' },
+        { id: '3b', text: 'Use the pressure to invent a faster, unconventional shortcut.', trait: 'innovator' },
+        { id: '3c', text: 'Streamline the checklist to ensure every remaining step is completed efficiently.', trait: 'organizer' },
+        { id: '3d', text: 'Double-check the accuracy of the most critical information \u2014 it must be right.', trait: 'analyzer' }
+      ]
+    },
+    {
+      id: 4,
+      prompt: 'Your team needs to choose between three vendors. How do you contribute to the decision?',
+      options: [
+        { id: '4a', text: 'Build a comparison spreadsheet with weighted scoring criteria.', trait: 'organizer' },
+        { id: '4b', text: 'Request trial samples or demos so you can physically test each option.', trait: 'builder' },
+        { id: '4c', text: 'Research each vendor\u2019s track record, financial stability, and client reviews.', trait: 'analyzer' },
+        { id: '4d', text: 'Suggest an unconventional fourth option no one has considered yet.', trait: 'innovator' }
+      ]
+    },
+    {
+      id: 5,
+      prompt: 'You are put in charge of a department budget. How do you manage it?',
+      options: [
+        { id: '5a', text: 'Allocate funds primarily to upgrading tangible equipment and physical assets.', trait: 'builder' },
+        { id: '5b', text: 'Create meticulously categorized spreadsheets tracking every single penny.', trait: 'organizer' },
+        { id: '5c', text: 'Review historical spending reports to justify every line item proposed.', trait: 'analyzer' },
+        { id: '5d', text: 'Keep it loose; use funds dynamically as new opportunities pop up.', trait: 'innovator' }
+      ]
+    },
+    {
+      id: 6,
+      prompt: 'A colleague asks you to review their draft proposal before submission. What stands out to you first?',
+      options: [
+        { id: '6a', text: 'Whether the arguments are supported by solid data and references.', trait: 'analyzer' },
+        { id: '6b', text: 'Whether the sections flow in a logical, well-organized sequence.', trait: 'organizer' },
+        { id: '6c', text: 'Whether the central idea is bold enough to stand out from competitors.', trait: 'innovator' },
+        { id: '6d', text: 'Whether the deliverables are realistic given the physical resources available.', trait: 'builder' }
+      ]
+    },
+    // ── Block 2: Learning & Problem-Solving (7-12) ──
+    {
+      id: 7,
+      prompt: 'You need to learn a completely new, complicated software tool for your job.',
+      options: [
+        { id: '7a', text: 'Read the technical documentation and feature specifications.', trait: 'analyzer' },
+        { id: '7b', text: 'Hook it up to my other physical devices to see how it integrates.', trait: 'builder' },
+        { id: '7c', text: 'Go through the official tutorial module step-by-step, in order.', trait: 'organizer' },
+        { id: '7d', text: 'Click around randomly and try out advanced features just to see what happens.', trait: 'innovator' }
+      ]
+    },
+    {
+      id: 8,
+      prompt: 'You encounter a confusing error message in something you are building. How do you debug it?',
+      options: [
+        { id: '8a', text: 'Search for the exact error text and read every relevant discussion thread.', trait: 'analyzer' },
+        { id: '8b', text: 'Systematically isolate each component until you find the one that fails.', trait: 'organizer' },
+        { id: '8c', text: 'Try a completely different approach to bypass the error entirely.', trait: 'innovator' },
+        { id: '8d', text: 'Physically swap out or reconnect hardware and parts to rule out tangible causes.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 9,
+      prompt: 'You are asked to teach someone a skill you know well. What is your teaching style?',
+      options: [
+        { id: '9a', text: 'Provide a reading list and reference materials for them to study first.', trait: 'analyzer' },
+        { id: '9b', text: 'Walk them through a structured lesson plan with exercises in sequence.', trait: 'organizer' },
+        { id: '9c', text: 'Throw them into a challenge and coach them through figuring it out live.', trait: 'innovator' },
+        { id: '9d', text: 'Do a hands-on demonstration and then guide their hands through it.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 10,
+      prompt: 'When participating in a brainstorming session for a new product, you typically:',
+      options: [
+        { id: '10a', text: 'Evaluate the ideas based on past case studies and factual evidence.', trait: 'analyzer' },
+        { id: '10b', text: 'Suggest throwing out the whole premise and starting with a wild new concept.', trait: 'innovator' },
+        { id: '10c', text: 'Take notes, categorize the ideas, and formulate next action steps.', trait: 'organizer' },
+        { id: '10d', text: 'Sketch out what the product would physically look like or function.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 11,
+      prompt: 'You discover that a widely-accepted process in your organization is flawed. What do you do?',
+      options: [
+        { id: '11a', text: 'Compile evidence showing exactly where and how the flaw causes problems.', trait: 'analyzer' },
+        { id: '11b', text: 'Draft a revised standard operating procedure with clear before-and-after steps.', trait: 'organizer' },
+        { id: '11c', text: 'Propose a radically different workflow that sidesteps the flaw entirely.', trait: 'innovator' },
+        { id: '11d', text: 'Build a working prototype of the improved process and demonstrate it live.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 12,
+      prompt: 'A sudden, unexpected crisis occurs that disrupts your team\u2019s workflow. How do you react?',
+      options: [
+        { id: '12a', text: 'Physically step in and fix the tangible problem with my own hands.', trait: 'builder' },
+        { id: '12b', text: 'Immediately consult established emergency protocols and standard procedures.', trait: 'organizer' },
+        { id: '12c', text: 'Improvise a fast, on-the-spot solution that breaks the normal rules.', trait: 'innovator' },
+        { id: '12d', text: 'Ask questions to gather all the facts and find the root cause.', trait: 'analyzer' }
+      ]
+    },
+    // ── Block 3: Daily Life & Home (13-18) ──
+    {
+      id: 13,
+      prompt: 'You just bought a complex piece of unassembled furniture. How do you tackle it?',
+      options: [
+        { id: '13a', text: 'Sort all the screws, dowels, and parts into logical, separate groups.', trait: 'organizer' },
+        { id: '13b', text: 'Go get my own high-quality physical tools to ensure it\u2019s built sturdily.', trait: 'builder' },
+        { id: '13c', text: 'Read the instruction manual cover-to-cover before touching anything.', trait: 'analyzer' },
+        { id: '13d', text: 'Toss the instructions aside and start fitting pieces together to see what works.', trait: 'innovator' }
+      ]
+    },
+    {
+      id: 14,
+      prompt: 'When it comes to organizing your personal workspace or desk:',
+      options: [
+        { id: '14a', text: 'I prefer an unstructured desk; I change it up constantly based on what I\u2019m doing.', trait: 'innovator' },
+        { id: '14b', text: 'I classify files by detailed metadata, dates, and historical records.', trait: 'analyzer' },
+        { id: '14c', text: 'I ensure all physical tools and ergonomic equipment are perfectly positioned.', trait: 'builder' },
+        { id: '14d', text: 'I use a strict color-coded system and label everything perfectly.', trait: 'organizer' }
+      ]
+    },
+    {
+      id: 15,
+      prompt: 'Your kitchen needs a complete reorganization. How do you approach it?',
+      options: [
+        { id: '15a', text: 'Research optimal kitchen layouts and storage principles before moving anything.', trait: 'analyzer' },
+        { id: '15b', text: 'Map out zones on paper and label every shelf and drawer before restocking.', trait: 'organizer' },
+        { id: '15c', text: 'Rip everything out and redesign the whole layout based on a new vision.', trait: 'innovator' },
+        { id: '15d', text: 'Install new shelving, hooks, and physical storage solutions myself.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 16,
+      prompt: 'You are cooking a meal for a dinner party. What is your natural style?',
+      options: [
+        { id: '16a', text: 'Follow a trusted recipe to the letter, measuring every ingredient precisely.', trait: 'organizer' },
+        { id: '16b', text: 'Research the dish\u2019s origins and understand the science behind each technique.', trait: 'analyzer' },
+        { id: '16c', text: 'Improvise with whatever looks good at the market and see what happens.', trait: 'innovator' },
+        { id: '16d', text: 'Focus on mastering the knife work, grill technique, or physical craft of cooking.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 17,
+      prompt: 'You need to pack for a move to a new home. What do you do first?',
+      options: [
+        { id: '17a', text: 'Make an inventory of every room\u2019s contents before boxing anything.', trait: 'analyzer' },
+        { id: '17b', text: 'Create a labeled color-coded system: kitchen boxes are green, bedroom is blue, etc.', trait: 'organizer' },
+        { id: '17c', text: 'Use the move as a chance to completely rethink what I own and start fresh.', trait: 'innovator' },
+        { id: '17d', text: 'Start wrapping and boxing the heaviest, most fragile items with proper padding.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 18,
+      prompt: 'How do you prefer to spend a free weekend relaxing?',
+      options: [
+        { id: '18a', text: 'Following a well-planned itinerary of chores and scheduled activities.', trait: 'organizer' },
+        { id: '18b', text: 'Deep diving into a documentary, historical book, or complex research rabbit hole.', trait: 'analyzer' },
+        { id: '18c', text: 'Dropping everything on a whim to try something entirely new and spontaneous.', trait: 'innovator' },
+        { id: '18d', text: 'Working on a physical hobby like woodworking, gardening, or fixing a car.', trait: 'builder' }
+      ]
+    },
+    // ── Block 4: Communication & Social (19-24) ──
+    {
+      id: 19,
+      prompt: 'You have been asked to give a presentation to a group of stakeholders.',
+      options: [
+        { id: '19a', text: 'Use a clear, sequential outline that tracks from point A to point Z.', trait: 'organizer' },
+        { id: '19b', text: 'Provide extensive data, citations, and thorough background context.', trait: 'analyzer' },
+        { id: '19c', text: 'Bring in physical props, 3D models, or do a live hands-on demonstration.', trait: 'builder' },
+        { id: '19d', text: 'Speak extemporaneously, using the audience\u2019s energy to guide my points.', trait: 'innovator' }
+      ]
+    },
+    {
+      id: 20,
+      prompt: 'You are helping a friend resolve a personal conflict. What do you instinctively offer?',
+      options: [
+        { id: '20a', text: 'An objective analysis of both sides, pointing out facts they may have missed.', trait: 'analyzer' },
+        { id: '20b', text: 'A step-by-step plan for how to approach the conversation constructively.', trait: 'organizer' },
+        { id: '20c', text: 'A completely reframed perspective that challenges their assumptions.', trait: 'innovator' },
+        { id: '20d', text: 'Practical, hands-on help \u2014 drive them there, move their stuff, make the call.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 21,
+      prompt: 'You are writing an important email that could influence a major decision. How do you draft it?',
+      options: [
+        { id: '21a', text: 'Load it with supporting data, links, and a thorough evidence trail.', trait: 'analyzer' },
+        { id: '21b', text: 'Structure it with numbered points, clear sections, and a specific call to action.', trait: 'organizer' },
+        { id: '21c', text: 'Lead with a bold, unexpected opening that immediately captures attention.', trait: 'innovator' },
+        { id: '21d', text: 'Attach a mockup, photo, or physical sample that speaks louder than words.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 22,
+      prompt: 'During a group discussion, you notice the conversation going in circles. You:',
+      options: [
+        { id: '22a', text: 'Summarize the key facts and unanswered questions to refocus the group.', trait: 'analyzer' },
+        { id: '22b', text: 'Propose a structured agenda or decision-making framework on the spot.', trait: 'organizer' },
+        { id: '22c', text: 'Throw out a provocative question that forces everyone to think differently.', trait: 'innovator' },
+        { id: '22d', text: 'Suggest pausing the talk and doing a quick prototype or real-world test instead.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 23,
+      prompt: 'You are onboarding a new team member. What do you focus on first?',
+      options: [
+        { id: '23a', text: 'Sharing background reading: team history, past decisions, institutional knowledge.', trait: 'analyzer' },
+        { id: '23b', text: 'Walking them through the systems, tools, and standard procedures step by step.', trait: 'organizer' },
+        { id: '23c', text: 'Encouraging them to challenge the status quo and bring fresh ideas from day one.', trait: 'innovator' },
+        { id: '23d', text: 'Sitting beside them and doing real work together so they learn by doing.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 24,
+      prompt: 'You disagree with a decision made by leadership. How do you handle it?',
+      options: [
+        { id: '24a', text: 'Prepare a data-backed memo showing why the current path has risks.', trait: 'analyzer' },
+        { id: '24b', text: 'Propose a structured alternative with a clear timeline and accountability steps.', trait: 'organizer' },
+        { id: '24c', text: 'Pitch a bold counter-vision that gets people excited about a different direction.', trait: 'innovator' },
+        { id: '24d', text: 'Build a small proof-of-concept that demonstrates my alternative is feasible.', trait: 'builder' }
+      ]
+    },
+    // ── Block 5: Planning & Change (25-30) ──
+    {
+      id: 25,
+      prompt: 'You are planning a two-week vacation to a country you\u2019ve never visited. What is your planning style?',
+      options: [
+        { id: '25a', text: 'Book the flight, but wait until I arrive to decide where the mood takes me.', trait: 'innovator' },
+        { id: '25b', text: 'Research the history, culture, and specifics of every potential location.', trait: 'analyzer' },
+        { id: '25c', text: 'Focus entirely on packing the right specialized gear for physical activities.', trait: 'builder' },
+        { id: '25d', text: 'Draft a comprehensive daily itinerary with travel times and reservations.', trait: 'organizer' }
+      ]
+    },
+    {
+      id: 26,
+      prompt: 'Your company announces a major shift in policy. Your first instinct is to:',
+      options: [
+        { id: '26a', text: 'Welcome the shake-up; it was getting boring anyway.', trait: 'innovator' },
+        { id: '26b', text: 'Analyze the written documentation to understand all the legal and historical implications.', trait: 'analyzer' },
+        { id: '26c', text: 'Figure out how this changes the physical layout or tangible operations.', trait: 'builder' },
+        { id: '26d', text: 'Update your personal systems, calendars, and routines to align with the new rules.', trait: 'organizer' }
+      ]
+    },
+    {
+      id: 27,
+      prompt: 'You are setting goals for the next year. How do you approach goal-setting?',
+      options: [
+        { id: '27a', text: 'Review last year\u2019s metrics and use them as the evidence base for targets.', trait: 'analyzer' },
+        { id: '27b', text: 'Create a detailed quarterly plan with milestones, check-ins, and dependencies.', trait: 'organizer' },
+        { id: '27c', text: 'Set one ambitious moonshot goal that would require reinventing how I work.', trait: 'innovator' },
+        { id: '27d', text: 'Choose goals I can physically build toward, with concrete, tangible deliverables.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 28,
+      prompt: 'A friend proposes a spontaneous road trip this weekend. How do you respond?',
+      options: [
+        { id: '28a', text: 'Check maps, weather reports, and reviews for potential stops along the route.', trait: 'analyzer' },
+        { id: '28b', text: 'Say yes only if we plan the route, book accommodation, and agree on a schedule.', trait: 'organizer' },
+        { id: '28c', text: 'Jump in immediately \u2014 the less planned, the more exciting.', trait: 'innovator' },
+        { id: '28d', text: 'Agree if I can drive and make sure the car is properly packed and road-ready.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 29,
+      prompt: 'You are deciding whether to accept a job at a startup versus a large established company.',
+      options: [
+        { id: '29a', text: 'Research both options thoroughly: salary data, growth rates, employee reviews.', trait: 'analyzer' },
+        { id: '29b', text: 'Compare benefits packages, career ladders, and organizational structures.', trait: 'organizer' },
+        { id: '29c', text: 'Lean toward the startup because the ambiguity and speed excite me.', trait: 'innovator' },
+        { id: '29d', text: 'Lean toward whichever role lets me build something real with my own hands.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 30,
+      prompt: 'You receive unexpected feedback that your recent work missed the mark. What do you do first?',
+      options: [
+        { id: '30a', text: 'Ask for specific examples and data points so I can pinpoint exactly what went wrong.', trait: 'analyzer' },
+        { id: '30b', text: 'Create a structured action plan with deadlines for addressing each piece of feedback.', trait: 'organizer' },
+        { id: '30c', text: 'Use it as a springboard to try an entirely new approach rather than fixing the old one.', trait: 'innovator' },
+        { id: '30d', text: 'Start reworking the most visible, tangible piece immediately to show progress.', trait: 'builder' }
+      ]
+    },
+    // ── Block 6: Identity & Values (31-36) ──
+    {
+      id: 31,
+      prompt: 'When shopping for a major purchase like a car or appliance, your approach is:',
+      options: [
+        { id: '31a', text: 'Read every specification sheet, comparison review, and consumer report available.', trait: 'analyzer' },
+        { id: '31b', text: 'Make a ranked shortlist with pros, cons, and a weighted decision matrix.', trait: 'organizer' },
+        { id: '31c', text: 'Go to the showroom and physically test, touch, and try everything in person.', trait: 'builder' },
+        { id: '31d', text: 'Skip the mainstream options and hunt for a unique or custom alternative.', trait: 'innovator' }
+      ]
+    },
+    {
+      id: 32,
+      prompt: 'You are volunteering to help organize a community event. What role do you gravitate toward?',
+      options: [
+        { id: '32a', text: 'Researching venue options, permits, and historical attendance data.', trait: 'analyzer' },
+        { id: '32b', text: 'Managing the master timeline, checklists, and vendor coordination.', trait: 'organizer' },
+        { id: '32c', text: 'Coming up with the theme, the surprise elements, and the creative direction.', trait: 'innovator' },
+        { id: '32d', text: 'Setting up the physical space: staging, equipment, signage, and logistics.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 33,
+      prompt: 'You want to pick up a new hobby. What draws you in?',
+      options: [
+        { id: '33a', text: 'A hobby with deep knowledge to acquire: astronomy, history, chess strategy.', trait: 'analyzer' },
+        { id: '33b', text: 'A hobby with clear progression levels and structured milestones.', trait: 'organizer' },
+        { id: '33c', text: 'Something I have never tried and can\u2019t predict whether I\u2019ll even like.', trait: 'innovator' },
+        { id: '33d', text: 'Something hands-on: ceramics, welding, rock climbing, restoring old things.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 34,
+      prompt: 'Your phone dies and you need to entertain yourself for two hours. You:',
+      options: [
+        { id: '34a', text: 'Find a newspaper, magazine, or bookshelf and read anything available.', trait: 'analyzer' },
+        { id: '34b', text: 'Organize the space around me: tidy a drawer, sort a shelf, make a list.', trait: 'organizer' },
+        { id: '34c', text: 'Strike up a conversation with a stranger or invent a game out of nothing.', trait: 'innovator' },
+        { id: '34d', text: 'Find something to fix, build, or physically tinker with.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 35,
+      prompt: 'When you recall your proudest accomplishment, what made it feel significant?',
+      options: [
+        { id: '35a', text: 'I solved a puzzle no one else could by finding the right piece of hidden information.', trait: 'analyzer' },
+        { id: '35b', text: 'I brought order to chaos and got a complex operation running smoothly.', trait: 'organizer' },
+        { id: '35c', text: 'I took a leap of faith on an original idea that nobody believed would work.', trait: 'innovator' },
+        { id: '35d', text: 'I built something real with my own hands that people can see and use.', trait: 'builder' }
+      ]
+    },
+    {
+      id: 36,
+      prompt: 'If money were no object and you could spend a year doing anything, you would:',
+      options: [
+        { id: '36a', text: 'Enroll in intensive research or study \u2014 dig deep into a subject that fascinates me.', trait: 'analyzer' },
+        { id: '36b', text: 'Build and manage a well-organized operation: a school, a farm, a nonprofit.', trait: 'organizer' },
+        { id: '36c', text: 'Travel with no plan, start experimental projects, and follow every impulse.', trait: 'innovator' },
+        { id: '36d', text: 'Build something physical from scratch: a house, a boat, a workshop.', trait: 'builder' }
+      ]
+    }
+  ];
+
+  // ── Trait metadata ─────────────────────────────────────────────
+  var TRAITS = {
+    analyzer: {
+      title: 'Fact Finder',
+      subtitle: 'Information',
+      color: 'var(--module-2)',
+      descriptions: {
+        low:  'You simplify. You cut to the chase, focus on the bottom line, and avoid getting bogged down in history or unnecessary details. You trust your instinct over exhaustive research.',
+        mid:  'You accommodate information. You gather enough facts to make an informed decision without over-researching. You balance due diligence with forward motion.',
+        high: 'You probe deeply. You naturally dive into facts, history, and details before acting. You need to justify decisions with thorough evidence and feel uneasy moving forward without it.'
+      }
+    },
+    organizer: {
+      title: 'Follow Thru',
+      subtitle: 'Systems',
+      color: 'var(--module-3)',
+      descriptions: {
+        low:  'You are adaptable. You thrive on flexibility, pivot easily when plans change, and feel constrained by rigid systems, checklists, or rules. Too much structure stalls you.',
+        mid:  'You maintain structure when needed. You can use systems and organize effectively, but you do not require absolute rigidity to function well.',
+        high: 'You systematize naturally. You create structure, charts, and sequential plans instinctively. You thrive on order, schedules, and consistency, and others rely on your systems.'
+      }
+    },
+    innovator: {
+      title: 'Quick Start',
+      subtitle: 'Risk & Change',
+      color: 'var(--module-4)',
+      descriptions: {
+        low:  'You stabilize. You protect what works, minimize risk, and prefer proven methods. You resist unnecessary change and bring valuable caution to impulsive environments.',
+        mid:  'You modify. You can adapt to change and contribute to brainstorming, but you prefer adjusting existing ideas rather than inventing from scratch.',
+        high: 'You innovate. You naturally take risks, brainstorm, and improvise under pressure. You act with urgency, embrace the unknown, and get restless without novelty.'
+      }
+    },
+    builder: {
+      title: 'Implementor',
+      subtitle: 'Tangibles',
+      color: 'var(--module-1)',
+      descriptions: {
+        low:  'You conceptualize. You envision solutions mentally or theoretically without needing to physically touch or prototype them. Abstract thinking is your natural workspace.',
+        mid:  'You restore. You can work with tangible materials when needed, but you are equally comfortable working with intangible concepts and abstract plans.',
+        high: 'You construct. You are highly hands-on and need to physically touch, build, or demonstrate things to understand them. You learn by doing, not by reading.'
+      }
+    }
+  };
+
+  var TRAIT_ORDER = ['analyzer', 'organizer', 'innovator', 'builder'];
+
+  // ── State ──────────────────────────────────────────────────────
+  var currentIndex = 0;
+  var answers = [];
+  var lastResult = null;
+  for (var i = 0; i < QUESTIONS.length; i++) {
+    answers.push({ most: null, least: null });
+  }
+
+  // ── DOM refs ───────────────────────────────────────────────────
+  var introSection   = document.getElementById('cap-intro');
+  var quizSection    = document.getElementById('cap-quiz');
+  var resultsSection = document.getElementById('cap-results');
+  var nextSteps      = document.getElementById('cap-next-steps');
+  var startBtn       = document.getElementById('cap-start');
+  var backBtn        = document.getElementById('cap-back');
+  var nextBtn        = document.getElementById('cap-next');
+  var retakeBtn      = document.getElementById('cap-retake');
+  var copyBtn        = document.getElementById('cap-copy');
+  var exportBtn      = document.getElementById('cap-export');
+  var messageEl      = document.getElementById('cap-message');
+  var progressFill   = document.getElementById('cap-progress-fill');
+  var progressText   = document.getElementById('cap-progress-text');
+  var promptEl       = document.getElementById('cap-prompt');
+  var optionsEl      = document.getElementById('cap-options');
+  var chartEl        = document.getElementById('cap-chart');
+  var analysisEl     = document.getElementById('cap-analysis');
+  var dateEl         = document.getElementById('cap-result-date');
+
+  // ── Helpers ────────────────────────────────────────────────────
+  function show(el) { if (el) el.style.display = ''; }
+  function hide(el) { if (el) el.style.display = 'none'; }
+
+  function scrollTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function setMessage(text) {
+    if (messageEl) messageEl.textContent = text;
+  }
+
+  function copyText(text, done) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(done);
+      return;
+    }
+    done();
+  }
+
+  function exportText(text, fileName) {
+    var blob = new Blob([text], { type: 'text/plain;charset=utf-8;' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function readJson(key, fallback) {
+    try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch (e) { return fallback; }
+  }
+
+  // ── Render question ────────────────────────────────────────────
+  function renderQuestion() {
+    var q = QUESTIONS[currentIndex];
+    var ans = answers[currentIndex];
+
+    /* progress */
+    var pct = Math.round((currentIndex / QUESTIONS.length) * 100);
+    progressFill.style.width = pct + '%';
+    progressText.textContent = 'Scenario ' + (currentIndex + 1) + ' of ' + QUESTIONS.length;
+
+    /* prompt */
+    promptEl.textContent = q.prompt;
+
+    /* options */
+    optionsEl.innerHTML = '';
+    q.options.forEach(function (opt) {
+      var isMost  = ans.most === opt.id;
+      var isLeast = ans.least === opt.id;
+
+      var row = document.createElement('div');
+      row.className = 'cap-option';
+      if (isMost) row.classList.add('cap-option--most');
+      if (isLeast) row.classList.add('cap-option--least');
+
+      var label = document.createElement('span');
+      label.className = 'cap-option__text';
+      label.textContent = opt.text;
+
+      var controls = document.createElement('div');
+      controls.className = 'cap-option__controls';
+
+      var mostBtn = document.createElement('button');
+      mostBtn.type = 'button';
+      mostBtn.className = 'cap-btn-choice cap-btn-choice--most';
+      if (isMost)  mostBtn.classList.add('cap-btn-choice--active');
+      if (isLeast) mostBtn.disabled = true;
+      mostBtn.setAttribute('aria-label', 'Select as most likely: ' + opt.text);
+      mostBtn.innerHTML = '<span class="cap-btn-choice__label">MOST</span>' +
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+      var leastBtn = document.createElement('button');
+      leastBtn.type = 'button';
+      leastBtn.className = 'cap-btn-choice cap-btn-choice--least';
+      if (isLeast) leastBtn.classList.add('cap-btn-choice--active');
+      if (isMost) leastBtn.disabled = true;
+      leastBtn.setAttribute('aria-label', 'Select as least likely: ' + opt.text);
+      leastBtn.innerHTML = '<span class="cap-btn-choice__label">LEAST</span>' +
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+
+      mostBtn.addEventListener('click', function () { handleSelect('most', opt.id); });
+      leastBtn.addEventListener('click', function () { handleSelect('least', opt.id); });
+
+      controls.appendChild(mostBtn);
+      controls.appendChild(leastBtn);
+      row.appendChild(label);
+      row.appendChild(controls);
+      optionsEl.appendChild(row);
+    });
+
+    /* nav buttons */
+    backBtn.disabled = (currentIndex === 0);
+    updateNextBtn();
+  }
+
+  function updateNextBtn() {
+    var ans = answers[currentIndex];
+    var complete = ans.most !== null && ans.least !== null;
+    nextBtn.disabled = !complete;
+    nextBtn.textContent = (currentIndex === QUESTIONS.length - 1) ? 'See Results' : 'Next Scenario';
+  }
+
+  // ── Selection handler ──────────────────────────────────────────
+  function handleSelect(type, optionId) {
+    var ans = { most: answers[currentIndex].most, least: answers[currentIndex].least };
+
+    /* prevent selecting the same option for both */
+    if (type === 'most' && ans.least === optionId) ans.least = null;
+    if (type === 'least' && ans.most === optionId) ans.most = null;
+
+    ans[type] = optionId;
+    answers[currentIndex] = ans;
+    renderQuestion();
+  }
+
+  // ── Scoring ────────────────────────────────────────────────────
+  // With 36 questions and 4 traits, each trait appears as an option in every question.
+  // Raw score range per trait: -36 (always least, never most) to +36 (always most, never least).
+  // Realistic range is roughly -12 to +12. We map to a 1-10 scale using a factor tuned for 36 questions.
+  function calculateScores() {
+    var raw = { analyzer: 0, organizer: 0, innovator: 0, builder: 0 };
+
+    answers.forEach(function (ans, idx) {
+      var q = QUESTIONS[idx];
+      if (ans.most) {
+        var mostOpt = q.options.filter(function (o) { return o.id === ans.most; })[0];
+        if (mostOpt) raw[mostOpt.trait] += 1;
+      }
+      if (ans.least) {
+        var leastOpt = q.options.filter(function (o) { return o.id === ans.least; })[0];
+        if (leastOpt) raw[leastOpt.trait] -= 1;
+      }
+    });
+
+    // Map raw scores to 1-10 scale.
+    // With 36 questions, max theoretical raw is 36 (all most) and min is -36 (all least).
+    // Practical range clusters around -12 to +12. Factor of 0.25 gives good spread:
+    // raw 0 → 6, raw +8 → 8, raw +12 → 9, raw -8 → 4, raw -12 → 3
+    var mapped = {};
+    TRAIT_ORDER.forEach(function (trait) {
+      var score = Math.round(5.5 + (raw[trait] * 0.25));
+      if (score < 1) score = 1;
+      if (score > 10) score = 10;
+      mapped[trait] = score;
+    });
+    return mapped;
+  }
+
+  // ── Zone label helper ──────────────────────────────────────────
+  function zoneLabel(score) {
+    if (score <= 3) return 'Prevent';
+    if (score >= 7) return 'Initiate';
+    return 'Respond';
+  }
+
+  // ── Summary text builder ───────────────────────────────────────
+  function buildSummary(result) {
+    var lines = [];
+    lines.push('EFI Conative Action Profile');
+    lines.push('Generated: ' + new Date().toLocaleString());
+    lines.push('');
+    lines.push('SCORES (1\u201310 scale)');
+    lines.push('---');
+    TRAIT_ORDER.forEach(function (trait) {
+      var data = TRAITS[trait];
+      var score = result.scores[trait];
+      lines.push(data.title + ' (' + data.subtitle + '): ' + score + '/10 \u2014 ' + zoneLabel(score) + ' zone');
+    });
+    lines.push('');
+    lines.push('ANALYSIS');
+    lines.push('---');
+    TRAIT_ORDER.forEach(function (trait) {
+      var data = TRAITS[trait];
+      var score = result.scores[trait];
+      var desc;
+      if (score <= 3) desc = data.descriptions.low;
+      else if (score >= 7) desc = data.descriptions.high;
+      else desc = data.descriptions.mid;
+      lines.push(data.title + ': ' + desc);
+      lines.push('');
+    });
+    lines.push('Note: This tool uses a forced-choice methodology to measure conative behavior.');
+    lines.push('It is an independent, non-diagnostic tool and is not affiliated with any trademarked assessment product.');
+    return lines.join('\n');
+  }
+
+  // ── Render results ─────────────────────────────────────────────
+  function renderResults(scores) {
+    var now = new Date();
+    lastResult = {
+      scores: scores,
+      generatedAt: now.toISOString()
+    };
+
+    /* Store latest in localStorage for cross-signal profile */
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(lastResult));
+    } catch (e) { /* quota exceeded */ }
+
+    /* Append to history (keep last 10) */
+    try {
+      var history = readJson(HISTORY_KEY, []);
+      history.push(lastResult);
+      if (history.length > 10) history = history.slice(-10);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    } catch (e) { /* quota exceeded */ }
+
+    /* Date line */
+    if (dateEl) {
+      dateEl.textContent = 'Completed ' + now.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    /* Chart */
+    chartEl.innerHTML = '';
+    TRAIT_ORDER.forEach(function (trait) {
+      var data = TRAITS[trait];
+      var score = scores[trait];
+      var pct = (score / 10) * 100;
+
+      var group = document.createElement('div');
+      group.className = 'cap-bar-group';
+
+      var header = document.createElement('div');
+      header.className = 'cap-bar-header';
+      var titleSpan = document.createElement('span');
+      titleSpan.className = 'cap-bar-title';
+      titleSpan.style.color = data.color;
+      titleSpan.textContent = data.title + ' (' + data.subtitle + ')';
+      var scoreSpan = document.createElement('span');
+      scoreSpan.className = 'cap-bar-score';
+      scoreSpan.style.color = data.color;
+      scoreSpan.textContent = score;
+      header.appendChild(titleSpan);
+      header.appendChild(scoreSpan);
+
+      var track = document.createElement('div');
+      track.className = 'cap-bar-track';
+
+      /* zone markers at 30% and 70% */
+      var mark1 = document.createElement('div');
+      mark1.className = 'cap-bar-zone-mark';
+      mark1.style.left = '30%';
+      var mark2 = document.createElement('div');
+      mark2.className = 'cap-bar-zone-mark';
+      mark2.style.left = '70%';
+      track.appendChild(mark1);
+      track.appendChild(mark2);
+
+      var fill = document.createElement('div');
+      fill.className = 'cap-bar-fill';
+      fill.style.background = data.color;
+      fill.style.width = '0%';
+      track.appendChild(fill);
+
+      var zones = document.createElement('div');
+      zones.className = 'cap-bar-zones';
+      zones.innerHTML =
+        '<span>1\u20133 Prevent</span>' +
+        '<span>4\u20136 Respond</span>' +
+        '<span>7\u201310 Initiate</span>';
+
+      group.appendChild(header);
+      group.appendChild(track);
+      group.appendChild(zones);
+      chartEl.appendChild(group);
+
+      /* animate bar after a short delay */
+      setTimeout(function () { fill.style.width = pct + '%'; }, 80);
+    });
+
+    /* Analysis cards */
+    analysisEl.innerHTML = '';
+    TRAIT_ORDER.forEach(function (trait) {
+      var data = TRAITS[trait];
+      var score = scores[trait];
+      var desc;
+      if (score <= 3) desc = data.descriptions.low;
+      else if (score >= 7) desc = data.descriptions.high;
+      else desc = data.descriptions.mid;
+
+      var card = document.createElement('div');
+      card.className = 'card cap-analysis-card';
+      card.style.borderLeft = '4px solid ' + data.color;
+      card.style.marginBottom = 'var(--space-md)';
+
+      var heading = document.createElement('h3');
+      heading.style.marginTop = '0';
+      heading.textContent = data.title + ' (' + data.subtitle + ') \u2014 ' + zoneLabel(score) + ' Zone';
+
+      var zoneTag = document.createElement('span');
+      zoneTag.className = 'cap-zone-tag';
+      zoneTag.textContent = score + '/10';
+      zoneTag.style.color = data.color;
+      heading.appendChild(document.createTextNode(' '));
+      heading.appendChild(zoneTag);
+
+      var p = document.createElement('p');
+      p.textContent = desc;
+
+      card.appendChild(heading);
+      card.appendChild(p);
+      analysisEl.appendChild(card);
+    });
+
+    setMessage('Your profile is ready to copy or export.');
+  }
+
+  // ── Event wiring ───────────────────────────────────────────────
+  startBtn.addEventListener('click', function () {
+    hide(introSection);
+    show(quizSection);
+    renderQuestion();
+    scrollTop();
+  });
+
+  backBtn.addEventListener('click', function () {
+    if (currentIndex > 0) {
+      currentIndex--;
+      renderQuestion();
+      scrollTop();
+    }
+  });
+
+  nextBtn.addEventListener('click', function () {
+    if (currentIndex < QUESTIONS.length - 1) {
+      currentIndex++;
+      renderQuestion();
+      scrollTop();
+    } else {
+      var scores = calculateScores();
+      hide(quizSection);
+      show(resultsSection);
+      show(nextSteps);
+      renderResults(scores);
+      scrollTop();
+    }
+  });
+
+  retakeBtn.addEventListener('click', function () {
+    currentIndex = 0;
+    answers = [];
+    for (var j = 0; j < QUESTIONS.length; j++) {
+      answers.push({ most: null, least: null });
+    }
+    lastResult = null;
+    hide(resultsSection);
+    hide(nextSteps);
+    show(introSection);
+    setMessage('');
+    scrollTop();
+  });
+
+  if (copyBtn) {
+    copyBtn.addEventListener('click', function () {
+      if (!lastResult) {
+        setMessage('Complete the assessment first.');
+        return;
+      }
+      copyText(buildSummary(lastResult), function () {
+        setMessage('Summary copied.');
+      });
+    });
+  }
+
+  if (exportBtn) {
+    exportBtn.addEventListener('click', function () {
+      if (!lastResult) {
+        setMessage('Complete the assessment first.');
+        return;
+      }
+      exportText(buildSummary(lastResult), 'efi-conative-action-profile-' + new Date().toISOString().slice(0, 10) + '.txt');
+      setMessage('Summary exported.');
+    });
+  }
+})();

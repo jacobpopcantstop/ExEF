@@ -27,6 +27,7 @@
   var TIME_KEY = 'efi_time_blindness_entries';
   var TASK_KEY = 'efi_task_friction_latest';
   var STORY_KEY = 'efi_ef_profile_story_latest';
+  var CONATIVE_KEY = 'efi_conative_profile';
 
   var mergedResult = null;
 
@@ -329,7 +330,7 @@
     };
   }
 
-  function buildMergedProfile(esqr, timeMetrics, task, story, hasTimeConfidence) {
+  function buildMergedProfile(esqr, timeMetrics, task, story, hasTimeConfidence, conative) {
     var priorities = [];
     var strengths = [];
     var plan = [];
@@ -384,6 +385,38 @@
       plan.push('For estimated 30-minute tasks, block about ' + timeMetrics.plan30 + ' minutes this week.');
     }
 
+    if (conative && conative.scores) {
+      completed.push('Conative Action Profile');
+      var capScores = conative.scores;
+      var capTraits = ['analyzer', 'organizer', 'innovator', 'builder'];
+      var capLabels = capTraits.map(function (t) { return conativeLabel(t, capScores[t] || 5); });
+      strengths.push('Conative action modes: ' + capLabels.join(', ') + '.');
+
+      /* Highlight strongest initiating and preventing modes */
+      var capMax = null;
+      var capMin = null;
+      capTraits.forEach(function (t) {
+        var s = capScores[t] || 5;
+        if (!capMax || s > capMax.score) capMax = { trait: t, score: s };
+        if (!capMin || s < capMin.score) capMin = { trait: t, score: s };
+      });
+      if (capMax && capMax.score >= 7) {
+        strengths.push('Strongest conative mode: ' + conativeLabel(capMax.trait, capMax.score) + '.');
+      }
+      if (capMin && capMin.score <= 3) {
+        priorities.push('Conative friction point: ' + conativeLabel(capMin.trait, capMin.score) + ' \u2014 tasks requiring this mode may need extra scaffolding.');
+      }
+
+      /* Cross-signal: high Quick Start + activation signal = impulsive start risk */
+      if ((capScores.innovator || 5) >= 7 && synthesis.signals.indexOf('activation') !== -1) {
+        plan.push('Your Quick Start drive is high but activation friction is present \u2014 channel impulsive energy into a defined first step rather than open brainstorming.');
+      }
+      /* Cross-signal: low Follow Thru + planning signal = systems gap */
+      if ((capScores.organizer || 5) <= 3 && synthesis.signals.indexOf('planning') !== -1) {
+        plan.push('Low Follow Thru combined with planning pressure means external systems (shared calendars, accountability partners) will outperform willpower.');
+      }
+    }
+
     priorities.unshift('Core pattern: ' + synthesis.primaryTheme);
     strengths.unshift('Best leverage point: ' + synthesis.leverage);
     plan.unshift('Main focus this week: ' + synthesis.coachingFocus);
@@ -393,7 +426,7 @@
     strengths = uniqueList(strengths).slice(0, 5);
 
     return {
-      title: (completed.length >= 4 ? 'Complete Multi-Diagnostic EF Profile' : 'Combined EF Profile (Partial)') + ': ' + synthesis.profileFrame,
+      title: (completed.length >= 5 ? 'Complete Multi-Diagnostic EF Profile' : 'Combined EF Profile (Partial)') + ': ' + synthesis.profileFrame,
       lede: 'Diagnostics completed: ' + completed.join(', ') + '. ' + synthesis.primaryTheme,
       modelName: synthesis.modelName,
       profileFrame: synthesis.profileFrame,
@@ -402,6 +435,7 @@
       leverage: synthesis.leverage,
       signals: synthesis.signals,
       signalMap: synthesis.signalMap,
+      conativeScores: (conative && conative.scores) ? conative.scores : null,
       priorities: priorities,
       strengths: strengths,
       plan: plan
@@ -434,6 +468,9 @@
     if (result.signalMap) {
       lines.push('Signal Scores: planning ' + result.signalMap.planning + ', activation ' + result.signalMap.activation + ', regulation ' + result.signalMap.regulation + ', environment ' + result.signalMap.environment);
     }
+    if (result.conativeScores) {
+      lines.push('Conative Action Profile: Fact Finder ' + result.conativeScores.analyzer + ', Follow Thru ' + result.conativeScores.organizer + ', Quick Start ' + result.conativeScores.innovator + ', Implementor ' + result.conativeScores.builder);
+    }
     lines.push('');
     lines.push('Top Priorities:');
     result.priorities.forEach(function (item) { lines.push('- ' + item); });
@@ -455,7 +492,8 @@
       { name: 'ESQ-R free test', ok: completion.hasEsqr, href: 'esqr.html', action: 'Take ESQ-R' },
       { name: 'EF Profile Story quiz', ok: completion.hasStory, href: 'ef-profile-story.html', action: 'Open Story Quiz' },
       { name: 'Task Start Friction diagnostic', ok: completion.hasTask, href: 'task-start-friction.html', action: 'Run Diagnostic' },
-      { name: timeLabel, ok: completion.hasTime, href: 'time-blindness-calibrator.html', action: 'Open Calibrator' }
+      { name: timeLabel, ok: completion.hasTime, href: 'time-blindness-calibrator.html', action: 'Open Calibrator' },
+      { name: 'Conative Action Profile', ok: completion.hasConative, href: 'conative-action-profile.html', action: 'Take Action Profile' }
     ];
     var completedCount = items.filter(function (item) { return item.ok; }).length;
     var progressPercent = (completedCount / items.length) * 100;
@@ -517,30 +555,43 @@
     });
   }
 
+  function conativeLabel(trait, score) {
+    var names = {
+      analyzer: 'Fact Finder',
+      organizer: 'Follow Thru',
+      innovator: 'Quick Start',
+      builder: 'Implementor'
+    };
+    var zone = score <= 3 ? 'Prevent' : (score >= 7 ? 'Initiate' : 'Respond');
+    return (names[trait] || trait) + ' ' + score + '/10 (' + zone + ')';
+  }
+
   function init() {
     var esqr = readJson(ESQR_KEY, null);
     var story = readJson(STORY_KEY, null);
     var task = readJson(TASK_KEY, null);
     var timeEntries = readJson(TIME_KEY, []);
+    var conative = readJson(CONATIVE_KEY, null);
     var timeMetrics = computeTimeMetrics(timeEntries);
 
     var completion = {
       hasEsqr: !!esqr,
       hasStory: !!story,
       hasTask: !!task,
-      hasTime: !!(timeMetrics && timeMetrics.count >= 3)
+      hasTime: !!(timeMetrics && timeMetrics.count >= 3),
+      hasConative: !!(conative && conative.scores)
     };
 
     renderStatus(completion, timeMetrics);
 
-    var completedCount = [completion.hasEsqr, completion.hasStory, completion.hasTask, completion.hasTime].filter(Boolean).length;
+    var completedCount = [completion.hasEsqr, completion.hasStory, completion.hasTask, completion.hasTime, completion.hasConative].filter(Boolean).length;
     if (completedCount < 2) {
       if (resultsSection) resultsSection.hidden = true;
       setMessage('Complete at least two diagnostics and EFI will stitch them into one combined profile.');
       return;
     }
 
-    mergedResult = buildMergedProfile(esqr, timeMetrics, task, story, completion.hasTime);
+    mergedResult = buildMergedProfile(esqr, timeMetrics, task, story, completion.hasTime, conative);
     if (resultsSection) resultsSection.hidden = false;
     if (titleEl) titleEl.textContent = mergedResult.title;
     if (ledeEl) ledeEl.textContent = mergedResult.lede;

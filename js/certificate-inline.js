@@ -36,6 +36,17 @@
 
   var certStatus = EFI.Auth.getCertificationStatus();
   var hasCertificatePurchase = certStatus.certificatePurchased;
+  var session = EFI.Auth.getSession ? EFI.Auth.getSession() : null;
+
+  function appendPrototypeNotice(message) {
+    var certId = document.getElementById('cert-id');
+    var note = document.createElement('p');
+    note.style.fontSize = '0.85rem';
+    note.style.color = 'var(--color-text-muted)';
+    note.style.marginTop = 'var(--space-sm)';
+    note.textContent = message;
+    certId.insertAdjacentElement('afterend', note);
+  }
 
   if (!certStatus.eligibleForCertificate && !hasCertificatePurchase) {
     setGateMessage([
@@ -110,6 +121,20 @@
     hash |= 0;
   }
   var fallbackId = 'EFI-CEFC-' + Math.abs(hash).toString(36).toUpperCase().substring(0, 8);
+  var isDemoPreview = !!(session && session.mode !== 'managed' && certPurchase && certPurchase.verification && certPurchase.verification.mode === 'demo_preview');
+  if (isDemoPreview) {
+    var prototypeCredentialId = certPurchase.credentialId || fallbackId;
+    var prototypeReceipt = certPurchase.receipt || EFI.Auth.getLatestReceiptFor('certificate') || 'demo-preview';
+    document.getElementById('cert-id').textContent = prototypeCredentialId;
+    document.getElementById('cert-verify-link').href = 'verify.html?id=' + encodeURIComponent(prototypeCredentialId) + '&receipt=' + encodeURIComponent(prototypeReceipt);
+    document.getElementById('cert-verify-link').textContent = 'Open Demo Verification Preview';
+    appendPrototypeNotice('Demo preview mode shows the certificate layout locally. Public verification remains disabled for this preview account.');
+    document.getElementById('print-cert').addEventListener('click', function() {
+      window.print();
+    });
+    return;
+  }
+
   var signedCheck = await EFI.Auth.verifyPurchasedProduct('certificate', fallbackId);
   if (!signedCheck || !signedCheck.verified) {
     gate.style.display = 'block';

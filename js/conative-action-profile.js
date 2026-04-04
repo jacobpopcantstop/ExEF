@@ -463,10 +463,10 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function scrollToQuiz() {
-    var bar = document.getElementById('cap-progress-bar');
-    if (bar) {
-      bar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  function scrollToQuestion() {
+    var card = document.getElementById('cap-question-card');
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }
 
@@ -786,7 +786,7 @@
     if (currentIndex > 0) {
       currentIndex--;
       renderQuestion();
-      scrollToQuiz();
+      scrollToQuestion();
     }
   });
 
@@ -794,7 +794,7 @@
     if (currentIndex < QUESTIONS.length - 1) {
       currentIndex++;
       renderQuestion();
-      scrollToQuiz();
+      scrollToQuestion();
     } else {
       var scores = calculateScores();
       hide(quizSection);

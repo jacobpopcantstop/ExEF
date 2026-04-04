@@ -48,6 +48,15 @@
       return;
     }
 
+    if (receipt.indexOf('demo-preview') === 0) {
+      renderResult(out, 'Demo Preview', [
+        { type: 'labeled', label: 'Credential ID:', value: id || 'Demo preview record' },
+        { type: 'labeled', label: 'Status:', value: 'Preview only. This is not a live EFI server-signed verification record.' },
+        { text: 'The demo account lets you review the verification screen flow without exposing a real public credential token.', color: 'var(--color-text-muted)' }
+      ]);
+      return;
+    }
+
     var query = '/api/verify?receipt=' + encodeURIComponent(receipt) + '&product=certificate';
     if (id) query += '&credential_id=' + encodeURIComponent(id);
 

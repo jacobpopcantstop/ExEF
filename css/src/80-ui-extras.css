@@ -548,6 +548,11 @@ body.page-resources .page-header {
   min-width: 0;
 }
 
+.store-paid-path-card {
+  display: flex;
+  flex-direction: column;
+}
+
 .store-offer-summary {
   padding: var(--space-md) var(--space-lg);
   border: 1px solid rgba(26, 82, 118, 0.16);
@@ -587,6 +592,10 @@ body.page-resources .page-header {
 
 .store-trust-anchor .artifact-ledger {
   margin: 0;
+}
+
+.store-trust-anchor--rail {
+  margin-top: auto;
 }
 
 .store-trust-anchor__meta {

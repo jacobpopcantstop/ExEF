@@ -4562,6 +4562,292 @@ select.form-control {
   .esqr-domain-bars { height: 200px; }
 }
 
+/* ============================================
+   Conative Action Profile (CAP)
+   ============================================ */
+
+/* Legend row above options */
+.cap-select-legend {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .cap-select-legend {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+    padding-right: var(--space-sm);
+    margin-bottom: var(--space-sm);
+  }
+
+  .cap-legend-label {
+    width: 72px;
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .cap-legend-label--most { color: var(--module-3); }
+  .cap-legend-label--least { color: var(--color-warm); }
+}
+
+/* Each option row */
+.cap-option {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  margin-bottom: var(--space-sm);
+  background: var(--color-white);
+  transition: border-color var(--transition), background-color var(--transition);
+}
+
+@media (min-width: 640px) {
+  .cap-option {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.cap-option--most {
+  border-color: var(--module-3);
+  background: rgba(30, 132, 73, 0.04);
+}
+
+.cap-option--least {
+  border-color: var(--color-warm);
+  background: rgba(211, 84, 0, 0.04);
+}
+
+.cap-option__text {
+  flex: 1;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.cap-option__controls {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+  flex-shrink: 0;
+  padding-top: var(--space-xs);
+  border-top: 1px solid var(--color-border);
+}
+
+@media (min-width: 640px) {
+  .cap-option__controls {
+    padding-top: 0;
+    border-top: none;
+  }
+}
+
+/* Choice toggle buttons */
+.cap-btn-choice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  width: auto;
+  min-width: 72px;
+  height: 40px;
+  padding: 0 var(--space-md);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  background: var(--color-bg-alt);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.cap-btn-choice:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.cap-btn-choice svg {
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.cap-btn-choice:hover:not(:disabled) svg {
+  opacity: 0.5;
+}
+
+/* Active states */
+.cap-btn-choice--most.cap-btn-choice--active {
+  background: var(--module-3);
+  border-color: var(--module-3);
+  color: var(--color-white);
+}
+
+.cap-btn-choice--least.cap-btn-choice--active {
+  background: var(--color-warm);
+  border-color: var(--color-warm);
+  color: var(--color-white);
+}
+
+.cap-btn-choice--active svg {
+  opacity: 1;
+}
+
+/* Hover non-active */
+.cap-btn-choice--most:hover:not(:disabled):not(.cap-btn-choice--active) {
+  border-color: var(--module-3);
+  color: var(--module-3);
+}
+
+.cap-btn-choice--least:hover:not(:disabled):not(.cap-btn-choice--active) {
+  border-color: var(--color-warm);
+  color: var(--color-warm);
+}
+
+/* Hide label on desktop, show on mobile */
+.cap-btn-choice__label {
+  display: inline;
+}
+
+@media (min-width: 640px) {
+  .cap-btn-choice__label {
+    display: none;
+  }
+
+  .cap-btn-choice {
+    width: 72px;
+    min-width: 0;
+    padding: 0;
+  }
+
+  .cap-btn-choice svg {
+    opacity: 0.3;
+  }
+}
+
+/* Navigation row */
+.cap-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ── Results: bar chart ── */
+.cap-bar-group {
+  margin-bottom: var(--space-xl);
+}
+
+.cap-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-xs);
+}
+
+.cap-bar-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.cap-bar-score {
+  font-weight: 800;
+  font-size: 1.4rem;
+}
+
+.cap-bar-track {
+  position: relative;
+  height: 16px;
+  background: var(--color-bg-alt);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.cap-bar-zone-mark {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: var(--color-border);
+  z-index: 1;
+}
+
+.cap-bar-fill {
+  position: relative;
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.8s ease;
+  z-index: 2;
+}
+
+.cap-bar-zones {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-xs);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.cap-bar-zones span:nth-child(2) {
+  text-align: center;
+}
+
+.cap-bar-zones span:last-child {
+  text-align: right;
+}
+
+/* ── Results: zone tag ── */
+.cap-zone-tag {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: var(--font-body);
+  vertical-align: middle;
+}
+
+/* ── Results: analysis cards ── */
+.cap-analysis-card {
+  break-inside: avoid;
+}
+
+@media print {
+  #cap-intro,
+  #cap-quiz,
+  #cap-next-steps { display: none !important; }
+
+  #cap-results { display: block !important; }
+  #cap-results .btn { display: none; }
+  #cap-message { display: none; }
+
+  .cap-bar-fill {
+    transition: none !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .cap-bar-track {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .cap-analysis-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+
+  .cap-bar-group {
+    break-inside: avoid;
+  }
+}
+
 /* Source: css/src/70-commerce.css */
 /* ============================================
    Store Cards & Cart
@@ -5234,6 +5520,11 @@ body.page-resources .page-header {
   min-width: 0;
 }
 
+.store-paid-path-card {
+  display: flex;
+  flex-direction: column;
+}
+
 .store-offer-summary {
   padding: var(--space-md) var(--space-lg);
   border: 1px solid rgba(26, 82, 118, 0.16);
@@ -5273,6 +5564,10 @@ body.page-resources .page-header {
 
 .store-trust-anchor .artifact-ledger {
   margin: 0;
+}
+
+.store-trust-anchor--rail {
+  margin-top: auto;
 }
 
 .store-trust-anchor__meta {
@@ -6997,4 +7292,64 @@ body.has-topic-clusters.has-topic-clusters-plain main {
 
 [data-theme="dark"] .search-status {
   color: #9fb2cb;
+}
+
+/* Conative Action Profile (CAP) */
+[data-theme="dark"] .cap-option {
+  background: #1a2332;
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .cap-option--most {
+  border-color: var(--module-3);
+  background: rgba(30, 132, 73, 0.08);
+}
+
+[data-theme="dark"] .cap-option--least {
+  border-color: var(--color-warm);
+  background: rgba(211, 84, 0, 0.08);
+}
+
+[data-theme="dark"] .cap-option__text {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .cap-option__controls {
+  border-top-color: var(--color-border);
+}
+
+[data-theme="dark"] .cap-btn-choice {
+  background: #132039;
+  border-color: #41557a;
+  color: #b8c7de;
+}
+
+[data-theme="dark"] .cap-btn-choice--most.cap-btn-choice--active {
+  background: var(--module-3);
+  border-color: var(--module-3);
+  color: #fff;
+}
+
+[data-theme="dark"] .cap-btn-choice--least.cap-btn-choice--active {
+  background: var(--color-warm);
+  border-color: var(--color-warm);
+  color: #fff;
+}
+
+[data-theme="dark"] .cap-bar-track {
+  background: #132039;
+  border-color: #41557a;
+}
+
+[data-theme="dark"] .cap-bar-zone-mark {
+  background: #41557a;
+}
+
+[data-theme="dark"] .cap-bar-zones {
+  color: #b8c7de;
+}
+
+[data-theme="dark"] .cap-analysis-card {
+  background: #1a2332;
+  border-color: var(--color-border);
 }

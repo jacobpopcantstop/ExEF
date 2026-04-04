@@ -1054,3 +1054,63 @@
 [data-theme="dark"] .search-status {
   color: #9fb2cb;
 }
+
+/* Conative Action Profile (CAP) */
+[data-theme="dark"] .cap-option {
+  background: #1a2332;
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .cap-option--most {
+  border-color: var(--module-3);
+  background: rgba(30, 132, 73, 0.08);
+}
+
+[data-theme="dark"] .cap-option--least {
+  border-color: var(--color-warm);
+  background: rgba(211, 84, 0, 0.08);
+}
+
+[data-theme="dark"] .cap-option__text {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .cap-option__controls {
+  border-top-color: var(--color-border);
+}
+
+[data-theme="dark"] .cap-btn-choice {
+  background: #132039;
+  border-color: #41557a;
+  color: #b8c7de;
+}
+
+[data-theme="dark"] .cap-btn-choice--most.cap-btn-choice--active {
+  background: var(--module-3);
+  border-color: var(--module-3);
+  color: #fff;
+}
+
+[data-theme="dark"] .cap-btn-choice--least.cap-btn-choice--active {
+  background: var(--color-warm);
+  border-color: var(--color-warm);
+  color: #fff;
+}
+
+[data-theme="dark"] .cap-bar-track {
+  background: #132039;
+  border-color: #41557a;
+}
+
+[data-theme="dark"] .cap-bar-zone-mark {
+  background: #41557a;
+}
+
+[data-theme="dark"] .cap-bar-zones {
+  color: #b8c7de;
+}
+
+[data-theme="dark"] .cap-analysis-card {
+  background: #1a2332;
+  border-color: var(--color-border);
+}

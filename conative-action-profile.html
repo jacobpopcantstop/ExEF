@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conative Action Profile | EFI</title>
+  <meta name="description" content="Discover how you naturally initiate action with EFI's free Conative Action Profile. A 36-scenario forced-choice assessment measuring four action modes: information gathering, systems building, risk-taking, and hands-on implementation.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.svg">
+  <meta property="og:title" content="Conative Action Profile | EFI">
+  <meta property="og:description" content="Free 36-scenario forced-choice assessment measuring how you naturally take action across four conative modes.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Executive Functioning Institute">
+  <meta property="og:image" content="https://executivefunctioninginstitute.com/images/efi-og-card.svg">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:image" content="https://executivefunctioninginstitute.com/images/efi-og-card.svg">
+  <link rel="canonical" href="https://executivefunctioninginstitute.com/conative-action-profile.html">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">EFI</div>
+        <span>Executive Functioning Institute</span>
+      </a>
+      <div class="nav__links" id="nav-links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="curriculum.html" class="nav__link">Curriculum</a>
+        <a href="certification.html" class="nav__link">Certification</a>
+        <a href="search.html" class="nav__link">Search</a>
+        <a href="resources.html" class="nav__link">Resources</a>
+        <span class="nav__auth"></span>
+        <a href="store.html" class="nav__link nav__link--cta">View Store</a>
+      </div>
+      <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <header class="page-header">
+      <div class="container">
+        <nav aria-label="Breadcrumb">
+          <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="free-executive-functioning-tests.html">Assessment Hub</a></li>
+            <li aria-current="page">Conative Action Profile</li>
+          </ol>
+        </nav>
+        <h1>Conative Action Profile</h1>
+        <p>Discover how you naturally initiate action. This assessment measures your instinctive operating mode across four dimensions &mdash; not personality or intelligence, but how you <em>do</em> when free to be yourself.</p>
+        <p style="margin-top:var(--space-sm);">
+          <a href="free-executive-functioning-tests.html" class="btn btn--sm btn--secondary">Back to Assessment Hub</a>
+          <a href="full-ef-profile.html" class="btn btn--sm btn--secondary">Open Cross-Signal Profile</a>
+        </p>
+      </div>
+    </header>
+
+    <!-- Intro -->
+    <section class="section" id="cap-intro">
+      <div class="container container--narrow">
+        <div class="card" style="margin-bottom:var(--space-lg);">
+          <h2 style="margin-top:0;">What This Measures</h2>
+          <p>The Conative Action Profile maps four modes of taking action: how you gather information, build systems, embrace change, and work with tangible materials. Everyone uses all four &mdash; the profile shows where you lean hardest when striving.</p>
+          <div class="grid grid--2" style="gap:var(--space-md);margin-top:var(--space-md);">
+            <div class="notice">
+              <strong>Fact Finder</strong> &mdash; How you gather and use information.
+            </div>
+            <div class="notice">
+              <strong>Follow Thru</strong> &mdash; How you organize and create systems.
+            </div>
+            <div class="notice">
+              <strong>Quick Start</strong> &mdash; How you handle risk and change.
+            </div>
+            <div class="notice">
+              <strong>Implementor</strong> &mdash; How you work with tangible materials.
+            </div>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-bottom:var(--space-lg);">
+          <p class="callout__label">How To Take This</p>
+          <ul style="margin:var(--space-sm) 0 0;padding-left:var(--space-lg);">
+            <li>You will face <strong>36 scenarios</strong> across six life domains.</li>
+            <li>For each, pick the action you are <strong>MOST</strong> likely to do.</li>
+            <li>Then, pick the action you are <strong>LEAST</strong> likely to do.</li>
+            <li><strong>Trust your gut.</strong> Answer how you naturally act when free to be yourself, not how you think you should act.</li>
+            <li>Takes approximately <strong>10&ndash;15 minutes</strong>.</li>
+          </ul>
+        </div>
+
+        <div style="text-align:center;">
+          <button type="button" class="btn btn--primary" id="cap-start">Start Assessment</button>
+        </div>
+
+        <p class="notice" style="margin-top:var(--space-lg);text-align:center;">This tool uses a forced-choice methodology to measure conative behavior. It is an independent, non-diagnostic tool and is not affiliated with any trademarked assessment product.</p>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section class="section" id="cap-quiz" style="display:none;">
+      <div class="container container--narrow">
+
+        <!-- Progress -->
+        <div class="esqr-progress" id="cap-progress-bar">
+          <div class="esqr-progress__bar">
+            <div class="esqr-progress__fill" id="cap-progress-fill" style="width:0%;"></div>
+          </div>
+          <span class="esqr-progress__text" id="cap-progress-text">Scenario 1 of 36</span>
+        </div>
+
+        <!-- Question card -->
+        <div class="card" id="cap-question-card">
+          <h2 id="cap-prompt" style="margin-top:0;"></h2>
+
+          <div class="cap-select-legend">
+            <span></span>
+            <span class="cap-legend-label cap-legend-label--most">MOST</span>
+            <span class="cap-legend-label cap-legend-label--least">LEAST</span>
+          </div>
+
+          <div id="cap-options"></div>
+        </div>
+
+        <!-- Nav -->
+        <div class="cap-nav" style="margin-top:var(--space-lg);">
+          <button type="button" class="btn btn--secondary btn--sm" id="cap-back" disabled>Back</button>
+          <button type="button" class="btn btn--primary btn--sm" id="cap-next" disabled>Next Scenario</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section class="section" id="cap-results" style="display:none;">
+      <div class="container container--narrow">
+        <div class="card" style="margin-bottom:var(--space-lg);">
+          <h2 style="margin-top:0;text-align:center;">Your Action Profile</h2>
+          <p style="text-align:center;">This is your natural conative blueprint. It shows how you initiate action and solve problems when striving. <strong>There are no bad scores.</strong></p>
+          <p id="cap-result-date" style="text-align:center;font-size:0.85rem;color:var(--color-text-muted);margin-top:var(--space-xs);"></p>
+
+          <div id="cap-chart" style="margin-top:var(--space-xl);"></div>
+        </div>
+
+        <div id="cap-analysis"></div>
+
+        <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;justify-content:center;margin-top:var(--space-lg);">
+          <button type="button" class="btn btn--secondary btn--sm" id="cap-copy">Copy Summary</button>
+          <button type="button" class="btn btn--secondary btn--sm" id="cap-export">Export Text</button>
+          <button type="button" class="btn btn--secondary btn--sm" id="cap-retake">Retake Assessment</button>
+        </div>
+        <p id="cap-message" style="margin-top:var(--space-sm);color:var(--color-text-muted);font-size:0.9rem;text-align:center;"></p>
+      </div>
+    </section>
+
+    <!-- Next steps -->
+    <section class="section section--alt" id="cap-next-steps" style="display:none;">
+      <div class="container container--narrow">
+        <div class="card">
+          <h2 style="margin-top:0;">Next Step In The Assessment Sequence</h2>
+          <p>Pair your Conative Action Profile with ESQ-R or Task Start Friction data to see how your natural action mode interacts with your executive functioning patterns.</p>
+          <div class="button-group">
+            <a href="esqr.html" class="btn btn--primary btn--sm">Take ESQ-R</a>
+            <a href="full-ef-profile.html" class="btn btn--secondary btn--sm">Open Cross-Signal Profile</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom">
+        <span>&copy; 2026 The Executive Functioning Institute</span>
+      </div>
+    </div>
+  </footer>
+
+  <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
+
+  <script src="js/nav-auth.min.js" defer></script>
+  <script src="js/conative-action-profile.min.js"></script>
+  <script src="js/main.min.js" defer></script>
+</body>
+</html>

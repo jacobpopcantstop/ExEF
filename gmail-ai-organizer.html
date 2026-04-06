@@ -174,7 +174,154 @@
       <div class="section-header"><h2>Customize Your Email Organizer</h2><p>Answer these questions to generate a personalized AI prompt for your email organizer.</p></div>
       <div style="max-width:var(--max-width-narrow);margin:0 auto">
         <form id="gao-questionnaire">
-          <!-- Form fields added in Task 2 -->
+
+          <!-- Fieldset A: Email Categories -->
+          <fieldset style="border:none;padding:0;margin:0 0 var(--space-xl)">
+            <legend style="font-family:var(--font-heading);font-size:1.2rem;font-weight:700;margin-bottom:var(--space-md);color:var(--color-heading)">Email Categories</legend>
+
+            <!-- Q1 -->
+            <div style="margin-top:var(--space-md)">
+              <span style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">Which categories do you want?</span>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="school"> School</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="work"> Work</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="bills"> Bills/Finance</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="family"> Family</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="health"> Health</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="shopping"> Shopping/Orders</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="newsletters"> Newsletters</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="social"> Social Media</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="promotions"> Promotions/Spam</label>
+              <div style="margin-top:var(--space-md)">
+                <label for="gao-custom-categories" style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">Custom categories</label>
+                <input type="text" id="gao-custom-categories" placeholder="Add custom categories (comma-separated)" style="width:100%;padding:0.7rem;border:1px solid var(--color-border);border-radius:var(--border-radius);font-family:var(--font-body);font-size:0.95rem">
+              </div>
+            </div>
+
+            <!-- Q2 -->
+            <div style="margin-top:var(--space-md)">
+              <span style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">Create a catch-all &lsquo;Other&rsquo; label for uncategorized email?</span>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-catchall" value="yes" checked> Yes</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-catchall" value="no"> No</label>
+            </div>
+          </fieldset>
+
+          <!-- Fieldset B: Actions & Automation -->
+          <fieldset style="border:none;padding:0;margin:0 0 var(--space-xl)">
+            <legend style="font-family:var(--font-heading);font-size:1.2rem;font-weight:700;margin-bottom:var(--space-md);color:var(--color-heading)">Actions &amp; Automation</legend>
+
+            <!-- Q3 -->
+            <div style="margin-top:var(--space-md)">
+              <span style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">What should happen with low-priority emails (newsletters, promotions)?</span>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-lowpri" value="label"> Label only</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-lowpri" value="archive"> Label + archive out of inbox</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-lowpri" value="archive-read"> Label + archive + mark as read</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-lowpri" value="nothing"> Leave them alone</label>
+            </div>
+
+            <!-- Q4 -->
+            <div style="margin-top:var(--space-md)">
+              <span style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">Draft reply suggestions for which categories?</span>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts-none" id="gao-drafts-none" checked> None</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="school"> School</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="work"> Work</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="bills"> Bills/Finance</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="family"> Family</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="health"> Health</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="shopping"> Shopping/Orders</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="newsletters"> Newsletters</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="social"> Social Media</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="promotions"> Promotions/Spam</label>
+            </div>
+
+            <!-- Q5 -->
+            <div style="margin-top:var(--space-md)">
+              <span style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">What tone should draft replies use?</span>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-tone" value="formal"> Formal</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-tone" value="friendly"> Friendly &amp; brief</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-tone" value="casual"> Casual</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-tone" value="match"> Match the sender&rsquo;s tone</label>
+            </div>
+          </fieldset>
+
+          <!-- Fieldset C: Daily Digest -->
+          <fieldset style="border:none;padding:0;margin:0 0 var(--space-xl)">
+            <legend style="font-family:var(--font-heading);font-size:1.2rem;font-weight:700;margin-bottom:var(--space-md);color:var(--color-heading)">Daily Digest</legend>
+
+            <!-- Q6 -->
+            <div style="margin-top:var(--space-md)">
+              <span style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">Send a daily digest email summarizing your inbox?</span>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-digest" value="yes"> Yes</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-digest" value="no" checked> No</label>
+            </div>
+
+            <!-- Q7 & Q8 -->
+            <div id="gao-digest-options" hidden style="margin-top:var(--space-md)">
+              <div>
+                <span style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">What should the digest include?</span>
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-digest-include" value="counts"> Count per category</label>
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-digest-include" value="action"> List of action-required emails</label>
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-digest-include" value="flagged"> Flagged sender highlights</label>
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-digest-include" value="archived"> Summary of what was auto-archived</label>
+              </div>
+
+              <div style="margin-top:var(--space-md)">
+                <label for="gao-digest-time" style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">What time should the digest arrive?</label>
+                <select id="gao-digest-time" style="width:100%;padding:0.7rem;border:1px solid var(--color-border);border-radius:var(--border-radius);font-family:var(--font-body);font-size:0.95rem;background:var(--color-white)">
+                  <option value="morning">Morning (7–9am)</option>
+                  <option value="midday">Midday (12–1pm)</option>
+                  <option value="evening">Evening (5–7pm)</option>
+                  <option value="custom">Custom time</option>
+                </select>
+                <input type="time" id="gao-digest-custom-time" hidden style="width:100%;padding:0.7rem;border:1px solid var(--color-border);border-radius:var(--border-radius);font-family:var(--font-body);font-size:0.95rem;margin-top:var(--space-sm)">
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Fieldset D: Schedule & Preferences -->
+          <fieldset style="border:none;padding:0;margin:0 0 var(--space-xl)">
+            <legend style="font-family:var(--font-heading);font-size:1.2rem;font-weight:700;margin-bottom:var(--space-md);color:var(--color-heading)">Schedule &amp; Preferences</legend>
+
+            <!-- Q9 -->
+            <div style="margin-top:var(--space-md)">
+              <span style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">How often should the bot run?</span>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-frequency" value="hourly"> Every hour</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-frequency" value="6hours"> Every 6 hours</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-frequency" value="daily"> Once daily</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-frequency" value="twice"> Twice daily (morning + evening)</label>
+            </div>
+
+            <!-- Q10 -->
+            <div style="margin-top:var(--space-md)">
+              <span style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">Which days should it run?</span>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-days" value="every"> Every day</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-days" value="weekdays"> Weekdays only</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-days" value="custom"> Custom</label>
+              <div id="gao-custom-days-container" hidden style="margin-top:var(--space-sm);margin-left:var(--space-lg)">
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-custom-days" value="monday"> Monday</label>
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-custom-days" value="tuesday"> Tuesday</label>
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-custom-days" value="wednesday"> Wednesday</label>
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-custom-days" value="thursday"> Thursday</label>
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-custom-days" value="friday"> Friday</label>
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-custom-days" value="saturday"> Saturday</label>
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-custom-days" value="sunday"> Sunday</label>
+              </div>
+            </div>
+
+            <!-- Q11 -->
+            <div style="margin-top:var(--space-md)">
+              <label for="gao-vip" style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">VIP senders &mdash; never auto-archive these</label>
+              <textarea id="gao-vip" name="gao-vip" rows="3" placeholder="One email address per line" style="width:100%;padding:0.7rem;border:1px solid var(--color-border);border-radius:var(--border-radius);font-family:var(--font-body);font-size:0.95rem"></textarea>
+            </div>
+
+            <!-- Q12 -->
+            <div style="margin-top:var(--space-md)">
+              <label for="gao-extra" style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">Any additional instructions for your bot?</label>
+              <textarea id="gao-extra" name="gao-extra" rows="3" placeholder="e.g., Flag anything from my kid's school as urgent" style="width:100%;padding:0.7rem;border:1px solid var(--color-border);border-radius:var(--border-radius);font-family:var(--font-body);font-size:0.95rem"></textarea>
+            </div>
+          </fieldset>
+
+          <button type="submit" class="btn btn--primary btn--lg" style="width:100%;margin-top:var(--space-xl)">Generate My Prompt</button>
+
         </form>
       </div>
     </div>

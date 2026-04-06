@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build a Free AI Email Organizer | EFI</title>
+  <meta name="description" content="Step-by-step guide to building a free AI-powered Gmail organizer using Google Apps Script and the Gemini API. Includes a customization questionnaire that generates your personal setup prompt.">
+  <link rel="preload" href="css/styles.css" as="style">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.svg">
+  <meta property="og:title" content="Build a Free AI Email Organizer | EFI">
+  <meta property="og:description" content="Set up an AI Gmail organizer for under $1/month. No coding required — customize with a questionnaire, copy a prompt, paste into any AI.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Executive Functioning Institute">
+  <meta property="og:image" content="https://executivefunctioninginstitute.com/images/efi-og-card.svg">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:image" content="https://executivefunctioninginstitute.com/images/efi-og-card.svg">
+  <link rel="canonical" href="https://executivefunctioninginstitute.com/gmail-ai-organizer.html">
+  <script src="js/theme-init.min.js"></script>
+</head>
+<body class="page-gmail-ai-organizer">
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">EFI</div>
+        <span>Executive Functioning Institute</span>
+      </a>
+      <div class="nav__links" id="nav-links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="curriculum.html" class="nav__link">Curriculum</a>
+        <a href="resources.html" class="nav__link nav__link--active">Resources</a>
+        <a href="coaching-home.html" class="nav__link">Coaching</a>
+        <a href="store.html" class="nav__link">Store</a>
+        <a href="certification.html" class="nav__link">Certification</a>
+        <a href="search.html" class="nav__link">Search</a>
+        <span class="nav__auth"></span>
+        <a href="store.html" class="nav__link nav__link--cta">View Store</a>
+      </div>
+      <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <main id="main-content">
+
+  <!-- 1. Page Header -->
+  <header class="page-header">
+    <div class="container">
+      <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li> <li><a href="resources.html">Resources</a></li> <li aria-current="page">Gmail AI Organizer</li></ol></nav>
+      <h1>Build a Free AI Email Organizer</h1>
+      <p>Use the Gemini API and Google Apps Script to sort, summarize, and manage your inbox automatically &mdash; no coding required.</p>
+    </div>
+  </header>
+
+  <!-- 2. What You'll Build -->
+  <section>
+    <div class="container container--narrow">
+      <div class="section-header"><h2>What You'll Build</h2></div>
+      <div class="card">
+        <ul>
+          <li>An AI bot that lives inside your Google account</li>
+          <li>Sorts emails into categories you define</li>
+          <li>Sends you a daily digest</li>
+          <li>Can draft replies and auto-archive low-priority mail</li>
+          <li>Runs on autopilot every day</li>
+        </ul>
+        <div class="notice">
+          <p>The Gemini API costs pennies per day for this kind of usage &mdash; typically under $1/month. Paid email organizer services that do the same thing charge $20/month or more.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Before You Start -->
+  <section class="section--alt">
+    <div class="container container--narrow">
+      <div class="section-header"><h2>Before You Start</h2></div>
+      <div class="card">
+        <ul class="checklist">
+          <li>A Gmail account (personal or Google Workspace)</li>
+          <li>About 15 minutes</li>
+          <li>Willingness to copy and paste</li>
+          <li>Access to any AI chatbot (Claude, Gemini, ChatGPT, etc.)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Walkthrough -->
+  <section>
+    <div class="container container--narrow">
+      <div class="section-header"><h2>Step-by-Step Walkthrough</h2></div>
+
+      <div class="card">
+        <h3>Step 1: Open Google Apps Script</h3>
+        <ol>
+          <li>Go to <a href="https://script.google.com" target="_blank" rel="noopener">script.google.com</a> and sign in with the Gmail account you want to organize.</li>
+          <li>Click <strong>New project</strong> and name it <strong>Email Organizer</strong>.</li>
+        </ol>
+        <div class="callout">
+          <p>Make sure you're signed into the right Google account if you have multiple.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Step 2: Get a Gemini API Key</h3>
+        <ol>
+          <li>Go to <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>.</li>
+          <li>Click <strong>Create API key</strong> and copy it.</li>
+          <li>In Apps Script, go to <strong>Project Settings &gt; Script Properties</strong> &gt; add a property named <code>GEMINI_API_KEY</code> with your key as the value.</li>
+        </ol>
+        <div class="notice">
+          <p>Your API key is private. Don't share it or post it publicly.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Step 3: Generate Your Custom Script</h3>
+        <ol>
+          <li>Complete the <a href="#gao-questionnaire">questionnaire below</a>.</li>
+          <li>Copy the generated prompt.</li>
+          <li>Paste it into your AI of choice and ask it to generate the Apps Script code.</li>
+          <li>Copy the code the AI gives you back.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h3>Step 4: Paste the Code</h3>
+        <ol>
+          <li>Back in the Apps Script editor, select all the default code and delete it.</li>
+          <li>Paste the AI-generated code.</li>
+          <li>Click the <strong>save</strong> icon.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h3>Step 5: Authorize &amp; Test</h3>
+        <ol>
+          <li>Click <strong>Run</strong> on the main function.</li>
+          <li>Click <strong>Review Permissions</strong>, choose your account, and click <strong>Allow</strong>.</li>
+          <li>Check your inbox to confirm it worked.</li>
+        </ol>
+        <div class="callout">
+          <p>Google will warn you the app isn't verified. This is normal for personal scripts &mdash; click <strong>Advanced</strong> then <strong>Go to Email Organizer (unsafe)</strong> to proceed.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Step 6: Set Up the Daily Trigger</h3>
+        <ol>
+          <li>In the Apps Script sidebar, click <strong>Triggers</strong> (clock icon), then <strong>Add Trigger</strong>.</li>
+          <li>Set it to run the main function on a time-driven timer at your preferred interval.</li>
+          <li>If you enabled a digest, add a second trigger for the digest function.</li>
+        </ol>
+        <div class="notice">
+          <p>You can always come back and change the schedule or re-run the questionnaire to update your prompt.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 5. Questionnaire -->
+  <section class="section--alt">
+    <div class="container container--narrow">
+      <div class="section-header"><h2>Customize Your Email Organizer</h2><p>Answer these questions to generate a personalized AI prompt for your email organizer.</p></div>
+      <div style="max-width:var(--max-width-narrow);margin:0 auto">
+        <form id="gao-questionnaire">
+          <!-- Form fields added in Task 2 -->
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Output -->
+  <section>
+    <div class="container container--narrow">
+      <div id="gao-output" hidden aria-live="polite">
+        <div class="section-header"><h2>Your Custom Prompt</h2></div>
+        <div id="gao-summary"></div>
+        <div id="gao-prompt-block"></div>
+        <div style="margin-top:var(--space-md);text-align:center">
+          <button type="button" id="gao-copy-prompt" class="btn btn--primary btn--sm">Copy Prompt</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. FAQ -->
+  <section class="section--alt">
+    <div class="container container--narrow">
+      <div class="section-header"><h2>Frequently Asked Questions</h2></div>
+
+      <div class="card">
+        <h3>I got a scary Google permissions warning</h3>
+        <p>When you authorize a personal Apps Script project, Google shows an "unverified app" screen. This is standard for any script you write yourself &mdash; it simply means Google hasn't reviewed it (and doesn't need to for personal use). Click <strong>Advanced</strong>, then <strong>Go to Email Organizer (unsafe)</strong>. The "unsafe" label is misleading; the script only accesses your own account with the permissions you grant.</p>
+      </div>
+
+      <div class="card">
+        <h3>The script ran but nothing happened</h3>
+        <p>First, check the <strong>Execution log</strong> in Apps Script (View &gt; Execution log) for error messages. The most common cause is a label spelling mismatch &mdash; make sure the label names in your script match real Gmail labels exactly, including capitalization. Also confirm the script is looking at recent emails and not an empty time window.</p>
+      </div>
+
+      <div class="card">
+        <h3>I want to change my categories later</h3>
+        <p>Re-run the questionnaire on this page with your updated preferences, copy the new prompt, paste it into your AI chatbot to generate fresh code, and replace the old code in Apps Script. Your triggers and API key stay the same.</p>
+      </div>
+
+      <div class="card">
+        <h3>How much will this cost?</h3>
+        <p>The Gemini API offers a generous free tier, and even beyond that, processing a typical inbox costs well under $1/month. You can monitor your usage at <a href="https://aistudio.google.com" target="_blank" rel="noopener">Google AI Studio</a>. Compare that to commercial email organizer subscriptions that charge $20/month or more for similar features.</p>
+      </div>
+
+      <div class="card">
+        <h3>Can I use this with Outlook or Yahoo?</h3>
+        <p>This guide is built specifically for Gmail and Google Apps Script. However, the prompt-based approach works elsewhere: you can take the generated prompt, ask an AI to adapt the code for Outlook (using Office Scripts or Power Automate) or another email provider. The logic and categories transfer &mdash; only the platform integration code changes.</p>
+      </div>
+
+    </div>
+  </section>
+
+  </main>
+
+  <!-- 8. Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom">
+        <span>&copy; 2026 The Executive Functioning Institute</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/nav-auth.min.js" defer></script>
+  <script src="js/gmail-ai-organizer.min.js" defer></script>
+  <script src="js/main.min.js" defer></script>
+</body>
+</html>

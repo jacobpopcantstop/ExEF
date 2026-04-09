@@ -127,7 +127,7 @@
   function getBasePath() {
     var currentScript = document.currentScript;
     if (currentScript && currentScript.src) {
-      return currentScript.src.replace(/main\.js(?:\?.*)?$/, '');
+      return currentScript.src.replace(/main(?:\.min)?\.js(?:\?.*)?$/, '');
     }
     return 'js/';
   }

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Executive Functioning Environment Quiz | EFI</title>
+  <meta name="description" content="Take EFI's Executive Functioning Environment Quiz to see whether your home, work, school, and digital systems are supporting or draining executive functioning, then get practical fixes you can use immediately.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.svg">
+  <meta property="og:title" content="Executive Functioning Environment Quiz | EFI">
+  <meta property="og:description" content="Measure whether your environment is supporting or draining executive functioning and get fast, concrete ways to improve it.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Executive Functioning Institute">
+  <meta property="og:image" content="https://executivefunctioninginstitute.com/images/efi-og-card.svg">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:image" content="https://executivefunctioninginstitute.com/images/efi-og-card.svg">
+  <link rel="canonical" href="https://executivefunctioninginstitute.com/environment-quiz.html">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">EFI</div>
+        <span>Executive Functioning Institute</span>
+      </a>
+      <div class="nav__links" id="nav-links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="curriculum.html" class="nav__link">Curriculum</a>
+        <a href="certification.html" class="nav__link">Certification</a>
+        <a href="search.html" class="nav__link">Search</a>
+        <a href="resources.html" class="nav__link">Resources</a>
+        <span class="nav__auth"></span>
+        <a href="store.html" class="nav__link nav__link--cta">View Store</a>
+      </div>
+      <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <header class="page-header">
+      <div class="container">
+        <nav aria-label="Breadcrumb">
+          <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="free-executive-functioning-tests.html">Assessment Hub</a></li>
+            <li aria-current="page">Environment Quiz</li>
+          </ol>
+        </nav>
+        <h1>Executive Functioning Environment Quiz</h1>
+        <p>Most executive-function advice focuses on habits and motivation. This quiz asks a more useful question first: is your environment quietly helping your brain, or quietly draining it?</p>
+        <p style="margin-top:var(--space-sm);">
+          <a href="free-executive-functioning-tests.html" class="btn btn--sm btn--secondary">Back to Assessment Hub</a>
+          <a href="#environment-questionnaire" class="btn btn--sm btn--secondary">Start The Quiz</a>
+        </p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container">
+        <div class="esqr-intro-grid stagger">
+          <div class="card">
+            <h2 style="margin-top:0;">What This Measures</h2>
+            <p>Your environment across sensory load, visibility, task friction, pacing, digital systems, social support, recovery, and flexibility.</p>
+          </div>
+          <div class="card">
+            <h2 style="margin-top:0;">Who It Helps</h2>
+            <p>People with ADHD, executive dysfunction, time blindness, burnout, or chronic “why does this feel harder than it should?” patterns.</p>
+          </div>
+          <div class="card">
+            <h2 style="margin-top:0;">How To Answer</h2>
+            <p>Rate each statement from <strong>0 to 4</strong> based on your usual environment, not your ideal setup and not your best day.</p>
+          </div>
+          <div class="card">
+            <h2 style="margin-top:0;">What You Get</h2>
+            <p>A total support score, per-domain friction map, fast interpretation, top quick wins, and a short action plan you can use right away.</p>
+          </div>
+        </div>
+
+        <div class="callout callout--accent" style="margin-top:var(--space-lg);">
+          <p class="callout__label">Important framing</p>
+          <p>This tool is not a diagnosis. It is an evidence-informed self-awareness and planning tool designed to help you identify where your environment is acting like an external scaffold for executive functioning and where it is adding invisible friction.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="environment-questionnaire">
+      <div class="container esqr-shell">
+        <form id="environment-quiz-form" novalidate>
+          <div class="esqr-progress fade-in" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="40" aria-label="Environment quiz progress">
+            <div class="esqr-progress__bar">
+              <div class="esqr-progress__fill" id="environment-progress-fill"></div>
+            </div>
+            <span class="esqr-progress__text" id="environment-progress-text">0 of 40 answered</span>
+          </div>
+
+          <div class="card environment-quiz-scale-card">
+            <h2 style="margin-top:0;">Scale</h2>
+            <div class="environment-quiz-scale">
+              <span><strong>0</strong> Never true</span>
+              <span><strong>1</strong> Rarely true</span>
+              <span><strong>2</strong> Sometimes true</span>
+              <span><strong>3</strong> Usually true</span>
+              <span><strong>4</strong> Consistently true</span>
+            </div>
+          </div>
+
+          <p id="environment-draft-status" class="notice" hidden></p>
+          <div id="environment-question-groups"></div>
+
+          <p id="environment-quiz-error" class="esqr-error" role="alert" hidden>Please answer all 40 questions before generating your environment report.</p>
+          <div class="button-group button-group--center" style="margin-top:var(--space-xl);">
+            <button type="submit" class="btn btn--primary btn--lg">Generate My Environment Report</button>
+            <button type="button" class="btn btn--secondary btn--lg" id="environment-reset-btn">Reset</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="environment-results" hidden>
+      <div class="container esqr-shell">
+        <div class="section-header">
+          <span class="section-header__tag">Your Result</span>
+          <h2 id="environment-result-title">Your environment report</h2>
+          <p id="environment-result-lede"></p>
+        </div>
+
+        <div class="grid grid--2 stagger">
+          <div class="card environment-result-card environment-result-card--score">
+            <p class="environment-result-card__eyebrow">Overall support score</p>
+            <div class="environment-total-score" id="environment-total-score">0 / 160</div>
+            <p id="environment-total-band" style="margin-bottom:var(--space-sm);"></p>
+            <p id="environment-total-summary" style="margin-bottom:0;color:var(--color-text-light);"></p>
+          </div>
+          <div class="card environment-result-card">
+            <h3 style="margin-top:0;">Fast Read</h3>
+            <div id="environment-fast-read"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:var(--space-xl);">
+          <h3 style="margin-top:0;">Domain Scorecard</h3>
+          <p style="color:var(--color-text-light);">Your lowest one or two domains matter more than your total. One weak environmental layer can destabilize everything else.</p>
+          <div id="environment-domain-scorecards" class="environment-domain-scorecards"></div>
+        </div>
+
+        <div class="grid grid--2 stagger" style="margin-top:var(--space-xl);">
+          <div class="card environment-result-card">
+            <h3 style="margin-top:0;color:var(--color-warm);">Highest-Friction Zones</h3>
+            <div id="environment-priority-domains"></div>
+          </div>
+          <div class="card environment-result-card">
+            <h3 style="margin-top:0;color:var(--color-accent);">Strongest Support Zones</h3>
+            <div id="environment-strength-domains"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:var(--space-xl);">
+          <h3 style="margin-top:0;">Top Quick Wins</h3>
+          <p style="color:var(--color-text-light);">These are the fastest changes likely to reduce friction without requiring a full life overhaul.</p>
+          <div id="environment-quick-wins" class="environment-quick-wins"></div>
+        </div>
+
+        <div class="grid grid--2 stagger" style="margin-top:var(--space-xl);">
+          <div class="card environment-result-card">
+            <h3 style="margin-top:0;">Your 10-Minute Action Plan</h3>
+            <div id="environment-action-plan"></div>
+          </div>
+          <div class="card environment-result-card">
+            <h3 style="margin-top:0;">Reflection Prompts</h3>
+            <div id="environment-reflection-prompts"></div>
+          </div>
+        </div>
+
+        <div class="environment-results-actions button-group button-group--center">
+          <button type="button" class="btn btn--secondary btn--sm" id="environment-copy-btn">Copy Summary</button>
+          <button type="button" class="btn btn--secondary btn--sm" id="environment-export-btn">Export Text</button>
+        </div>
+        <p id="environment-share-status" class="text-center" style="margin-top:var(--space-sm);color:var(--color-text-muted);"></p>
+
+        <div class="text-center" style="margin-top:var(--space-3xl);">
+          <h3>Continue the sequence</h3>
+          <p>Environment friction is one layer. Pair it with a skills-based or situation-based EFI tool if you want a fuller read.</p>
+          <div class="button-group button-group--center" style="margin-top:var(--space-lg);">
+            <a href="esqr.html" class="btn btn--primary">Take ESQ-R</a>
+            <a href="task-start-friction.html" class="btn btn--secondary">Run Task Start Friction</a>
+            <a href="time-blindness-calibrator.html" class="btn btn--secondary">Open Time Calibrator</a>
+            <a href="full-ef-profile.html" class="btn btn--secondary">Open Cross-Signal Profile</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container">
+        <h2>Why EFI Includes An Environment Quiz</h2>
+        <p>Executive dysfunction is never just a willpower problem. EFI treats physical setup, digital load, pacing, sensory conditions, and demand architecture as part of the intervention surface, not as background noise.</p>
+        <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
+          <a href="free-executive-functioning-tests.html" class="btn btn--primary btn--lg">Browse All Free Assessments</a>
+          <a href="resources.html" class="btn btn--outline-white btn--lg">Open Resources</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="index.html" class="nav__logo" style="color:var(--color-white);">
+            <div class="nav__logo-icon">EFI</div>
+            <span>Executive Functioning Institute</span>
+          </a>
+          <p>Free diagnostic tools and open-source executive functioning resources.</p>
+        </div>
+        <div>
+          <h4>Assessment Hub</h4>
+          <ul class="footer__links">
+            <li><a href="esqr.html">ESQ-R Test</a></li>
+            <li><a href="environment-quiz.html">Environment Quiz</a></li>
+            <li><a href="ef-profile-story.html">EF Profile Story</a></li>
+            <li><a href="full-ef-profile.html">Cross-Signal Profile</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Program</h4>
+          <ul class="footer__links">
+            <li><a href="curriculum.html">Curriculum</a></li>
+            <li><a href="certification.html">Certification</a></li>
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="store.html">Store</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>The Executive Functioning Institute &mdash; Open-Source Education</span>
+      </div>
+    </div>
+  </footer>
+
+  <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
+
+  <script src="js/nav-auth.min.js" defer></script>
+  <script src="js/main.min.js" defer></script>
+  <script src="js/environment-quiz.js"></script>
+</body>
+</html>

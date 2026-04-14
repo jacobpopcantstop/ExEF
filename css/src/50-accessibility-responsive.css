@@ -448,6 +448,12 @@
     padding: var(--space-lg);
     border-radius: var(--border-radius);
   }
+
+  .team-profile .card {
+    grid-template-columns: 1fr !important;
+    justify-items: center;
+    text-align: center;
+  }
 }
 
 @media (max-width: 480px) {

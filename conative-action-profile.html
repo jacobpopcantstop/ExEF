@@ -16,6 +16,7 @@
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:image" content="https://executivefunctioninginstitute.com/images/efi-og-card.svg">
   <link rel="canonical" href="https://executivefunctioninginstitute.com/conative-action-profile.html">
+  <script src="js/theme-init.min.js"></script>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -28,13 +29,19 @@
       </a>
       <div class="nav__links" id="nav-links">
         <a href="index.html" class="nav__link">Home</a>
+        <a href="free-executive-functioning-tests.html" class="nav__link nav__link--active">Assessments</a>
+        <a href="coaching-home.html" class="nav__link">Coaching</a>
+        <a href="blog.html" class="nav__link">Blog</a>
         <a href="about.html" class="nav__link">About</a>
-        <a href="curriculum.html" class="nav__link">Curriculum</a>
-        <a href="certification.html" class="nav__link">Certification</a>
-        <a href="search.html" class="nav__link">Search</a>
-        <a href="resources.html" class="nav__link">Resources</a>
+        <div class="nav__dropdown">
+          <button class="nav__link nav__dropdown-trigger" aria-expanded="false" aria-haspopup="true">Learn <svg aria-hidden="true" viewBox="0 0 12 8" width="12" height="8" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 1 6 6 11 1"/></svg></button>
+          <div class="nav__dropdown-menu">
+            <a href="curriculum.html" class="nav__dropdown-item">Curriculum</a>
+            <a href="certification.html" class="nav__dropdown-item">Certification</a>
+          </div>
+        </div>
         <span class="nav__auth"></span>
-        <a href="store.html" class="nav__link nav__link--cta">View Store</a>
+        <a href="#" class="nav__link nav__link--cta" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/jacobansky/30min'});return false;">Book a Consultation</a>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
         <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -113,26 +120,16 @@
           <div class="esqr-progress__bar">
             <div class="esqr-progress__fill" id="cap-progress-fill" style="width:0%;"></div>
           </div>
-          <span class="esqr-progress__text" id="cap-progress-text">Scenario 1 of 36</span>
+          <span class="esqr-progress__text" id="cap-progress-text">Page 1 of 6 — 0 of 36 answered</span>
         </div>
 
-        <!-- Question card -->
-        <div class="card" id="cap-question-card">
-          <h2 id="cap-prompt" style="margin-top:0;"></h2>
-
-          <div class="cap-select-legend">
-            <span></span>
-            <span class="cap-legend-label cap-legend-label--most">MOST</span>
-            <span class="cap-legend-label cap-legend-label--least">LEAST</span>
-          </div>
-
-          <div id="cap-options"></div>
-        </div>
+        <!-- Question cards container -->
+        <div id="cap-questions-container"></div>
 
         <!-- Nav -->
         <div class="cap-nav" style="margin-top:var(--space-lg);">
           <button type="button" class="btn btn--secondary btn--sm" id="cap-back" disabled>Back</button>
-          <button type="button" class="btn btn--primary btn--sm" id="cap-next" disabled>Next Scenario</button>
+          <button type="button" class="btn btn--primary btn--sm" id="cap-next" disabled>Next Page</button>
         </div>
       </div>
     </section>

@@ -1157,3 +1157,22 @@
   background: #1a2332;
   border-color: var(--color-border);
 }
+
+[data-theme="dark"] .cap-block-title {
+  color: #b8c7de;
+  border-bottom-color: var(--color-border);
+}
+
+[data-theme="dark"] .cap-question-number {
+  background: #b8c7de;
+  color: #0d1520;
+}
+
+[data-theme="dark"] .nav__dropdown-menu {
+  background: #1a2332;
+  border-color: rgba(159, 178, 203, 0.2);
+}
+
+[data-theme="dark"] .nav__dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}

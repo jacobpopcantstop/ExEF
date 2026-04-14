@@ -92,6 +92,28 @@
 
   registerServiceWorker();
 
+  // Nav dropdown toggle
+  document.querySelectorAll('.nav__dropdown-trigger').forEach(function(trigger) {
+    trigger.addEventListener('click', function(e) {
+      e.preventDefault();
+      var expanded = this.getAttribute('aria-expanded') === 'true';
+      document.querySelectorAll('.nav__dropdown-trigger').forEach(function(t) {
+        t.setAttribute('aria-expanded', 'false');
+      });
+      if (!expanded) {
+        this.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.nav__dropdown')) {
+      document.querySelectorAll('.nav__dropdown-trigger').forEach(function(t) {
+        t.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+
   var modulesReady = false;
   var domReady = document.readyState !== 'loading';
   var modulesStarted = false;

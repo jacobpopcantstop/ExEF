@@ -8,6 +8,17 @@
   status = 200
 
 [[redirects]]
+  from = "/blog"
+  to = "/blog/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blog/"
+  to = "/blog.html"
+  status = 200
+
+[[redirects]]
   from = "/coaching-home.html"
   to = "/coaching/"
   status = 301

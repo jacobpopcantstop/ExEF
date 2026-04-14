@@ -1176,3 +1176,21 @@
 [data-theme="dark"] .nav__dropdown-item:hover {
   background: rgba(255, 255, 255, 0.06);
 }
+
+/* --- Full EF Profile Progress (dark mode) --- */
+[data-theme="dark"] .full-profile-progress {
+  background: rgba(26, 35, 50, 0.88);
+  border-color: rgba(159, 178, 203, 0.2);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .full-profile-progress h2,
+[data-theme="dark"] .full-profile-progress h3,
+[data-theme="dark"] .full-profile-progress p,
+[data-theme="dark"] .full-profile-progress span {
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .full-profile-progress__meter {
+  background: rgba(159, 178, 203, 0.2);
+}

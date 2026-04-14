@@ -114,6 +114,17 @@
     }
   });
 
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.nav__dropdown-trigger').forEach(function(t) {
+        if (t.getAttribute('aria-expanded') === 'true') {
+          t.setAttribute('aria-expanded', 'false');
+          t.focus();
+        }
+      });
+    }
+  });
+
   var modulesReady = false;
   var domReady = document.readyState !== 'loading';
   var modulesStarted = false;

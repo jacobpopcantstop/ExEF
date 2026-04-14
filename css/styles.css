@@ -4010,6 +4010,15 @@ select.form-control {
     padding: var(--space-md);
   }
 
+  .nav__dropdown-menu {
+    position: static;
+    transform: none;
+    box-shadow: none;
+    border: none;
+    min-width: 0;
+    padding-left: var(--space-lg);
+  }
+
   .nav__toggle {
     display: flex;
   }

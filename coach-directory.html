@@ -3,19 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Certified Coach Directory | The Executive Functioning Institute</title>
-  <meta name="description" content="Search the EFI certified coach directory by location, specialty, and delivery format." />
+  <title>Certified Coach Directory | Expert EF</title>
+  <meta name="description" content="The ExEF certified coach directory is coming soon. Find verified executive function coaches by location, specialty, and delivery format." />
   <link rel="canonical" href="https://executivefunctioninginstitute.com/coach-directory.html" />
   <link rel="stylesheet" href="css/styles.css" />
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "ItemList",
-      "name": "EFI Certified Coach Directory",
-      "description": "Directory of verified EFI coaches with location and specialty metadata.",
-      "url": "https://executivefunctioninginstitute.com/coach-directory.html"
-    }
-  </script>
   <meta property="og:image" content="https://www.theexecutivefunctioninginstitute.com/images/og-image.svg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -27,20 +18,22 @@
   <nav class="nav" role="navigation" aria-label="Main navigation">
     <div class="nav__inner">
       <a href="index.html" class="nav__logo">
-        <div class="nav__logo-icon">EFI</div>
-        <span>Executive Functioning Institute</span>
+        <div class="nav__logo-icon">ExEF</div>
+        <span>Expert EF</span>
       </a>
       <div class="nav__links" id="nav-links">
         <a href="index.html" class="nav__link">Home</a>
         <a href="free-executive-functioning-tests.html" class="nav__link">Assessments</a>
-        <a href="coaching-home.html" class="nav__link">Coaching</a>
-        <a href="blog.html" class="nav__link">Blog</a>
+        <a href="coaching-home.html" class="nav__link">Services</a>
         <a href="about.html" class="nav__link">About</a>
+        <a href="store.html" class="nav__link">Store</a>
         <div class="nav__dropdown">
           <button class="nav__link nav__dropdown-trigger" aria-expanded="false" aria-haspopup="true">Learn <svg aria-hidden="true" viewBox="0 0 12 8" width="12" height="8" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 1 6 6 11 1"/></svg></button>
           <div class="nav__dropdown-menu">
             <a href="curriculum.html" class="nav__dropdown-item">Curriculum</a>
             <a href="certification.html" class="nav__dropdown-item">Certification</a>
+            <a href="blog.html" class="nav__dropdown-item">Blog</a>
+            <a href="resources.html" class="nav__dropdown-item">Resources</a>
           </div>
         </div>
         <span class="nav__auth"></span>
@@ -50,204 +43,36 @@
     </div>
   </nav>
 
-  <header class="page-header">
-    <div class="container">
-      <nav aria-label="Breadcrumb">
-        <ol class="breadcrumb">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="teacher-to-coach.html">Business</a></li>
-          <li aria-current="page">Coach Directory</li>
-        </ol>
-      </nav>
-      <h1>Certified Coach Directory</h1>
-      <p>Find verified EFI coaches by city, state, ZIP, specialty, and service format.</p>
-    </div>
-  </header>
-
   <main id="main-content">
-    <section class="section">
-      <div class="container">
-        <div class="notice" style="margin-bottom:var(--space-lg);">
-          Public listings shown below are verification-passed and moderation-approved. Profiles with pending review are held out of public search results.
+    <section class="section" style="padding-top:var(--space-4xl);">
+      <div class="container" style="text-align:center; max-width:var(--max-width-narrow); margin:0 auto;">
+        <h1>Certified Coach Directory</h1>
+        <p class="lead" style="margin-top:var(--space-lg);">The ExEF coach directory is coming soon.</p>
+        <p>We're building a searchable directory of certified executive function coaches &mdash; verified through the Expert EF Institute certification program. When it launches, you'll be able to filter by specialty, location, and delivery format.</p>
+        <div class="card" style="margin-top:var(--space-2xl); text-align:left; border-left:4px solid var(--color-primary);">
+          <h3 style="margin-top:0;">What to expect</h3>
+          <ul class="checklist">
+            <li>Searchable by city, state, specialty, and virtual/in-person availability</li>
+            <li>Every listing verified through ExEF's capstone and credentialing process</li>
+            <li>Coach profiles with bios, delivery formats, and direct contact</li>
+          </ul>
         </div>
-        <p style="font-size:0.9rem;color:var(--color-text-muted);margin-bottom:var(--space-md);">Status definitions: <strong>Active</strong> (reviewed &lt;180 days), <strong>Probation</strong> (180-365 days), <strong>Expired</strong> (&gt;365 days). See the <a href="coach-directory-policy.html">Directory Policy</a>.</p>
-
-        <div class="grid grid--4" style="align-items:end;">
-          <div>
-            <label for="dir-search">Search</label>
-            <input id="dir-search" class="form-control" placeholder="Name, city, state, ZIP" />
-          </div>
-          <div>
-            <label for="dir-specialty">Specialty</label>
-            <select id="dir-specialty" class="form-control">
-              <option value="">All specialties</option>
-            </select>
-          </div>
-          <div>
-            <label for="dir-mode">Delivery Mode</label>
-            <select id="dir-mode" class="form-control">
-              <option value="">All modes</option>
-              <option value="virtual">Virtual</option>
-              <option value="in-person">In-person</option>
-            </select>
-          </div>
-          <div>
-            <button type="button" id="dir-reset" class="btn btn--secondary btn--sm">Reset Filters</button>
+        <div style="margin-top:var(--space-2xl);">
+          <p>In the meantime, book a consultation and we'll connect you with the right support.</p>
+          <div class="button-group" style="justify-content:center; margin-top:var(--space-lg);">
+            <a href="#" class="btn btn--primary btn--lg" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/jacobansky/30min'});return false;">Book a Consultation</a>
+            <a href="certification.html" class="btn btn--secondary btn--lg">Learn About Certification</a>
           </div>
         </div>
-
-        <div class="card" style="margin-top:var(--space-lg);">
-          <div style="display:flex;justify-content:space-between;gap:var(--space-md);flex-wrap:wrap;align-items:center;">
-            <h3 style="margin:0;">Directory Results</h3>
-            <p id="dir-count" style="margin:0;color:var(--color-text-light);font-size:0.95rem;">Loading...</p>
-          </div>
-          <p id="dir-stats" style="margin-top:var(--space-sm);color:var(--color-text-muted);font-size:0.9rem;">Loading directory statistics...</p>
-          <div class="table-wrapper" style="margin-top:var(--space-md);">
-            <table>
-              <thead>
-                <tr>
-                  <th>Coach</th>
-                  <th>Location</th>
-                  <th>Specialty</th>
-                  <th>Delivery</th>
-                  <th>Profile</th>
-                </tr>
-              </thead>
-              <tbody id="dir-body">
-                <tr><td colspan="5">Loading directory...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="grid grid--2" style="margin-top:var(--space-xl);">
-          <article class="card" style="border-left:4px solid var(--module-6);">
-            <h3>Listing Governance</h3>
-            <ul class="checklist">
-              <li>Directory visibility requires completion + passing capstone scores.</li>
-              <li>Profiles are reviewed for scope-safe language and accurate service claims.</li>
-              <li>Verification records include credential ID and last review timestamp.</li>
-            </ul>
-            <a href="coach-directory-policy.html" class="btn btn--ghost btn--sm">View Full Policy</a>
-          </article>
-          <article class="card">
-            <h3>Need Changes to a Listing?</h3>
-            <p>Use this if a listing has stale location data, inaccurate claims, or broken links.</p>
-            <div class="button-group">
-              <a href="mailto:jacob@exef.org?subject=Directory%20Listing%20Update" class="btn btn--secondary btn--sm">Request Listing Update</a>
-              <a href="verify.html" class="btn btn--ghost btn--sm">Verify Credential ID</a>
-            </div>
-          </article>
-        </div>
-
-        <article class="card" style="margin-top:var(--space-xl);border-left:4px solid var(--module-2);">
-          <h3>Apply For Directory Listing</h3>
-          <p>Graduates can submit a listing request for moderation review. Publishing requires verification and approval.</p>
-          <form id="dir-submit-form">
-            <div class="grid grid--2">
-              <div>
-                <label for="dir-submit-name">Full Name</label>
-                <input id="dir-submit-name" class="form-control" type="text" required>
-              </div>
-              <div>
-                <label for="dir-submit-email">Email</label>
-                <input id="dir-submit-email" class="form-control" type="email" required>
-              </div>
-              <div>
-                <label for="dir-submit-city">City</label>
-                <input id="dir-submit-city" class="form-control" type="text" required>
-              </div>
-              <div>
-                <label for="dir-submit-state">State</label>
-                <input id="dir-submit-state" class="form-control" type="text" maxlength="2" required>
-              </div>
-              <div>
-                <label for="dir-submit-zip">ZIP</label>
-                <input id="dir-submit-zip" class="form-control" type="text" required>
-              </div>
-              <div>
-                <label for="dir-submit-specialty">Specialty</label>
-                <select id="dir-submit-specialty" class="form-control" required>
-                  <option value="">Select a specialty</option>
-                  <option>Student EF</option>
-                  <option>College Transition</option>
-                  <option>Adult ADHD</option>
-                  <option>Family Coaching</option>
-                </select>
-              </div>
-            </div>
-            <div class="grid grid--2" style="margin-top:var(--space-md);">
-              <div>
-                <label for="dir-submit-website">Website (optional)</label>
-                <input id="dir-submit-website" class="form-control" type="url" placeholder="https://">
-              </div>
-              <div>
-                <label for="dir-submit-credential">Credential ID (optional)</label>
-                <input id="dir-submit-credential" class="form-control" type="text" placeholder="EFI-CEFC-2026-XXX">
-              </div>
-            </div>
-            <div style="margin-top:var(--space-md);">
-              <label>Delivery Modes</label>
-              <div class="button-group">
-                <label><input type="checkbox" name="dir-submit-mode" value="virtual"> Virtual</label>
-                <label><input type="checkbox" name="dir-submit-mode" value="in-person"> In-person</label>
-              </div>
-            </div>
-            <div style="margin-top:var(--space-md);">
-              <label for="dir-submit-bio">Brief Bio (optional)</label>
-              <textarea id="dir-submit-bio" class="form-control" rows="4" maxlength="500" placeholder="Share your coaching focus and populations served."></textarea>
-            </div>
-            <div style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
-              <label for="dir-submit-company">Company</label>
-              <input id="dir-submit-company" class="form-control" type="text" tabindex="-1" autocomplete="off">
-            </div>
-            <label style="display:flex;gap:0.5rem;align-items:flex-start;margin-top:var(--space-md);">
-              <input id="dir-submit-attest" type="checkbox" required style="margin-top:0.3rem;">
-              <span>I attest this listing is accurate and within coaching scope of practice. I understand publication requires moderation approval.</span>
-            </label>
-            <p id="dir-submit-status" style="font-size:0.9rem;color:var(--color-text-light);margin-top:var(--space-sm);"></p>
-            <div class="button-group" style="margin-top:var(--space-md);">
-              <button type="submit" id="dir-submit-btn" class="btn btn--primary btn--sm">Submit Listing Request</button>
-            </div>
-          </form>
-        </article>
-
-        <article class="card" style="margin-top:var(--space-xl);">
-          <h3>Check Listing Request Status</h3>
-          <p>If you already submitted a request, check whether it is pending, approved, or needs revision.</p>
-          <form id="dir-status-form" class="button-group" style="align-items:flex-end;">
-            <div style="min-width:280px;">
-              <label for="dir-status-email">Email</label>
-              <input id="dir-status-email" class="form-control" type="email" required>
-            </div>
-            <button type="submit" id="dir-status-btn" class="btn btn--secondary btn--sm">Check Status</button>
-          </form>
-          <div class="table-wrapper" style="margin-top:var(--space-md);">
-            <table>
-              <thead>
-                <tr>
-                  <th>Credential ID</th>
-                  <th>Moderation</th>
-                  <th>Verification</th>
-                  <th>Last Reviewed</th>
-                </tr>
-              </thead>
-              <tbody id="dir-status-body">
-                <tr><td colspan="4">No status lookup yet.</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
       </div>
     </section>
   </main>
 
   <footer class="footer">
     <div class="container">
-      <div class="footer__bottom"><span>© 2026 Executive Functioning Institute</span></div>
+      <div class="footer__bottom"><span>&copy; 2026 Expert EF</span></div>
     </div>
   </footer>
   <script src="js/main.min.js" defer></script>
-  <script src="js/coach-directory.min.js"></script>
 </body>
 </html>

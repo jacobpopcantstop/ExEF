@@ -681,7 +681,7 @@
 
   function buildSummaryText(results) {
     var lines = [];
-    lines.push('EFI Executive Functioning Environment Quiz');
+    lines.push('ExEF Executive Functioning Environment Quiz');
     lines.push('');
     lines.push('Overall score: ' + results.totalScore + ' / 160');
     lines.push('Interpretation: ' + results.totalBand.label);

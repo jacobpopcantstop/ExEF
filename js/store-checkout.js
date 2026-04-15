@@ -197,7 +197,7 @@
         lead_id: result.lead_id || ''
       });
 
-      showMessage(message, 'Request received. EFI will follow up with onboarding steps within 1 business day.', false);
+      showMessage(message, 'Request received. ExEF will follow up with onboarding steps within 1 business day.', false);
     } catch (err) {
       trackStoreEvent('store_lead_submit_error', {
         funnel_offer: payload.offer,

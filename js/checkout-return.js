@@ -30,7 +30,7 @@
         if (dashLink && data.dashboard_url) dashLink.href = data.dashboard_url;
 
         if (syncMessage) {
-          syncMessage.textContent = 'Syncing your purchase to your EFI account...';
+          syncMessage.textContent = 'Syncing your purchase to your ExEF account...';
         }
 
         if (window.EFI && EFI.Auth && typeof EFI.Auth.addOfferPurchase === 'function' && data.offer && data.payment_intent_id) {

@@ -1,7 +1,7 @@
 {
   "version": "2026-03-13",
-  "title": "EFI ESQ-R Interactive Intake",
-  "description": "A 25-item, 5-area executive-function intake experience aligned to EFI's current public ESQ-R framing.",
+  "title": "ExEF ESQ-R Interactive Intake",
+  "description": "A 25-item, 5-area executive-function intake experience aligned to ExEF's current public ESQ-R framing.",
   "scale": {
     "min": 1,
     "max": 5,

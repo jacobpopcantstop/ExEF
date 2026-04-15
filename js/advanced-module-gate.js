@@ -8,6 +8,11 @@
     });
   }
 
+  function isLocalEnvironment() {
+    var host = window.location.hostname || '';
+    return window.location.protocol === 'file:' || /^(localhost|127\.0\.0\.1)$/i.test(host);
+  }
+
   function hasAdvancedAccess() {
     if (!window.EFI || !EFI.Auth) return false;
     if (typeof EFI.Auth.hasRole === 'function' && EFI.Auth.hasRole(['admin', 'reviewer'])) {
@@ -61,6 +66,10 @@
     }
 
     function evaluate() {
+      if (isLocalEnvironment()) {
+        reveal();
+        return;
+      }
       if (!EFI.Auth.isLoggedIn()) {
         showGate('Log in with a paid ExEF account to open this advanced module.', false);
         return;

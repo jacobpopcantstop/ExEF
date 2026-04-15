@@ -1004,15 +1004,15 @@ window.EFI.registerMainModule(function (shared) {
     logo.style.color = 'var(--color-white)';
     var logoIcon = document.createElement('div');
     logoIcon.className = 'nav__logo-icon';
-    logoIcon.textContent = 'EFI';
+    logoIcon.textContent = 'ExEF';
     var logoText = document.createElement('span');
-    logoText.textContent = 'Executive Functioning Institute';
+    logoText.textContent = 'Expert EF';
     logo.appendChild(logoIcon);
     logo.appendChild(logoText);
     brand.appendChild(logo);
 
     var description = document.createElement('p');
-    description.textContent = 'EFI is structured as a decision tree. Visitors should identify their role, use one free tool or route page first, and only move to paid review when the next step is already obvious.';
+    description.textContent = 'ExEF is structured as a decision tree. Visitors should identify their role, use one free tool or route page first, and only move to paid review when the next step is already obvious.';
     brand.appendChild(description);
 
     var dossier = document.createElement('ul');
@@ -1042,8 +1042,8 @@ window.EFI.registerMainModule(function (shared) {
       { href: 'store.html#paid-path', label: 'Free vs Paid Boundary' }
     ]);
     appendFooterListSection(grid, 'Evidence', [
-      { href: 'EFI-Capstone-Transparency-Rubric.pdf', label: 'Capstone Rubric PDF', target: '_blank', rel: 'noopener' },
-      { href: 'EFI-Competency-Crosswalk-Map.pdf', label: 'Competency Crosswalk', target: '_blank', rel: 'noopener' },
+      { href: 'ExEF-Capstone-Transparency-Rubric.pdf', label: 'Capstone Rubric PDF', target: '_blank', rel: 'noopener' },
+      { href: 'ExEF-Competency-Crosswalk-Map.pdf', label: 'Competency Crosswalk', target: '_blank', rel: 'noopener' },
       { href: 'verify.html', label: 'Credential Verification' },
       { href: 'resources.html#source-access', label: 'Source Access Notes' },
       { href: 'https://github.com/jacobpopcantstop/TheExecutiveFunctioningInstitute', label: 'GitHub Repository', target: '_blank', rel: 'noopener' }
@@ -1083,14 +1083,10 @@ window.EFI.registerMainModule(function (shared) {
     { href: 'curriculum.html', label: 'Curriculum' },
     { href: 'resources.html', label: 'Resources' },
     { href: 'certification.html', label: 'Certification' },
+    { href: 'coaching-home.html', label: 'Support' },
+    { href: 'store.html', label: 'Store' },
     { href: 'search.html', label: 'Search' }
   ];
-
-    var audienceLinks = [
-      { href: 'coaching-home.html', label: 'Parents' },
-      { href: 'teacher-to-coach.html', label: 'Educators' },
-      { href: 'certification.html', label: 'Professionals' }
-    ];
 
     document.querySelectorAll('.nav__links').forEach(function (links) {
       var existingAuth = links.querySelector('.nav__auth');
@@ -1099,32 +1095,16 @@ window.EFI.registerMainModule(function (shared) {
 
       var primaryCluster = document.createElement('div');
       primaryCluster.className = 'nav__cluster';
-      var primaryEyebrow = document.createElement('p');
-      primaryEyebrow.className = 'nav__eyebrow';
-      primaryEyebrow.textContent = 'Explore';
-      primaryCluster.appendChild(primaryEyebrow);
       primaryLinks.forEach(function (item) {
         appendTextLink(primaryCluster, item.href, item.label, 'nav__link');
       });
-      links.appendChild(primaryCluster);
-
-      var audienceCluster = document.createElement('div');
-      audienceCluster.className = 'nav__cluster nav__cluster--support';
-      var audienceEyebrow = document.createElement('p');
-      audienceEyebrow.className = 'nav__eyebrow';
-      audienceEyebrow.textContent = 'By Audience';
-      audienceCluster.appendChild(audienceEyebrow);
-      audienceLinks.forEach(function (item) {
-        appendTextLink(audienceCluster, item.href, item.label, 'nav__link');
-      });
-
       var authWrap = document.createElement('span');
       authWrap.className = 'nav__auth';
       authNodes.forEach(function (node) {
         authWrap.appendChild(node);
       });
-      audienceCluster.appendChild(authWrap);
-      links.appendChild(audienceCluster);
+      primaryCluster.appendChild(authWrap);
+      links.appendChild(primaryCluster);
     });
   })();
 
@@ -1205,7 +1185,7 @@ window.EFI.registerMainModule(function (shared) {
     card.style.marginTop = 'var(--space-xl)';
     var heading = document.createElement('h3');
     heading.style.marginTop = '0';
-    heading.textContent = 'New to EFI?';
+    heading.textContent = 'New to ExEF?';
     card.appendChild(heading);
 
     var intro = document.createElement('p');

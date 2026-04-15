@@ -625,7 +625,7 @@
   // ── Summary text builder ───────────────────────────────────────
   function buildSummary(result) {
     var lines = [];
-    lines.push('EFI Conative Action Profile');
+    lines.push('ExEF Conative Action Profile');
     lines.push('Generated: ' + new Date().toLocaleString());
     lines.push('');
     lines.push('SCORES (1\u201310 scale)');

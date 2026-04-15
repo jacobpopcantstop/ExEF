@@ -165,11 +165,11 @@
       var benchmark = findBenchmark(tbCategory ? tbCategory.value : '', tbTask.value);
       var complexityKey = tbComplexity && tbComplexity.value ? tbComplexity.value : 'typical';
       if (!benchmark) {
-        tbBenchmarkNote.textContent = 'Choose a context and task to see EFI\'s typical time benchmark.';
+        tbBenchmarkNote.textContent = 'Choose a context and task to see ExEF\'s typical time benchmark.';
         return;
       }
       tbBenchmarkNote.textContent =
-        'EFI typical baseline: about ' + adjustedBenchmark(benchmark, complexityKey) +
+        'ExEF typical baseline: about ' + adjustedBenchmark(benchmark, complexityKey) +
         ' minutes (' + benchmark.range + '). That usually includes about ' + benchmark.setup + ' minutes of setup and ' + benchmark.execution + ' minutes of actual doing.';
     }
 
@@ -368,7 +368,7 @@
       var latestEntry = entries[entries.length - 1];
       tbMessage.textContent =
         'Most recent check: you expected ' + (latestEntry.taskLabel || 'this task') + ' to take ' + Number(latestEntry.estimated).toFixed(0) +
-        ' minutes, while EFI would plan it closer to ' + Number(latestEntry.benchmark || latestEntry.actual || 0).toFixed(0) +
+        ' minutes, while ExEF would plan it closer to ' + Number(latestEntry.benchmark || latestEntry.actual || 0).toFixed(0) +
         ' minutes. For now, treat your first guess like a draft and adjust by about ' + metrics.correctionFactor.toFixed(2) + 'x.';
       if (tbPattern) {
         var patternParts = [
@@ -914,7 +914,7 @@
         if (tbEstimated) tbEstimated.value = '';
         if (tbMessage) {
           tbMessage.textContent =
-            'You guessed ' + estimated + ' minutes. EFI would plan this closer to ' + adjusted + ' minutes, so your current instinct is ' +
+            'You guessed ' + estimated + ' minutes. ExEF would plan this closer to ' + adjusted + ' minutes, so your current instinct is ' +
             (delta === 0 ? 'right on target.' : (delta > 0 ? 'running long by ' + Math.abs(Math.round(delta)) + ' minutes.' : 'running short by ' + Math.abs(Math.round(delta)) + ' minutes.'));
         }
         renderTimeCalibrator();

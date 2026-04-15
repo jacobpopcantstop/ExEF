@@ -52,7 +52,7 @@ function injectInstituteCommerceLinks() {
         var storeLink = document.createElement('a');
         storeLink.href = 'store.html';
         if (currentPage === 'store.html') storeLink.className = 'active';
-        storeLink.textContent = 'EFI Store';
+        storeLink.textContent = 'ExEF Store';
         storeItem.appendChild(storeLink);
 
         var certItem = document.createElement('li');
@@ -312,7 +312,7 @@ async function submitContactLead(form) {
         }
     };
 
-    await submitLeadForm(form, payload, 'Thanks. Your message was sent. The EFI coaching team will follow up within 24-48 hours.');
+    await submitLeadForm(form, payload, 'Thanks. Your message was sent. The ExEF coaching team will follow up within 24-48 hours.');
 }
 
 async function submitCubeLead(form) {

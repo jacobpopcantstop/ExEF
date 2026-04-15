@@ -51,7 +51,7 @@
     if (receipt.indexOf('demo-preview') === 0) {
       renderResult(out, 'Demo Preview', [
         { type: 'labeled', label: 'Credential ID:', value: id || 'Demo preview record' },
-        { type: 'labeled', label: 'Status:', value: 'Preview only. This is not a live EFI server-signed verification record.' },
+        { type: 'labeled', label: 'Status:', value: 'Preview only. This is not a live ExEF server-signed verification record.' },
         { text: 'The demo account lets you review the verification screen flow without exposing a real public credential token.', color: 'var(--color-text-muted)' }
       ]);
       return;
@@ -73,7 +73,7 @@
         renderResult(out, 'Verified', [
           { type: 'labeled', label: 'Credential ID:', value: data.receipt.credential_id || '' },
           { type: 'labeled', label: 'Issued:', value: new Date(data.receipt.issued_at).toLocaleDateString() },
-          { type: 'labeled', label: 'Status:', value: 'Verified via EFI server-signed purchase record.' }
+          { type: 'labeled', label: 'Status:', value: 'Verified via ExEF server-signed purchase record.' }
         ]);
       }).catch(function () {
         renderResult(out, 'Verification Error', [

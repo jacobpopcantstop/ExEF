@@ -968,7 +968,7 @@
   function buildSummaryText() {
     if (!lastResultsPayload) return '';
     var lines = [];
-    lines.push('EFI ESQ-R Interactive Intake');
+    lines.push('ExEF ESQ-R Interactive Intake');
     lines.push('Generated: ' + new Date(lastResultsPayload.generatedAt).toLocaleString());
     lines.push('');
     lines.push(lastResultsPayload.profileTitle);
@@ -1077,7 +1077,7 @@
     }
     if (leadOfferPreview) {
       leadOfferPreview.hidden = false;
-      leadOfferPreview.textContent = 'Recommended EFI follow-up: ' + offer.code + ' (' + offer.discountPercent + '% off) for ' + offer.focus + '.';
+      leadOfferPreview.textContent = 'Recommended ExEF follow-up: ' + offer.code + ' (' + offer.discountPercent + '% off) for ' + offer.focus + '.';
     }
 
     var plan = buildEsqrActionPlan(lastResultsPayload);
@@ -1257,10 +1257,10 @@
         }
         renderResultsImageBlob().then(function (result) {
           if (navigator.canShare && navigator.share && result.blob) {
-            var file = new File([result.blob], 'efi-esqr-results.png', { type: 'image/png' });
+            var file = new File([result.blob], 'exef-esqr-results.png', { type: 'image/png' });
             if (navigator.canShare({ files: [file] })) {
               return navigator.share({
-                title: 'EFI ESQ-R Interactive Intake',
+                title: 'ExEF ESQ-R Interactive Intake',
                 text: text,
                 files: [file]
               }).then(function () {

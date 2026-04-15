@@ -1080,7 +1080,7 @@
         },
         {
           href: 'coaching-contact.html',
-          label: 'Contact the EFI team',
+          label: 'Contact the ExEF team',
           suffix: ' — we can help you troubleshoot what\'s getting in the way.'
         }
       ], function (li, item) {

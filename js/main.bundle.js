@@ -995,7 +995,7 @@ window.EFI.registerMainModule(function (shared) {
     brand.className = 'footer__brand footer__brand--institutional';
     var eyebrow = document.createElement('p');
     eyebrow.className = 'footer__eyebrow';
-    eyebrow.textContent = 'Route Before You Buy';
+    eyebrow.textContent = 'Start With the Free Layer';
     brand.appendChild(eyebrow);
 
     var logo = document.createElement('a');
@@ -1012,22 +1012,22 @@ window.EFI.registerMainModule(function (shared) {
     brand.appendChild(logo);
 
     var description = document.createElement('p');
-    description.textContent = 'ExEF is structured as a decision tree. Visitors should identify their role, use one free tool or route page first, and only move to paid review when the next step is already obvious.';
+    description.textContent = 'ExEF is built so people can see the model before they buy support. Start with tools, sample outputs, curriculum, and standards; move to paid work only when the next step is clear.';
     brand.appendChild(description);
 
     var dossier = document.createElement('ul');
     dossier.className = 'footer__dossier';
-    appendFooterDossierItem(dossier, 'Step 1', 'Choose a role: parent, educator, or practitioner');
-    appendFooterDossierItem(dossier, 'Step 2', 'Use the free layer: assessments, toolkits, curriculum, and public standards');
-    appendFooterDossierItem(dossier, 'Step 3', 'Use reviewed services only when the route and scope are already clear');
+    appendFooterDossierItem(dossier, 'Step 1', 'Start with a free diagnostic, toolkit, printable, or sample profile.');
+    appendFooterDossierItem(dossier, 'Step 2', 'Use the open curriculum and standards to understand what good support should look like.');
+    appendFooterDossierItem(dossier, 'Step 3', 'Use paid services when the route, scope, and owner are concrete.');
     brand.appendChild(dossier);
     grid.appendChild(brand);
 
-    appendFooterListSection(grid, 'Audience Routes', [
-      { href: 'coaching-home.html', label: 'Parents and Families' },
-      { href: 'teacher-to-coach.html', label: 'Educators in Transition' },
-      { href: 'certification.html', label: 'Professionals and Practitioners' },
-      { href: 'index.html#start-paths', label: 'Homepage Router' }
+    appendFooterListSection(grid, 'Start Here', [
+      { href: 'free-executive-functioning-tests.html', label: 'Assessment Hub' },
+      { href: 'full-ef-profile.html', label: 'Sample Cross-Signal Profile' },
+      { href: 'coaching-home.html', label: 'Support Paths' },
+      { href: 'certification.html', label: 'Certification Path' }
     ]);
     appendFooterListSection(grid, 'Free Layer', [
       { href: 'resources.html#assessments', label: 'Assessments and Tools' },
@@ -1036,9 +1036,9 @@ window.EFI.registerMainModule(function (shared) {
       { href: 'resources.html#library', label: 'Reference Library' }
     ]);
     appendFooterListSection(grid, 'Reviewed Next Steps', [
+      { href: 'store.html', label: 'Services and Pricing' },
+      { href: 'coaching-contact.html#booking', label: 'Book a Consultation' },
       { href: 'certification.html', label: 'Certification Standards' },
-      { href: 'store.html', label: 'Reviewed Services and Pricing' },
-      { href: 'coaching-contact.html', label: 'Start an Intake Conversation' },
       { href: 'store.html#paid-path', label: 'Free vs Paid Boundary' }
     ]);
     appendFooterListSection(grid, 'Evidence', [
@@ -1104,6 +1104,11 @@ window.EFI.registerMainModule(function (shared) {
         authWrap.appendChild(node);
       });
       primaryCluster.appendChild(authWrap);
+      var consultLink = document.createElement('a');
+      consultLink.href = 'coaching-contact.html#booking';
+      consultLink.className = 'nav__link nav__link--cta';
+      consultLink.textContent = 'Book Consultation';
+      primaryCluster.appendChild(consultLink);
       links.appendChild(primaryCluster);
     });
   })();

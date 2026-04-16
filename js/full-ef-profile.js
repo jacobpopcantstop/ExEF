@@ -320,7 +320,7 @@
     }
 
     return {
-      modelName: 'EFI Cross-Signal Model',
+      modelName: 'ExEF Cross-Signal Model',
       signals: uniqueList(signals),
       signalMap: signalMap,
       profileFrame: profileFrame,
@@ -444,7 +444,7 @@
 
   function summaryText(result) {
     var lines = [];
-    lines.push(result.modelName || 'EFI Cross-Signal Profile');
+    lines.push(result.modelName || 'ExEF Cross-Signal Profile');
     lines.push('Generated: ' + new Date().toLocaleString());
     lines.push('');
     lines.push(result.title);
@@ -587,7 +587,7 @@
     var completedCount = [completion.hasEsqr, completion.hasStory, completion.hasTask, completion.hasTime, completion.hasConative].filter(Boolean).length;
     if (completedCount < 2) {
       if (resultsSection) resultsSection.hidden = true;
-      setMessage('Complete at least two diagnostics and EFI will stitch them into one combined profile.');
+      setMessage('Complete at least two diagnostics and ExEF will stitch them into one combined profile.');
       return;
     }
 
@@ -625,7 +625,7 @@
         setMessage('Complete more diagnostics before exporting.');
         return;
       }
-      exportText(summaryText(mergedResult), 'efi-full-profile-' + new Date().toISOString().slice(0, 10) + '.txt');
+      exportText(summaryText(mergedResult), 'exef-full-profile-' + new Date().toISOString().slice(0, 10) + '.txt');
       setMessage('Full profile exported.');
     });
   }

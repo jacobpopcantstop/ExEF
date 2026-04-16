@@ -1669,7 +1669,7 @@
         });
         lastProtocol = '';
         localStorage.removeItem(TASK_FRICTION_KEY);
-        if (tfResult) tfResult.textContent = 'Rate each friction layer and EFI will build a tailored start script for this situation.';
+        if (tfResult) tfResult.textContent = 'Rate each friction layer and ExEF will build a tailored start script for this situation.';
         renderTaskFrictionBeforeAfterPanel([]);
         if (tfMessage) tfMessage.textContent = 'No protocol copied yet.';
       });
@@ -1703,7 +1703,7 @@
         renderTaskFrictionPrompts();
         lastProtocol = '';
         localStorage.removeItem(TASK_FRICTION_KEY);
-        if (tfResult) tfResult.textContent = 'Rate each friction layer and EFI will build a tailored start script for this situation.';
+        if (tfResult) tfResult.textContent = 'Rate each friction layer and ExEF will build a tailored start script for this situation.';
         renderTaskFrictionBeforeAfterPanel([]);
         if (tfMessage) tfMessage.textContent = 'Situation updated. Run the tool again to get a new start script.';
       });

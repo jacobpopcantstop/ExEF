@@ -14,8 +14,6 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Expert EF">
   <script src="js/theme-init.min.js"></script>
-  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 </head>
 <body class="page-coaching-contact">
 
@@ -44,7 +42,7 @@
           </div>
         </div>
         <span class="nav__auth"></span>
-        <a href="#" class="nav__link nav__link--cta" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/jacobansky/30min'});return false;">Book a Consultation</a>
+        <a href="coaching-contact.html#booking" class="nav__link nav__link--cta">Book a Consultation</a>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
         <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -215,42 +213,18 @@
     </div>
   </section>
 
-  <!-- Booking Calendar Section -->
-    <section class="booking-section consultation-booking" id="booking">
-        <div class="container">
-            <div class="consultation-booking__header">
-                <h2>Book a Free Consultation</h2>
-                <p>The consultation is short by design. It should tell you whether the creative-to-structured coaching model is a fit, what service lane makes sense, and what the next step would actually look like.</p>
-            </div>
-            <div class="booking-container">
-                <div class="booking-info consultation-booking__info">
-                    <p>Choose a time that works for you. These calls are 20 minutes, enough time to review your child's challenges and determine whether the practice is a good fit.</p>
-
-                    <div class="booking-details">
-                        <h4>What to Expect</h4>
-                        <ul>
-                            <li>Brief overview of your child's situation</li>
-                            <li>Discussion of their specific challenges</li>
-                            <li>Explanation of ExEF's creative-to-structured coaching model</li>
-                            <li>Q&A and next steps recommendation</li>
-                        </ul>
-
-                        <h4>Before the Call</h4>
-                        <p>Think about what challenges your child faces (homework, organization, focus, emotional regulation, etc.) and what you've already tried. The more context you can share, the more helpful our conversation will be.</p>
-                    </div>
-                </div>
-
-                <div class="booking-calendar consultation-booking__calendar">
-                    <div class="calendly-inline-widget" data-url="https://calendly.com/jacobansky/30min" style="min-width:320px;height:700px;"></div>
-                    <p class="calendar-note">If no suitable time appears, email <a href="mailto:jacob@exef.org">jacob@exef.org</a> and ExEF will add an alternate slot.</p>
-                </div>
-            </div>
-        </div>
-        <div class="card" style="margin-bottom:var(--space-md)">
+  <section class="section section--alt" id="consultation-faq">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>Before You Book</h2>
+        <p>Common questions before the first call.</p>
+      </div>
+      <div class="grid grid--3 stagger">
+        <div class="card">
           <h4 style="margin-bottom:var(--space-xs)">How soon can we start?</h4>
           <p style="color:var(--color-text-light)">Availability varies, but initial sessions can usually be scheduled within 1&ndash;2 weeks of the consultation call.</p>
         </div>
-        <div class="card" style="margin-bottom:var(--space-md)">
+        <div class="card">
           <h4 style="margin-bottom:var(--space-xs)">Do you work with schools?</h4>
           <p style="color:var(--color-text-light)">ExEF can communicate with teachers and learning specialists as needed, with permission. IEP meeting attendance is scoped as a separate service.</p>
         </div>

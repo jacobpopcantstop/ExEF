@@ -1,7 +1,7 @@
 'use strict';
 
-var STATIC_CACHE = 'efi-static-v3';
-var PAGE_CACHE = 'efi-pages-v1';
+var STATIC_CACHE = 'exef-static-v4';
+var PAGE_CACHE = 'exef-pages-v2';
 var ALL_CACHES = [STATIC_CACHE, PAGE_CACHE];
 
 var CORE_PAGES = [
@@ -19,13 +19,20 @@ var CORE_PAGES = [
 var SHARED_ASSETS = [
   '/css/styles.css',
   '/favicon.svg',
-  '/images/og-image.svg',
+  '/images/exef-og-card.svg',
   '/js/main.min.js',
   '/js/main.bundle.min.js',
   '/js/module-pages.bundle.min.js',
   '/js/nav-auth.min.js',
   '/js/search.min.js',
   '/data/search-index.json'
+];
+
+var CRITICAL_STATIC_ASSETS = [
+  '/css/styles.css',
+  '/js/main.min.js',
+  '/js/main.bundle.min.js',
+  '/js/nav-auth.min.js'
 ];
 
 function normalizeUrl(url) {
@@ -125,6 +132,22 @@ async function cacheFirstStatic(request) {
   return response;
 }
 
+async function networkFirstStatic(request) {
+  var cache = await caches.open(STATIC_CACHE);
+
+  try {
+    var response = await fetch(request);
+    if (isSuccessful(response)) {
+      await cache.put(request, response.clone());
+    }
+    return response;
+  } catch (err) {
+    var cached = await cache.match(request);
+    if (cached) return cached;
+    throw err;
+  }
+}
+
 self.addEventListener('fetch', function (event) {
   var request = event.request;
   if (request.method !== 'GET') return;
@@ -135,6 +158,11 @@ self.addEventListener('fetch', function (event) {
   }
 
   if (shouldHandleStatic(request)) {
+    var pathname = normalizeUrl(request.url);
+    if (CRITICAL_STATIC_ASSETS.indexOf(pathname) !== -1) {
+      event.respondWith(networkFirstStatic(request));
+      return;
+    }
     event.respondWith(cacheFirstStatic(request));
   }
 });

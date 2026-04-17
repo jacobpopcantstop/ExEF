@@ -18,9 +18,344 @@
 
   var isOpsRole = EFI.Auth.hasRole(['admin', 'reviewer']);
   document.getElementById('ops-tools-card').style.display = isOpsRole ? 'block' : 'none';
+  var submissionWorkflow = [];
 
   function setOpsStatus(msg) {
     document.getElementById('ops-status').textContent = msg;
+  }
+
+  function getLatestUser() {
+    return EFI.Auth.getCurrentUser() || user;
+  }
+
+  function hasPurchasedItem(itemId) {
+    var latestUser = getLatestUser();
+    return ((latestUser && latestUser.purchases) || []).some(function (purchase) {
+      return (purchase.items || []).some(function (item) { return String(item.id || '') === itemId; });
+    });
+  }
+
+  function getSubmissionGateState() {
+    return [
+      {
+        id: 'cefc-enrollment',
+        label: 'Module grading queue',
+        detail: hasPurchasedItem('cefc-enrollment')
+          ? 'Enrollment entitlement is active. Module submissions can enter grading immediately.'
+          : 'Enrollment entitlement is missing. Module submissions will be blocked until CEFC Enrollment Access or the bundle is purchased.',
+        unlocked: hasPurchasedItem('cefc-enrollment'),
+        href: 'store.html?offer=cefc_enrollment#paid-path',
+        cta: 'Unlock Module Queue'
+      },
+      {
+        id: 'capstone-review',
+        label: 'Capstone review queue',
+        detail: hasPurchasedItem('capstone-review')
+          ? 'Capstone review entitlement is active. Final practicum can enter review when ready.'
+          : 'Capstone review entitlement is missing. Capstone submission is blocked until Capstone Review or the bundle is purchased.',
+        unlocked: hasPurchasedItem('capstone-review'),
+        href: 'store.html?offer=capstone_review#paid-path',
+        cta: 'Unlock Capstone Queue'
+      }
+    ];
+  }
+
+  function renderSubmissionGates() {
+    var host = document.getElementById('submission-gates');
+    if (!host) return;
+    while (host.firstChild) host.removeChild(host.firstChild);
+    var gates = getSubmissionGateState();
+    gates.forEach(function (gate) {
+      var card = document.createElement('div');
+      card.className = 'notice';
+      card.style.marginBottom = 'var(--space-sm)';
+      card.style.borderLeft = gate.unlocked ? '4px solid var(--color-accent)' : '4px solid var(--color-warm)';
+      var title = document.createElement('strong');
+      title.textContent = gate.label + ': ';
+      card.appendChild(title);
+      card.appendChild(document.createTextNode(gate.unlocked ? 'Unlocked. ' : 'Locked. '));
+      card.appendChild(document.createTextNode(gate.detail));
+      if (!gate.unlocked) {
+        card.appendChild(document.createTextNode(' '));
+        var link = document.createElement('a');
+        link.href = gate.href;
+        link.textContent = gate.cta;
+        card.appendChild(link);
+      }
+      host.appendChild(card);
+    });
+  }
+
+  function getSubmissionStateMeta(row) {
+    var state = String((row && (row.workflow_state || row.status)) || '').toLowerCase();
+    if (state === 'queued_for_release' || state === 'feedback_ready') {
+      return { label: 'Queued for release', color: 'var(--module-4)' };
+    }
+    if (state === 'passed') {
+      return { label: 'Passed', color: 'var(--color-accent)' };
+    }
+    if (state === 'needs_revision') {
+      return { label: 'Needs revision', color: 'var(--color-warm)' };
+    }
+    if (state === 'submitted') {
+      return { label: 'Submitted', color: 'var(--module-3)' };
+    }
+    return { label: state ? state.replace(/_/g, ' ') : 'Pending', color: 'var(--color-text-muted)' };
+  }
+
+  function collectSubmissionAttachments() {
+    var attachments = [];
+    [1, 2].forEach(function (index) {
+      var labelEl = document.getElementById('submission-attachment-label-' + index);
+      var urlEl = document.getElementById('submission-attachment-url-' + index);
+      var url = urlEl ? String(urlEl.value || '').trim() : '';
+      var label = labelEl ? String(labelEl.value || '').trim() : '';
+      if (!url) return;
+      attachments.push({
+        label: label || ('Attachment ' + index),
+        url: url,
+        kind: 'supporting_evidence'
+      });
+    });
+    return attachments;
+  }
+
+  function clearSubmissionAttachmentFields() {
+    [1, 2].forEach(function (index) {
+      var labelEl = document.getElementById('submission-attachment-label-' + index);
+      var urlEl = document.getElementById('submission-attachment-url-' + index);
+      if (labelEl) labelEl.value = '';
+      if (urlEl) urlEl.value = '';
+    });
+  }
+
+  function renderSubmissionTimeline(records) {
+    var host = document.getElementById('submission-timeline-list');
+    if (!host) return;
+    while (host.firstChild) host.removeChild(host.firstChild);
+
+    var events = [];
+    (records || []).forEach(function (row) {
+      var title = row.kind === 'capstone' ? 'Capstone practicum' : ('Module ' + row.module_id + ' submission');
+      (row.timeline || []).forEach(function (entry) {
+        events.push({
+          submissionTitle: title,
+          at: entry && entry.at ? entry.at : '',
+          label: entry && entry.label ? entry.label : 'Submission event',
+          score: entry && typeof entry.score === 'number' ? entry.score : null
+        });
+      });
+    });
+
+    if (!events.length) return;
+
+    events.sort(function (a, b) {
+      return new Date(b.at || 0).getTime() - new Date(a.at || 0).getTime();
+    });
+
+    var card = document.createElement('div');
+    card.className = 'card';
+    card.style.padding = 'var(--space-md)';
+    var heading = document.createElement('h4');
+    heading.style.marginBottom = 'var(--space-sm)';
+    heading.textContent = 'Recent workflow timeline';
+    card.appendChild(heading);
+
+    var list = document.createElement('ul');
+    list.style.margin = '0';
+    list.style.paddingLeft = '1.1rem';
+    events.slice(0, 10).forEach(function (event) {
+      var item = document.createElement('li');
+      item.style.marginBottom = 'var(--space-xs)';
+      item.textContent = [
+        event.at ? new Date(event.at).toLocaleString() : 'Pending date',
+        event.submissionTitle,
+        event.label,
+        event.score != null ? (event.score + '%') : ''
+      ].filter(Boolean).join(' - ');
+      list.appendChild(item);
+    });
+    card.appendChild(list);
+    host.appendChild(card);
+  }
+
+  function renderSubmissionWorkflow(records) {
+    var host = document.getElementById('submission-workflow-list');
+    if (!host) return;
+    while (host.firstChild) host.removeChild(host.firstChild);
+    renderSubmissionTimeline(records || []);
+
+    if (!records || !records.length) {
+      var empty = document.createElement('p');
+      empty.style.color = 'var(--color-text-muted)';
+      empty.textContent = 'No submission records yet. When you submit a module or capstone, it will appear here with a clear workflow state.';
+      host.appendChild(empty);
+      return;
+    }
+
+    records.slice(0, 6).forEach(function (row) {
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.style.marginBottom = 'var(--space-sm)';
+      card.style.padding = 'var(--space-md)';
+
+      var heading = document.createElement('div');
+      heading.style.display = 'flex';
+      heading.style.justifyContent = 'space-between';
+      heading.style.alignItems = 'center';
+      heading.style.gap = 'var(--space-sm)';
+      heading.style.flexWrap = 'wrap';
+
+      var title = document.createElement('strong');
+      title.textContent = row.kind === 'capstone' ? 'Capstone practicum' : ('Module ' + row.module_id + ' submission');
+      heading.appendChild(title);
+
+      var badge = document.createElement('span');
+      var meta = getSubmissionStateMeta(row);
+      badge.textContent = meta.label;
+      badge.style.display = 'inline-flex';
+      badge.style.padding = '0.25rem 0.6rem';
+      badge.style.borderRadius = '999px';
+      badge.style.background = 'rgba(74, 158, 218, 0.1)';
+      badge.style.color = meta.color;
+      badge.style.fontSize = '0.82rem';
+      badge.style.fontWeight = '700';
+      heading.appendChild(badge);
+
+      card.appendChild(heading);
+
+      var submitted = document.createElement('p');
+      submitted.style.margin = 'var(--space-xs) 0 0';
+      submitted.style.color = 'var(--color-text-muted)';
+      submitted.style.fontSize = '0.92rem';
+      submitted.textContent = 'Submitted ' + new Date(row.submitted_at).toLocaleString();
+      card.appendChild(submitted);
+
+      if (row.release_at) {
+        var release = document.createElement('p');
+        release.style.margin = 'var(--space-xs) 0 0';
+        release.style.color = 'var(--color-text-muted)';
+        release.style.fontSize = '0.92rem';
+        release.textContent = row.feedback_available
+          ? 'Feedback released ' + new Date(row.release_at).toLocaleString()
+          : 'Feedback scheduled for release ' + new Date(row.release_at).toLocaleString();
+        card.appendChild(release);
+      }
+
+      if (typeof row.score === 'number') {
+        var score = document.createElement('p');
+        score.style.margin = 'var(--space-xs) 0 0';
+        score.innerHTML = '<strong>Score:</strong> ' + row.score + '%';
+        card.appendChild(score);
+      }
+
+      if (Array.isArray(row.attachments) && row.attachments.length) {
+        var attachmentWrap = document.createElement('div');
+        attachmentWrap.style.margin = 'var(--space-sm) 0 0';
+        var attachmentHeading = document.createElement('p');
+        attachmentHeading.style.margin = '0 0 var(--space-xs)';
+        attachmentHeading.innerHTML = '<strong>Evidence package</strong>';
+        attachmentWrap.appendChild(attachmentHeading);
+        var attachmentList = document.createElement('ul');
+        attachmentList.style.margin = '0';
+        attachmentList.style.paddingLeft = '1.1rem';
+        row.attachments.forEach(function (attachment) {
+          var item = document.createElement('li');
+          var link = document.createElement('a');
+          link.href = attachment.url;
+          link.target = '_blank';
+          link.rel = 'noopener';
+          link.textContent = attachment.label || attachment.url;
+          item.appendChild(link);
+          attachmentList.appendChild(item);
+        });
+        attachmentWrap.appendChild(attachmentList);
+        card.appendChild(attachmentWrap);
+      }
+
+      if (row.feedback && row.feedback.summary) {
+        var summary = document.createElement('p');
+        summary.style.margin = 'var(--space-xs) 0 0';
+        summary.style.color = 'var(--color-text-muted)';
+        summary.textContent = row.feedback.summary;
+        card.appendChild(summary);
+      }
+
+      if (row.feedback && row.feedback.reviewer_override && row.feedback.reviewer_override.reviewer_notes) {
+        var reviewerNotes = document.createElement('p');
+        reviewerNotes.style.margin = 'var(--space-xs) 0 0';
+        reviewerNotes.innerHTML = '<strong>Reviewer notes:</strong> ' + row.feedback.reviewer_override.reviewer_notes;
+        card.appendChild(reviewerNotes);
+      }
+
+      if (row.feedback && row.feedback.reviewer_override && row.feedback.reviewer_override.reviewed_at) {
+        var reviewedAt = document.createElement('p');
+        reviewedAt.style.margin = 'var(--space-xs) 0 0';
+        reviewedAt.style.color = 'var(--color-text-muted)';
+        reviewedAt.style.fontSize = '0.92rem';
+        reviewedAt.textContent = 'Reviewed ' + new Date(row.feedback.reviewer_override.reviewed_at).toLocaleString();
+        card.appendChild(reviewedAt);
+      }
+
+      if (row.feedback && Array.isArray(row.feedback.review_history) && row.feedback.review_history.length) {
+        var historyWrap = document.createElement('div');
+        historyWrap.style.margin = 'var(--space-sm) 0 0';
+        var historyHeading = document.createElement('p');
+        historyHeading.style.margin = '0 0 var(--space-xs)';
+        historyHeading.innerHTML = '<strong>Review history</strong>';
+        historyWrap.appendChild(historyHeading);
+        var historyList = document.createElement('ul');
+        historyList.style.margin = '0';
+        historyList.style.paddingLeft = '1.1rem';
+        row.feedback.review_history.slice(-3).reverse().forEach(function (entry) {
+          var item = document.createElement('li');
+          var pieces = [];
+          if (entry.reviewed_at) pieces.push(new Date(entry.reviewed_at).toLocaleString());
+          if (entry.decision) pieces.push(String(entry.decision).replace(/_/g, ' '));
+          if (typeof entry.score === 'number') pieces.push(entry.score + '%');
+          if (entry.reviewer_notes) pieces.push(entry.reviewer_notes);
+          item.textContent = pieces.join(' - ');
+          historyList.appendChild(item);
+        });
+        historyWrap.appendChild(historyList);
+        card.appendChild(historyWrap);
+      }
+
+      if (row.notes) {
+        var submissionNotes = document.createElement('p');
+        submissionNotes.style.margin = 'var(--space-xs) 0 0';
+        submissionNotes.style.color = 'var(--color-text-muted)';
+        submissionNotes.style.fontSize = '0.92rem';
+        submissionNotes.textContent = 'Submission notes: ' + row.notes;
+        card.appendChild(submissionNotes);
+      }
+      host.appendChild(card);
+    });
+  }
+
+  function fetchSubmissionWorkflow() {
+    var latestUser = getLatestUser();
+    if (!latestUser || !latestUser.email) return Promise.resolve([]);
+    var token = localStorage.getItem('efi_access_token') || '';
+    var headers = {};
+    if (token) headers.Authorization = 'Bearer ' + token;
+    return fetch('/api/submissions?email=' + encodeURIComponent(latestUser.email), { headers: headers })
+      .then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (body) {
+          if (!res.ok || body.ok === false) throw new Error(body.error || 'Unable to load submission workflow.');
+          return body.submissions || [];
+        });
+      })
+      .catch(function () { return []; });
+  }
+
+  function refreshSubmissionWorkflow() {
+    renderSubmissionGates();
+    return fetchSubmissionWorkflow().then(function (records) {
+      submissionWorkflow = records || [];
+      renderSubmissionWorkflow(submissionWorkflow);
+      return submissionWorkflow;
+    });
   }
 
   if (isOpsRole) {
@@ -342,12 +677,15 @@
     btn.addEventListener('click', function () {
       var url = document.getElementById('submission-url').value;
       var notes = document.getElementById('submission-notes').value;
+      var attachments = collectSubmissionAttachments();
       var msg = document.getElementById('grading-message');
       var moduleId = this.getAttribute('data-submit-module');
-      Promise.resolve(EFI.Auth.saveModuleSubmission(moduleId, url, notes)).then(function (result) {
+      Promise.resolve(EFI.Auth.saveModuleSubmission(moduleId, url, notes, attachments)).then(function (result) {
         msg.textContent = result.ok
           ? ('Module ' + moduleId + ' submitted. Rubric-engine feedback is queued for release after 24 hours (' + new Date(result.release_at).toLocaleString() + ').')
           : result.error;
+        if (result.ok) clearSubmissionAttachmentFields();
+        return refreshSubmissionWorkflow();
       });
     });
   });
@@ -355,12 +693,15 @@
   document.getElementById('submit-capstone-btn').addEventListener('click', function () {
     var url = document.getElementById('submission-url').value;
     var notes = document.getElementById('submission-notes').value;
-    Promise.resolve(EFI.Auth.submitCapstone(url, notes)).then(function (result) {
+    var attachments = collectSubmissionAttachments();
+    Promise.resolve(EFI.Auth.submitCapstone(url, notes, attachments)).then(function (result) {
       document.getElementById('grading-message').textContent = result.ok
         ? ('Capstone submitted. Rubric-engine feedback will unlock in dashboard after 24 hours (' + new Date(result.release_at).toLocaleString() + ').')
         : result.error;
+      if (result.ok) clearSubmissionAttachmentFields();
       renderCertificationReadiness();
       renderOutcomeMetrics();
+      return refreshSubmissionWorkflow();
     });
   });
 
@@ -374,12 +715,15 @@
         ? 'Feedback refresh complete. Released grading feedback applied to your readiness.'
         : 'Feedback refresh complete. Some submissions may still be waiting for 24-hour release.';
       document.getElementById('grading-message').textContent = statusText;
-      window.location.reload();
+      renderCertificationReadiness();
+      renderOutcomeMetrics();
+      refreshSubmissionWorkflow();
     });
   });
 
   Promise.resolve(EFI.Auth.runAutoGrading()).finally(function () {
     renderCertificationReadiness();
     renderOutcomeMetrics();
+    refreshSubmissionWorkflow();
   });
 })();

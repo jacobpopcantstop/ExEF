@@ -17,8 +17,6 @@
   <meta property="og:image:type" content="image/svg+xml">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:image" content="https://executivefunctioninginstitute.com/images/exef-og-card.svg">  <link rel="canonical" href="https://executivefunctioninginstitute.com/dashboard.html" />
-  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 </head>
 <body>
 
@@ -28,23 +26,16 @@
     <div class="nav__inner">
       <a href="index.html" class="nav__logo"><div class="nav__logo-icon">ExEF</div><span>Expert EF</span></a>
       <div class="nav__links" id="nav-links">
-        <a href="index.html" class="nav__link">Home</a>
-        <a href="free-executive-functioning-tests.html" class="nav__link">Assessments</a>
-        <a href="coaching-home.html" class="nav__link">Services</a>
-        
-        <a href="about.html" class="nav__link">About</a>
-        <a href="store.html" class="nav__link">Store</a>
-        <div class="nav__dropdown">
-          <button class="nav__link nav__dropdown-trigger" aria-expanded="false" aria-haspopup="true">Learn <svg aria-hidden="true" viewBox="0 0 12 8" width="12" height="8" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 1 6 6 11 1"/></svg></button>
-          <div class="nav__dropdown-menu">
-            <a href="curriculum.html" class="nav__dropdown-item">Curriculum</a>
-            <a href="certification.html" class="nav__dropdown-item">Certification</a>
-            <a href="blog.html" class="nav__dropdown-item">Blog</a>
-            <a href="resources.html" class="nav__dropdown-item">Resources</a>
-          </div>
+        <div class="nav__cluster">
+          <a href="curriculum.html" class="nav__link">Curriculum</a>
+          <a href="resources.html" class="nav__link">Resources</a>
+          <a href="certification.html" class="nav__link">Certification</a>
+          <a href="coaching-home.html" class="nav__link">Support</a>
+          <a href="store.html" class="nav__link">Store</a>
+          <a href="search.html" class="nav__link">Search</a>
+          <span class="nav__auth"></span>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="nav__link nav__link--cta">Book Consultation</a>
         </div>
-        <span class="nav__auth"></span>
-        <a href="#" class="nav__link nav__link--cta" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/jacobansky/30min'});return false;">Book a Consultation</a>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
         <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -57,9 +48,43 @@
   <header class="page-header">
     <div class="container">
       <h1 id="dash-greeting">My Dashboard</h1>
-      <p>Track released certification progress, review purchase records, and manage your member tools.</p>
+      <p>Track released certification progress, see what needs attention next, review purchases, and manage your member tools from one place.</p>
     </div>
   </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="dashboard-hero">
+        <div class="dashboard-hero__card">
+          <p class="dashboard-hero__eyebrow">Control Center</p>
+          <h2>Your ExEF workspace</h2>
+          <p>The goal of this dashboard is simple: know where you stand, what unlocks next, and what action actually matters today.</p>
+          <div class="dashboard-hero__chips">
+            <span class="dashboard-hero__chip">Progress</span>
+            <span class="dashboard-hero__chip">Feedback</span>
+            <span class="dashboard-hero__chip">Assessments</span>
+            <span class="dashboard-hero__chip">Purchases</span>
+            <span class="dashboard-hero__chip">Resources</span>
+          </div>
+          <div class="dashboard-hero__actions">
+            <a href="full-ef-profile.html" class="btn btn--secondary btn--sm">View Sample Cross-Signal Profile</a>
+            <a href="printables.html" class="btn btn--secondary btn--sm">Open Printables</a>
+            <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--primary btn--sm">Schedule Consultation</a>
+          </div>
+        </div>
+        <aside class="dashboard-pulse">
+          <p class="dashboard-pulse__eyebrow">What This Area Should Become</p>
+          <h3>Feedback and release pulse</h3>
+          <p>This dashboard now surfaces progress, purchases, and next-step signals in one place. The next build phase is a true reviewer queue, richer release history, and polished purchase state transitions.</p>
+          <ul>
+            <li>Immediate next action based on pass state and purchases</li>
+            <li>Visible reviewer-release timeline instead of hidden holds</li>
+            <li>Submission tracking that feels like a real workflow</li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </section>
 
   <!-- Quick Stats -->
   <section class="section">
@@ -256,31 +281,68 @@
   <section class="section section--alt">
     <div class="container">
       <h2>Submission &amp; Grading Pipeline</h2>
-      <p style="color:var(--color-text-muted);margin-bottom:var(--space-lg);">Submit assignment evidence for asynchronous rubric-engine review. Scores are stored immediately, but the dashboard only shows released results after the 24-hour hold window.</p>
-      <div class="card" style="border-left:4px solid var(--module-4);margin-bottom:var(--space-lg);">
-        <label for="submission-url" style="display:block;font-weight:600;margin-bottom:var(--space-xs);">Module evidence URL</label>
-        <input id="submission-url" class="form-control" type="url" placeholder="https://...your assignment or case study link">
-        <label for="submission-notes" style="display:block;font-weight:600;margin:var(--space-md) 0 var(--space-xs);">Submission notes</label>
-        <textarea id="submission-notes" class="form-control" rows="3" placeholder="Briefly describe the intervention design, tools used, and client outcome."></textarea>
-        <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-top:var(--space-md);">
-          <button type="button" class="btn btn--secondary" data-submit-module="1">Submit M1</button>
-          <button type="button" class="btn btn--secondary" data-submit-module="2">Submit M2</button>
-          <button type="button" class="btn btn--secondary" data-submit-module="3">Submit M3</button>
-          <button type="button" class="btn btn--secondary" data-submit-module="4">Submit M4</button>
-          <button type="button" class="btn btn--secondary" data-submit-module="5">Submit M5</button>
-          <button type="button" class="btn btn--secondary" data-submit-module="6">Submit M6</button>
+      <p style="color:var(--color-text-muted);margin-bottom:var(--space-lg);">This area now frames submissions as a workflow with attachment metadata, release timing, and review history. File storage is still URL-based, but the record around each submission is much stronger.</p>
+      <div class="submission-layout">
+        <aside class="submission-queue">
+          <p class="submission-queue__eyebrow">Workflow</p>
+          <h3>How the review queue should feel</h3>
+          <div id="submission-gates" style="margin-top:var(--space-md);"></div>
+          <div id="submission-workflow-list" style="margin-top:var(--space-md);"></div>
+          <div id="submission-timeline-list" style="margin-top:var(--space-md);"></div>
+          <ul>
+            <li>Submit evidence once with a clean receipt trail</li>
+            <li>See whether the item is queued, under review, released, or needs revision</li>
+            <li>Know whether a missing purchase is blocking release</li>
+            <li>Watch module completion roll directly into capstone readiness</li>
+          </ul>
+          <p style="margin-top:var(--space-md);color:var(--color-text-muted);">Today this still relies on account state and prototype-grade forms. The visual shell is being shaped toward a real reviewer portal.</p>
+        </aside>
+        <div>
+          <div class="submission-form-card" style="border-left:4px solid var(--module-4);margin-bottom:var(--space-lg);">
+            <h3 style="margin-bottom:var(--space-sm);">Module Submission Desk</h3>
+            <label for="submission-url" style="display:block;font-weight:600;margin-bottom:var(--space-xs);">Module evidence URL</label>
+            <input id="submission-url" class="form-control" type="url" placeholder="https://...your assignment or case study link">
+            <div class="grid grid--2" style="margin-top:var(--space-md);gap:var(--space-md);">
+              <div>
+                <label for="submission-attachment-label-1" style="display:block;font-weight:600;margin-bottom:var(--space-xs);">Supporting attachment label</label>
+                <input id="submission-attachment-label-1" class="form-control" type="text" placeholder="Session notes PDF">
+              </div>
+              <div>
+                <label for="submission-attachment-url-1" style="display:block;font-weight:600;margin-bottom:var(--space-xs);">Supporting attachment URL</label>
+                <input id="submission-attachment-url-1" class="form-control" type="url" placeholder="https://...supporting file or folder">
+              </div>
+              <div>
+                <label for="submission-attachment-label-2" style="display:block;font-weight:600;margin-bottom:var(--space-xs);">Supporting attachment label</label>
+                <input id="submission-attachment-label-2" class="form-control" type="text" placeholder="Outcome tracker">
+              </div>
+              <div>
+                <label for="submission-attachment-url-2" style="display:block;font-weight:600;margin-bottom:var(--space-xs);">Supporting attachment URL</label>
+                <input id="submission-attachment-url-2" class="form-control" type="url" placeholder="https://...second supporting link">
+              </div>
+            </div>
+            <label for="submission-notes" style="display:block;font-weight:600;margin:var(--space-md) 0 var(--space-xs);">Submission notes</label>
+            <textarea id="submission-notes" class="form-control" rows="3" placeholder="Briefly describe the intervention design, tools used, and client outcome."></textarea>
+            <div class="button-group">
+              <button type="button" class="btn btn--secondary" data-submit-module="1">Submit M1</button>
+              <button type="button" class="btn btn--secondary" data-submit-module="2">Submit M2</button>
+              <button type="button" class="btn btn--secondary" data-submit-module="3">Submit M3</button>
+              <button type="button" class="btn btn--secondary" data-submit-module="4">Submit M4</button>
+              <button type="button" class="btn btn--secondary" data-submit-module="5">Submit M5</button>
+              <button type="button" class="btn btn--secondary" data-submit-module="6">Submit M6</button>
+            </div>
+          </div>
+          <div class="submission-form-card" style="border-left:4px solid var(--module-6);margin-bottom:var(--space-lg);">
+            <h3 style="margin-bottom:var(--space-sm);">Capstone Practicum</h3>
+            <p style="color:var(--color-text-muted);margin-bottom:var(--space-md);">When your capstone packet is ready, submit the evidence link and refresh grading status after the release window. Certificate issuance still depends on capstone passing status, all six modules passing, and a recorded certificate purchase.</p>
+            <div class="button-group">
+              <button type="button" class="btn btn--secondary" id="submit-capstone-btn">Submit Capstone</button>
+              <button type="button" class="btn btn--primary" id="run-grading-btn">Refresh Grading Status</button>
+              <a href="store.html" class="btn btn--outline">Purchase Missing Services</a>
+            </div>
+            <p style="margin:var(--space-md) 0 0;color:var(--color-text-muted);font-size:0.95rem;">`Refresh Grading Status` checks for already-released results. It does not trigger a new grading run.</p>
+            <p id="grading-message" style="margin:var(--space-md) 0 0;color:var(--color-text-muted);"></p>
+          </div>
         </div>
-      </div>
-      <div class="card" style="border-left:4px solid var(--module-6);margin-bottom:var(--space-lg);">
-        <h3 style="margin-bottom:var(--space-sm);">Capstone Practicum</h3>
-        <p style="color:var(--color-text-muted);margin-bottom:var(--space-md);">When your capstone packet is ready, submit the evidence link and refresh grading status after the release window. Certificate issuance still depends on capstone passing status, all six modules passing, and a recorded certificate purchase.</p>
-        <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;">
-          <button type="button" class="btn btn--secondary" id="submit-capstone-btn">Submit Capstone</button>
-          <button type="button" class="btn btn--primary" id="run-grading-btn">Refresh Grading Status</button>
-          <a href="store.html" class="btn btn--outline">Purchase Missing Services</a>
-        </div>
-        <p style="margin:var(--space-md) 0 0;color:var(--color-text-muted);font-size:0.95rem;">`Refresh Grading Status` checks for already-released results. It does not trigger a new grading run.</p>
-        <p id="grading-message" style="margin:var(--space-md) 0 0;color:var(--color-text-muted);"></p>
       </div>
       <div class="card">
         <h3 style="margin-bottom:var(--space-md);">Certification Readiness</h3>
@@ -367,7 +429,7 @@
         <div>
           <h4>Connect</h4>
           <ul class="footer__links">
-            <li><a href="#" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/jacobansky/30min'});return false;">Book a Consultation</a></li>
+            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a Consultation</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="search.html">Search</a></li>
           </ul>

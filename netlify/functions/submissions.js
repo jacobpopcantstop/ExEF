@@ -14,22 +14,85 @@ function releaseAt24h() {
   return new Date(Date.now() + (24 * 60 * 60 * 1000)).toISOString();
 }
 
+function normalizedAttachments(raw, primaryUrl) {
+  const input = Array.isArray(raw) ? raw : [];
+  const attachments = [];
+  const seen = new Set();
+
+  function pushAttachment(label, url, kind) {
+    const cleanUrl = String(url || '').trim();
+    if (!cleanUrl || seen.has(cleanUrl)) return;
+    seen.add(cleanUrl);
+    attachments.push({
+      label: String(label || '').trim() || 'Supporting evidence',
+      url: cleanUrl,
+      kind: kind || 'supporting_evidence'
+    });
+  }
+
+  pushAttachment('Primary evidence', primaryUrl, 'primary_evidence');
+  input.forEach((item, index) => {
+    if (!item || typeof item !== 'object') return;
+    pushAttachment(item.label || ('Attachment ' + (index + 1)), item.url, item.kind || 'supporting_evidence');
+  });
+
+  return attachments.slice(0, 5);
+}
+
+function validateAttachments(attachments) {
+  for (const item of attachments) {
+    if (String(item.url || '').length > 2048) return 'attachment url exceeds maximum length';
+    if (!/^https?:\/\//i.test(String(item.url || ''))) return 'attachment url must be a valid HTTP(S) URL';
+    if (String(item.label || '').length > 120) return 'attachment label exceeds maximum length';
+  }
+  return null;
+}
+
+function appendTimelineEvent(feedback, event) {
+  const next = Object.assign({}, feedback || {});
+  const timeline = Array.isArray(next.submission_timeline) ? next.submission_timeline.slice(-14) : [];
+  timeline.push(event);
+  next.submission_timeline = timeline;
+  return next;
+}
+
 function visibleSubmission(row, nowIso) {
   const releaseAt = row.release_at || null;
   const isReleased = !releaseAt || releaseAt <= nowIso;
+  let workflowState = row.status;
+  if (!isReleased && row.status === 'feedback_ready') workflowState = 'queued_for_release';
+  if (isReleased && row.kind === 'module' && typeof row.score === 'number') {
+    workflowState = row.score >= 75 ? 'passed' : 'needs_revision';
+  }
+  if (isReleased && row.kind === 'capstone' && typeof row.score === 'number') {
+    workflowState = row.score >= 75 ? 'passed' : 'needs_revision';
+  }
   return {
     id: row.id,
     kind: row.kind,
     module_id: row.module_id,
     evidence_url: row.evidence_url,
+    attachments: row.feedback && row.feedback.submission_meta && Array.isArray(row.feedback.submission_meta.attachments)
+      ? row.feedback.submission_meta.attachments
+      : (row.evidence_url ? [{ label: 'Primary evidence', url: row.evidence_url, kind: 'primary_evidence' }] : []),
+    timeline: row.feedback && Array.isArray(row.feedback.submission_timeline) ? row.feedback.submission_timeline : [],
     notes: row.notes,
     status: row.status,
+    workflow_state: workflowState,
     submitted_at: row.submitted_at,
     release_at: releaseAt,
     feedback_available: isReleased,
     score: isReleased ? row.score : null,
     feedback: isReleased ? row.feedback : null
   };
+}
+
+async function hasEntitlement(email, requiredItemId) {
+  const rows = await db.listPurchases(email).catch(() => ({ purchases: [] }));
+  const purchases = Array.isArray(rows && rows.purchases) ? rows.purchases : [];
+  return purchases.some((purchase) => {
+    return (purchase.items || []).some((item) => String(item.id || '') === requiredItemId);
+  });
 }
 
 function getClientIp(event) {
@@ -106,6 +169,14 @@ async function authorizeLearnerEmail(event, email) {
 
 async function notifyRelease(row, reason) {
   if (!row || row.notified_at) return;
+  const releaseAt = new Date().toISOString();
+  const feedback = appendTimelineEvent(row.feedback || {}, {
+    type: 'feedback_released',
+    label: 'Feedback released to learner',
+    at: releaseAt,
+    reason: reason || 'manual_review',
+    score: row.score
+  });
   await fanout({
     type: 'feedback_ready',
     email: row.email,
@@ -116,7 +187,7 @@ async function notifyRelease(row, reason) {
     release_at: row.release_at,
     release_reason: reason || 'manual_review'
   });
-  await db.updateSubmission(row.id, { notified_at: new Date().toISOString() });
+  await db.updateSubmission(row.id, { notified_at: releaseAt, feedback });
 }
 
 async function submit(body, event) {
@@ -125,6 +196,7 @@ async function submit(body, event) {
   const moduleId = body.module_id ? String(body.module_id) : null;
   const evidenceUrl = String(body.evidence_url || '').trim();
   const notes = String(body.notes || '').trim();
+  const attachments = normalizedAttachments(body.attachments, evidenceUrl);
   const authz = await authorizeLearnerEmail(event, email);
   if (!authz.ok) return json(authz.statusCode, { ok: false, error: authz.error });
   const actor = authz.actor;
@@ -135,17 +207,58 @@ async function submit(body, event) {
   if (!evidenceUrl) return json(400, { ok: false, error: 'evidence_url is required' });
   if (evidenceUrl.length > 2048) return json(400, { ok: false, error: 'evidence_url exceeds maximum length' });
   if (!/^https?:\/\//i.test(evidenceUrl)) return json(400, { ok: false, error: 'evidence_url must be a valid HTTP(S) URL' });
+  const attachmentError = validateAttachments(attachments);
+  if (attachmentError) return json(400, { ok: false, error: attachmentError });
   if (notes.length > 5000) return json(400, { ok: false, error: 'notes exceeds maximum length' });
   if (!['module', 'capstone'].includes(kind)) return json(400, { ok: false, error: 'kind must be module or capstone' });
   if (kind === 'module' && !moduleId) return json(400, { ok: false, error: 'module_id is required for module submissions' });
   if (kind === 'module' && !['1','2','3','4','5','6'].includes(moduleId)) return json(400, { ok: false, error: 'module_id must be 1-6' });
+
+  const requiredItemId = kind === 'capstone' ? 'capstone-review' : 'cefc-enrollment';
+  const entitlementOk = await hasEntitlement(email, requiredItemId);
+  if (!entitlementOk) {
+    return json(403, {
+      ok: false,
+      error: kind === 'capstone'
+        ? 'Capstone review purchase is required before capstone submission can enter the queue.'
+        : 'CEFC enrollment is required before module submissions can enter the grading queue.',
+      required_item_id: requiredItemId
+    });
+  }
 
   log.info('submission received', { action: kind === 'capstone' ? 'submit_capstone' : 'submit_module', email, kind });
   const graded = await ai.gradeSubmission({
     kind,
     module_id: moduleId,
     evidence_url: evidenceUrl,
-    notes
+    notes: [notes, attachments.length > 1 ? ('Supporting attachments: ' + attachments.slice(1).map((item) => item.label + ' ' + item.url).join(' | ')) : ''].filter(Boolean).join('\n')
+  });
+
+  const submittedAt = new Date().toISOString();
+  const releaseAt = releaseAt24h();
+  let feedback = Object.assign({}, graded, {
+    submission_meta: {
+      primary_evidence_url: evidenceUrl,
+      attachments
+    }
+  });
+  feedback = appendTimelineEvent(feedback, {
+    type: 'submitted',
+    label: kind === 'capstone' ? 'Capstone submitted' : ('Module ' + moduleId + ' submitted'),
+    at: submittedAt,
+    actor_role: actor.role || 'learner'
+  });
+  feedback = appendTimelineEvent(feedback, {
+    type: 'auto_graded',
+    label: 'Rubric engine scored the submission',
+    at: submittedAt,
+    score: graded.score
+  });
+  feedback = appendTimelineEvent(feedback, {
+    type: 'queued_for_release',
+    label: 'Feedback queued for timed release',
+    at: releaseAt,
+    score: graded.score
   });
 
   log.info('grading complete', { email, score: graded.score, passed: graded.passed });
@@ -157,9 +270,9 @@ async function submit(body, event) {
     notes,
     status: 'feedback_ready',
     score: graded.score,
-    feedback: graded,
-    submitted_at: new Date().toISOString(),
-    release_at: releaseAt24h(),
+    feedback,
+    submitted_at: submittedAt,
+    release_at: releaseAt,
     notified_at: null
   });
 
@@ -185,7 +298,8 @@ async function submit(body, event) {
       module_id: moduleId,
       status: submissionRow.submission.status,
       score: submissionRow.submission.score,
-      release_at: submissionRow.submission.release_at
+      release_at: submissionRow.submission.release_at,
+      attachment_count: attachments.length
     }
   });
 
@@ -222,12 +336,18 @@ async function listForReview(query, event) {
     limit: query.limit || '100'
   });
 
-  const records = (rows.submissions || []).map((row) => {
+  const records = await Promise.all((rows.submissions || []).map(async (row) => {
     const visible = visibleSubmission(row, now);
+    const requiredItemId = row.kind === 'capstone' ? 'capstone-review' : 'cefc-enrollment';
+    const entitlementActive = await hasEntitlement(row.email, requiredItemId).catch(() => false);
     visible.email = row.email || null;
     visible.notified_at = row.notified_at || null;
+    visible.internal_score = row.score == null ? null : Number(row.score);
+    visible.internal_feedback = row.feedback || null;
+    visible.required_item_id = requiredItemId;
+    visible.entitlement_active = entitlementActive;
     return visible;
-  });
+  }));
 
   return json(200, {
     ok: true,
@@ -296,6 +416,7 @@ async function reviewSubmission(body, event) {
 
   const existing = found.submission;
   const patch = {};
+  const reviewedAt = new Date().toISOString();
   if (decision === 'override_pass') {
     const nextScore = scoreInput == null || scoreInput === '' ? Math.max(75, Number(existing.score || 75)) : Number(scoreInput);
     patch.score = Number.isFinite(nextScore) ? Math.max(75, Math.min(100, Math.round(nextScore))) : 75;
@@ -312,20 +433,41 @@ async function reviewSubmission(body, event) {
     }
   }
 
-  const feedback = Object.assign({}, existing.feedback || {});
+  let feedback = Object.assign({}, existing.feedback || {});
   feedback.reviewer_override = {
     decision,
     reviewer_notes: reviewerNotes,
     actor_email: actor.email || null,
     actor_role: actor.role,
-    reviewed_at: new Date().toISOString()
+    reviewed_at: reviewedAt
   };
-  patch.feedback = feedback;
 
   if (decision === 'release_now' || releaseNow) {
-    patch.release_at = new Date().toISOString();
+    patch.release_at = reviewedAt;
     if (!existing.notified_at) patch.notified_at = null;
   }
+
+  const reviewHistory = Array.isArray(feedback.review_history) ? feedback.review_history.slice(-9) : [];
+  reviewHistory.push({
+    decision,
+    reviewer_notes: reviewerNotes,
+    actor_email: actor.email || null,
+    actor_role: actor.role,
+    reviewed_at: reviewedAt,
+    score: patch.score != null ? patch.score : (existing.score != null ? Number(existing.score) : null),
+    release_at: patch.release_at || existing.release_at || null,
+    status: patch.status || existing.status || null
+  });
+  feedback.review_history = reviewHistory;
+  feedback = appendTimelineEvent(feedback, {
+    type: 'reviewer_decision',
+    label: 'Reviewer marked this submission as ' + decision.replace(/_/g, ' '),
+    at: reviewedAt,
+    decision,
+    score: patch.score != null ? patch.score : (existing.score != null ? Number(existing.score) : null),
+    actor_email: actor.email || null
+  });
+  patch.feedback = feedback;
 
   const updated = await db.updateSubmission(submissionId, patch);
   if (!updated) return json(404, { ok: false, error: 'Submission not found' });

@@ -561,11 +561,19 @@
     });
   }
 
+  function formatSubmissionStateLabel(state) {
+    var normalized = String(state || '').trim();
+    if (!normalized) return 'Pending';
+    return normalized.replace(/_/g, ' ').replace(/\b\w/g, function (match) {
+      return match.toUpperCase();
+    });
+  }
+
   function renderSubmissionQueue(records) {
     var body = byId('submission-queue-body');
     if (!body) return;
     if (!records.length) {
-      renderEmptyBody(body, 6, 'No submissions match current filters.');
+      renderEmptyBody(body, 7, 'No submissions match current filters.');
       return;
     }
     clearNode(body);
@@ -573,8 +581,27 @@
       var label = row.kind === 'capstone'
         ? 'Capstone'
         : ('Module ' + String(row.module_id || '?'));
-      var releaseText = row.release_at ? new Date(row.release_at).toLocaleString() : 'Immediate';
-      var scoreText = row.feedback_available && typeof row.score === 'number' ? (row.score + '%') : 'Held';
+      var releaseText = row.release_at ? new Date(row.release_at).toLocaleString() : 'Immediate release';
+      var scoreText = typeof row.internal_score === 'number'
+        ? (row.internal_score + '%')
+        : (typeof row.score === 'number' ? (row.score + '%') : 'Pending');
+      var workflowState = formatSubmissionStateLabel(row.workflow_state || row.status);
+      var entitlementText = row.entitlement_active
+        ? 'Unlocked'
+        : ('Missing ' + String(row.required_item_id || 'required purchase'));
+      var internalFeedback = row.internal_feedback || {};
+      var reviewerOverride = internalFeedback.reviewer_override || {};
+      var reviewHistory = Array.isArray(internalFeedback.review_history) ? internalFeedback.review_history : [];
+      var attachments = internalFeedback.submission_meta && Array.isArray(internalFeedback.submission_meta.attachments)
+        ? internalFeedback.submission_meta.attachments
+        : [];
+      var noteParts = [];
+      if (internalFeedback.summary) noteParts.push(internalFeedback.summary);
+      if (reviewerOverride.reviewer_notes) noteParts.push('Reviewer: ' + reviewerOverride.reviewer_notes);
+      if (reviewHistory.length) noteParts.push('Reviews logged: ' + reviewHistory.length);
+      if (attachments.length) noteParts.push('Evidence links: ' + attachments.map(function (item) { return item.label || item.url; }).join(', '));
+      noteParts.push('Release: ' + releaseText);
+      if (row.notified_at) noteParts.push('Notified ' + new Date(row.notified_at).toLocaleString());
       var tr = document.createElement('tr');
       tr.setAttribute('data-submission-id', String(row.id || ''));
 
@@ -589,11 +616,46 @@
       tr.appendChild(learnerCell);
 
       appendTextCell(tr, label);
-      appendTextCell(tr, row.status || '');
+      appendTextCell(tr, workflowState);
       appendTextCell(tr, scoreText);
-      appendTextCell(tr, releaseText);
+      appendTextCell(tr, entitlementText);
+      appendTextCell(tr, noteParts.join(' | '));
 
       var actionCell = document.createElement('td');
+      var scoreInput = document.createElement('input');
+      scoreInput.className = 'form-control js-submission-score';
+      scoreInput.type = 'number';
+      scoreInput.min = '0';
+      scoreInput.max = '100';
+      scoreInput.step = '1';
+      scoreInput.placeholder = 'Score';
+      scoreInput.value = typeof row.internal_score === 'number'
+        ? String(row.internal_score)
+        : (typeof row.score === 'number' ? String(row.score) : '');
+      scoreInput.style.marginBottom = 'var(--space-xs)';
+      actionCell.appendChild(scoreInput);
+
+      var noteInput = document.createElement('textarea');
+      noteInput.className = 'form-control js-submission-note';
+      noteInput.rows = 3;
+      noteInput.placeholder = 'Reviewer notes for the learner and audit trail';
+      noteInput.style.minWidth = '18rem';
+      noteInput.style.marginBottom = 'var(--space-xs)';
+      noteInput.value = reviewerOverride.reviewer_notes || '';
+      actionCell.appendChild(noteInput);
+
+      var historyText = document.createElement('div');
+      historyText.style.fontSize = '0.8rem';
+      historyText.style.color = 'var(--color-text-muted)';
+      historyText.style.marginBottom = 'var(--space-xs)';
+      if (reviewHistory.length) {
+        var latestReview = reviewHistory[reviewHistory.length - 1] || {};
+        historyText.textContent = 'Latest review: ' + formatSubmissionStateLabel(latestReview.decision || latestReview.status || '') + ' on ' + (latestReview.reviewed_at ? new Date(latestReview.reviewed_at).toLocaleString() : 'N/A');
+      } else {
+        historyText.textContent = 'No reviewer actions logged yet.';
+      }
+      actionCell.appendChild(historyText);
+
       appendButtonGroup(actionCell, [
         { className: 'btn btn--sm btn--secondary js-submission-release', label: 'Release' },
         { className: 'btn btn--sm btn--ghost js-submission-pass', label: 'Pass' },
@@ -952,16 +1014,29 @@
       var submission = (lastSubmissionQueue || []).find(function (item) { return String(item.id) === String(submissionId); }) || null;
       if (!submissionId || !submission) return;
 
-      function runDecision(decision, defaultNotes, score) {
+      function runDecision(decision, defaultNotes, fallbackScore) {
+        var notesField = row.querySelector('.js-submission-note');
+        var scoreField = row.querySelector('.js-submission-score');
+        var reviewerNotes = notesField && String(notesField.value || '').trim()
+          ? String(notesField.value || '').trim()
+          : defaultNotes;
+        var scoreValue = scoreField && String(scoreField.value || '').trim() !== ''
+          ? Number(scoreField.value)
+          : fallbackScore;
+        if (reviewerNotes.length < 8) {
+          setSubmissionQueueStatus('Reviewer notes must be at least 8 characters.');
+          if (notesField) notesField.focus();
+          return Promise.resolve();
+        }
         ensureCsrfToken().then(function () {
           setSubmissionQueueStatus('Recording reviewer decision...');
           var payload = {
             action: 'review_submission',
             submission_id: submissionId,
             decision: decision,
-            reviewer_notes: window.prompt('Reviewer notes', defaultNotes) || defaultNotes
+            reviewer_notes: reviewerNotes
           };
-          if (score != null) payload.score = score;
+          if (scoreValue != null && Number.isFinite(scoreValue)) payload.score = scoreValue;
           if (decision === 'release_now') payload.release_now = true;
           return postJson('/api/submissions', payload);
         }).then(function () {
@@ -975,11 +1050,15 @@
         runDecision('release_now', 'Manual release after reviewer check.');
       }
       if (target.classList.contains('js-submission-pass')) {
-        var passScore = typeof submission.score === 'number' ? Math.max(75, submission.score) : 85;
+        var passScore = typeof submission.internal_score === 'number'
+          ? Math.max(75, submission.internal_score)
+          : (typeof submission.score === 'number' ? Math.max(75, submission.score) : 85);
         runDecision('override_pass', 'Manual pass after reviewer review.', passScore);
       }
       if (target.classList.contains('js-submission-revise')) {
-        var failScore = typeof submission.score === 'number' ? Math.min(74, submission.score) : 60;
+        var failScore = typeof submission.internal_score === 'number'
+          ? Math.min(74, submission.internal_score)
+          : (typeof submission.score === 'number' ? Math.min(74, submission.score) : 60);
         runDecision('needs_revision', 'Needs revision after reviewer review.', failScore);
       }
     });

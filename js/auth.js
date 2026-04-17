@@ -913,9 +913,10 @@ EFI.Auth = (function () {
     };
   }
 
-  function submitCapstone(evidenceUrl, notes) {
+  function submitCapstone(evidenceUrl, notes, attachments) {
     var user = getCurrentUser();
     if (!user) return Promise.resolve({ ok: false, error: 'Please log in first.' });
+    var normalizedAttachments = Array.isArray(attachments) ? attachments : [];
     return apiFetch('/api/submissions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -923,7 +924,8 @@ EFI.Auth = (function () {
         action: 'submit_capstone',
         email: user.email,
         evidence_url: (evidenceUrl || '').trim(),
-        notes: (notes || '').trim()
+        notes: (notes || '').trim(),
+        attachments: normalizedAttachments
       })
     }).then(function (res) {
       user.progress = normalizeProgress(user.progress);
@@ -932,6 +934,7 @@ EFI.Auth = (function () {
         submittedAt: new Date().toISOString(),
         evidenceUrl: (evidenceUrl || '').trim(),
         notes: (notes || '').trim(),
+        attachments: normalizedAttachments,
         releaseAt: res.release_at
       };
       updateUser({ progress: user.progress });
@@ -953,6 +956,8 @@ EFI.Auth = (function () {
             submittedAt: submission.submitted_at,
             evidenceUrl: submission.evidence_url,
             notes: submission.notes,
+            attachments: submission.attachments || [],
+            timeline: submission.timeline || [],
             releaseAt: submission.release_at,
             score: submission.score,
             feedback: submission.feedback
@@ -977,6 +982,10 @@ EFI.Auth = (function () {
           user.progress.capstone = {
             status: submission.feedback_available ? (submission.score >= 75 ? 'passed' : 'needs-revision') : 'feedback_pending_release',
             submittedAt: submission.submitted_at,
+            evidenceUrl: submission.evidence_url,
+            notes: submission.notes,
+            attachments: submission.attachments || [],
+            timeline: submission.timeline || [],
             releaseAt: submission.release_at,
             score: submission.score,
             feedback: submission.feedback
@@ -990,9 +999,10 @@ EFI.Auth = (function () {
     });
   }
 
-  function saveModuleSubmission(moduleId, evidenceUrl, notes) {
+  function saveModuleSubmission(moduleId, evidenceUrl, notes, attachments) {
     var user = getCurrentUser();
     if (!user) return Promise.resolve({ ok: false, error: 'Please log in first.' });
+    var normalizedAttachments = Array.isArray(attachments) ? attachments : [];
     return apiFetch('/api/submissions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1001,7 +1011,8 @@ EFI.Auth = (function () {
         email: user.email,
         module_id: String(moduleId),
         evidence_url: (evidenceUrl || '').trim(),
-        notes: (notes || '').trim()
+        notes: (notes || '').trim(),
+        attachments: normalizedAttachments
       })
     }).then(function (res) {
       user.progress = normalizeProgress(user.progress);
@@ -1011,6 +1022,7 @@ EFI.Auth = (function () {
         submittedAt: new Date().toISOString(),
         evidenceUrl: (evidenceUrl || '').trim(),
         notes: (notes || '').trim(),
+        attachments: normalizedAttachments,
         releaseAt: res.release_at
       };
       updateUser({ progress: user.progress });

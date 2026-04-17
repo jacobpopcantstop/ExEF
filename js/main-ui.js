@@ -6,6 +6,7 @@ window.EFI.registerMainModule = window.EFI.registerMainModule || function (fn) {
 
 window.EFI.registerMainModule(function (shared) {
   'use strict';
+  var CONSULT_URL = 'https://calendly.com/jacobansky/30min?month=2026-04';
 
   function clearNode(node) {
     while (node && node.firstChild) node.removeChild(node.firstChild);
@@ -120,7 +121,7 @@ window.EFI.registerMainModule(function (shared) {
     ]);
     appendFooterListSection(grid, 'Reviewed Next Steps', [
       { href: 'store.html', label: 'Services and Pricing' },
-      { href: 'coaching-contact.html#booking', label: 'Book a Consultation' },
+      { href: CONSULT_URL, label: 'Book a Consultation' },
       { href: 'certification.html', label: 'Certification Standards' },
       { href: 'store.html#paid-path', label: 'Free vs Paid Boundary' }
     ]);
@@ -188,7 +189,7 @@ window.EFI.registerMainModule(function (shared) {
       });
       primaryCluster.appendChild(authWrap);
       var consultLink = document.createElement('a');
-      consultLink.href = 'coaching-contact.html#booking';
+      consultLink.href = CONSULT_URL;
       consultLink.className = 'nav__link nav__link--cta';
       consultLink.textContent = 'Book Consultation';
       primaryCluster.appendChild(consultLink);

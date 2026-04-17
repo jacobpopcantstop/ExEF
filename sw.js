@@ -1,7 +1,7 @@
 'use strict';
 
-var STATIC_CACHE = 'exef-static-v4';
-var PAGE_CACHE = 'exef-pages-v2';
+var STATIC_CACHE = 'exef-static-v5';
+var PAGE_CACHE = 'exef-pages-v3';
 var ALL_CACHES = [STATIC_CACHE, PAGE_CACHE];
 
 var CORE_PAGES = [
@@ -22,6 +22,7 @@ var SHARED_ASSETS = [
   '/images/exef-og-card.svg',
   '/js/main.min.js',
   '/js/main.bundle.min.js',
+  '/js/homepage-ux.js',
   '/js/module-pages.bundle.min.js',
   '/js/nav-auth.min.js',
   '/js/search.min.js',

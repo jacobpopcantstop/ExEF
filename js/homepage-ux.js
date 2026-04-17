@@ -1,41 +1,64 @@
 (function () {
   'use strict';
 
-  var track = document.querySelector('[data-insight-track]');
-  var prev = document.querySelector('[data-carousel-prev]');
-  var next = document.querySelector('[data-carousel-next]');
-  var indexEl = document.querySelector('[data-carousel-index]');
+  var carousel = document.querySelector('[data-insight-carousel]');
+  var stage = document.querySelector('[data-insight-stage]');
+  var dotsHost = document.querySelector('[data-insight-dots]');
 
-  function updateCarouselIndex() {
-    if (!track || !indexEl) return;
-    var cards = Array.prototype.slice.call(track.children);
-    if (!cards.length) return;
-    var closestIndex = 0;
-    var closestDistance = Infinity;
-    var left = track.scrollLeft;
-    cards.forEach(function (card, idx) {
-      var distance = Math.abs(card.offsetLeft - left);
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestIndex = idx;
-      }
+  if (carousel && stage) {
+    var cards = Array.prototype.slice.call(stage.querySelectorAll('.insight-card'));
+    var current = 0;
+    var timer = null;
+    var INTERVAL = 6500;
+    var paused = false;
+
+    var dots = [];
+    if (dotsHost) {
+      cards.forEach(function (_, idx) {
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'insight-carousel__dot';
+        dot.setAttribute('aria-label', 'Show fact ' + (idx + 1));
+        dot.addEventListener('click', function () { show(idx); restart(); });
+        dotsHost.appendChild(dot);
+        dots.push(dot);
+      });
+    }
+
+    function show(idx) {
+      current = (idx + cards.length) % cards.length;
+      cards.forEach(function (card, i) {
+        card.classList.toggle('is-active', i === current);
+      });
+      dots.forEach(function (dot, i) {
+        dot.classList.toggle('is-active', i === current);
+      });
+    }
+
+    function advance() {
+      if (paused) return;
+      show(current + 1);
+    }
+
+    function start() {
+      stop();
+      timer = window.setInterval(advance, INTERVAL);
+    }
+
+    function stop() {
+      if (timer) { window.clearInterval(timer); timer = null; }
+    }
+
+    function restart() { stop(); start(); }
+
+    carousel.addEventListener('mouseenter', function () { paused = true; });
+    carousel.addEventListener('mouseleave', function () { paused = false; });
+    document.addEventListener('visibilitychange', function () {
+      paused = document.hidden;
     });
-    indexEl.textContent = String(closestIndex + 1);
-  }
 
-  function scrollByCard(direction) {
-    if (!track) return;
-    var width = track.firstElementChild ? track.firstElementChild.getBoundingClientRect().width : track.clientWidth;
-    track.scrollBy({ left: direction * (width + 24), behavior: 'smooth' });
-  }
-
-  if (prev) prev.addEventListener('click', function () { scrollByCard(-1); });
-  if (next) next.addEventListener('click', function () { scrollByCard(1); });
-  if (track) {
-    track.addEventListener('scroll', function () {
-      window.requestAnimationFrame(updateCarouselIndex);
-    }, { passive: true });
-    updateCarouselIndex();
+    show(0);
+    start();
   }
 
   var NEWSLETTER_DISMISS_KEY = 'exef_newsletter_dismissed_v1';

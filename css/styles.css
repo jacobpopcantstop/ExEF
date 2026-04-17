@@ -8436,51 +8436,44 @@ body.has-topic-clusters.has-topic-clusters-plain main {
 .insight-carousel {
   position: relative;
   display: grid;
-  gap: var(--space-lg);
-}
-
-.insight-carousel__controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   gap: var(--space-md);
+  max-width: var(--max-width-narrow);
+  margin: 0 auto;
 }
 
-.insight-carousel__button {
-  width: 48px;
-  height: 48px;
-  border-radius: 999px;
-  border: 1px solid rgba(17, 51, 68, 0.14);
-  background: #fff;
-  color: var(--color-primary);
-  font-size: 1.25rem;
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-}
-
-.insight-carousel__status {
-  font-size: 0.95rem;
-  color: var(--color-text-muted);
-}
-
-.insight-carousel__track {
+.insight-carousel__stage {
+  position: relative;
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(280px, 1fr);
-  gap: var(--space-lg);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  padding-bottom: var(--space-xs);
 }
 
-.insight-carousel__track::-webkit-scrollbar {
-  display: none;
+.insight-carousel__stage > .insight-card {
+  grid-area: 1 / 1;
+}
+
+.insight-carousel__dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: var(--space-xs);
+}
+
+.insight-carousel__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: none;
+  padding: 0;
+  background: rgba(17, 51, 68, 0.2);
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.insight-carousel__dot.is-active {
+  background: var(--color-primary);
+  transform: scale(1.25);
 }
 
 .insight-card {
-  scroll-snap-align: start;
-  min-height: 290px;
   padding: var(--space-xl);
   border-radius: var(--border-radius-lg);
   border: 1px solid rgba(17, 51, 68, 0.1);
@@ -8488,6 +8481,18 @@ body.has-topic-clusters.has-topic-clusters-plain main {
     linear-gradient(160deg, rgba(74, 158, 218, 0.12), rgba(255, 255, 255, 0.98) 32%),
     #fff;
   box-shadow: var(--shadow-md);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 600ms ease, transform 600ms ease, visibility 0s linear 600ms;
+  min-height: 260px;
+}
+
+.insight-card.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: opacity 600ms ease, transform 600ms ease, visibility 0s;
 }
 
 .insight-card__kicker {
@@ -8700,7 +8705,153 @@ body.has-topic-clusters.has-topic-clusters-plain main {
 }
 
 @media (max-width: 720px) {
-  .insight-carousel__track {
-    grid-auto-columns: 88%;
+  .insight-card {
+    padding: var(--space-lg);
+    min-height: 300px;
   }
+}
+
+/* Advanced tier (curriculum locked modules) */
+.advanced-tier {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(74, 158, 218, 0.08), transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba(255, 214, 102, 0.08), transparent 45%),
+    var(--color-surface-alt, #f4f6fa);
+}
+
+.advanced-tier__note {
+  margin-top: var(--space-md);
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.advanced-tier__seal {
+  color: var(--color-accent);
+  font-size: 1.05rem;
+}
+
+.advanced-modules {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+@media (max-width: 960px) {
+  .advanced-modules {
+    grid-template-columns: 1fr;
+  }
+}
+
+.advanced-module {
+  position: relative;
+  padding: var(--space-xl);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(17, 51, 68, 0.12);
+  background:
+    linear-gradient(160deg, rgba(17, 51, 68, 0.05), rgba(17, 51, 68, 0.02));
+  color: var(--color-text-muted);
+  overflow: hidden;
+  min-height: 280px;
+  transition: border-color var(--transition), background var(--transition), color var(--transition), transform var(--transition);
+}
+
+.advanced-module::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(135deg, rgba(17, 51, 68, 0.04) 0 2px, transparent 2px 10px);
+  pointer-events: none;
+}
+
+.advanced-module__body {
+  position: relative;
+  filter: blur(0.6px);
+  opacity: 0.78;
+  transition: filter var(--transition), opacity var(--transition);
+}
+
+.advanced-module__lock {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: rgba(17, 51, 68, 0.08);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  border: 1px solid rgba(17, 51, 68, 0.1);
+}
+
+.advanced-module__number {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  font-size: 0.85rem;
+  color: var(--color-accent);
+  margin-bottom: var(--space-sm);
+}
+
+.advanced-module__eyebrow {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-sm);
+}
+
+.advanced-module h3 {
+  margin: 0 0 var(--space-sm);
+  color: var(--color-text);
+}
+
+.advanced-module__teaser {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.advanced-module__open {
+  display: none;
+  margin-top: var(--space-md);
+}
+
+.advanced-tier--unlocked .advanced-module {
+  color: var(--color-text);
+  background: #fff;
+  border-color: rgba(74, 158, 218, 0.35);
+}
+
+.advanced-tier--unlocked .advanced-module::before { display: none; }
+
+.advanced-tier--unlocked .advanced-module__body {
+  filter: none;
+  opacity: 1;
+}
+
+.advanced-tier--unlocked .advanced-module__lock { display: none; }
+
+.advanced-tier--unlocked .advanced-module__eyebrow::before {
+  content: "Unlocked \2022 ";
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.advanced-tier--unlocked .advanced-module__open { display: inline-flex; }
+
+[data-theme="dark"] .advanced-module {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+  border-color: rgba(159, 178, 203, 0.18);
+}
+
+[data-theme="dark"] .advanced-tier--unlocked .advanced-module {
+  background: rgba(20, 30, 44, 0.7);
+  border-color: rgba(127, 192, 255, 0.35);
 }

@@ -49,6 +49,57 @@
   if (draftsNone) draftsNone.addEventListener('change', handleDraftsNone);
   draftCheckboxes.forEach(function (cb) { cb.addEventListener('change', handleDraftCategory); });
 
+  // Advanced panel toggle
+  var advancedToggle = document.getElementById('gao-advanced-toggle');
+  var advancedPanel = document.getElementById('gao-advanced-panel');
+  if (advancedToggle && advancedPanel) {
+    advancedToggle.addEventListener('change', function () {
+      advancedPanel.hidden = !advancedToggle.checked;
+    });
+  }
+
+  // Slider value echoes
+  var sliderIds = ['gao-batch-size', 'gao-sleep-ms', 'gao-max-exec', 'gao-confidence', 'gao-body-chars'];
+  sliderIds.forEach(function (id) {
+    var slider = document.getElementById(id);
+    var echo = document.querySelector('.gao-slider-value[data-for="' + id + '"]');
+    if (!slider || !echo) return;
+    var fmt = function (v) { return id === 'gao-confidence' ? parseFloat(v).toFixed(2) : v; };
+    slider.addEventListener('input', function () { echo.textContent = fmt(slider.value); });
+  });
+
+  // Backlog situation drives defaults for sliders + aggressiveness
+  var backlogDefaults = {
+    zero:          { batch: 15, sleep: 400, exec: 3, conf: 0.80, body: 1500, oldest: false, dry: false },
+    light:         { batch: 25, sleep: 250, exec: 4, conf: 0.70, body: 1500, oldest: false, dry: false },
+    medium:        { batch: 40, sleep: 200, exec: 4, conf: 0.70, body: 1200, oldest: true,  dry: false },
+    heavy:         { batch: 60, sleep: 150, exec: 5, conf: 0.65, body: 1000, oldest: true,  dry: false },
+    overwhelming:  { batch: 90, sleep: 100, exec: 5, conf: 0.60, body: 800,  oldest: true,  dry: true  }
+  };
+  function applyBacklogDefaults(key) {
+    var d = backlogDefaults[key];
+    if (!d) return;
+    var set = function (id, val) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.value = val;
+      var echo = document.querySelector('.gao-slider-value[data-for="' + id + '"]');
+      if (echo) echo.textContent = id === 'gao-confidence' ? parseFloat(val).toFixed(2) : val;
+    };
+    set('gao-batch-size', d.batch);
+    set('gao-sleep-ms', d.sleep);
+    set('gao-max-exec', d.exec);
+    set('gao-confidence', d.conf);
+    set('gao-body-chars', d.body);
+    var oldest = document.getElementById('gao-oldest-first');
+    var dry = document.getElementById('gao-dry-run');
+    if (oldest) oldest.checked = d.oldest;
+    if (dry) dry.checked = d.dry;
+  }
+  form.querySelectorAll('input[name="gao-backlog"]').forEach(function (r) {
+    r.addEventListener('change', function () { if (r.checked) applyBacklogDefaults(r.value); });
+  });
+
   function getCheckedValues(name) {
     var checked = form.querySelectorAll('input[name="' + name + '"]:checked');
     return Array.prototype.map.call(checked, function (el) { return el.value; });
@@ -148,6 +199,15 @@
     else if (days === 'weekdays') days = 'weekdays only';
     else if (days === 'custom') days = getCheckedValues('gao-custom-days').join(', ');
 
+    var getVal = function (id, fallback) {
+      var el = document.getElementById(id);
+      return el ? el.value : fallback;
+    };
+    var getChecked = function (id) {
+      var el = document.getElementById(id);
+      return !!(el && el.checked);
+    };
+
     return {
       categories: allCategories,
       catchall: getRadioValue('gao-catchall') !== 'no',
@@ -160,7 +220,19 @@
       frequency: getRadioValue('gao-frequency'),
       days: days,
       vip: (document.getElementById('gao-vip') || {}).value || '',
-      extra: (document.getElementById('gao-extra') || {}).value || ''
+      extra: (document.getElementById('gao-extra') || {}).value || '',
+      backlog: getRadioValue('gao-backlog') || 'light',
+      aggressiveness: getRadioValue('gao-aggressiveness') || 'balanced',
+      batchSize: parseInt(getVal('gao-batch-size', '25'), 10),
+      sleepMs: parseInt(getVal('gao-sleep-ms', '250'), 10),
+      maxExecMin: parseInt(getVal('gao-max-exec', '4'), 10),
+      confidence: parseFloat(getVal('gao-confidence', '0.7')),
+      bodyChars: parseInt(getVal('gao-body-chars', '1500'), 10),
+      quietStart: getVal('gao-quiet-start', '07:00'),
+      quietEnd: getVal('gao-quiet-end', '22:00'),
+      dryRun: getChecked('gao-dry-run'),
+      oldestFirst: getChecked('gao-oldest-first'),
+      separatePromos: getChecked('gao-separate-promos')
     };
   }
 
@@ -168,6 +240,22 @@
     var lines = [];
     lines.push('Build me a Google Apps Script that connects to the Gemini API to organize my Gmail inbox.');
     lines.push('Store the API key in Script Properties under the key "GEMINI_API_KEY".');
+    lines.push('');
+    var backlogBlurb = {
+      zero: 'I am at Inbox Zero and just maintaining — optimize for accuracy over speed.',
+      light: 'I have a light backlog (<500 unread) — balanced throughput is fine.',
+      medium: 'I have a medium backlog (500-5,000 unread) — I need steady cleanup.',
+      heavy: 'I have a heavy backlog (5,000-10,000 unread) — prioritize throughput.',
+      overwhelming: 'I have an OVERWHELMING backlog (10,000+ unread) — enable backlog-blitz mode: max the Gmail daily quota, process oldest threads first, and keep DRY_RUN true for the first 3 days so I can verify behavior before letting it modify mail.'
+    };
+    lines.push('SITUATION: ' + (backlogBlurb[data.backlog] || backlogBlurb.light));
+    var aggBlurb = {
+      conservative: 'CONSERVATIVE MODE: label only, never archive or trash. Use confidence >= 0.80 for any action.',
+      balanced: 'BALANCED MODE: label everything, archive low-priority, keep important threads in inbox.',
+      aggressive: 'AGGRESSIVE MODE: archive + mark-read broadly, trash obvious promotional junk, only leave clearly-important threads in inbox.',
+      blitz: 'BACKLOG-BLITZ MODE: the goal is to clear the backlog fast. Max daily Gmail quotas, run every 15 minutes during active hours, process oldest threads first, and keep a conservative confidence threshold (0.60) so the AI is willing to sort aggressively. Keep DRY_RUN true by default so I can verify the first few runs.'
+    };
+    lines.push('MODE: ' + (aggBlurb[data.aggressiveness] || aggBlurb.balanced));
     lines.push('');
     lines.push('SORTING RULES:');
     lines.push('- Create these Gmail labels and sort incoming unread emails into them: ' + data.categories.join(', '));
@@ -221,16 +309,22 @@
     lines.push('- Rule engine BEFORE the LLM: apply deterministic rules first and only call Gemini for ambiguous threads. Hardcoded rule hits (not AI decisions) must include: Gmail category matches (`category:promotions`, `category:social`, `list:*` for mailing lists), VIP allowlist, security alerts, self-sent mail, and obvious unsubscribe footers. This typically cuts API cost by ~60%.');
     lines.push('- Model: default to "gemini-2.5-flash" (stable). Expose a MODEL_ID constant at the top so I can swap in "gemini-3.1-flash-lite-preview" later.');
     lines.push('- Gemini request protocol (critical — skipping this produces markdown-wrapped JSON and silent miscategorizations): call the API with `generationConfig: { temperature: 0.1, responseMimeType: "application/json", thinkingConfig: { thinkingLevel: "minimal" } }`. Define a strict JSON schema for the response with fields `action`, `label`, `urgency`, `confidence`, `summary`. Parse `candidates[0].content.parts[0].text` as JSON. If parsing fails, skip the thread and log the error — do NOT guess or fall back to text parsing.');
-    lines.push('- Truncate email body content sent to Gemini to the first 1500 characters. Long reply chains otherwise burn tokens for no classification benefit.');
+    lines.push('- Truncate email body content sent to Gemini to the first ' + data.bodyChars + ' characters. Long reply chains otherwise burn tokens for no classification benefit.');
     lines.push('- Retries: on 429 or 5xx, retry with exponential backoff (1s, 2s, 4s) with a MAX_RETRIES cap of 3. Never use an infinite retry loop (no "i--" patterns).');
-    lines.push('- Quota-safe defaults: BATCH_SIZE = 25 threads per run, INTER_THREAD_SLEEP_MS = 250. If I want more throughput I can raise these, but defaults should fit Gmail\'s daily quotas comfortably.');
+    lines.push('- Tuning constants (use these exact values): BATCH_SIZE = ' + data.batchSize + ', INTER_THREAD_SLEEP_MS = ' + data.sleepMs + ', MAX_EXECUTION_MS = ' + (data.maxExecMin * 60 * 1000) + ', MIN_CONFIDENCE = ' + data.confidence.toFixed(2) + '. Expose these as named constants at the top of the script so I can retune without reading the code.');
     lines.push('- Order of operations on each thread: apply the PROCESSED label FIRST, then archive/trash/draft. Skip label ops on already-trashed threads. Do not mark threads unread again after processing.');
     lines.push('- SEARCH_QUERY must exclude the PROCESSED label dynamically (e.g. `-label:"Processed"`), and must be built from the label name constant so renaming the label does not break the search.');
     lines.push('- NEVER-TOUCH guards (hardcode these): security alerts and 2FA codes, mail sent by me (self-sender), threads already in Drafts, threads in Trash or Spam. VIPs never get auto-archived or trashed.');
-    lines.push('- Quiet hours: if the script fires before 7am or after 10pm local time, exit early without processing.');
+    lines.push('- Quiet hours: if the script fires before ' + data.quietStart + ' or after ' + data.quietEnd + ' local time, exit early without processing.');
     lines.push('- Concurrency lock: call `LockService.getScriptLock().waitLock(10000)` at the start of the main sweep. If the lock cannot be acquired, exit immediately — another instance is already running. Skipping this corrupts the stats counter when triggers overlap.');
-    lines.push('- Execution-time safety: define `MAX_EXECUTION_MS = 4 * 60 * 1000` (Apps Script hard-kills at 6 minutes). Record start time, check elapsed inside the thread loop, and break out cleanly when approaching the limit.');
-    lines.push('- DRY_RUN mode: include a `DRY_RUN` boolean flag at the top (default false). When true, log the decision for each thread but do NOT execute archive/trash/draft operations. Lets me verify behavior before trusting the script.');
+    lines.push('- Execution-time safety: use the MAX_EXECUTION_MS constant above (Apps Script hard-kills at 6 minutes). Record start time, check elapsed inside the thread loop, and break out cleanly when approaching the limit.');
+    lines.push('- DRY_RUN mode: include a `DRY_RUN` boolean flag at the top, default ' + (data.dryRun ? 'TRUE' : 'false') + '. When true, log the decision for each thread but do NOT execute archive/trash/draft operations.' + (data.dryRun ? ' I want it ON initially so I can verify the first runs before trusting it.' : ''));
+    if (data.oldestFirst) {
+      lines.push('- Process oldest threads first: sort the search results by date ascending (use `older_than` queries stepping back in time if needed) so the backlog gets chewed through chronologically, not newest-first.');
+    }
+    if (data.separatePromos) {
+      lines.push('- Use Gmail\'s native category filters: match `category:promotions`, `category:social`, and `list:*` threads via SEARCH_QUERY and handle them deterministically (archive + label) BEFORE any Gemini call. These should never hit the LLM.');
+    }
     lines.push('- VIPs: define a `VIPS` JavaScript array of email addresses at the top of the script (populated from my VIP list above). Any match bypasses all archive/trash rules and gets a "VIP" label applied.');
     lines.push('- PROCESSED label: use a flat label named exactly `Processed` (never include "AI" or any tooling suffix in any label name — the label list should look human-authored). Store the exact string in a `PROCESSED_LABEL` constant and build SEARCH_QUERY from it.');
     lines.push('- Label naming rule (strict): no label created by this script may contain "AI", "Bot", "GPT", "Gemini", or any other tooling tell. Category labels use plain human names only (e.g. `Newsletters`, `Receipts`, `VIP`).');
@@ -238,7 +332,7 @@
     lines.push('- Secrets: read the API key via PropertiesService.getScriptProperties().getProperty("GEMINI_API_KEY"). Never hardcode. If missing, throw a clear error that names the exact property key.');
     lines.push('- Error handling: wrap the main loop in try/catch. On fatal error, send me a single notification email (not one per thread) and store last-error + timestamp in UserProperties so the digest can surface it.');
     if (data.draftCategories.length > 0) {
-      lines.push('- Drafts: only create a draft if Gemini returns a confidence >= 0.7. Otherwise label the thread for manual review.');
+      lines.push('- Drafts: only create a draft if Gemini returns a confidence >= ' + data.confidence.toFixed(2) + '. Otherwise label the thread for manual review with a "Review" label.');
     }
     lines.push('- Include a one-time setup() function that (a) creates any missing labels so the first run does not fail on a MailLabel lookup, (b) installs the time-based triggers for the main sweep (hourly) and digest (daily), checking first whether each already exists to avoid duplicates. Non-dev users will forget to install triggers manually and the script will silently never run.');
     lines.push('');

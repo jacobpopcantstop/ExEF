@@ -182,6 +182,29 @@
       <div style="max-width:var(--max-width-narrow);margin:0 auto">
         <form id="gao-questionnaire">
 
+          <!-- Fieldset 0: Inbox Situation -->
+          <fieldset style="border:none;padding:0;margin:0 0 var(--space-xl)">
+            <legend style="font-family:var(--font-heading);font-size:1.2rem;font-weight:700;margin-bottom:var(--space-md);color:var(--color-heading)">Start Here: Your Inbox Situation</legend>
+            <p style="font-size:0.9rem;color:var(--color-muted);margin:0 0 var(--space-md)">This sets smart defaults for everything below. You can still override anything in the advanced panel.</p>
+
+            <div style="margin-top:var(--space-md)">
+              <span style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">How big is your current backlog?</span>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-backlog" value="zero"> Inbox Zero &mdash; just maintaining</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-backlog" value="light" checked> Light (under 500 unread)</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-backlog" value="medium"> Medium (500&ndash;5,000)</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-backlog" value="heavy"> Heavy (5,000&ndash;10,000)</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-backlog" value="overwhelming"> Overwhelming (10,000+) &mdash; enables backlog-blitz mode</label>
+            </div>
+
+            <div style="margin-top:var(--space-md)">
+              <span style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">How aggressive should the bot be?</span>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-aggressiveness" value="conservative"> Conservative &mdash; label only, never archive, low confidence</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-aggressiveness" value="balanced" checked> Balanced &mdash; label + archive low-priority, keep important in inbox</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-aggressiveness" value="aggressive"> Aggressive &mdash; archive + mark-read broadly, trash obvious promos</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="radio" name="gao-aggressiveness" value="blitz"> Backlog Blitz &mdash; max daily quota, process oldest first, DRY_RUN on for first 3 days</label>
+            </div>
+          </fieldset>
+
           <!-- Fieldset A: Email Categories -->
           <fieldset style="border:none;padding:0;margin:0 0 var(--space-xl)">
             <legend style="font-family:var(--font-heading);font-size:1.2rem;font-weight:700;margin-bottom:var(--space-md);color:var(--color-heading)">Email Categories</legend>
@@ -198,6 +221,22 @@
               <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="newsletters"> Newsletters</label>
               <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="social"> Social Media</label>
               <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="promotions"> Promotions/Spam</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="travel"> Travel &amp; Itineraries</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="receipts"> Receipts</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="invoices"> Invoices &amp; Billing</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="banking"> Banking &amp; Investments</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="taxes"> Taxes &amp; Legal</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="insurance"> Insurance</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="realestate"> Real Estate &amp; Housing</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="job-search"> Job Search</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="education"> Education &amp; Learning</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="subscriptions"> Subscriptions</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="deliveries"> Deliveries &amp; Shipping</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="calendar"> Calendar &amp; Invites</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="support"> Support Tickets</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="government"> Government &amp; Civic</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="projects"> Projects &amp; Collaboration</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-categories" value="events"> Events &amp; RSVPs</label>
               <div style="margin-top:var(--space-md)">
                 <label for="gao-custom-categories" style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">Custom categories</label>
                 <input type="text" id="gao-custom-categories" placeholder="Add custom categories (comma-separated)" style="width:100%;padding:0.7rem;border:1px solid var(--color-border);border-radius:var(--border-radius);font-family:var(--font-body);font-size:0.95rem">
@@ -238,6 +277,11 @@
               <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="newsletters"> Newsletters</label>
               <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="social"> Social Media</label>
               <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="promotions"> Promotions/Spam</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="travel"> Travel</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="job-search"> Job Search</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="projects"> Projects &amp; Collaboration</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="events"> Events &amp; RSVPs</label>
+              <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" name="gao-drafts" value="support"> Support Tickets</label>
             </div>
 
             <!-- Q5 -->
@@ -324,6 +368,64 @@
             <div style="margin-top:var(--space-md)">
               <label for="gao-extra" style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">Any additional instructions for your bot?</label>
               <textarea id="gao-extra" name="gao-extra" rows="3" placeholder="e.g., Flag anything from my kid's school as urgent" style="width:100%;padding:0.7rem;border:1px solid var(--color-border);border-radius:var(--border-radius);font-family:var(--font-body);font-size:0.95rem"></textarea>
+            </div>
+          </fieldset>
+
+          <!-- Fieldset E: Advanced Controls -->
+          <fieldset style="border:none;padding:0;margin:0 0 var(--space-xl)">
+            <legend style="font-family:var(--font-heading);font-size:1.2rem;font-weight:700;margin-bottom:var(--space-md);color:var(--color-heading)">
+              <label style="display:flex;align-items:center;gap:var(--space-sm);cursor:pointer;font-family:inherit;font-size:inherit;font-weight:inherit">
+                <input type="checkbox" id="gao-advanced-toggle" style="width:1rem;height:1rem"> Advanced controls (sliders &amp; tuning)
+              </label>
+            </legend>
+            <p style="font-size:0.9rem;color:var(--color-muted);margin:0 0 var(--space-md)">Defaults are auto-set from your inbox situation above. Toggle this to override.</p>
+
+            <div id="gao-advanced-panel" hidden>
+              <div style="margin-top:var(--space-md)">
+                <label for="gao-batch-size" style="display:flex;justify-content:space-between;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)"><span>Threads per run (BATCH_SIZE)</span><span class="gao-slider-value" data-for="gao-batch-size">25</span></label>
+                <input type="range" id="gao-batch-size" min="5" max="100" step="5" value="25" style="width:100%">
+                <p style="font-size:0.8rem;color:var(--color-muted);margin:var(--space-xs) 0 0">Higher = faster backlog crunch, but closer to Gmail's 6-minute per-run cap.</p>
+              </div>
+
+              <div style="margin-top:var(--space-md)">
+                <label for="gao-sleep-ms" style="display:flex;justify-content:space-between;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)"><span>Sleep between threads (ms)</span><span class="gao-slider-value" data-for="gao-sleep-ms">250</span></label>
+                <input type="range" id="gao-sleep-ms" min="0" max="1000" step="50" value="250" style="width:100%">
+                <p style="font-size:0.8rem;color:var(--color-muted);margin:var(--space-xs) 0 0">Lower = more throughput, higher risk of 429 rate limits.</p>
+              </div>
+
+              <div style="margin-top:var(--space-md)">
+                <label for="gao-max-exec" style="display:flex;justify-content:space-between;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)"><span>Max execution time (minutes)</span><span class="gao-slider-value" data-for="gao-max-exec">4</span></label>
+                <input type="range" id="gao-max-exec" min="1" max="5" step="1" value="4" style="width:100%">
+                <p style="font-size:0.8rem;color:var(--color-muted);margin:var(--space-xs) 0 0">Apps Script hard-kills at 6 min. Leave 1&ndash;2 min of buffer.</p>
+              </div>
+
+              <div style="margin-top:var(--space-md)">
+                <label for="gao-confidence" style="display:flex;justify-content:space-between;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)"><span>Minimum classification confidence</span><span class="gao-slider-value" data-for="gao-confidence">0.70</span></label>
+                <input type="range" id="gao-confidence" min="0.5" max="0.95" step="0.05" value="0.7" style="width:100%">
+                <p style="font-size:0.8rem;color:var(--color-muted);margin:var(--space-xs) 0 0">Below this, threads get an "Unsure" label instead of being sorted/trashed.</p>
+              </div>
+
+              <div style="margin-top:var(--space-md)">
+                <label for="gao-body-chars" style="display:flex;justify-content:space-between;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)"><span>Body chars sent to Gemini</span><span class="gao-slider-value" data-for="gao-body-chars">1500</span></label>
+                <input type="range" id="gao-body-chars" min="500" max="5000" step="250" value="1500" style="width:100%">
+                <p style="font-size:0.8rem;color:var(--color-muted);margin:var(--space-xs) 0 0">Longer = better context for long threads. Higher token cost.</p>
+              </div>
+
+              <div style="margin-top:var(--space-md)">
+                <label for="gao-quiet-start" style="display:block;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)">Quiet hours</label>
+                <div style="display:flex;gap:var(--space-sm);align-items:center;flex-wrap:wrap">
+                  <span style="font-size:0.9rem">Don't run before</span>
+                  <input type="time" id="gao-quiet-start" value="07:00" style="padding:0.5rem;border:1px solid var(--color-border);border-radius:var(--border-radius);font-family:var(--font-body)">
+                  <span style="font-size:0.9rem">or after</span>
+                  <input type="time" id="gao-quiet-end" value="22:00" style="padding:0.5rem;border:1px solid var(--color-border);border-radius:var(--border-radius);font-family:var(--font-body)">
+                </div>
+              </div>
+
+              <div style="margin-top:var(--space-md)">
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" id="gao-dry-run"> Start in DRY_RUN mode (log decisions but don't archive/trash)</label>
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" id="gao-oldest-first"> Process oldest threads first (useful for backlog cleanup)</label>
+                <label style="display:flex;align-items:flex-start;gap:var(--space-sm);font-size:0.95rem;cursor:pointer"><input type="checkbox" id="gao-separate-promos" checked> Use Gmail's built-in category:promotions/social rules before the AI</label>
+              </div>
             </div>
           </fieldset>
 

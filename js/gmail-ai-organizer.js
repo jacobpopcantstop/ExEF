@@ -212,11 +212,26 @@
       lines.push('');
     }
     lines.push('IMPLEMENTATION REQUIREMENTS:');
-    lines.push('- Include a main function that processes unread emails using the Gemini API');
-    if (data.digestEnabled) lines.push('- Include a separate digest function that composes and sends the summary email');
+    lines.push('- Include a main function that processes unread threads using the Gemini API');
+    if (data.digestEnabled) lines.push('- Include a separate digest function that composes and sends the summary email (set MimeType/charset to UTF-8 so emoji and em-dashes render correctly)');
     lines.push('- Add clear comments explaining each section so a non-developer can modify it later');
-    lines.push('- Add error handling that sends me an email notification if the script fails');
-    lines.push('- Use GmailApp and UrlFetchApp (no external libraries)');
+    lines.push('- Use GmailApp and UrlFetchApp only (no external libraries)');
+    lines.push('');
+    lines.push('ARCHITECTURE (important — these are the lessons from real deployments):');
+    lines.push('- Rule engine BEFORE the LLM: apply deterministic rules first (VIP allowlist, security alerts, self-sent mail, obvious unsubscribe footers). Only call Gemini for ambiguous threads. This typically cuts API cost by ~60%.');
+    lines.push('- Model: default to "gemini-2.5-flash" (stable). Expose a MODEL_ID constant at the top so I can swap in "gemini-3.1-flash-lite-preview" later.');
+    lines.push('- Retries: on 429 or 5xx, retry with exponential backoff (1s, 2s, 4s) with a MAX_RETRIES cap of 3. Never use an infinite retry loop (no "i--" patterns).');
+    lines.push('- Quota-safe defaults: BATCH_SIZE = 25 threads per run, INTER_THREAD_SLEEP_MS = 250. If I want more throughput I can raise these, but defaults should fit Gmail\'s daily quotas comfortably.');
+    lines.push('- Order of operations on each thread: apply the PROCESSED label FIRST, then archive/trash/draft. Skip label ops on already-trashed threads. Do not mark threads unread again after processing.');
+    lines.push('- SEARCH_QUERY must exclude the PROCESSED label dynamically (e.g. `-label:"Processed/AI"`), and must be built from the label name constant so renaming the label does not break the search.');
+    lines.push('- NEVER-TOUCH guards (hardcode these): security alerts and 2FA codes, mail sent by me (self-sender), threads already in Drafts, threads in Trash or Spam. VIPs never get auto-archived or trashed.');
+    lines.push('- Quiet hours: if the script fires before 7am or after 10pm local time, exit early without processing.');
+    lines.push('- Secrets: read the API key via PropertiesService.getScriptProperties().getProperty("GEMINI_API_KEY"). Never hardcode. If missing, throw a clear error that names the exact property key.');
+    lines.push('- Error handling: wrap the main loop in try/catch. On fatal error, send me a single notification email (not one per thread) and store last-error + timestamp in UserProperties so the digest can surface it.');
+    if (data.draftCategories.length > 0) {
+      lines.push('- Drafts: only create a draft if Gemini returns a confidence >= 0.7. Otherwise label the thread for manual review.');
+    }
+    lines.push('- Include a one-time setup() function that creates any missing labels so the first run does not fail on a MailLabel lookup.');
     return lines.join('\n');
   }
 

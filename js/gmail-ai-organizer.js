@@ -218,20 +218,33 @@
     lines.push('- Use GmailApp and UrlFetchApp only (no external libraries)');
     lines.push('');
     lines.push('ARCHITECTURE (important — these are the lessons from real deployments):');
-    lines.push('- Rule engine BEFORE the LLM: apply deterministic rules first (VIP allowlist, security alerts, self-sent mail, obvious unsubscribe footers). Only call Gemini for ambiguous threads. This typically cuts API cost by ~60%.');
+    lines.push('- Rule engine BEFORE the LLM: apply deterministic rules first and only call Gemini for ambiguous threads. Hardcoded rule hits (not AI decisions) must include: Gmail category matches (`category:promotions`, `category:social`, `list:*` for mailing lists), VIP allowlist, security alerts, self-sent mail, and obvious unsubscribe footers. This typically cuts API cost by ~60%.');
     lines.push('- Model: default to "gemini-2.5-flash" (stable). Expose a MODEL_ID constant at the top so I can swap in "gemini-3.1-flash-lite-preview" later.');
+    lines.push('- Gemini request protocol (critical — skipping this produces markdown-wrapped JSON and silent miscategorizations): call the API with `generationConfig: { temperature: 0.1, responseMimeType: "application/json", thinkingConfig: { thinkingLevel: "minimal" } }`. Define a strict JSON schema for the response with fields `action`, `label`, `urgency`, `confidence`, `summary`. Parse `candidates[0].content.parts[0].text` as JSON. If parsing fails, skip the thread and log the error — do NOT guess or fall back to text parsing.');
+    lines.push('- Truncate email body content sent to Gemini to the first 1500 characters. Long reply chains otherwise burn tokens for no classification benefit.');
     lines.push('- Retries: on 429 or 5xx, retry with exponential backoff (1s, 2s, 4s) with a MAX_RETRIES cap of 3. Never use an infinite retry loop (no "i--" patterns).');
     lines.push('- Quota-safe defaults: BATCH_SIZE = 25 threads per run, INTER_THREAD_SLEEP_MS = 250. If I want more throughput I can raise these, but defaults should fit Gmail\'s daily quotas comfortably.');
     lines.push('- Order of operations on each thread: apply the PROCESSED label FIRST, then archive/trash/draft. Skip label ops on already-trashed threads. Do not mark threads unread again after processing.');
     lines.push('- SEARCH_QUERY must exclude the PROCESSED label dynamically (e.g. `-label:"Processed/AI"`), and must be built from the label name constant so renaming the label does not break the search.');
     lines.push('- NEVER-TOUCH guards (hardcode these): security alerts and 2FA codes, mail sent by me (self-sender), threads already in Drafts, threads in Trash or Spam. VIPs never get auto-archived or trashed.');
     lines.push('- Quiet hours: if the script fires before 7am or after 10pm local time, exit early without processing.');
+    lines.push('- Concurrency lock: call `LockService.getScriptLock().waitLock(10000)` at the start of the main sweep. If the lock cannot be acquired, exit immediately — another instance is already running. Skipping this corrupts the stats counter when triggers overlap.');
+    lines.push('- Execution-time safety: define `MAX_EXECUTION_MS = 4 * 60 * 1000` (Apps Script hard-kills at 6 minutes). Record start time, check elapsed inside the thread loop, and break out cleanly when approaching the limit.');
+    lines.push('- DRY_RUN mode: include a `DRY_RUN` boolean flag at the top (default false). When true, log the decision for each thread but do NOT execute archive/trash/draft operations. Lets me verify behavior before trusting the script.');
+    lines.push('- VIPs: define a `VIPS` JavaScript array of email addresses at the top of the script (populated from my VIP list above). Any match bypasses all archive/trash rules and gets a "VIP" label applied.');
+    lines.push('- PROCESSED label: use a nested path `Processed/AI` (not flat) so it stays out of the main label list visually. Store the exact string in a `PROCESSED_LABEL` constant and build SEARCH_QUERY from it.');
+    lines.push('- Logging: use `console.error` for failures and `console.log` for successes, so the Apps Script execution panel\'s severity filter works cleanly.');
     lines.push('- Secrets: read the API key via PropertiesService.getScriptProperties().getProperty("GEMINI_API_KEY"). Never hardcode. If missing, throw a clear error that names the exact property key.');
     lines.push('- Error handling: wrap the main loop in try/catch. On fatal error, send me a single notification email (not one per thread) and store last-error + timestamp in UserProperties so the digest can surface it.');
     if (data.draftCategories.length > 0) {
       lines.push('- Drafts: only create a draft if Gemini returns a confidence >= 0.7. Otherwise label the thread for manual review.');
     }
-    lines.push('- Include a one-time setup() function that creates any missing labels so the first run does not fail on a MailLabel lookup.');
+    lines.push('- Include a one-time setup() function that (a) creates any missing labels so the first run does not fail on a MailLabel lookup, (b) installs the time-based triggers for the main sweep (hourly) and digest (daily), checking first whether each already exists to avoid duplicates. Non-dev users will forget to install triggers manually and the script will silently never run.');
+    lines.push('');
+    lines.push('OBSERVABILITY (do not skip this — without it I am flying blind):');
+    lines.push('- Maintain running counters in `PropertiesService.getUserProperties()` for threads trashed, archived, kept, drafted, skipped, and errors since last digest.');
+    lines.push('- Include a daily digest function on its own trigger that emails me a plain-text summary using `MailApp.sendEmail` with `charset: "UTF-8"`. Reset the counters after sending.');
+    lines.push('- The digest should surface the last fatal error (timestamp + message) if any occurred since the previous digest.');
     return lines.join('\n');
   }
 

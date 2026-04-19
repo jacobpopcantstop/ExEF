@@ -100,6 +100,42 @@
     r.addEventListener('change', function () { if (r.checked) applyBacklogDefaults(r.value); });
   });
 
+  // Category preset buttons
+  var categoryPresets = {
+    personal:     ['bills','family','health','shopping','travel','receipts','newsletters','promotions','subscriptions','deliveries','calendar'],
+    professional: ['work','projects','support','calendar','events','newsletters','promotions','travel','receipts','invoices'],
+    financial:    ['bills','invoices','banking','taxes','insurance','receipts','subscriptions','shopping','promotions'],
+    parent:       ['school','family','health','calendar','events','shopping','deliveries','bills','promotions','newsletters'],
+    power:        ['school','work','bills','family','health','shopping','newsletters','social','promotions','travel','receipts','invoices','banking','taxes','insurance','realestate','job-search','education','subscriptions','deliveries','calendar','support','government','projects','events']
+  };
+  form.querySelectorAll('.gao-preset[data-preset]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var preset = btn.getAttribute('data-preset');
+      var all = form.querySelectorAll('input[name="gao-categories"]');
+      if (preset === 'clear') {
+        all.forEach(function (cb) { cb.checked = false; });
+        return;
+      }
+      var set = categoryPresets[preset] || [];
+      all.forEach(function (cb) { cb.checked = set.indexOf(cb.value) !== -1; });
+    });
+  });
+
+  // Draft preset buttons
+  var draftPresets = {
+    none:            [],
+    work:            ['work'],
+    'all-important': ['work','school','family','health','bills','projects','events','support','job-search']
+  };
+  form.querySelectorAll('.gao-preset[data-drafts-preset]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var preset = btn.getAttribute('data-drafts-preset');
+      var set = draftPresets[preset] || [];
+      draftCheckboxes.forEach(function (cb) { cb.checked = set.indexOf(cb.value) !== -1; });
+      if (draftsNone) draftsNone.checked = set.length === 0;
+    });
+  });
+
   function getCheckedValues(name) {
     var checked = form.querySelectorAll('input[name="' + name + '"]:checked');
     return Array.prototype.map.call(checked, function (el) { return el.value; });

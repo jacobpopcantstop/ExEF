@@ -130,7 +130,41 @@
       </div>
 
       <div class="card">
-        <h3>Step 3: Generate Your Custom Script</h3>
+        <h3>Step 3: Decide Free Tier vs. Paid (and enable billing if you need it)</h3>
+        <p>Gemini has a generous free tier. Most people never pay a cent. But if you have a 10k+ backlog or want very frequent runs, you'll hit the free-tier rate limits and the script will start failing with 429 errors. Here's how to tell which camp you're in, and what to do if you need the paid tier.</p>
+
+        <p><strong>You're almost certainly fine on the free tier if:</strong></p>
+        <ul>
+          <li>Your backlog is under ~5,000 emails.</li>
+          <li>The bot runs once an hour or less often.</li>
+          <li>You're just maintaining a normal inbox going forward.</li>
+        </ul>
+
+        <p><strong>You'll want to enable paid billing if:</strong></p>
+        <ul>
+          <li>You're running Backlog Blitz mode on a 10k+ inbox &mdash; you'll want the bot processing nonstop for a few days.</li>
+          <li>You want runs every 15 minutes.</li>
+          <li>You're seeing repeated <code>429 RESOURCE_EXHAUSTED</code> errors in the Apps Script execution log.</li>
+        </ul>
+
+        <p><strong>Realistic cost:</strong> Even in Backlog Blitz mode cleaning 20,000 emails, expect &lt;$2 total. Steady-state after your inbox is tidy: usually under $1/month. Compare that to commercial inbox-sorting subscriptions at $20+/month.</p>
+
+        <p><strong>How to enable billing (only if you need it):</strong></p>
+        <ol>
+          <li>Go to <a href="https://console.cloud.google.com/billing" target="_blank" rel="noopener">console.cloud.google.com/billing</a>.</li>
+          <li>Click <strong>Create billing account</strong> (or use an existing one) and add a payment method.</li>
+          <li>Go to <a href="https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com" target="_blank" rel="noopener">the Generative Language API page</a> and click <strong>Enable</strong> on the project that owns your Gemini API key.</li>
+          <li>Link your billing account to that project: <strong>Billing &gt; Link a billing account</strong>.</li>
+          <li>Set a budget alert so you can't accidentally overspend: <strong>Billing &gt; Budgets &amp; alerts &gt; Create budget</strong>. A $5 monthly cap with email alerts at 50% and 90% is a sensible default.</li>
+        </ol>
+
+        <div class="callout">
+          <p><strong>Start free, upgrade only if you hit limits.</strong> You can always enable billing later &mdash; the same API key keeps working. If you're unsure, skip this step and come back only if the execution log shows rate-limit errors.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Step 4: Generate Your Custom Script</h3>
         <ol>
           <li>Complete the <a href="#gao-questionnaire">questionnaire below</a>.</li>
           <li>Copy the generated prompt.</li>
@@ -140,7 +174,7 @@
       </div>
 
       <div class="card">
-        <h3>Step 4: Paste the Code</h3>
+        <h3>Step 5: Paste the Code</h3>
         <ol>
           <li>Back in the Apps Script editor, select all the default code and delete it.</li>
           <li>Paste the AI-generated code.</li>
@@ -149,7 +183,7 @@
       </div>
 
       <div class="card">
-        <h3>Step 5: Authorize &amp; Test</h3>
+        <h3>Step 6: Authorize &amp; Test</h3>
         <ol>
           <li>Click <strong>Run</strong> on the main function.</li>
           <li>Click <strong>Review Permissions</strong>, choose your account, and click <strong>Allow</strong>.</li>
@@ -161,7 +195,7 @@
       </div>
 
       <div class="card">
-        <h3>Step 6: Set Up the Daily Trigger</h3>
+        <h3>Step 7: Set Up the Daily Trigger</h3>
         <ol>
           <li>In the Apps Script sidebar, click <strong>Triggers</strong> (clock icon), then <strong>Add Trigger</strong>.</li>
           <li>Set it to run the main function on a time-driven timer at your preferred interval.</li>
@@ -431,9 +465,23 @@
             <legend style="display:flex;align-items:center;gap:var(--space-sm)">
               <input type="checkbox" id="gao-advanced-toggle" style="width:1rem;height:1rem"> Advanced controls (sliders &amp; tuning)
             </legend>
-            <p class="gao-hint">Defaults auto-tune from your Inbox Situation above. Open this only if you want to override individual values.</p>
+            <p class="gao-hint">Defaults auto-tune from your Inbox Situation above. Most people never need to touch these. Open only if the bot is too slow, too aggressive, too timid, or hitting quota limits.</p>
 
             <div id="gao-advanced-panel" hidden>
+              <div style="background:color-mix(in srgb, var(--color-primary) 5%, white);border:1px solid var(--color-border);border-radius:var(--border-radius);padding:var(--space-md);margin-bottom:var(--space-md);font-size:0.88rem;line-height:1.55">
+                <strong>What these actually do, in plain English:</strong>
+                <ul style="margin:var(--space-xs) 0 0;padding-left:var(--space-lg)">
+                  <li><strong>Threads per run</strong> — how many emails the bot handles each time it wakes up. Raise it if the backlog isn't shrinking fast enough; lower it if runs are timing out.</li>
+                  <li><strong>Sleep between threads</strong> — tiny pause after each email so Gemini doesn't rate-limit you. Raise if you're seeing 429 errors in the execution log.</li>
+                  <li><strong>Max execution time</strong> — a self-imposed stopwatch. Apps Script kills anything past 6 min; this tells the bot "stop at 4 min and pick up next run" so you never lose progress mid-thread.</li>
+                  <li><strong>Minimum confidence</strong> — how sure the AI has to be before it archives or trashes something. Raise to 0.90 if it's making mistakes; lower to 0.60 for a massive backlog where "good enough" beats "perfect."</li>
+                  <li><strong>Body chars sent to Gemini</strong> — how much of each email the AI reads. Lower = cheaper and faster. Raise if your email is full of long threads the AI is misreading because it's only seeing the top.</li>
+                  <li><strong>Quiet hours</strong> — when the bot is forbidden from running. Useful if you don't want it drafting replies at 3am.</li>
+                  <li><strong>DRY_RUN</strong> — the bot logs what it <em>would</em> do but changes nothing. Turn this on for the first few days to build trust.</li>
+                  <li><strong>Oldest first</strong> — chew through the backlog chronologically instead of always grabbing new mail. Essential for large cleanups.</li>
+                  <li><strong>Native category filters</strong> — lets Gmail's own "Promotions/Social" tabs do the easy sorting before the AI runs, saving API calls.</li>
+                </ul>
+              </div>
               <div class="gao-question">
                 <label for="gao-batch-size" style="display:flex;justify-content:space-between;font-weight:600;font-size:0.9rem;margin-bottom:var(--space-xs)"><span>Threads per run (BATCH_SIZE)</span><span class="gao-slider-value" data-for="gao-batch-size">25</span></label>
                 <input type="range" id="gao-batch-size" min="5" max="100" step="5" value="25" style="width:100%">

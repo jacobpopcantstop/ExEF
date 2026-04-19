@@ -108,16 +108,30 @@
     parent:       ['school','family','health','calendar','events','shopping','deliveries','bills','promotions','newsletters'],
     power:        ['school','work','bills','family','health','shopping','newsletters','social','promotions','travel','receipts','invoices','banking','taxes','insurance','realestate','job-search','education','subscriptions','deliveries','calendar','support','government','projects','events']
   };
+  function flashPreset(btn) {
+    var orig = btn.textContent;
+    btn.setAttribute('data-orig', orig);
+    btn.textContent = '✓ applied';
+    btn.style.borderColor = 'var(--color-primary)';
+    btn.style.background = 'color-mix(in srgb, var(--color-primary) 12%, white)';
+    setTimeout(function () {
+      btn.textContent = btn.getAttribute('data-orig') || orig;
+      btn.style.borderColor = '';
+      btn.style.background = '';
+    }, 900);
+  }
   form.querySelectorAll('.gao-preset[data-preset]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
       var preset = btn.getAttribute('data-preset');
       var all = form.querySelectorAll('input[name="gao-categories"]');
       if (preset === 'clear') {
         all.forEach(function (cb) { cb.checked = false; });
-        return;
+      } else {
+        var set = categoryPresets[preset] || [];
+        all.forEach(function (cb) { cb.checked = set.indexOf(cb.value) !== -1; });
       }
-      var set = categoryPresets[preset] || [];
-      all.forEach(function (cb) { cb.checked = set.indexOf(cb.value) !== -1; });
+      flashPreset(btn);
     });
   });
 
@@ -128,11 +142,13 @@
     'all-important': ['work','school','family','health','bills','projects','events','support','job-search']
   };
   form.querySelectorAll('.gao-preset[data-drafts-preset]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
       var preset = btn.getAttribute('data-drafts-preset');
       var set = draftPresets[preset] || [];
       draftCheckboxes.forEach(function (cb) { cb.checked = set.indexOf(cb.value) !== -1; });
       if (draftsNone) draftsNone.checked = set.length === 0;
+      flashPreset(btn);
     });
   });
 

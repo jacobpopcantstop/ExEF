@@ -2,6 +2,7 @@
 20-navigation.css
 30-page-sections.css
 40-components.css
+45-imagery.css
 50-accessibility-responsive.css
 60-esqr.css
 70-commerce.css

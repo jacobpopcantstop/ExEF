@@ -48,6 +48,22 @@ TARGETS = {
     "compass.jpg": [640, 960],
     "bullseye.jpg": [640, 960],
     "checklistboard.jpg": [640, 960],
+    "alarmclock.jpg": [640, 960],
+    "balancingrocks.jpg": [640, 960],
+    "card-magic.jpg": [640, 960],
+    "cheweduppen.jpg": [640, 960],
+    "chessboard.jpg": [640, 960],
+    "deepbreath.jpg": [640, 960],
+    "focus.jpg": [640, 960],
+    "handshake.jpg": [640, 960],
+    "highfive.jpg": [640, 960],
+    "meditation.jpg": [640, 960],
+    "messydesk.jpg": [640, 960],
+    "officedesk.jpg": [640, 960],
+    "planner.jpg": [640, 960],
+    "rubikscube.jpg": [640, 960],
+    "sparks.jpg": [640, 960],
+    "stickynote.jpg": [640, 960],
 }
 
 

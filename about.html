@@ -60,8 +60,16 @@
   <main id="main-content">
 
   <!-- Hero Header -->
-  <section class="page-header">
+  <section class="page-header page-header--with-art">
     <div class="container" style="text-align:center;">
+      <figure class="page-hero-figure page-header__art" aria-hidden="true">
+        <img src="images/san-diego-beach.jpg"
+             srcset="images/san-diego-beach-640.jpg 640w, images/san-diego-beach-960.jpg 960w, images/san-diego-beach.jpg 2048w"
+             sizes="(max-width: 768px) 72vw, 300px"
+             width="2048" height="1361"
+             alt=""
+             decoding="async">
+      </figure>
       <h1>About Expert EF</h1>
       <p class="hero__subtitle">Executive function coaching grounded in neuroscience, built for adults, professionals, and students. We believe EF challenges deserve science-grounded support, practical systems, and language that lowers shame.</p>
       <div class="hero__actions" style="margin-top:var(--space-xl);">
@@ -71,17 +79,6 @@
     </div>
   </section>
 
-  <div class="container">
-    <figure class="page-hero-figure">
-      <img src="images/san-diego-beach.jpg"
-           srcset="images/san-diego-beach-640.jpg 640w, images/san-diego-beach-960.jpg 960w, images/san-diego-beach.jpg 2048w"
-           sizes="(max-width: 768px) 92vw, (max-width: 1200px) 88vw, 960px"
-           width="2048" height="1361"
-           alt="San Diego coastline at golden hour, the region where Expert EF is based"
-           decoding="async">
-    </figure>
-  </div>
-
   <!-- Mission -->
   <section class="section">
     <div class="container" style="max-width:var(--max-width-narrow); margin:0 auto;">
@@ -89,7 +86,7 @@
         <h2>Our Approach</h2>
         <p>ExEF combines the executive function frameworks of Barkley, Brown, Dawson &amp; Guare, and Ward into one coherent coaching model. Every session, assessment, and tool references a named research framework with a practical use case.</p>
       </div>
-        <figure class="inline-figure">
+        <figure class="inline-figure inline-figure--nestled inline-figure--quiet">
           <img src="images/bonzaitree.jpg"
                srcset="images/bonzaitree-640.jpg 640w, images/bonzaitree-960.jpg 960w, images/bonzaitree.jpg 2048w"
                sizes="(max-width: 768px) 92vw, 480px"

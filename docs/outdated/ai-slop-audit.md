@@ -10,69 +10,69 @@ The problem is not "too modern." The problem is that the visual language implies
 - Shared typography and color choices default to `Inter` + `Merriweather`, blue/teal gradients, pill badges, and rounded cards. That is competent, but it is also the safest possible AI-generated visual stack.
 - The fixed glass nav and glowing gradient square logo push the site toward "AI tools company" rather than "trusted educational institution."
 - References:
-  - [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css#L39)
-  - [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css#L243)
-  - [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css#L286)
+  - [css/styles.css](/Users/jacobrozansky/exef/css/styles.css#L39)
+  - [css/styles.css](/Users/jacobrozansky/exef/css/styles.css#L243)
+  - [css/styles.css](/Users/jacobrozansky/exef/css/styles.css#L286)
 
 ### 2. Hero treatment reads like a template, not a point of view
 - The homepage opens with a three-stop gradient hero, highlighted span headline, badge, metrics row, and three CTA buttons. This is a textbook AI-site composition.
 - The hero says the right things, but the structure is mechanically familiar: big abstract promise, stacked CTAs, stats, no immediate evidence artifact.
 - References:
-  - [index.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/index.html#L69)
-  - [index.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/index.html#L80)
-  - [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css#L509)
+  - [index.html](/Users/jacobrozansky/exef/index.html#L69)
+  - [index.html](/Users/jacobrozansky/exef/index.html#L80)
+  - [css/styles.css](/Users/jacobrozansky/exef/css/styles.css#L509)
 
 ### 3. Too many sections use the same "tag + headline + paragraph + cards" rhythm
 - Homepage, About, and Curriculum all repeat centered section tags, soft explanatory paragraphs, and card grids. The repetition makes the site feel auto-composed even when the underlying content is strong.
 - The problem is not the components themselves. The problem is that almost every page relies on the same rhythm, spacing, and reveal pattern.
 - References:
-  - [index.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/index.html#L105)
-  - [index.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/index.html#L215)
-  - [about.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/about.html#L56)
-  - [curriculum.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/curriculum.html#L135)
-  - [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css#L796)
+  - [index.html](/Users/jacobrozansky/exef/index.html#L105)
+  - [index.html](/Users/jacobrozansky/exef/index.html#L215)
+  - [about.html](/Users/jacobrozansky/exef/about.html#L56)
+  - [curriculum.html](/Users/jacobrozansky/exef/curriculum.html#L135)
+  - [css/styles.css](/Users/jacobrozansky/exef/css/styles.css#L796)
 
 ### 4. Motion and hover polish are doing generic "premium" work instead of meaningful work
 - Card lift, button lift, stagger reveals, and decorative nav pixel effects create motion volume without adding comprehension.
 - These patterns are common AI-generated embellishments because they make a site feel "finished" quickly, but they do not create trust or clarity here.
 - References:
-  - [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css#L300)
-  - [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css#L667)
-  - [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css#L706)
-  - [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css#L1771)
+  - [css/styles.css](/Users/jacobrozansky/exef/css/styles.css#L300)
+  - [css/styles.css](/Users/jacobrozansky/exef/css/styles.css#L667)
+  - [css/styles.css](/Users/jacobrozansky/exef/css/styles.css#L706)
+  - [css/styles.css](/Users/jacobrozansky/exef/css/styles.css#L1771)
 
 ### 5. The site under-signals real people, real practice, and real artifacts
 - EFI is strongest when it is specific: Barkley, Brown, Ward, capstones, rubrics, applied frameworks, tools. The UI often wraps that specificity in abstract marketing chrome instead of leading with visible proof.
 - There is very little institutional texture: annotated syllabus pages, research excerpts, faculty voice, workshop scenes, whiteboard diagrams, real coaching artifacts, or document previews.
 - References:
-  - [index.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/index.html#L174)
-  - [about.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/about.html#L83)
-  - [curriculum.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/curriculum.html#L141)
+  - [index.html](/Users/jacobrozansky/exef/index.html#L174)
+  - [about.html](/Users/jacobrozansky/exef/about.html#L83)
+  - [curriculum.html](/Users/jacobrozansky/exef/curriculum.html#L141)
 
 ### 6. The design system over-rounds and over-softens everything
 - Rounded pills, rounded cards, rounded tags, soft shadows, gradient buttons, and muted borders flatten distinction between content types.
 - When everything is equally softened, nothing feels authoritative.
 - References:
-  - [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css#L56)
-  - [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css#L426)
-  - [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css#L654)
-  - [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css#L1172)
+  - [css/styles.css](/Users/jacobrozansky/exef/css/styles.css#L56)
+  - [css/styles.css](/Users/jacobrozansky/exef/css/styles.css#L426)
+  - [css/styles.css](/Users/jacobrozansky/exef/css/styles.css#L654)
+  - [css/styles.css](/Users/jacobrozansky/exef/css/styles.css#L1172)
 
 ### 7. Inline one-off styling reinforces the assembled feel
 - Several pages rely on inline spacing, color, and border tweaks on top of the shared system. That usually happens when a site is iterated quickly without a strong editorial art direction.
 - The result is visually coherent enough, but it feels composited rather than designed.
 - References:
-  - [index.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/index.html#L76)
-  - [about.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/about.html#L58)
-  - [about.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/about.html#L87)
-  - [curriculum.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/curriculum.html#L141)
+  - [index.html](/Users/jacobrozansky/exef/index.html#L76)
+  - [about.html](/Users/jacobrozansky/exef/about.html#L58)
+  - [about.html](/Users/jacobrozansky/exef/about.html#L87)
+  - [curriculum.html](/Users/jacobrozansky/exef/curriculum.html#L141)
 
 ### 8. Shared runtime templating is flattening page identity
 - The site is not only reusing the same visual components. `js/main.js` rewrites navigation and footer structures so pages converge toward the same shell even when their source markup differs.
 - That is efficient, but it also means page identity is being erased by the runtime layer.
 - References:
-  - [js/main.js](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/js/main.js#L119)
-  - [js/main.js](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/js/main.js#L133)
+  - [js/main.js](/Users/jacobrozansky/exef/js/main.js#L119)
+  - [js/main.js](/Users/jacobrozansky/exef/js/main.js#L133)
 
 ## What To Preserve
 - The content base is substantially better than the average AI-built site.
@@ -124,9 +124,9 @@ That means:
 - Tighten the token set so emphasis styles are rare and meaningful.
 
 ## First Three Changes I Would Actually Ship
-1. Restyle the header, buttons, cards, and hero backgrounds in [css/styles.css](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/css/styles.css) to remove the fastest "AI startup" tells.
-2. Rebuild the top of [index.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/index.html) so the first screen shows proof artifacts and only two actions.
-3. Redesign [curriculum.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/curriculum.html) as an academic outline / workbook page instead of a sequence of polished product cards.
+1. Restyle the header, buttons, cards, and hero backgrounds in [css/styles.css](/Users/jacobrozansky/exef/css/styles.css) to remove the fastest "AI startup" tells.
+2. Rebuild the top of [index.html](/Users/jacobrozansky/exef/index.html) so the first screen shows proof artifacts and only two actions.
+3. Redesign [curriculum.html](/Users/jacobrozansky/exef/curriculum.html) as an academic outline / workbook page instead of a sequence of polished product cards.
 
 ## Success Criteria
 - A first-time visitor should think "credible institute" before "template site."

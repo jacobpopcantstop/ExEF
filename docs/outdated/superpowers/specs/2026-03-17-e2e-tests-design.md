@@ -46,7 +46,7 @@ Add a Playwright E2E suite targeting a local Python static server. Three test fi
 
 ```json
 {
-  "name": "theexecutivefunctioninginstitute",
+  "name": "exef",
   "private": true,
   "devDependencies": {
     "@playwright/test": "^1.42.0"

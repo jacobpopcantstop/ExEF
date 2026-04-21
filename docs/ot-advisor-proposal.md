@@ -58,20 +58,20 @@ Review the highest-priority public surfaces for:
 
 Suggested pages:
 
-- [scope-of-practice.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/scope-of-practice.html)
-- [curriculum.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/curriculum.html)
-- [module-1.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/module-1.html)
-- [module-2.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/module-2.html)
-- [module-5.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/module-5.html)
-- [certification.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/certification.html)
-- [store.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/store.html)
+- [scope-of-practice.html](/Users/jacobrozansky/exef/scope-of-practice.html)
+- [curriculum.html](/Users/jacobrozansky/exef/curriculum.html)
+- [module-1.html](/Users/jacobrozansky/exef/module-1.html)
+- [module-2.html](/Users/jacobrozansky/exef/module-2.html)
+- [module-5.html](/Users/jacobrozansky/exef/module-5.html)
+- [certification.html](/Users/jacobrozansky/exef/certification.html)
+- [store.html](/Users/jacobrozansky/exef/store.html)
 
 ### Deliverable 2: revision guidance memo
 
 Provide a marked-up review using:
 
-- [ot-review-brief.md](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/docs/ot-review-brief.md)
-- [ot-clinical-review-memo.md](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/docs/ot-clinical-review-memo.md)
+- [ot-review-brief.md](/Users/jacobrozansky/exef/docs/ot-review-brief.md)
+- [ot-clinical-review-memo.md](/Users/jacobrozansky/exef/docs/ot-clinical-review-memo.md)
 
 Output should identify:
 

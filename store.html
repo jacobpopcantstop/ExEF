@@ -18,8 +18,6 @@
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:image" content="https://executivefunctioninginstitute.com/images/exef-og-card.svg">  <link rel="canonical" href="https://executivefunctioninginstitute.com/store.html" />
   <script src="js/theme-init.min.js"></script>
-  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
 </head>
 <body class="page-store">
 
@@ -29,23 +27,16 @@
     <div class="nav__inner">
       <a href="index.html" class="nav__logo"><div class="nav__logo-icon">ExEF</div><span>Expert EF</span></a>
       <div class="nav__links" id="nav-links">
-        <a href="index.html" class="nav__link">Home</a>
-        <a href="free-executive-functioning-tests.html" class="nav__link">Assessments</a>
-        <a href="coaching-home.html" class="nav__link">Services</a>
-        
-        <a href="about.html" class="nav__link">About</a>
-        <a href="store.html" class="nav__link">Store</a>
-        <div class="nav__dropdown">
-          <button class="nav__link nav__dropdown-trigger" aria-expanded="false" aria-haspopup="true">Learn <svg aria-hidden="true" viewBox="0 0 12 8" width="12" height="8" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 1 6 6 11 1"/></svg></button>
-          <div class="nav__dropdown-menu">
-            <a href="curriculum.html" class="nav__dropdown-item">Curriculum</a>
-            <a href="certification.html" class="nav__dropdown-item">Certification</a>
-            <a href="blog.html" class="nav__dropdown-item">Blog</a>
-            <a href="resources.html" class="nav__dropdown-item">Resources</a>
-          </div>
+        <div class="nav__cluster">
+          <a href="curriculum.html" class="nav__link">Curriculum</a>
+          <a href="resources.html" class="nav__link">Resources</a>
+          <a href="certification.html" class="nav__link">Certification</a>
+          <a href="coaching-home.html" class="nav__link">Support</a>
+          <a href="store.html" class="nav__link nav__link--active">Store</a>
+          <a href="search.html" class="nav__link">Search</a>
+          <span class="nav__auth"></span>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="nav__link nav__link--cta">Book Consultation</a>
         </div>
-        <span class="nav__auth"></span>
-        <a href="#" class="nav__link nav__link--cta" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/jacobansky/30min'});return false;">Book a Consultation</a>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
         <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -58,9 +49,11 @@
   <header class="page-header">
     <div class="container">
       <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li> <li aria-current="page">Store</li></ol></nav>
-      <h1>Store</h1>
-      <p>ExEF keeps the curriculum free and charges for the part that actually requires expert labor: human grading, practicum review, credential decisions, and professional interpretation.</p>
-      <p class="page-header__note">Use this page to compare the reviewed offers directly: ESQ-R analysis, CEFC enrollment, capstone review, or the full pathway bundle.</p>
+      <div class="store-page-header">
+        <h1>Store</h1>
+        <p>Choose the offer that matches the job you need done: expert interpretation, graded enrollment, capstone review, or the full reviewed certification path.</p>
+        <p class="page-header__note">The products are front and center below. The routing and pricing logic stays visible for anyone who wants to inspect how the system works.</p>
+      </div>
       <div class="button-group" style="margin-top:var(--space-lg);justify-content:flex-start;">
         <a href="#paid-path" class="btn btn--primary btn--sm">Buy Now</a>
         <a href="store.html?offer=esqr_analysis#paid-path" class="btn btn--secondary btn--sm">Start With ESQ-R Analysis</a>
@@ -68,6 +61,78 @@
       </div>
     </div>
   </header>
+
+  <section class="section store-featured" id="paid-path">
+    <div class="container">
+      <div class="section-header section-header--left fade-in">
+        <span class="section-header__tag">Products</span>
+        <h2>Choose your reviewed service</h2>
+        <p>Each product maps to a concrete deliverable and a specific kind of evaluator labor.</p>
+      </div>
+      <div class="offer-grid">
+        <article class="offer-dossier offer-dossier--assessment fade-in">
+          <p class="offer-dossier__eyebrow">Fastest paid entry</p>
+          <h3>ESQ-R Professional Analysis</h3>
+          <span class="offer-dossier__price">$199</span>
+          <p>A lower-friction expert interpretation service for adults or families who want a usable written analysis before committing to a larger support path.</p>
+          <ul class="offer-dossier__meta">
+            <li><span>Includes</span><strong>5-7 page report mapping strength, strain, and intervention priorities</strong></li>
+            <li><span>Best Fit</span><strong>Clients who want signal and direction before weekly support</strong></li>
+            <li><span>Boundary</span><strong>Educational and coaching-oriented analysis that stays outside diagnosis and medical opinion</strong></li>
+          </ul>
+          <div class="artifact-card__links">
+            <button type="button" class="btn btn--primary btn--sm store-cart-btn" data-offer-code="esqr_analysis" data-offer-label="ESQ-R Professional Analysis" data-offer-price="199">Add to Cart</button>
+            <a href="store.html?offer=esqr_analysis#paid-path" class="btn btn--ghost btn--sm">Buy Now</a>
+          </div>
+        </article>
+        <article class="offer-dossier offer-dossier--primary fade-in">
+          <p class="offer-dossier__eyebrow">Certification entry</p>
+          <h3>CEFC Enrollment Access</h3>
+          <span class="offer-dossier__price">$695</span>
+          <p>Six graded module assessments, reviewer feedback, and formal progress tracking for practitioners moving through the CEFC pathway.</p>
+          <ul class="offer-dossier__meta">
+            <li><span>Includes</span><strong>Graded modules, evaluator notes, and readiness tracking</strong></li>
+            <li><span>Best Fit</span><strong>Practitioners who want accountable external review</strong></li>
+            <li><span>Boundary</span><strong>Capstone review and certificate issuance are separate</strong></li>
+          </ul>
+          <div class="artifact-card__links">
+            <button type="button" class="btn btn--primary btn--sm store-cart-btn" data-offer-code="cefc_enrollment" data-offer-label="CEFC Enrollment Access" data-offer-price="695">Add to Cart</button>
+            <a href="store.html?offer=cefc_enrollment#paid-path" class="btn btn--ghost btn--sm">Buy Now</a>
+          </div>
+        </article>
+        <article class="offer-dossier offer-dossier--capstone fade-in">
+          <p class="offer-dossier__eyebrow">Final review</p>
+          <h3>Capstone Review &amp; Credentialing</h3>
+          <span class="offer-dossier__price">$350</span>
+          <p>Manual evaluation of the intake simulation packet, case study, and original tool with revision guidance and credential workflow.</p>
+          <ul class="offer-dossier__meta">
+            <li><span>Includes</span><strong>Rubric scoring, revision notes, and credential decision routing</strong></li>
+            <li><span>Best Fit</span><strong>Candidates who already completed the reviewed curriculum layer</strong></li>
+            <li><span>Output</span><strong>Pass decision, verification, and directory eligibility workflow</strong></li>
+          </ul>
+          <div class="artifact-card__links">
+            <button type="button" class="btn btn--primary btn--sm store-cart-btn" data-offer-code="capstone_review" data-offer-label="Capstone Review &amp; Credentialing" data-offer-price="350">Add to Cart</button>
+            <a href="store.html?offer=capstone_review#paid-path" class="btn btn--ghost btn--sm">Buy Now</a>
+          </div>
+        </article>
+        <article class="offer-dossier offer-dossier--bundle fade-in">
+          <p class="offer-dossier__eyebrow">Full pathway</p>
+          <h3>CEFC Bundle</h3>
+          <span class="offer-dossier__price">$895</span>
+          <p>The cleanest start-to-finish route for practitioners who already know they want reviewed enrollment and final capstone evaluation under one account record.</p>
+          <ul class="offer-dossier__meta">
+            <li><span>Includes</span><strong>Enrollment access plus capstone review in one purchase path</strong></li>
+            <li><span>Best Fit</span><strong>Buyers who want the full reviewed route under $1,000</strong></li>
+            <li><span>Operational Benefit</span><strong>One purchase flow and one reviewer-facing service anchor</strong></li>
+          </ul>
+          <div class="artifact-card__links">
+            <button type="button" class="btn btn--primary btn--sm store-cart-btn" data-offer-code="cefc_bundle" data-offer-label="CEFC Bundle" data-offer-price="895">Add to Cart</button>
+            <a href="store.html?offer=cefc_bundle#paid-path" class="btn btn--ghost btn--sm">Buy Now</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
 
   <section class="section">
     <div class="container">
@@ -79,7 +144,7 @@
           <ul class="artifact-ledger">
             <li><span>Free Layer</span><strong>Curriculum pages, reading structure, open tools, source notes, and public standards.</strong></li>
             <li><span>Paid Layer</span><strong>Human-scored assignments, professional interpretation, capstone review, revision notes, and credential operations.</strong></li>
-            <li><span>Page Role</span><strong>This page lets buyers inspect offer scope before they start checkout.</strong></li>
+            <li><span>Page Role</span><strong>This page lets buyers inspect scope, products, and delivery logic before they start checkout.</strong></li>
             <li><span>Price Context</span><strong>Independent EF coaching certifications from comparable providers run $1,200&ndash;$2,400. ExEF's full reviewed pathway is $895 — the curriculum layer remains open to everyone.</strong></li>
           </ul>
           <figure class="artifact-preview">
@@ -162,87 +227,6 @@
     </div>
   </section>
 
-  <section class="section section--alt">
-    <div class="container">
-      <div class="section-header section-header--left fade-in">
-        <span class="section-header__tag">Offer Dossiers</span>
-        <h2>Reviewed services and paid pathways</h2>
-        <p>Each offer is scoped around a real job ExEF performs: reviewer oversight, formal scoring, expert interpretation, or final credential operations.</p>
-      </div>
-      <div class="offer-grid">
-        <article class="offer-dossier offer-dossier--assessment fade-in">
-          <p class="offer-dossier__eyebrow">Start here - lowest commitment</p>
-          <h3>ESQ-R Professional Analysis</h3>
-          <span class="offer-dossier__price">$199</span>
-          <p class="notice" style="margin-bottom:var(--space-md);">Start here if you want the fastest paid entry point and a clear written interpretation before committing to a larger service.</p>
-          <p>A lower-friction expert interpretation service for families or adults who want a concrete report before deciding on ongoing support.</p>
-          <ul class="offer-dossier__meta">
-            <li><span>Includes</span><strong>5-7 page report mapping strength and strain patterns with intervention priorities</strong></li>
-            <li><span>Best Fit</span><strong>People who want professional interpretation without an immediate weekly coaching commitment</strong></li>
-            <li><span>Boundary</span><strong>Educational and coaching-oriented analysis, not diagnosis or medical opinion</strong></li>
-          </ul>
-          <div class="artifact-card__links">
-            <button type="button" class="btn btn--primary btn--sm store-cart-btn" data-offer-code="esqr_analysis" data-offer-label="ESQ-R Professional Analysis" data-offer-price="199">Add to Cart</button>
-            <a href="store.html?offer=esqr_analysis#paid-path" class="btn btn--ghost btn--sm">Buy Now</a>
-            <a href="esqr.html" class="btn btn--secondary btn--sm">Take the Free ESQ-R</a>
-            <a href="coaching-home.html#services" class="btn btn--ghost btn--sm">Compare Coaching Options</a>
-          </div>
-        </article>
-
-        <article class="offer-dossier offer-dossier--primary fade-in">
-          <p class="offer-dossier__eyebrow">Certification entry</p>
-          <h3>CEFC Enrollment Access</h3>
-          <span class="offer-dossier__price">$695</span>
-          <p>For professionals who want formal progression through the CEFC pathway with reviewer oversight and accountable scoring standards.</p>
-          <ul class="offer-dossier__meta">
-            <li><span>Includes</span><strong>Six graded module assessments, written evaluator feedback, and readiness tracking toward capstone eligibility</strong></li>
-            <li><span>Best Fit</span><strong>Educators, clinicians, and practitioners who want external review before a larger transition</strong></li>
-            <li><span>Boundary</span><strong>Does not include final capstone scoring or credential issuance</strong></li>
-          </ul>
-          <p class="notice">This offer covers human scoring and reviewer oversight across the graded curriculum layer.</p>
-          <div class="artifact-card__links">
-            <button type="button" class="btn btn--primary btn--sm store-cart-btn" data-offer-code="cefc_enrollment" data-offer-label="CEFC Enrollment Access" data-offer-price="695">Add to Cart</button>
-            <a href="store.html?offer=cefc_enrollment#paid-path" class="btn btn--ghost btn--sm">Buy Now</a>
-          </div>
-        </article>
-
-        <article class="offer-dossier offer-dossier--capstone fade-in">
-          <p class="offer-dossier__eyebrow">Final review</p>
-          <h3>Capstone Review &amp; Credentialing</h3>
-          <span class="offer-dossier__price">$350</span>
-          <p>Manual evaluation of the intake simulation packet, case study, and original tool with revision guidance and credential processing.</p>
-          <ul class="offer-dossier__meta">
-            <li><span>Includes</span><strong>Rubric scoring, written revision notes, re-review support, and credential decision workflow</strong></li>
-            <li><span>Best Fit</span><strong>Candidates who have already completed the reviewed curriculum layer</strong></li>
-            <li><span>Output</span><strong>Pass decision plus verification and directory workflow when eligible</strong></li>
-          </ul>
-          <p class="notice">Priced around judgment-heavy manual review. This is the most evaluator-intensive part of the certification stack.</p>
-          <div class="artifact-card__links">
-            <button type="button" class="btn btn--primary btn--sm store-cart-btn" data-offer-code="capstone_review" data-offer-label="Capstone Review &amp; Credentialing" data-offer-price="350">Add to Cart</button>
-            <a href="store.html?offer=capstone_review#paid-path" class="btn btn--ghost btn--sm">Buy Now</a>
-          </div>
-        </article>
-
-        <article class="offer-dossier offer-dossier--bundle fade-in">
-          <p class="offer-dossier__eyebrow">Full pathway</p>
-          <h3>CEFC Bundle</h3>
-          <span class="offer-dossier__price">$895</span>
-          <p>The combined reviewed path for practitioners who already know they want enrollment oversight and final capstone review.</p>
-          <ul class="offer-dossier__meta">
-            <li><span>Includes</span><strong>Enrollment access plus capstone review in one purchase path</strong></li>
-            <li><span>Best Fit</span><strong>Practitioners who want the cleanest all-in route under the $1,000 threshold</strong></li>
-            <li><span>Operational Benefit</span><strong>One intake conversation and one reviewed-services anchor for the whole credential path</strong></li>
-          </ul>
-          <p class="notice">This is the simplest program purchase if the buyer is already committed to the full reviewed certification track.</p>
-          <div class="artifact-card__links">
-            <button type="button" class="btn btn--primary btn--sm store-cart-btn" data-offer-code="cefc_bundle" data-offer-label="CEFC Bundle" data-offer-price="895">Add to Cart</button>
-            <a href="store.html?offer=cefc_bundle#paid-path" class="btn btn--ghost btn--sm">Buy Now</a>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
   <section class="section">
     <div class="container">
       <div class="artifact-board">
@@ -284,7 +268,7 @@
           </figure>
           <figure class="artifact-preview">
             <img src="images/dawson-thinking-doing-matrix.svg" alt="Dawson and Guare thinking versus doing matrix used in ExEF's program materials." loading="lazy">
-            <figcaption>The reviewed services exist to score and support transfer from theory into practice, not to gate the theory itself.</figcaption>
+            <figcaption>The reviewed services exist to score and support transfer from theory into practice rather than gate the theory itself.</figcaption>
           </figure>
         </aside>
       </div>
@@ -310,7 +294,7 @@
             <article class="artifact-card artifact-card--2">
               <p class="artifact-card__label">Standards artifact</p>
               <h3>Rubric and competency map</h3>
-              <p>ExEF publishes its capstone rubric and competency crosswalk so the credential isn’t a black box.</p>
+              <p>ExEF publishes its capstone rubric and competency crosswalk so the credential stays transparent.</p>
               <div class="artifact-card__links">
                 <a href="ExEF-Capstone-Transparency-Rubric.html" class="btn btn--secondary btn--sm">View Rubric</a>
                 <a href="ExEF-Competency-Crosswalk-Map.pdf" class="btn btn--ghost btn--sm" target="_blank" rel="noopener">Crosswalk PDF</a>
@@ -339,7 +323,7 @@
               <li><span>Educators</span><strong>June to July, plus late October to mid November transition windows</strong></li>
               <li><span>Students</span><strong>Early January and late spring academic transition periods</strong></li>
             </ul>
-            <p class="page-header__note" style="margin-top:var(--space-lg);">ExEF runs seasonal campaigns, not permanent discounting. Public list pricing stays visible as the anchor before and after promotional weeks.</p>
+            <p class="page-header__note" style="margin-top:var(--space-lg);">ExEF runs seasonal campaigns rather than permanent discounting. Public list pricing stays visible as the anchor before and after promotional weeks.</p>
           </div>
           <div class="card" style="margin-top:var(--space-xl);border-top:3px solid var(--color-accent);">
             <h4 style="margin-top:0;">Get notified when enrollment opens</h4>
@@ -355,7 +339,7 @@
     </div>
   </section>
 
-  <section class="section section--alt" id="paid-path">
+  <section class="section section--alt" id="paid-path-details">
     <div class="container">
       <div class="section-header section-header--left fade-in">
         <span class="section-header__tag">Operations Boundary</span>
@@ -442,7 +426,7 @@
           </div>
           <p style="color:var(--color-text-light);margin-top:var(--space-md);">This replaces dead-end checkout logic with one measurable conversion step. For immediate fit questions, you can still book a consultation.</p>
           <div class="button-group" style="margin-top:var(--space-lg);">
-            <a href="coaching-contact.html#booking" class="btn btn--secondary btn--sm" data-analytics-event="store_book_consultation_click" data-analytics-label="Store book consultation">Book Consultation</a>
+            <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--secondary btn--sm" data-analytics-event="store_book_consultation_click" data-analytics-label="Store book consultation">Book Consultation</a>
             <a href="certification.html" class="btn btn--secondary btn--sm">Review Certification</a>
           </div>
         </div>
@@ -502,9 +486,9 @@
         <h3 style="margin-top:0;">Common Questions Before Purchase</h3>
         <ul class="checklist">
           <li><strong>&ldquo;How much time does certification take?&rdquo;</strong> Most candidates complete in 8&ndash;16 weeks at 5&ndash;8 hours per week. You set your own pace &mdash; there are no cohort deadlines or expiration dates on enrollment.</li>
-          <li><strong>&ldquo;Is this credential recognized?&rdquo;</strong> The CEFC is an internal ExEF credential built on Barkley, Brown, Dawson &amp; Guare, and Ward frameworks. It is not an ICF or NBEFC credential, but our <a href="accreditation.html">alignment status page</a> documents where ExEF standards map to those bodies. Graduates list it alongside other professional development.</li>
+          <li><strong>&ldquo;Is this credential recognized?&rdquo;</strong> The CEFC is an internal ExEF credential built on Barkley, Brown, Dawson &amp; Guare, and Ward frameworks. Our <a href="accreditation.html">alignment status page</a> documents where ExEF standards map to ICF and NBEFC bodies. Graduates list it alongside other professional development.</li>
           <li><strong>&ldquo;What if I don&rsquo;t pass the capstone?&rdquo;</strong> You receive written rubric feedback explaining exactly what to revise. Resubmission is included &mdash; no additional fee. Most candidates who complete the program and revise to the rubric pass on resubmission.</li>
-          <li><strong>&ldquo;I&rsquo;m not sure which offer fits me.&rdquo;</strong> Start with the free ESQ-R or book a consultation. If you want structured progression with graded feedback, CEFC Enrollment is the right entry. If you only need a one-off assessment interpretation, start with ESQ-R Analysis.</li>
+          <li><strong>&ldquo;Which offer fits me best?&rdquo;</strong> Start with the free ESQ-R or book a consultation. If you want structured progression with graded feedback, CEFC Enrollment is the right entry. If you only need a one-off assessment interpretation, start with ESQ-R Analysis.</li>
           <li><strong>&ldquo;Can I see the rubric and standards before I pay?&rdquo;</strong> Yes. The <a href="certification.html#transparency-rubric">capstone rubric</a>, grading criteria, and scope-of-practice policy are all public before purchase.</li>
           <li><strong>&ldquo;How quickly do I get feedback after submission?&rdquo;</strong> Rubric-engine results are generated within hours and held for a 24-hour review window before dashboard release. Most feedback arrives within one business day.</li>
           <li><strong>&ldquo;Can I pay in installments?&rdquo;</strong> Installment payment via Stripe is coming soon. If you need a split-payment arrangement in the meantime, contact us directly before submitting — we can discuss options on a case-by-case basis.</li>
@@ -515,8 +499,8 @@
   <!-- CTA -->
   <section class="cta-section">
     <div class="container">
-      <h2>Not ready for reviewed services?</h2>
-      <p>Go back to the route pages, use the free layer first, and return only when you know which reviewed service matches the job you need done.</p>
+      <h2>Need more time before reviewed services?</h2>
+      <p>Go back to the route pages, use the free layer first, and return when you know which reviewed service matches the job you need done.</p>
       <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
         <a href="index.html#start-paths" class="btn btn--primary btn--lg">Choose a Start Path</a>
         <a href="resources.html#assessments" class="btn btn--outline-white btn--lg">Use Free Tools First</a>
@@ -557,7 +541,7 @@
         <div>
           <h4>Connect</h4>
           <ul class="footer__links">
-            <li><a href="#" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/jacobansky/30min'});return false;">Book a Consultation</a></li>
+            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a Consultation</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="search.html">Search</a></li>
           </ul>

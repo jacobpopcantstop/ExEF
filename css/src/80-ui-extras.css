@@ -2,8 +2,8 @@
    Dark Mode Toggle
    ============================================ */
 .dark-toggle {
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(22, 43, 60, 0.32);
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(22, 43, 60, 0.16);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -13,15 +13,18 @@
   justify-content: center;
   font-size: 1.1rem;
   color: var(--color-text);
-  transition: background-color var(--transition), color var(--transition), border-color var(--transition);
+  box-shadow: 0 10px 24px rgba(22, 43, 60, 0.12);
+  transition: background-color var(--transition), color var(--transition), border-color var(--transition), box-shadow var(--transition), transform var(--transition);
   flex-shrink: 0;
   margin-left: var(--space-xs);
   grid-column: 3;
 }
 
 .dark-toggle:hover {
-  background: var(--color-bg-alt);
-  border-color: var(--color-primary-light);
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(30, 132, 73, 0.32);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(22, 43, 60, 0.16);
 }
 
 .module-scroll-progress {
@@ -162,8 +165,8 @@
 
 .artifact-board {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
-  gap: var(--space-2xl);
+  grid-template-columns: minmax(0, 1.32fr) minmax(240px, 0.68fr);
+  gap: var(--space-3xl);
   align-items: start;
 }
 
@@ -211,7 +214,7 @@
 .artifact-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-lg);
+  gap: var(--space-xl);
 }
 
 .artifact-grid--stack-laptop {
@@ -372,7 +375,16 @@
   border-radius: var(--border-radius-lg);
   padding: var(--space-xl);
   min-width: 0;
-  overflow-wrap: break-word;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+  text-wrap: pretty;
+}
+
+.artifact-card h3 {
+  font-size: clamp(1.18rem, 1.02rem + 0.5vw, 1.5rem);
+  line-height: 1.22;
+  text-wrap: balance;
 }
 
 .visual-slot {
@@ -461,6 +473,8 @@ body.page-resources .page-header {
 
 .artifact-card p {
   color: var(--color-text-light);
+  font-size: 0.96rem;
+  line-height: 1.72;
 }
 
 .artifact-card__links {

@@ -75,31 +75,31 @@ For each note, please include:
 
 ### Scope, ethics, and public claims
 
-- [scope-of-practice.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/scope-of-practice.html)
-- [certification.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/certification.html)
-- [about.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/about.html)
-- [store.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/store.html)
-- [privacy.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/privacy.html)
-- [terms.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/terms.html)
+- [scope-of-practice.html](/Users/jacobrozansky/exef/scope-of-practice.html)
+- [certification.html](/Users/jacobrozansky/exef/certification.html)
+- [about.html](/Users/jacobrozansky/exef/about.html)
+- [store.html](/Users/jacobrozansky/exef/store.html)
+- [privacy.html](/Users/jacobrozansky/exef/privacy.html)
+- [terms.html](/Users/jacobrozansky/exef/terms.html)
 
 ### Curriculum core
 
-- [curriculum.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/curriculum.html)
-- [module-1.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/module-1.html)
-- [module-2.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/module-2.html)
-- [module-3.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/module-3.html)
-- [module-4.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/module-4.html)
-- [module-5.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/module-5.html)
-- [module-6.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/module-6.html)
+- [curriculum.html](/Users/jacobrozansky/exef/curriculum.html)
+- [module-1.html](/Users/jacobrozansky/exef/module-1.html)
+- [module-2.html](/Users/jacobrozansky/exef/module-2.html)
+- [module-3.html](/Users/jacobrozansky/exef/module-3.html)
+- [module-4.html](/Users/jacobrozansky/exef/module-4.html)
+- [module-5.html](/Users/jacobrozansky/exef/module-5.html)
+- [module-6.html](/Users/jacobrozansky/exef/module-6.html)
 
 ### Tools and interpretation surfaces
 
-- [teacher-to-coach.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/teacher-to-coach.html)
-- [full-ef-profile.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/full-ef-profile.html)
-- [ef-profile-story.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/ef-profile-story.html)
-- [gap-analyzer.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/gap-analyzer.html)
-- [launch-plan.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/launch-plan.html)
-- [brown-clusters-tool.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/brown-clusters-tool.html)
+- [teacher-to-coach.html](/Users/jacobrozansky/exef/teacher-to-coach.html)
+- [full-ef-profile.html](/Users/jacobrozansky/exef/full-ef-profile.html)
+- [ef-profile-story.html](/Users/jacobrozansky/exef/ef-profile-story.html)
+- [gap-analyzer.html](/Users/jacobrozansky/exef/gap-analyzer.html)
+- [launch-plan.html](/Users/jacobrozansky/exef/launch-plan.html)
+- [brown-clusters-tool.html](/Users/jacobrozansky/exef/brown-clusters-tool.html)
 
 ## Suggested review order
 

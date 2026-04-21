@@ -43,7 +43,7 @@ Create a Python script that finds and replaces the nav `<div class="nav__links">
 ```
 
 ```bash
-cd /Users/jacobrozansky/TheExecutiveFunctioningInstitute
+cd /Users/jacobrozansky/exef
 python3 scripts/update_nav.py
 ```
 
@@ -96,7 +96,7 @@ print(f"\nUpdated {count} files.")
 - [ ] **Step 2: Run the nav update script**
 
 ```bash
-cd /Users/jacobrozansky/TheExecutiveFunctioningInstitute
+cd /Users/jacobrozansky/exef
 python3 scripts/update_nav.py
 ```
 
@@ -222,7 +222,7 @@ document.addEventListener('click', function(e) {
 - [ ] **Step 7: Build CSS and test**
 
 ```bash
-cd /Users/jacobrozansky/TheExecutiveFunctioningInstitute
+cd /Users/jacobrozansky/exef
 python3 scripts/build_css.py
 ```
 
@@ -283,7 +283,7 @@ print(f"\nUpdated {count} files with Calendly assets.")
 - [ ] **Step 2: Run the script**
 
 ```bash
-cd /Users/jacobrozansky/TheExecutiveFunctioningInstitute
+cd /Users/jacobrozansky/exef
 python3 scripts/add_calendly.py
 ```
 
@@ -516,7 +516,7 @@ print(f"\nUpdated {count} footers.")
 - [ ] **Step 2: Run the footer update script**
 
 ```bash
-cd /Users/jacobrozansky/TheExecutiveFunctioningInstitute
+cd /Users/jacobrozansky/exef
 python3 scripts/update_footer.py
 ```
 
@@ -548,7 +548,7 @@ git commit -m "feat: update footer nav with coaching-first structure and new ema
 - [ ] **Step 1: Replace all email addresses**
 
 ```bash
-cd /Users/jacobrozansky/TheExecutiveFunctioningInstitute
+cd /Users/jacobrozansky/exef
 # Replace jacob@jacobef.com
 grep -rl 'jacob@jacobef.com' *.html | xargs sed -i '' 's/jacob@jacobef\.com/jacob@exef.org/g'
 # Replace info@theexecutivefunctioninginstitute.com
@@ -594,7 +594,7 @@ grep -n 'calendly\|jacobef' coaching-contact.html
 Replace `https://calendly.com/jacobef/efi-consultation` with `https://calendly.com/jacobansky/30min` throughout the file.
 
 ```bash
-cd /Users/jacobrozansky/TheExecutiveFunctioningInstitute
+cd /Users/jacobrozansky/exef
 sed -i '' 's|https://calendly.com/jacobef/efi-consultation|https://calendly.com/jacobansky/30min|g' coaching-contact.html
 ```
 
@@ -633,7 +633,7 @@ git commit -m "feat: update coaching contact with new Calendly link and inline w
 - [ ] **Step 1: Create the blog directory**
 
 ```bash
-mkdir -p /Users/jacobrozansky/TheExecutiveFunctioningInstitute/blog
+mkdir -p /Users/jacobrozansky/exef/blog
 ```
 
 - [ ] **Step 2: Create `blog.html`**
@@ -819,7 +819,7 @@ Append blog-specific styles:
 - [ ] **Step 4: Build CSS**
 
 ```bash
-cd /Users/jacobrozansky/TheExecutiveFunctioningInstitute
+cd /Users/jacobrozansky/exef
 python3 scripts/build_css.py
 ```
 
@@ -928,7 +928,7 @@ Add to `css/src/50-accessibility-responsive.css` in the mobile media query secti
 - [ ] **Step 4: Build CSS and verify**
 
 ```bash
-cd /Users/jacobrozansky/TheExecutiveFunctioningInstitute
+cd /Users/jacobrozansky/exef
 python3 scripts/build_css.py
 ```
 
@@ -956,7 +956,7 @@ git commit -m "feat: rewrite about page as team page with Jacob's profile"
 - [ ] **Step 1: Read the current resources page**
 
 ```bash
-head -100 /Users/jacobrozansky/TheExecutiveFunctioningInstitute/resources.html
+head -100 /Users/jacobrozansky/exef/resources.html
 ```
 
 Identify the sections to remove (role selection, "about this page" explainer, artifact grid, "use this desk in order" sidebar).
@@ -1110,7 +1110,7 @@ Append to `css/src/90-dark-theme.css`:
 - [ ] **Step 2: Build CSS**
 
 ```bash
-cd /Users/jacobrozansky/TheExecutiveFunctioningInstitute
+cd /Users/jacobrozansky/exef
 python3 scripts/build_css.py
 ```
 
@@ -1156,7 +1156,7 @@ Add to the redirects section of `netlify.toml`:
 - [ ] **Step 2: Verify config syntax**
 
 ```bash
-cd /Users/jacobrozansky/TheExecutiveFunctioningInstitute
+cd /Users/jacobrozansky/exef
 cat netlify.toml | head -20
 ```
 
@@ -1180,7 +1180,7 @@ git commit -m "feat: add Netlify redirect for blog page"
 - [ ] **Step 1: Rebuild CSS**
 
 ```bash
-cd /Users/jacobrozansky/TheExecutiveFunctioningInstitute
+cd /Users/jacobrozansky/exef
 python3 scripts/build_css.py
 ```
 
@@ -1215,7 +1215,7 @@ Toggle dark mode on each page. Check:
 - [ ] **Step 5: Run link checker**
 
 ```bash
-cd /Users/jacobrozansky/TheExecutiveFunctioningInstitute
+cd /Users/jacobrozansky/exef
 python3 scripts/check_links.py
 ```
 

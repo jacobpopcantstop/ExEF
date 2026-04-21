@@ -1,5 +1,5 @@
 {
-  "name": "theexecutivefunctioninginstitute",
+  "name": "exef",
   "private": true,
   "devDependencies": {
     "@playwright/test": "^1.42.0"

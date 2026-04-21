@@ -7,7 +7,7 @@
 .inline-figure {
   margin: var(--space-xl) auto;
   text-align: center;
-  max-width: min(100%, 720px);
+  max-width: min(100%, 860px);
   position: relative;
   z-index: 0;
 }
@@ -15,9 +15,11 @@
 .inline-figure img {
   width: 100%;
   max-width: 100%;
-  max-height: 360px;
-  height: auto;
+  height: clamp(180px, 26vw, 280px);
+  max-height: 280px;
+  aspect-ratio: 18 / 7;
   object-fit: cover;
+  object-position: center 45%;
   border-radius: var(--border-radius);
   box-shadow: 0 14px 36px rgba(14, 47, 68, 0.14);
 }
@@ -51,7 +53,7 @@
 .page-hero-figure {
   margin: var(--space-md) auto 0;
   text-align: center;
-  max-width: min(100%, 960px);
+  max-width: min(100%, 1120px);
   position: relative;
   z-index: 0;
 }
@@ -59,9 +61,11 @@
 .page-hero-figure img {
   width: 100%;
   max-width: 100%;
-  max-height: 420px;
-  height: auto;
+  height: clamp(170px, 24vw, 300px);
+  max-height: 300px;
+  aspect-ratio: 21 / 7;
   object-fit: cover;
+  object-position: center 48%;
   border-radius: var(--border-radius);
   box-shadow: 0 18px 44px rgba(14, 47, 68, 0.16);
 }
@@ -73,6 +77,11 @@
 .page-hero-figure--accent img {
   opacity: 0.44;
   filter: saturate(0.94) contrast(0.98);
+}
+
+.page-hero-figure--accent.page-hero-figure--full-color img {
+  opacity: 0.9;
+  filter: none;
 }
 
 .page-hero-figure--quiet img {
@@ -91,7 +100,7 @@
 }
 
 .page-header__art img {
-  opacity: 0.42;
+  opacity: 0.34;
   filter: saturate(0.95) contrast(0.98);
 }
 
@@ -125,20 +134,22 @@
   }
 
   .page-header--with-art .container {
-    padding-right: min(36vw, 30rem);
+    padding-right: min(30vw, 24rem);
   }
 
   .page-header__art {
     position: absolute;
-    top: calc(var(--space-lg) * -1);
+    top: 0;
     right: clamp(1rem, 4vw, 3.5rem);
     margin: 0;
-    width: min(34vw, 460px);
-    max-width: 460px;
+    width: min(26vw, 360px);
+    max-width: 360px;
   }
 
   .page-header__art img {
-    max-height: none;
+    height: clamp(140px, 18vw, 210px);
     width: 100%;
+    max-height: 210px;
+    aspect-ratio: 16 / 6;
   }
 }

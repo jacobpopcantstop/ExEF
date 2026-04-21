@@ -63,7 +63,7 @@ function loadAuthWithUser(user) {
   context.window.document = context.document;
   vm.createContext(context);
   vm.runInContext(
-    fs.readFileSync('/Users/jacobrozansky/TheExecutiveFunctioningInstitute/js/auth.js', 'utf8'),
+    fs.readFileSync('/Users/jacobrozansky/exef/js/auth.js', 'utf8'),
     context
   );
 

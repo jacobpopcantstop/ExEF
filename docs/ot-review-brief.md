@@ -26,20 +26,20 @@ Please review the site for:
 
 Please start with these:
 
-- [scope-of-practice.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/scope-of-practice.html)
-- [curriculum.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/curriculum.html)
-- [module-1.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/module-1.html)
-- [module-2.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/module-2.html)
-- [module-5.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/module-5.html)
-- [certification.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/certification.html)
-- [store.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/store.html)
+- [scope-of-practice.html](/Users/jacobrozansky/exef/scope-of-practice.html)
+- [curriculum.html](/Users/jacobrozansky/exef/curriculum.html)
+- [module-1.html](/Users/jacobrozansky/exef/module-1.html)
+- [module-2.html](/Users/jacobrozansky/exef/module-2.html)
+- [module-5.html](/Users/jacobrozansky/exef/module-5.html)
+- [certification.html](/Users/jacobrozansky/exef/certification.html)
+- [store.html](/Users/jacobrozansky/exef/store.html)
 
 If you have time for more, these would also be valuable:
 
-- [about.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/about.html)
-- [teacher-to-coach.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/teacher-to-coach.html)
-- [full-ef-profile.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/full-ef-profile.html)
-- [ef-profile-story.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/ef-profile-story.html)
+- [about.html](/Users/jacobrozansky/exef/about.html)
+- [teacher-to-coach.html](/Users/jacobrozansky/exef/teacher-to-coach.html)
+- [full-ef-profile.html](/Users/jacobrozansky/exef/full-ef-profile.html)
+- [ef-profile-story.html](/Users/jacobrozansky/exef/ef-profile-story.html)
 
 ## Questions to keep in mind
 
@@ -87,4 +87,4 @@ I will not imply accreditation, therapy supervision, or clinical endorsement bey
 
 If useful, the more detailed working memo is here:
 
-- [ot-clinical-review-memo.md](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/docs/ot-clinical-review-memo.md)
+- [ot-clinical-review-memo.md](/Users/jacobrozansky/exef/docs/ot-clinical-review-memo.md)

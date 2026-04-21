@@ -4,24 +4,36 @@
   var user = EFI.Auth.getCurrentUser();
   if (!user) return;
 
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
+  function setText(id, value) {
+    var node = byId(id);
+    if (node) node.textContent = value;
+  }
+
   // Greeting
-  document.getElementById('dash-greeting').textContent = 'Welcome, ' + user.name.split(' ')[0];
+  setText('dash-greeting', 'Welcome back, ' + user.name.split(' ')[0]);
 
   // Account info
-  document.getElementById('acct-name').textContent = user.name;
-  document.getElementById('acct-email').textContent = user.email;
-  document.getElementById('acct-since').textContent = new Date(user.createdAt).toLocaleDateString();
+  setText('acct-name', user.name);
+  setText('acct-email', user.email);
+  setText('acct-since', new Date(user.createdAt).toLocaleDateString());
 
   // Logout
-  document.getElementById('logout-btn').addEventListener('click', function() { EFI.Auth.logout(); });
-  document.getElementById('logout-link').addEventListener('click', function(e) { e.preventDefault(); EFI.Auth.logout(); });
+  var logoutBtn = byId('logout-btn');
+  if (logoutBtn) logoutBtn.addEventListener('click', function() { EFI.Auth.logout(); });
+  var logoutLink = byId('logout-link');
+  if (logoutLink) logoutLink.addEventListener('click', function(e) { e.preventDefault(); EFI.Auth.logout(); });
 
   var isOpsRole = EFI.Auth.hasRole(['admin', 'reviewer']);
-  document.getElementById('ops-tools-card').style.display = isOpsRole ? 'block' : 'none';
+  var opsToolsCard = byId('ops-tools-card');
+  if (opsToolsCard) opsToolsCard.style.display = isOpsRole ? 'block' : 'none';
   var submissionWorkflow = [];
 
   function setOpsStatus(msg) {
-    document.getElementById('ops-status').textContent = msg;
+    setText('ops-status', msg);
   }
 
   function getLatestUser() {
@@ -406,7 +418,8 @@
     var latestUser = EFI.Auth.getCurrentUser();
     if (!latestUser) return;
     var status = EFI.Auth.getCertificationStatus(latestUser);
-    var list = document.getElementById('readiness-list');
+    var list = byId('readiness-list');
+    if (!list) return;
     while (list.firstChild) list.removeChild(list.firstChild);
 
     var checks = [
@@ -442,16 +455,16 @@
     var moduleIds = ['1', '2', '3', '4', '5', '6'];
     var completed = moduleIds.filter(function(id) { return EFI.Auth.isModuleComplete(id, progress); }).length;
     var completionPct = Math.round((completed / moduleIds.length) * 100);
-    document.getElementById('metric-completion-trend').textContent = completed + '/6 modules passed (' + completionPct + '%)';
+    setText('metric-completion-trend', completed + '/6 modules passed (' + completionPct + '%)');
 
     var metrics = EFI.Auth.getReleaseMetrics(progress);
-    document.getElementById('stat-avg-score').textContent = metrics.averageScore == null ? 'N/A' : (metrics.averageScore + '%');
-    document.getElementById('metric-pending-release').textContent = metrics.pendingReleaseCount + ' submission(s) waiting for release';
+    setText('stat-avg-score', metrics.averageScore == null ? 'N/A' : (metrics.averageScore + '%'));
+    setText('metric-pending-release', metrics.pendingReleaseCount + ' submission(s) waiting for release');
 
     if (!metrics.nextReleaseAt) {
-      document.getElementById('metric-next-release').textContent = 'No pending feedback release windows.';
+      setText('metric-next-release', 'No pending feedback release windows.');
     } else {
-      document.getElementById('metric-next-release').textContent = new Date(metrics.nextReleaseAt).toLocaleString();
+      setText('metric-next-release', new Date(metrics.nextReleaseAt).toLocaleString());
     }
   }
 
@@ -461,15 +474,16 @@
   var totalItems = purchases.reduce(function(s, p) { return s + p.items.length; }, 0);
   var certStatus = EFI.Auth.getCertificationStatus(user);
 
-  document.getElementById('stat-purchases').textContent = totalItems;
-  document.getElementById('stat-spent').textContent = '$' + totalSpent;
-  document.getElementById('stat-cert').textContent = certStatus.fullyCertified ? 'Earned' : (certStatus.eligibleForCertificate ? 'Ready to Purchase' : 'In Progress');
-  if (certStatus.fullyCertified) document.getElementById('stat-cert').style.color = 'var(--color-accent)';
+  setText('stat-purchases', totalItems);
+  setText('stat-spent', '$' + totalSpent);
+  setText('stat-cert', certStatus.fullyCertified ? 'Earned' : (certStatus.eligibleForCertificate ? 'Ready to Purchase' : 'In Progress'));
+  if (certStatus.fullyCertified && byId('stat-cert')) byId('stat-cert').style.color = 'var(--color-accent)';
   renderOutcomeMetrics();
 
   // Purchase history
-  var listEl = document.getElementById('purchase-list');
-  var noEl = document.getElementById('no-purchases');
+  var listEl = byId('purchase-list');
+  var noEl = byId('no-purchases');
+  if (!listEl || !noEl) return;
   if (purchases.length === 0) {
     noEl.style.display = 'block';
     listEl.style.display = 'none';
@@ -589,7 +603,7 @@
       }
     });
 
-    var container = document.getElementById('module-progress');
+    var container = byId('module-progress');
     if (!container) return;
 
     var capstone = prog.capstone || {};
@@ -619,7 +633,8 @@
       cta.textContent = 'Go to Capstone Submission';
       cta.addEventListener('click', function (event) {
         event.preventDefault();
-        document.getElementById('submit-capstone-btn').scrollIntoView({ behavior: 'smooth' });
+        var capstoneBtn = byId('submit-capstone-btn');
+        if (capstoneBtn) capstoneBtn.scrollIntoView({ behavior: 'smooth' });
       });
       guidance.appendChild(heading);
       guidance.appendChild(body);
@@ -675,10 +690,10 @@
 
   document.querySelectorAll('[data-submit-module]').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      var url = document.getElementById('submission-url').value;
-      var notes = document.getElementById('submission-notes').value;
+      var url = byId('submission-url').value;
+      var notes = byId('submission-notes').value;
       var attachments = collectSubmissionAttachments();
-      var msg = document.getElementById('grading-message');
+      var msg = byId('grading-message');
       var moduleId = this.getAttribute('data-submit-module');
       Promise.resolve(EFI.Auth.saveModuleSubmission(moduleId, url, notes, attachments)).then(function (result) {
         msg.textContent = result.ok
@@ -690,12 +705,12 @@
     });
   });
 
-  document.getElementById('submit-capstone-btn').addEventListener('click', function () {
-    var url = document.getElementById('submission-url').value;
-    var notes = document.getElementById('submission-notes').value;
+  byId('submit-capstone-btn').addEventListener('click', function () {
+    var url = byId('submission-url').value;
+    var notes = byId('submission-notes').value;
     var attachments = collectSubmissionAttachments();
     Promise.resolve(EFI.Auth.submitCapstone(url, notes, attachments)).then(function (result) {
-      document.getElementById('grading-message').textContent = result.ok
+      byId('grading-message').textContent = result.ok
         ? ('Capstone submitted. Rubric-engine feedback will unlock in dashboard after 24 hours (' + new Date(result.release_at).toLocaleString() + ').')
         : result.error;
       if (result.ok) clearSubmissionAttachmentFields();
@@ -705,16 +720,16 @@
     });
   });
 
-  document.getElementById('run-grading-btn').addEventListener('click', function () {
+  byId('run-grading-btn').addEventListener('click', function () {
     Promise.resolve(EFI.Auth.runAutoGrading()).then(function (result) {
       if (!result.ok) {
-        document.getElementById('grading-message').textContent = result.error;
+        byId('grading-message').textContent = result.error;
         return;
       }
       var statusText = result.status.capstonePassed
         ? 'Feedback refresh complete. Released grading feedback applied to your readiness.'
         : 'Feedback refresh complete. Some submissions may still be waiting for 24-hour release.';
-      document.getElementById('grading-message').textContent = statusText;
+      byId('grading-message').textContent = statusText;
       renderCertificationReadiness();
       renderOutcomeMetrics();
       refreshSubmissionWorkflow();

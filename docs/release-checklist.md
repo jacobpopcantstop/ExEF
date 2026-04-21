@@ -55,7 +55,7 @@ Canonical outstanding roadmap: `docs/progress.md`
 ## 4) Live Stripe purchase verification
 
 - [ ] Create or use a real learner account on the deployed site.
-- [ ] Start checkout from the live [store.html](/Users/jacobrozansky/TheExecutiveFunctioningInstitute/store.html).
+- [ ] Start checkout from the live [store.html](/Users/jacobrozansky/exef/store.html).
 - [ ] Complete one real purchase for the lowest-risk live offer.
 - [ ] Confirm:
   - Stripe Checkout opens successfully

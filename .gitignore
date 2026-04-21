@@ -26,3 +26,11 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+
+# Local planning and generated artifacts
+.superpowers/
+output/playwright/*.json
+output/playwright/*.png
+output/spreadsheet/
+supabase/.temp/
+test-results/

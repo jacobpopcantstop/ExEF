@@ -113,6 +113,88 @@
 
   <main id="main-content">
 
+  <!-- Work-in-progress banner + interest form -->
+  <section class="section section--tight cert-wip">
+    <div class="container container--narrow">
+      <div class="cert-wip__banner" role="note">
+        <p class="cert-wip__eyebrow">Work in Progress &middot; Preview Only</p>
+        <h2 class="cert-wip__title">Certification is not open yet.</h2>
+        <p class="cert-wip__body">We're finalizing capstone review operations, coach supervision hours, and accreditation alignment before opening enrollment. The material below previews what the pathway will include. If you'd like to be notified when enrollment opens, join the interest list.</p>
+        <form id="certification-interest-form" class="cert-wip__form">
+          <div class="cert-wip__row">
+            <label class="sr-only" for="cert-interest-name">Name</label>
+            <input id="cert-interest-name" name="name" type="text" placeholder="Your name" autocomplete="name" required>
+            <label class="sr-only" for="cert-interest-email">Email</label>
+            <input id="cert-interest-email" name="email" type="email" placeholder="you@email.com" autocomplete="email" required>
+          </div>
+          <label class="cert-wip__role" for="cert-interest-role">Your role (optional)</label>
+          <select id="cert-interest-role" name="role">
+            <option value="">Select one...</option>
+            <option value="aspiring_coach">Aspiring EF / ADHD coach</option>
+            <option value="practicing_coach">Practicing coach adding EF credential</option>
+            <option value="educator">Educator or special educator</option>
+            <option value="therapist">Therapist / clinician</option>
+            <option value="ot">Occupational therapist</option>
+            <option value="parent">Parent / family member</option>
+            <option value="other">Other</option>
+          </select>
+          <label class="cert-wip__notes" for="cert-interest-notes">What would you want from certification? (optional)</label>
+          <textarea id="cert-interest-notes" name="notes" rows="3" placeholder="A sentence or two helps us prioritize."></textarea>
+          <label class="cert-wip__consent">
+            <input id="cert-interest-consent" name="consent" type="checkbox" required>
+            <span>I'd like occasional updates about ExEF certification and understand I can unsubscribe any time.</span>
+          </label>
+          <div class="cert-wip__actions">
+            <button type="submit" class="btn btn--primary btn--sm">Join the Interest List</button>
+          </div>
+          <p id="certification-interest-status" class="cert-wip__status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      var form = document.getElementById('certification-interest-form');
+      var status = document.getElementById('certification-interest-status');
+      if (!form) return;
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (!form.reportValidity()) return;
+        var name = document.getElementById('cert-interest-name').value.trim();
+        var email = document.getElementById('cert-interest-email').value.trim();
+        var role = document.getElementById('cert-interest-role').value;
+        var notes = document.getElementById('cert-interest-notes').value.trim();
+        var submit = form.querySelector('button[type="submit"]');
+        var original = submit ? submit.textContent : '';
+        if (submit) { submit.disabled = true; submit.textContent = 'Adding...'; }
+        if (status) { status.style.color = 'var(--color-text-muted)'; status.textContent = 'Saving your interest...'; }
+        try {
+          var response = await fetch('/api/leads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: name,
+              email: email,
+              consent: true,
+              source: 'certification_interest',
+              lead_type: 'certification_interest',
+              metadata: { page: 'certification.html', role: role, notes: notes }
+            })
+          });
+          var body = await response.json();
+          if (!response.ok || !body.ok) throw new Error((body && body.error) || 'Unable to save right now.');
+          status.textContent = 'Thanks. We\u2019ll email you when certification opens.';
+          form.reset();
+        } catch (err) {
+          if (status) { status.style.color = 'var(--color-danger, #b42318)'; status.textContent = err.message || 'Unable to save right now.'; }
+        } finally {
+          if (submit) { submit.disabled = false; submit.textContent = original; }
+        }
+      });
+    })();
+  </script>
+
   <!-- Page Header — simplified -->
   <header class="page-header certification-masthead">
     <div class="container certification-masthead__hero">

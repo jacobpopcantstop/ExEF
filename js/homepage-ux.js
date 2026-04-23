@@ -28,31 +28,61 @@
     function show(idx) {
       current = (idx + cards.length) % cards.length;
       cards.forEach(function (card, i) {
-        card.classList.toggle('is-active', i === current);
+        var isActive = i === current;
+        card.classList.toggle('is-active', isActive);
+        card.hidden = !isActive;
+        card.setAttribute('aria-hidden', isActive ? 'false' : 'true');
       });
       dots.forEach(function (dot, i) {
         dot.classList.toggle('is-active', i === current);
       });
     }
 
-    function advance() {
-      if (paused) return;
-      show(current + 1);
-    }
-
     function start() {
       stop();
-      timer = window.setInterval(advance, INTERVAL);
+      timer = window.setTimeout(tick, INTERVAL);
     }
 
     function stop() {
-      if (timer) { window.clearInterval(timer); timer = null; }
+      if (timer) { window.clearTimeout(timer); timer = null; }
     }
 
     function restart() { stop(); start(); }
 
+    function tick() {
+      if (!paused) {
+        show(current + 1);
+      }
+      start();
+    }
+
     document.addEventListener('visibilitychange', function () {
       paused = document.hidden;
+      if (paused) {
+        stop();
+      } else {
+        restart();
+      }
+    });
+
+    carousel.addEventListener('mouseenter', function () {
+      paused = true;
+      stop();
+    });
+
+    carousel.addEventListener('mouseleave', function () {
+      paused = false;
+      restart();
+    });
+
+    carousel.addEventListener('focusin', function () {
+      paused = true;
+      stop();
+    });
+
+    carousel.addEventListener('focusout', function () {
+      paused = false;
+      restart();
     });
 
     show(0);
@@ -174,6 +204,12 @@
 
     buildDots();
     render();
+    // Re-render after layout settles (fonts/images) so the first prev/next click
+    // has correct measurements.
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(render);
+    });
+    window.addEventListener('load', render);
     tileStart();
   }
 
@@ -202,6 +238,7 @@
 
   if (dismiss) {
     dismiss.addEventListener('click', function () {
+      setStatus('You can always join later from another page.', false);
       hideStrip(true);
     });
   }

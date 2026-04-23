@@ -220,6 +220,15 @@
     URL.revokeObjectURL(url);
   }
 
+  function buildFileStem(state) {
+    var raw = normalizeProfile(state).name || 'personal-operating-manual';
+    var cleaned = raw
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    return cleaned || 'personal-operating-manual';
+  }
+
   function renderSections() {
     sectionsWrap.innerHTML = sections.map(function (section, sectionIndex) {
       return '' +
@@ -420,6 +429,7 @@
           '<div>' +
             '<p class="pom-kicker">Personal Operating Manual</p>' +
             '<h2>' + escapeHtml(profile.name) + '</h2>' +
+            '<p>A practical guide for teammates, collaborators, and managers who want to work with this person more smoothly.</p>' +
             (metaItems.length ? '<div class="pom-preview-meta">' + metaItems.map(function (item) {
               return '<span class="pom-preview-pill">' + escapeHtml(item) + '</span>';
             }).join('') + '</div>' : '') +
@@ -581,13 +591,13 @@
 
   downloadTextBtn.addEventListener('click', function () {
     var state = collectState();
-    downloadFile('personal-operating-manual.txt', buildPlainText(state), 'text/plain;charset=utf-8');
+    downloadFile(buildFileStem(state) + '-personal-operating-manual.txt', buildPlainText(state), 'text/plain;charset=utf-8');
     setStatus('Downloaded a plain-text version of your manual.');
   });
 
   downloadHtmlBtn.addEventListener('click', function () {
     var state = collectState();
-    downloadFile('personal-operating-manual.html', buildExportHtml(state), 'text/html;charset=utf-8');
+    downloadFile(buildFileStem(state) + '-personal-operating-manual.html', buildExportHtml(state), 'text/html;charset=utf-8');
     setStatus('Downloaded a formatted HTML version of your manual.');
   });
 

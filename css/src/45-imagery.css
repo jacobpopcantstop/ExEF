@@ -104,6 +104,15 @@
   filter: saturate(0.95) contrast(0.98);
 }
 
+.page-header__art.page-hero-figure--full-color img {
+  opacity: 1;
+  filter: none;
+}
+
+.page-hero-figure--forest-raise img {
+  object-position: center 32%;
+}
+
 @media (min-width: 900px) {
   .inline-figure {
     margin-top: var(--space-lg);

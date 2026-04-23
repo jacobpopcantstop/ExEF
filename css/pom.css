@@ -56,6 +56,18 @@
   min-height: 100%;
 }
 
+.pom-quickstart {
+  margin-top: var(--space-xl);
+  border: 1px solid rgba(39, 73, 96, 0.12);
+  background:
+    linear-gradient(135deg, rgba(244, 248, 245, 0.98), rgba(235, 228, 215, 0.9)),
+    radial-gradient(circle at top right, rgba(30, 132, 73, 0.1), transparent 42%);
+}
+
+.pom-quickstart h2 {
+  margin-bottom: var(--space-md);
+}
+
 .pom-shell {
   max-width: 1280px;
 }
@@ -276,6 +288,11 @@
   justify-content: center;
 }
 
+.pom-actions-card__note {
+  margin-bottom: var(--space-md);
+  color: var(--color-text-light);
+}
+
 .pom-share-status {
   min-height: 1.5rem;
   margin: var(--space-md) 0 0;
@@ -416,7 +433,8 @@
 
 [data-theme="dark"] .pom-header-art__card,
 [data-theme="dark"] .pom-section,
-[data-theme="dark"] .pom-preview-card {
+[data-theme="dark"] .pom-preview-card,
+[data-theme="dark"] .pom-quickstart {
   background:
     linear-gradient(180deg, rgba(19, 27, 40, 0.98), rgba(16, 24, 36, 0.98)),
     repeating-linear-gradient(

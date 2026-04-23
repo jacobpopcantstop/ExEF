@@ -4081,6 +4081,15 @@ select.form-control {
   filter: saturate(0.95) contrast(0.98);
 }
 
+.page-header__art.page-hero-figure--full-color img {
+  opacity: 1;
+  filter: none;
+}
+
+.page-hero-figure--forest-raise img {
+  object-position: center 32%;
+}
+
 @media (min-width: 900px) {
   .inline-figure {
     margin-top: var(--space-lg);
@@ -6633,8 +6642,323 @@ body.page-resources .page-header {
   align-items: start;
 }
 
+/* When the conversion surface only contains the main column (no aside),
+   stretch it to full width so the form inputs don't feel pinched. */
+.store-conversion-surface:not(:has(> .store-conversion-surface__aside)) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .store-conversion-surface__main {
   min-width: 0;
+}
+
+#purchase-intent-form label {
+  display: block;
+  margin-bottom: calc(var(--space-xs) * -1 + 0.15rem);
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+#purchase-intent-form input[type="text"],
+#purchase-intent-form input[type="email"],
+#purchase-intent-form select {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid rgba(22, 43, 60, 0.22);
+  border-radius: var(--border-radius);
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--color-heading);
+  font-size: 1rem;
+  font-family: inherit;
+  line-height: 1.4;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+#purchase-intent-form input[type="text"]:hover,
+#purchase-intent-form input[type="email"]:hover,
+#purchase-intent-form select:hover {
+  border-color: rgba(22, 43, 60, 0.38);
+}
+
+#purchase-intent-form input[type="text"]:focus,
+#purchase-intent-form input[type="email"]:focus,
+#purchase-intent-form select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(198, 153, 90, 0.22);
+  background: #ffffff;
+}
+
+#purchase-intent-form input::placeholder {
+  color: rgba(22, 43, 60, 0.42);
+}
+
+[data-theme="dark"] #purchase-intent-form input[type="text"],
+[data-theme="dark"] #purchase-intent-form input[type="email"],
+[data-theme="dark"] #purchase-intent-form select {
+  background: rgba(16, 38, 30, 0.8);
+  border-color: rgba(107, 226, 166, 0.28);
+  color: #f1faf4;
+}
+
+[data-theme="dark"] #purchase-intent-form input::placeholder {
+  color: rgba(232, 240, 255, 0.45);
+}
+
+[data-theme="dark"] #purchase-intent-form label {
+  color: rgba(232, 240, 255, 0.78);
+}
+
+/* ============================================
+   Store FAQ (Common Questions Before Purchase)
+   ============================================ */
+.store-faq__intro {
+  margin: 0 0 var(--space-md);
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+}
+
+.store-faq__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.store-faq__item {
+  border: 1px solid rgba(22, 43, 60, 0.12);
+  border-radius: var(--border-radius);
+  background: rgba(255, 255, 255, 0.6);
+  transition: border-color 180ms ease, background 180ms ease;
+}
+
+.store-faq__item[open] {
+  border-color: rgba(30, 132, 73, 0.35);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 6px 18px rgba(22, 43, 60, 0.06);
+}
+
+.store-faq__item > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: var(--space-md) var(--space-lg);
+  padding-right: calc(var(--space-lg) + 1.6rem);
+  position: relative;
+  font-weight: 600;
+  color: var(--color-heading);
+  line-height: 1.4;
+}
+
+.store-faq__item > summary::-webkit-details-marker {
+  display: none;
+}
+
+.store-faq__item > summary::after {
+  content: "+";
+  position: absolute;
+  right: var(--space-lg);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.3rem;
+  height: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(30, 132, 73, 0.12);
+  color: #1e8449;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1;
+  transition: transform 220ms ease, background 220ms ease;
+}
+
+.store-faq__item[open] > summary::after {
+  content: "\2013";
+  background: #1e8449;
+  color: #ffffff;
+}
+
+.store-faq__item > summary:hover,
+.store-faq__item > summary:focus-visible {
+  color: #1e8449;
+  outline: none;
+}
+
+.store-faq__item > p {
+  margin: 0;
+  padding: 0 var(--space-lg) var(--space-md);
+  color: var(--color-text-light);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+[data-theme="dark"] .store-faq__item {
+  background: rgba(16, 38, 30, 0.5);
+  border-color: rgba(107, 226, 166, 0.2);
+}
+
+[data-theme="dark"] .store-faq__item[open] {
+  background: rgba(16, 38, 30, 0.9);
+  border-color: rgba(107, 226, 166, 0.45);
+}
+
+[data-theme="dark"] .store-faq__item > summary {
+  color: #f1faf4;
+}
+
+[data-theme="dark"] .store-faq__item > p {
+  color: rgba(232, 240, 255, 0.82);
+}
+
+/* ============================================
+   Certification WIP banner + interest form
+   ============================================ */
+.cert-wip {
+  padding-top: var(--space-xl);
+}
+
+.cert-wip__banner {
+  padding: var(--space-2xl);
+  border: 2px dashed rgba(198, 153, 90, 0.55);
+  border-radius: var(--border-radius-lg);
+  background:
+    linear-gradient(135deg, rgba(255, 248, 235, 0.96), rgba(255, 255, 255, 0.96)),
+    repeating-linear-gradient(
+      45deg,
+      transparent 0,
+      transparent 14px,
+      rgba(198, 153, 90, 0.05) 14px,
+      rgba(198, 153, 90, 0.05) 15px
+    );
+  box-shadow: 0 14px 36px rgba(22, 43, 60, 0.08);
+}
+
+.cert-wip__eyebrow {
+  margin: 0 0 var(--space-xs);
+  color: #8a6318;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.cert-wip__title {
+  margin: 0 0 var(--space-sm);
+  color: var(--color-heading);
+  font-size: 1.55rem;
+  line-height: 1.2;
+}
+
+.cert-wip__body {
+  margin: 0 0 var(--space-lg);
+  color: var(--color-text-light);
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.cert-wip__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.cert-wip__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+}
+
+@media (max-width: 640px) {
+  .cert-wip__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cert-wip__role,
+.cert-wip__notes {
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: calc(var(--space-xs) * -1 + 0.2rem);
+}
+
+.cert-wip__form input[type="text"],
+.cert-wip__form input[type="email"],
+.cert-wip__form select,
+.cert-wip__form textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid rgba(22, 43, 60, 0.22);
+  border-radius: var(--border-radius);
+  background: rgba(255, 255, 255, 0.98);
+  color: var(--color-heading);
+  font-size: 1rem;
+  font-family: inherit;
+  line-height: 1.4;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.cert-wip__form textarea {
+  resize: vertical;
+  min-height: 3.2rem;
+}
+
+.cert-wip__form input:focus,
+.cert-wip__form select:focus,
+.cert-wip__form textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(198, 153, 90, 0.24);
+}
+
+.cert-wip__consent {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  color: var(--color-text-light);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin-top: var(--space-xs);
+}
+
+.cert-wip__actions {
+  margin-top: var(--space-xs);
+}
+
+.cert-wip__status {
+  min-height: 1.2rem;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+[data-theme="dark"] .cert-wip__banner {
+  background:
+    linear-gradient(135deg, rgba(34, 24, 10, 0.9), rgba(16, 38, 30, 0.9));
+  border-color: rgba(198, 153, 90, 0.55);
+}
+
+[data-theme="dark"] .cert-wip__title {
+  color: #f1faf4;
+}
+
+[data-theme="dark"] .cert-wip__body,
+[data-theme="dark"] .cert-wip__consent {
+  color: rgba(232, 240, 255, 0.82);
+}
+
+[data-theme="dark"] .cert-wip__form input[type="text"],
+[data-theme="dark"] .cert-wip__form input[type="email"],
+[data-theme="dark"] .cert-wip__form select,
+[data-theme="dark"] .cert-wip__form textarea {
+  background: rgba(16, 38, 30, 0.8);
+  border-color: rgba(107, 226, 166, 0.28);
+  color: #f1faf4;
 }
 
 .store-paid-path-card {
@@ -6818,6 +7142,10 @@ body.has-topic-clusters.has-topic-clusters-plain main {
   box-shadow: 0 18px 42px rgba(22, 43, 60, 0.08);
 }
 
+.insight-card[hidden] {
+  display: none !important;
+}
+
 .insight-card.is-active {
   display: block;
 }
@@ -6875,6 +7203,10 @@ body.has-topic-clusters.has-topic-clusters-plain main {
 .insight-carousel__dot.is-active {
   background: var(--color-accent-dark);
   transform: scale(1.15);
+}
+
+.newsletter-strip[hidden] {
+  display: none;
 }
 
 .newsletter-strip {
@@ -7337,6 +7669,24 @@ body.has-topic-clusters.has-topic-clusters-plain main {
   .artifact-board,
   .store-ledger {
     grid-template-columns: 1fr;
+  }
+
+  .insight-carousel__stage {
+    min-height: 360px;
+  }
+
+  .insight-card {
+    padding: var(--space-xl);
+  }
+
+  .insight-card h3 {
+    max-width: none;
+    font-size: clamp(1.35rem, 6vw, 1.7rem);
+  }
+
+  .insight-card p:not(.insight-card__kicker):not(.insight-card__source) {
+    max-width: none;
+    font-size: 0.98rem;
   }
 
   .artifact-grid {

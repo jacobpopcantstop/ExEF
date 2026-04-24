@@ -12,6 +12,10 @@
     var INTERVAL = 6500;
     var paused = false;
 
+    function isMobileCarousel() {
+      return window.matchMedia('(max-width: 640px)').matches;
+    }
+
     var dots = [];
     if (dotsHost) {
       cards.forEach(function (_, idx) {
@@ -27,11 +31,12 @@
 
     function show(idx) {
       current = (idx + cards.length) % cards.length;
+      var mobile = isMobileCarousel();
       cards.forEach(function (card, i) {
         var isActive = i === current;
         card.classList.toggle('is-active', isActive);
-        card.hidden = !isActive;
-        card.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+        card.hidden = mobile ? false : !isActive;
+        card.setAttribute('aria-hidden', mobile ? 'false' : (isActive ? 'false' : 'true'));
       });
       dots.forEach(function (dot, i) {
         dot.classList.toggle('is-active', i === current);
@@ -40,6 +45,7 @@
 
     function start() {
       stop();
+      if (isMobileCarousel()) return;
       timer = window.setTimeout(tick, INTERVAL);
     }
 
@@ -85,8 +91,18 @@
       restart();
     });
 
+    function applyInsightLayoutMode() {
+      if (isMobileCarousel()) {
+        stop();
+      } else if (!document.hidden) {
+        start();
+      }
+      show(current);
+    }
+
     show(0);
-    start();
+    applyInsightLayoutMode();
+    window.addEventListener('resize', applyInsightLayoutMode);
   }
 
   // Tile carousel (assessments + resources, three at a time, smooth cycle)
@@ -108,6 +124,10 @@
       return 3;
     }
 
+    function isMobileTiles() {
+      return window.matchMedia('(max-width: 640px)').matches;
+    }
+
     var pageIndex = 0;
 
     function pageCount() {
@@ -118,15 +138,19 @@
     function render() {
       if (!items.length || !track) return;
       var vc = visibleCount();
-      var first = items[0];
-      var style = window.getComputedStyle(track);
-      var gap = parseFloat(style.columnGap || style.gap || '0') || 0;
-      var itemWidth = first.getBoundingClientRect().width;
-      var offset = pageIndex * (itemWidth + gap);
-      track.style.transform = 'translateX(' + (-offset) + 'px)';
+      if (isMobileTiles()) {
+        track.style.transform = 'none';
+      } else {
+        var first = items[0];
+        var style = window.getComputedStyle(track);
+        var gap = parseFloat(style.columnGap || style.gap || '0') || 0;
+        var itemWidth = first.getBoundingClientRect().width;
+        var offset = pageIndex * (itemWidth + gap);
+        track.style.transform = 'translateX(' + (-offset) + 'px)';
+      }
 
-      if (prevBtn) prevBtn.disabled = pageIndex <= 0;
-      if (nextBtn) nextBtn.disabled = pageIndex >= items.length - vc;
+      if (prevBtn) prevBtn.disabled = isMobileTiles() || pageIndex <= 0;
+      if (nextBtn) nextBtn.disabled = isMobileTiles() || pageIndex >= items.length - vc;
 
       if (tileDotsHost) {
         var dots = Array.prototype.slice.call(tileDotsHost.children);
@@ -163,12 +187,13 @@
     }
 
     function tileAdvance() {
-      if (tilePaused) return;
+      if (tilePaused || isMobileTiles()) return;
       goTo(pageIndex + 1);
     }
 
     function tileStart() {
       tileStop();
+      if (isMobileTiles()) return;
       tileTimer = window.setInterval(tileAdvance, TILE_INTERVAL);
     }
 

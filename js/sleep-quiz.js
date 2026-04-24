@@ -1,0 +1,114 @@
+(function () {
+  'use strict';
+
+  var form = document.getElementById('sleep-quiz-form');
+  if (!form) return;
+
+  var questions = [
+    { id:'s1', text:'I get into bed at roughly the same time most nights.', positive:true },
+    { id:'s2', text:'I wake up at roughly the same time most mornings.', positive:true },
+    { id:'s3', text:'I lie awake for more than 30 minutes before falling asleep.', positive:false },
+    { id:'s4', text:'I wake up during the night and have trouble getting back to sleep.', positive:false },
+    { id:'s5', text:'I wake up feeling restored instead of depleted.', positive:true },
+    { id:'s6', text:'My caffeine timing does not interfere with sleep.', positive:true },
+    { id:'s7', text:'Screen use in the final hour before bed is hard to control.', positive:false },
+    { id:'s8', text:'Stress rumination keeps my brain spinning at bedtime.', positive:false },
+    { id:'s9', text:'My room is dark enough, cool enough, and quiet enough for sleep.', positive:true },
+    { id:'s10', text:'I need naps just to function through normal days.', positive:false },
+    { id:'s11', text:'I can keep a shutdown routine even on busy days.', positive:true },
+    { id:'s12', text:'My sleep schedule shifts a lot between weekdays and weekends.', positive:false },
+    { id:'s13', text:'I rely on revenge bedtime scrolling even when I am exhausted.', positive:false },
+    { id:'s14', text:'Morning light exposure is part of my normal routine.', positive:true },
+    { id:'s15', text:'Poor sleep clearly worsens my focus, memory, or emotional regulation.', positive:false },
+    { id:'s16', text:'I wake up multiple times because of discomfort, pain, or breathing issues.', positive:false }
+  ];
+
+  var mapLabel = ['Never','Rarely','Sometimes','Often'];
+  var progressText = document.getElementById('sleep-progress-text');
+  var progressFill = document.getElementById('sleep-progress-fill');
+  var groups = document.getElementById('sleep-question-groups');
+  var error = document.getElementById('sleep-quiz-error');
+  var results = document.getElementById('sleep-results');
+  var title = document.getElementById('sleep-result-title');
+  var lede = document.getElementById('sleep-result-lede');
+  var actions = document.getElementById('sleep-actions');
+
+  function renderQuestions() {
+    groups.innerHTML = questions.map(function (q, idx) {
+      var opts = [0,1,2,3].map(function (n) {
+        return '<label><input type="radio" name="' + q.id + '" value="' + n + '"> ' + mapLabel[n] + '</label>';
+      }).join('');
+      return '<article class="card" style="margin-bottom:var(--space-md);"><p><strong>' + (idx + 1) + '.</strong> ' + q.text + '</p><div class="quiz-scale-row">' + opts + '</div></article>';
+    }).join('');
+  }
+
+  function readScore() {
+    var answered = 0;
+    var total = 0;
+    questions.forEach(function (q) {
+      var pick = form.querySelector('input[name="' + q.id + '"]:checked');
+      if (!pick) return;
+      answered += 1;
+      var raw = Number(pick.value);
+      total += q.positive ? raw : (3 - raw);
+    });
+    return { answered: answered, total: total };
+  }
+
+  function updateProgress() {
+    var state = readScore();
+    progressText.textContent = state.answered + ' of 16 answered';
+    progressFill.style.width = (state.answered / 16 * 100) + '%';
+  }
+
+  function renderResult(total) {
+    var band;
+    if (total >= 38) {
+      band = {
+        titleText: 'Sleep likely supports your executive functioning',
+        ledeText: 'Your current rest pattern looks protective. Keep it steady and avoid over-correcting what already works.',
+        actionsList: ['Protect wake time first; bedtime consistency follows.', 'Keep a 30-minute wind-down as non-negotiable infrastructure.', 'Watch early signs of slide: later caffeine, doom-scrolling, skipped morning light.']
+      };
+    } else if (total >= 27) {
+      band = {
+        titleText: 'Sleep is probably part of the friction',
+        ledeText: 'Your score suggests sleep is not catastrophic, but it is likely reducing attention, emotional control, and task initiation on harder days.',
+        actionsList: ['Pick one anchor: fixed wake time or fixed digital cutoff.', 'Move caffeine cutoff 60–90 minutes earlier this week.', 'Use a two-step shutdown ritual: brain dump + low-light routine.']
+      };
+    } else {
+      band = {
+        titleText: 'Sleep debt is likely amplifying your EF struggles',
+        ledeText: 'This pattern often feels like motivation failure but is usually a physiology load problem. Start with stabilization, not self-criticism.',
+        actionsList: ['Run a 7-day sleep triage: same wake time, earlier light, earlier caffeine cutoff.', 'Remove one high-friction bedtime trigger (phone in bed, late work, intense media).', 'If loud snoring, breathing pauses, pain, or insomnia persist, seek medical sleep evaluation.']
+      };
+    }
+
+    title.textContent = band.titleText;
+    lede.textContent = band.ledeText;
+    actions.innerHTML = band.actionsList.map(function (item) { return '<li>' + item + '</li>'; }).join('');
+    results.hidden = false;
+    results.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  form.addEventListener('change', updateProgress);
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    var state = readScore();
+    if (state.answered !== 16) {
+      error.hidden = false;
+      return;
+    }
+    error.hidden = true;
+    renderResult(state.total);
+  });
+
+  document.getElementById('sleep-reset-btn').addEventListener('click', function () {
+    form.reset();
+    results.hidden = true;
+    error.hidden = true;
+    updateProgress();
+  });
+
+  renderQuestions();
+  updateProgress();
+})();

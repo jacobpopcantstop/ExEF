@@ -7504,6 +7504,45 @@ body.has-topic-clusters.has-topic-clusters-plain main {
   justify-content: center;
 }
 
+.quiz-scale-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.quiz-scale-row label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.5rem;
+  border: 1px solid rgba(36, 53, 67, 0.16);
+  border-radius: var(--border-radius);
+  background: rgba(255, 255, 255, 0.68);
+  font-size: 0.9rem;
+}
+
+.quiz-rank-list,
+.quiz-full-list,
+.quiz-actions-list {
+  display: grid;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  padding-left: 1.2rem;
+}
+
+.quiz-rank-list li,
+.quiz-full-list li,
+.quiz-actions-list li {
+  color: var(--color-text-light);
+}
+
+.quiz-full-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
 .floating-store-cta {
   position: fixed;
   right: 14px;
@@ -7662,6 +7701,10 @@ body.has-topic-clusters.has-topic-clusters-plain main {
     width: 100%;
     justify-content: center;
   }
+
+  .quiz-scale-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 640px) {
@@ -7672,28 +7715,11 @@ body.has-topic-clusters.has-topic-clusters-plain main {
   }
 
   .insight-carousel__stage {
-    min-height: 0;
-    display: flex;
-    gap: var(--space-md);
-    overflow-x: auto;
-    padding-bottom: 4px;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
+    min-height: 360px;
   }
 
   .insight-card {
-    display: block;
-    flex: 0 0 min(88%, 360px);
-    scroll-snap-align: start;
     padding: var(--space-xl);
-  }
-
-  .insight-card[hidden] {
-    display: block !important;
-  }
-
-  .insight-carousel__dots {
-    display: none;
   }
 
   .insight-card h3 {
@@ -8193,27 +8219,10 @@ body.page-home .page-hero-figure--responsive img {
 
 @media (max-width: 640px) {
   .tile-carousel__item {
-    flex: 0 0 min(88vw, 360px);
-    scroll-snap-align: start;
+    flex: 0 0 100%;
   }
-
-  .tile-carousel__viewport {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
-  }
-
   .tile-carousel__track {
     gap: var(--space-md);
-    width: max-content;
-    transition: none;
-    will-change: auto;
-    transform: none !important;
-  }
-
-  .tile-carousel__controls {
-    display: none;
   }
 }
 

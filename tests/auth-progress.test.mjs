@@ -1,7 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import path from 'node:path';
 import vm from 'node:vm';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const authScriptPath = path.resolve(__dirname, '../js/auth.js');
 
 function createStorage(initial) {
   const data = new Map(Object.entries(initial || {}));
@@ -63,7 +69,7 @@ function loadAuthWithUser(user) {
   context.window.document = context.document;
   vm.createContext(context);
   vm.runInContext(
-    fs.readFileSync('/Users/jacobrozansky/exef/js/auth.js', 'utf8'),
+    fs.readFileSync(authScriptPath, 'utf8'),
     context
   );
 

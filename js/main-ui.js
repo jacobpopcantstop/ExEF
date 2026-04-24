@@ -169,7 +169,7 @@ window.EFI.registerMainModule(function (shared) {
     { href: 'certification.html', label: 'Certification' },
     { href: 'coaching-home.html', label: 'Support' },
     { href: 'store.html', label: 'Store' },
-    { href: 'search.html', label: 'Search' }
+    { href: 'blog.html', label: 'Blog' }
   ];
 
     document.querySelectorAll('.nav__links').forEach(function (links) {

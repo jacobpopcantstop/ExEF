@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Best Fit Fitness Quiz | ExEF</title>
+  <meta name="description" content="Take ExEF's 20-question Best Fit Fitness Quiz and get a ranked list of 30 exercise types matched to your lifestyle, preferences, and access constraints.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.svg">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <nav class="nav" role="navigation" aria-label="Main navigation"><div class="nav__inner"><a href="index.html" class="nav__logo"><div class="nav__logo-icon">ExEF</div><span>Expert EF</span></a><div class="nav__links" id="nav-links"></div><button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button></div></nav>
+
+  <main id="main-content">
+    <header class="page-header"><div class="container container--narrow"><nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li><li><a href="free-executive-functioning-tests.html">Assessment Hub</a></li><li aria-current="page">Best Fit Fitness Quiz</li></ol></nav><h1>Best Fit Fitness Quiz</h1><p>Regular movement is one of the highest-leverage interventions for executive functioning. This quiz helps you pick a format you'll actually sustain.</p></div></header>
+
+    <section class="section section--alt" id="fitness-questionnaire">
+      <div class="container container--narrow">
+        <form id="fitness-quiz-form" novalidate>
+          <div class="esqr-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="20" aria-label="Fitness quiz progress">
+            <div class="esqr-progress__bar"><div class="esqr-progress__fill" id="fitness-progress-fill"></div></div>
+            <span class="esqr-progress__text" id="fitness-progress-text">0 of 20 answered</span>
+          </div>
+          <div class="card" style="margin-top:var(--space-lg);"><p style="margin:0;"><strong>Scale:</strong> 0 = Not true for me, 4 = Very true for me.</p></div>
+          <div id="fitness-question-groups" style="margin-top:var(--space-lg);"></div>
+          <p id="fitness-quiz-error" class="esqr-error" role="alert" hidden>Please answer all 20 questions before scoring your fit list.</p>
+          <div class="button-group" style="margin-top:var(--space-xl);">
+            <button type="submit" class="btn btn--primary btn--lg">Rank My Best-Fit Exercise Options</button>
+            <button type="button" class="btn btn--secondary btn--lg" id="fitness-reset-btn">Reset</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="fitness-results" hidden>
+      <div class="container container--narrow">
+        <div class="section-header"><span class="section-header__tag">Your Results</span><h2>Best-Fit Movement Ranking</h2><p id="fitness-summary"></p></div>
+        <div class="card">
+          <h3 style="margin-top:0;">Top 10 to test first</h3>
+          <ol id="fitness-top-list" class="quiz-rank-list"></ol>
+        </div>
+        <div class="card" style="margin-top:var(--space-lg);">
+          <h3 style="margin-top:0;">Full 30-option ranking</h3>
+          <ol id="fitness-full-list" class="quiz-full-list"></ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container"><div class="footer__bottom"><span>Expert EF — Open-Source Education</span></div></div></footer>
+  <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
+  <script src="js/nav-auth.min.js" defer></script>
+  <script src="js/main.min.js" defer></script>
+  <script src="js/fitness-quiz.js" defer></script>
+</body>
+</html>

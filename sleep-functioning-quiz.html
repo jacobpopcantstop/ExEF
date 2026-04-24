@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sleep & Executive Function Quiz | ExEF</title>
+  <meta name="description" content="Take ExEF's sleep quiz to check whether sleep quality is amplifying your executive-function struggles, and get a practical next-step plan.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.svg">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <nav class="nav" role="navigation" aria-label="Main navigation"><div class="nav__inner"><a href="index.html" class="nav__logo"><div class="nav__logo-icon">ExEF</div><span>Expert EF</span></a><div class="nav__links" id="nav-links"></div><button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button></div></nav>
+
+  <main id="main-content">
+    <header class="page-header"><div class="container container--narrow"><nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li><li><a href="free-executive-functioning-tests.html">Assessment Hub</a></li><li aria-current="page">Sleep & EF Quiz</li></ol></nav><h1>Sleep &amp; Executive Function Quiz</h1><p>If your planning, focus, and emotional regulation feel harder than they should, sleep quality may be a hidden multiplier. This check helps you test that hypothesis.</p></div></header>
+
+    <section class="section section--alt">
+      <div class="container container--narrow">
+        <form id="sleep-quiz-form" novalidate>
+          <div class="esqr-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="16" aria-label="Sleep quiz progress">
+            <div class="esqr-progress__bar"><div class="esqr-progress__fill" id="sleep-progress-fill"></div></div>
+            <span class="esqr-progress__text" id="sleep-progress-text">0 of 16 answered</span>
+          </div>
+          <div id="sleep-question-groups" style="margin-top:var(--space-lg);"></div>
+          <p id="sleep-quiz-error" class="esqr-error" role="alert" hidden>Please answer all 16 prompts before generating your sleep readout.</p>
+          <div class="button-group" style="margin-top:var(--space-xl);">
+            <button type="submit" class="btn btn--primary btn--lg">Generate Sleep Readout</button>
+            <button type="button" class="btn btn--secondary btn--lg" id="sleep-reset-btn">Reset</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="sleep-results" hidden>
+      <div class="container container--narrow">
+        <div class="card">
+          <h2 id="sleep-result-title" style="margin-top:0;">Your sleep result</h2>
+          <p id="sleep-result-lede"></p>
+          <h3>What to do this week</h3>
+          <ul id="sleep-actions" class="quiz-actions-list"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container"><div class="footer__bottom"><span>Expert EF — Open-Source Education</span></div></div></footer>
+  <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
+  <script src="js/nav-auth.min.js" defer></script>
+  <script src="js/main.min.js" defer></script>
+  <script src="js/sleep-quiz.js" defer></script>
+</body>
+</html>

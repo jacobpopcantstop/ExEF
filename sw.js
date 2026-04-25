@@ -1,13 +1,16 @@
 'use strict';
 
-var STATIC_CACHE = 'exef-static-v5';
-var PAGE_CACHE = 'exef-pages-v3';
+// Bump cache names when shared navigation or critical assets change so clients
+// don't stay pinned to an older site shell after deploy.
+var STATIC_CACHE = 'exef-static-v6';
+var PAGE_CACHE = 'exef-pages-v4';
 var ALL_CACHES = [STATIC_CACHE, PAGE_CACHE];
 
 var CORE_PAGES = [
   '/',
   '/index.html',
   '/about.html',
+  '/blog.html',
   '/curriculum.html',
   '/resources.html',
   '/getting-started.html',

@@ -154,7 +154,7 @@
 [data-theme="dark"] body.page-curriculum .page-header,
 [data-theme="dark"] body.page-resources .page-header {
   background:
-    linear-gradient(180deg, rgba(19, 26, 36, 0.98), rgba(13, 19, 28, 0.98)),
+    linear-gradient(180deg, rgba(13, 19, 28, 0.98), rgba(19, 26, 36, 0.98)),
     repeating-linear-gradient(
       135deg,
       rgba(159, 178, 203, 0.045) 0,

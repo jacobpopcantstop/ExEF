@@ -126,6 +126,12 @@
   .certification-masthead__hero {
     position: relative;
     isolation: isolate;
+    padding-right: min(32vw, 23rem);
+  }
+
+  .certification-masthead__copy {
+    position: relative;
+    z-index: 1;
   }
 
   .page-hero-figure--accent {
@@ -133,8 +139,8 @@
     top: calc(var(--space-lg) * -1);
     right: clamp(1rem, 5vw, 4rem);
     margin: 0;
-    width: min(34vw, 460px);
-    max-width: 460px;
+    width: min(28vw, 360px);
+    max-width: 360px;
   }
 
   .page-hero-figure--accent img {

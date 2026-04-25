@@ -1,0 +1,245 @@
+:root {
+  --bg: #f5efe4;
+  --panel: rgba(255, 251, 245, 0.9);
+  --panel-strong: #fffaf2;
+  --ink: #182018;
+  --muted: #586558;
+  --line: rgba(24, 32, 24, 0.12);
+  --accent: #1f5f4a;
+  --accent-2: #d08f2f;
+  --shadow: 0 18px 45px rgba(55, 42, 20, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(208, 143, 47, 0.15), transparent 28%),
+    linear-gradient(180deg, #ece1ce 0%, #f8f3eb 45%, #f2f6f0 100%);
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.shell {
+  width: min(1100px, calc(100vw - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+}
+
+.hero-panel,
+.toolbar,
+.chunk-card,
+.empty-state {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+
+.hero-panel {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  color: var(--accent);
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 0.96;
+  margin-bottom: 0.75rem;
+}
+
+.lede {
+  max-width: 60ch;
+  color: var(--muted);
+  font-size: 1.06rem;
+}
+
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.9rem;
+}
+
+.score-card {
+  background: var(--panel-strong);
+  border-radius: 18px;
+  padding: 1rem;
+  border: 1px solid var(--line);
+}
+
+.score-card strong {
+  display: block;
+  font-size: 2rem;
+  margin: 0.15rem 0;
+}
+
+.score-card__label,
+.score-card__note,
+.toolbar label,
+.chunk-card__original-label,
+.chunk-card__label {
+  color: var(--muted);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: end;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.toolbar select,
+textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 0.9rem 1rem;
+  font: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.toolbar select {
+  min-width: min(340px, 100%);
+  margin-top: 0.45rem;
+}
+
+.toolbar__legend {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 42rem;
+  color: var(--muted);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.85rem;
+  background: rgba(31, 95, 74, 0.1);
+  color: var(--accent);
+}
+
+.pill--accent {
+  background: rgba(208, 143, 47, 0.14);
+  color: #815812;
+}
+
+.notice {
+  margin: 0 0 1rem;
+  padding: 0.95rem 1rem;
+  border-radius: 16px;
+  background: rgba(208, 143, 47, 0.12);
+  border: 1px solid rgba(208, 143, 47, 0.25);
+}
+
+.queue {
+  display: grid;
+  gap: 1rem;
+}
+
+.chunk-card,
+.empty-state {
+  padding: 1.25rem;
+}
+
+.chunk-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.chunk-card__original {
+  margin: 0 0 1rem;
+  padding: 1rem;
+  border-left: 4px solid rgba(31, 95, 74, 0.3);
+  background: rgba(31, 95, 74, 0.06);
+  border-radius: 0 16px 16px 0;
+  white-space: pre-wrap;
+}
+
+textarea {
+  min-height: 180px;
+  resize: vertical;
+  margin-bottom: 1rem;
+}
+
+.chunk-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  padding: 0.75rem 1.15rem;
+  text-decoration: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.chunk-card.is-busy {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .shell {
+    width: min(100vw - 1rem, 1100px);
+    padding-top: 1rem;
+  }
+
+  .hero-panel,
+  .toolbar,
+  .chunk-card,
+  .empty-state {
+    border-radius: 18px;
+  }
+
+  .chunk-card__actions > * {
+    width: 100%;
+  }
+}

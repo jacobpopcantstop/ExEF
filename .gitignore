@@ -34,3 +34,4 @@ output/playwright/*.png
 output/spreadsheet/
 supabase/.temp/
 test-results/
+tmp/copy-lab-progress.json

@@ -5,6 +5,7 @@
     "@playwright/test": "^1.42.0"
   },
   "scripts": {
+    "copy:lab": "node scripts/copy-lab-server.mjs",
     "test:e2e": "playwright test"
   }
 }

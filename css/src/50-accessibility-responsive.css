@@ -287,8 +287,7 @@
   }
 
   .module-toc {
-    position: static;
-    order: -1;
+    display: none;
   }
 
   .curriculum-masthead__grid,
@@ -351,11 +350,17 @@
 
   /* Tables */
   .table-wrapper {
+    max-width: 100%;
     font-size: 0.85rem;
+  }
+
+  .table-wrapper table {
+    table-layout: fixed;
   }
 
   th, td {
     padding: var(--space-sm) var(--space-md);
+    overflow-wrap: anywhere;
   }
 
   .tabs__list {
@@ -475,6 +480,35 @@
 
   .page-header {
     padding: calc(72px + var(--space-2xl)) 0 var(--space-2xl);
+  }
+
+  .callout,
+  .card,
+  .launch-room__figure,
+  .launch-room__card,
+  .infographic {
+    max-width: 100%;
+  }
+
+  .callout {
+    padding: var(--space-lg);
+  }
+
+  .launch-room {
+    min-width: 0;
+  }
+
+  .launch-room > * {
+    min-width: 0;
+  }
+
+  .launch-room__figure img {
+    max-width: 100%;
+  }
+
+  .launch-room code {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .tabs__list {

@@ -483,6 +483,31 @@
   background: #141922;
 }
 
+[data-theme="dark"] body.page-module {
+  background: #101722;
+  color: #e7edf5;
+}
+
+[data-theme="dark"] body.page-module .section {
+  background: #101722;
+}
+
+[data-theme="dark"] body.page-module .section--alt {
+  background: #142033;
+}
+
+[data-theme="dark"] body.page-module .section p,
+[data-theme="dark"] body.page-module .section li,
+[data-theme="dark"] body.page-module .lead {
+  color: rgba(231, 237, 245, 0.88);
+}
+
+[data-theme="dark"] body.page-module .section h2,
+[data-theme="dark"] body.page-module .section h3,
+[data-theme="dark"] body.page-module .section h4 {
+  color: #f4f9ff;
+}
+
 [data-theme="dark"] .masthead-strip {
   background: rgba(17, 26, 42, 0.72);
   border-bottom-color: rgba(127, 192, 255, 0.14);

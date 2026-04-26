@@ -2,8 +2,8 @@
 
 // Bump cache names when shared navigation or critical assets change so clients
 // don't stay pinned to an older site shell after deploy.
-var STATIC_CACHE = 'exef-static-v6';
-var PAGE_CACHE = 'exef-pages-v4';
+var STATIC_CACHE = 'exef-static-v8';
+var PAGE_CACHE = 'exef-pages-v6';
 var ALL_CACHES = [STATIC_CACHE, PAGE_CACHE];
 
 var CORE_PAGES = [
@@ -13,6 +13,7 @@ var CORE_PAGES = [
   '/blog.html',
   '/curriculum.html',
   '/resources.html',
+  '/executive-functioning-iep-goal-bank.html',
   '/getting-started.html',
   '/free-executive-functioning-tests.html',
   '/search.html',

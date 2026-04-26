@@ -8,9 +8,12 @@
   <link rel="canonical" href="https://executivefunctioninginstitute.com/gap-analyzer.html" />
   <link rel="icon" href="favicon.svg" />
   <link rel="stylesheet" href="css/styles.css" />
-  <meta property="og:image" content="https://www.theexecutivefunctioninginstitute.com/images/og-image.svg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:title" content="Executive Function Skills Gap Analyzer PDF | ExEF">
+  <meta property="og:description" content="A printable worksheet for mapping the distance between your current EF coaching practice and the ExEF certification standard.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://executivefunctioninginstitute.com/images/exef-og-card.svg">
+  <meta property="twitter:card" content="summary_large_image">
+  <script src="js/theme-init.min.js"></script>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to content</a>
@@ -40,25 +43,51 @@
     </div>
   </nav>
 
-  <header class="page-header"><div class="container"><h1>Executive Function Skills Gap Analyzer PDF</h1><p>Map the distance between your current coaching competencies and the ExEF certification standard. Enter your email to receive the downloadable worksheet.</p></div></header>
+  <header class="page-header"><div class="container container--narrow"><nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li><li><a href="resources.html">Resources</a></li><li aria-current="page">EF Gap Analyzer</li></ol></nav><h1>Executive Function Skills Gap Analyzer</h1><p>A printable worksheet that maps the distance between your current coaching competencies and the ExEF certification standard &mdash; so you know exactly which modules to prioritize.</p></div></header>
 
   <main id="main-content">
     <section class="section">
       <div class="container container--narrow">
-        <div class="tool-panel">
-          <h2>Request Download</h2>
-          <form id="gate-form-a" novalidate>
-            <div class="form-group"><label for="gate-email-a">Email</label><input class="form-control" id="gate-email-a" type="email" required autocomplete="email" /></div>
-            <div class="form-group"><input id="gate-consent-a" type="checkbox" required /> <label for="gate-consent-a">I consent to receive ExEF resources and updates.</label></div>
-            <button class="btn btn--primary" type="submit" id="gate-submit-a" data-analytics-event="gap_gate_submit_click">Unlock PDF</button>
-          </form>
-          <div id="gate-out-a" class="tool-output" aria-live="polite" role="status" tabindex="-1"></div>
+        <div class="grid grid--2" style="align-items:start;gap:var(--space-xl);">
+          <div class="card">
+            <h2 style="margin-top:0;">What's inside</h2>
+            <ul style="margin-bottom:var(--space-md);">
+              <li>A 24-row self-rating across the five ExEF competency domains</li>
+              <li>A scoring rubric calibrated to certification readiness, not generic coaching</li>
+              <li>Module-by-module mapping so each gap points to a specific next step</li>
+              <li>Space for evidence notes &mdash; the rubric assessors look for during portfolio review</li>
+            </ul>
+            <p style="margin-bottom:0;color:var(--color-text-muted);font-size:var(--text-sm);">Best used alongside the <a href="ExEF-Competency-Crosswalk-Map.pdf" target="_blank" rel="noopener">Competency Crosswalk Map</a> and <a href="ExEF-Capstone-Transparency-Rubric.pdf" target="_blank" rel="noopener">Capstone Transparency Rubric</a>.</p>
+          </div>
+          <div class="tool-panel">
+            <h2 style="margin-top:0;">Request the PDF</h2>
+            <form id="gate-form-a" novalidate>
+              <div class="form-group"><label for="gate-email-a">Email</label><input class="form-control" id="gate-email-a" type="email" required autocomplete="email" placeholder="you@example.com" /></div>
+              <div class="form-group" style="display:flex;align-items:flex-start;gap:var(--space-xs);"><input id="gate-consent-a" type="checkbox" required style="margin-top:0.35rem;" /> <label for="gate-consent-a" style="font-size:var(--text-sm);">I agree to receive the worksheet and occasional ExEF updates. See our <a href="privacy.html">privacy policy</a>; you can unsubscribe at any time.</label></div>
+              <button class="btn btn--primary btn--lg" type="submit" id="gate-submit-a" data-analytics-event="gap_gate_submit_click">Email Me the PDF</button>
+            </form>
+            <div id="gate-out-a" class="tool-output" aria-live="polite" role="status" tabindex="-1"></div>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer"><div class="container"><div class="footer__bottom"><span>© 2026 Expert EF</span></div></div></footer>
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="index.html" class="nav__logo" style="color:var(--color-white);"><div class="nav__logo-icon">ExEF</div><span>Expert EF</span></a>
+          <p>Executive function and ADHD coaching grounded in neuroscience. Assessments, tools, and support.</p>
+        </div>
+        <div><h4>Site</h4><ul class="footer__links"><li><a href="coaching-home.html">Services</a></li><li><a href="free-executive-functioning-tests.html">Assessments</a></li><li><a href="blog.html">Blog</a></li><li><a href="about.html">About</a></li></ul></div>
+        <div><h4>Learn</h4><ul class="footer__links"><li><a href="curriculum.html">Curriculum</a></li><li><a href="certification.html">Certification</a></li><li><a href="resources.html">Resources</a></li><li><a href="store.html">Store</a></li></ul></div>
+        <div><h4>Connect</h4><ul class="footer__links"><li><a href="coaching-contact.html#booking">Book a Consultation</a></li><li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li><li><a href="privacy.html">Privacy</a></li></ul></div>
+      </div>
+      <div class="footer__bottom"><span>Expert EF &mdash; Open-Source Education</span></div>
+    </div>
+  </footer>
+  <script src="js/nav-auth.min.js" defer></script>
   <script src="js/main.min.js" defer></script>
   <script src="js/gap-analyzer-inline.min.js"></script>
 </body>

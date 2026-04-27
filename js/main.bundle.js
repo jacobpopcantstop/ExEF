@@ -1282,33 +1282,13 @@ window.EFI.registerMainModule(function (shared) {
     });
   })();
 
-  (function initDarkModeToggle() {
-    var THEME_KEY = 'efi_theme';
-    var navInner = document.querySelector('.nav__inner');
-    if (!navInner) return;
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'dark-toggle';
-    btn.setAttribute('aria-label', 'Toggle dark mode');
-    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    btn.textContent = isDark ? '\u2600' : '\u263E';
-    btn.title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
-
-    btn.addEventListener('click', function () {
-      var current = document.documentElement.getAttribute('data-theme');
-      var next = current === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      shared.safeSetLocalStorage(THEME_KEY, next);
-      btn.textContent = next === 'dark' ? '\u2600' : '\u263E';
-      btn.title = next === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
-    });
-
-    var mobileToggle = navInner.querySelector('.nav__toggle');
-    if (mobileToggle) {
-      navInner.insertBefore(btn, mobileToggle);
-    } else {
-      navInner.appendChild(btn);
-    }
+  // Dark mode toggle has been retired. The dark theme produced grey washes that
+  // never matched the warm paper/ink palette. js/theme-init.js clears any stale
+  // efi_theme preference so existing visitors return to light.
+  (function purgeStrayDarkToggle() {
+    var stale = document.querySelector('.dark-toggle');
+    if (stale && stale.parentNode) stale.parentNode.removeChild(stale);
+    document.documentElement.removeAttribute('data-theme');
   })();
 
   var navToggle = document.querySelector('.nav__toggle');

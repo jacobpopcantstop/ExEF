@@ -92,9 +92,27 @@
         dot.type = 'button';
         dot.className = 'insight-carousel__dot';
         dot.setAttribute('aria-label', 'Show fact ' + (idx + 1));
-        dot.addEventListener('click', function () { show(idx); restart(); });
+        dot.addEventListener('click', function () {
+          if (isMobileCarousel()) {
+            scrollToCard(idx);
+          } else {
+            show(idx);
+            restart();
+          }
+        });
         dotsHost.appendChild(dot);
         dots.push(dot);
+      });
+    }
+
+    function scrollToCard(idx) {
+      var target = cards[idx];
+      if (!target) return;
+      var stageRect = stage.getBoundingClientRect();
+      var targetRect = target.getBoundingClientRect();
+      stage.scrollTo({
+        left: stage.scrollLeft + (targetRect.left - stageRect.left),
+        behavior: 'smooth'
       });
     }
 
@@ -104,6 +122,7 @@
       cards.forEach(function (card, i) {
         var isActive = i === current;
         card.classList.toggle('is-active', isActive);
+        // On mobile, all cards are visible side-by-side via native scroll-snap.
         card.hidden = mobile ? false : !isActive;
         card.setAttribute('aria-hidden', mobile ? 'false' : (isActive ? 'false' : 'true'));
       });
@@ -111,6 +130,37 @@
         dot.classList.toggle('is-active', i === current);
       });
     }
+
+    // Update active dot as the user swipes through the native scroll on mobile.
+    var scrollSyncTimer = null;
+    stage.addEventListener('scroll', function () {
+      if (!isMobileCarousel()) return;
+      if (scrollSyncTimer) window.clearTimeout(scrollSyncTimer);
+      scrollSyncTimer = window.setTimeout(function () {
+        var stageRect = stage.getBoundingClientRect();
+        var stageCenter = stageRect.left + stageRect.width / 2;
+        var nearestIdx = 0;
+        var nearestDelta = Infinity;
+        cards.forEach(function (card, i) {
+          var r = card.getBoundingClientRect();
+          var center = r.left + r.width / 2;
+          var delta = Math.abs(center - stageCenter);
+          if (delta < nearestDelta) {
+            nearestDelta = delta;
+            nearestIdx = i;
+          }
+        });
+        if (nearestIdx !== current) {
+          current = nearestIdx;
+          dots.forEach(function (dot, i) {
+            dot.classList.toggle('is-active', i === current);
+          });
+          cards.forEach(function (card, i) {
+            card.classList.toggle('is-active', i === current);
+          });
+        }
+      }, 80);
+    }, { passive: true });
 
     function start() {
       stop();
@@ -173,7 +223,10 @@
     applyInsightLayoutMode();
     window.addEventListener('resize', applyInsightLayoutMode);
 
+    // Desktop only: pointer-drag swipe over a single visible card.
+    // Mobile uses native CSS scroll-snap (see .insight-carousel__stage in CSS).
     attachSwipe(carousel, function (dir) {
+      if (isMobileCarousel()) return;
       if (dir < 0) show(current + 1);
       else show(current - 1);
       restart();
@@ -184,6 +237,7 @@
   var tileCarousel = document.querySelector('[data-tile-carousel]');
   if (tileCarousel) {
     var track = tileCarousel.querySelector('[data-tile-track]');
+    var viewport = tileCarousel.querySelector('[data-tile-viewport]');
     var items = track ? Array.prototype.slice.call(track.children) : [];
     var prevBtn = tileCarousel.querySelector('[data-tile-prev]');
     var nextBtn = tileCarousel.querySelector('[data-tile-next]');
@@ -205,13 +259,24 @@
 
     var pageIndex = 0;
 
-    function pageCount() {
-      var vc = visibleCount();
-      return Math.max(1, items.length - vc + 1);
-    }
-
     function render() {
       if (!items.length || !track) return;
+      var mobile = isMobileTiles();
+
+      if (mobile) {
+        // Native scroll on mobile - don't fight it with transforms or disabled buttons.
+        track.style.transform = '';
+        if (prevBtn) prevBtn.disabled = false;
+        if (nextBtn) nextBtn.disabled = false;
+        if (tileDotsHost) {
+          var mDots = Array.prototype.slice.call(tileDotsHost.children);
+          mDots.forEach(function (dot, i) {
+            dot.classList.toggle('is-active', i === pageIndex);
+          });
+        }
+        return;
+      }
+
       var vc = visibleCount();
       var first = items[0];
       var style = window.getComputedStyle(track);
@@ -234,18 +299,39 @@
     function buildDots() {
       if (!tileDotsHost) return;
       tileDotsHost.innerHTML = '';
-      var vc = visibleCount();
-      var pages = Math.max(1, items.length - vc + 1);
+      var mobile = isMobileTiles();
+      var pages = mobile
+        ? items.length
+        : Math.max(1, items.length - visibleCount() + 1);
       for (var i = 0; i < pages; i++) {
         var dot = document.createElement('button');
         dot.type = 'button';
         dot.className = 'tile-carousel__dot';
         dot.setAttribute('aria-label', 'Show tiles starting at ' + (i + 1));
         (function (idx) {
-          dot.addEventListener('click', function () { goTo(idx); tileRestart(); });
+          dot.addEventListener('click', function () {
+            if (isMobileTiles()) {
+              scrollTileTo(idx);
+            } else {
+              goTo(idx);
+              tileRestart();
+            }
+          });
         })(i);
         tileDotsHost.appendChild(dot);
       }
+    }
+
+    function scrollTileTo(idx) {
+      var target = items[idx];
+      if (!target || !viewport) return;
+      var vpRect = viewport.getBoundingClientRect();
+      var tgtRect = target.getBoundingClientRect();
+      var delta = (tgtRect.left + tgtRect.width / 2) - (vpRect.left + vpRect.width / 2);
+      viewport.scrollTo({
+        left: viewport.scrollLeft + delta,
+        behavior: 'smooth'
+      });
     }
 
     function goTo(idx) {
@@ -274,8 +360,22 @@
 
     function tileRestart() { tileStop(); tileStart(); }
 
-    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(pageIndex - 1); tileRestart(); });
-    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(pageIndex + 1); tileRestart(); });
+    if (prevBtn) prevBtn.addEventListener('click', function () {
+      if (isMobileTiles()) {
+        scrollTileTo(Math.max(0, pageIndex - 1));
+      } else {
+        goTo(pageIndex - 1);
+        tileRestart();
+      }
+    });
+    if (nextBtn) nextBtn.addEventListener('click', function () {
+      if (isMobileTiles()) {
+        scrollTileTo(Math.min(items.length - 1, pageIndex + 1));
+      } else {
+        goTo(pageIndex + 1);
+        tileRestart();
+      }
+    });
 
     tileCarousel.addEventListener('mouseenter', function () { tilePaused = true; });
     tileCarousel.addEventListener('mouseleave', function () { tilePaused = false; });
@@ -286,13 +386,43 @@
       if (document.hidden) tilePaused = true;
     });
 
+    // Update active dot in real time as the user swipes the native scroll on mobile.
+    if (viewport) {
+      var tileScrollSyncTimer = null;
+      viewport.addEventListener('scroll', function () {
+        if (!isMobileTiles()) return;
+        if (tileScrollSyncTimer) window.clearTimeout(tileScrollSyncTimer);
+        tileScrollSyncTimer = window.setTimeout(function () {
+          var vpRect = viewport.getBoundingClientRect();
+          var center = vpRect.left + vpRect.width / 2;
+          var nearest = 0;
+          var nearestDelta = Infinity;
+          items.forEach(function (item, i) {
+            var r = item.getBoundingClientRect();
+            var d = Math.abs((r.left + r.width / 2) - center);
+            if (d < nearestDelta) {
+              nearestDelta = d;
+              nearest = i;
+            }
+          });
+          if (nearest !== pageIndex) {
+            pageIndex = nearest;
+            render();
+          }
+        }, 80);
+      }, { passive: true });
+    }
+
     var resizeTimer = null;
     window.addEventListener('resize', function () {
       if (resizeTimer) window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(function () {
         buildDots();
-        if (pageIndex > items.length - visibleCount()) {
-          pageIndex = Math.max(0, items.length - visibleCount());
+        var maxIdx = isMobileTiles()
+          ? items.length - 1
+          : items.length - visibleCount();
+        if (pageIndex > Math.max(0, maxIdx)) {
+          pageIndex = Math.max(0, maxIdx);
         }
         render();
       }, 120);
@@ -300,15 +430,15 @@
 
     buildDots();
     render();
-    // Re-render after layout settles (fonts/images) so the first prev/next click
-    // has correct measurements.
     window.requestAnimationFrame(function () {
       window.requestAnimationFrame(render);
     });
     window.addEventListener('load', render);
     tileStart();
 
+    // Desktop only: pointer-drag swipe (mobile is native scroll).
     attachSwipe(tileCarousel, function (dir) {
+      if (isMobileTiles()) return;
       if (dir < 0) goTo(pageIndex + 1);
       else goTo(pageIndex - 1);
       tileRestart();

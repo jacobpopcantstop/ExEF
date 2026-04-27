@@ -95,25 +95,6 @@ html {
   body {
     animation: pageEnter 0.32s cubic-bezier(0.22, 1, 0.36, 1);
   }
-
-  .nav,
-  main,
-  .footer {
-    transition: opacity 0.22s ease, transform 0.28s ease, filter 0.28s ease;
-    will-change: opacity, transform;
-  }
-
-  body.page-is-leaving .nav {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-
-  body.page-is-leaving main,
-  body.page-is-leaving .footer {
-    opacity: 0;
-    transform: translateY(16px);
-    filter: blur(2px);
-  }
 }
 
 body {

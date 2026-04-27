@@ -79,7 +79,7 @@ window.EFI.registerMainModule(function (shared) {
     brand.className = 'footer__brand footer__brand--institutional';
     var eyebrow = document.createElement('p');
     eyebrow.className = 'footer__eyebrow';
-    eyebrow.textContent = 'Start With the Free Layer';
+    eyebrow.textContent = 'Executive Function Coaching + Credentialing';
     brand.appendChild(eyebrow);
 
     var logo = document.createElement('a');
@@ -96,41 +96,41 @@ window.EFI.registerMainModule(function (shared) {
     brand.appendChild(logo);
 
     var description = document.createElement('p');
-    description.textContent = 'ExEF is built so people can see the model before they buy support. Start with tools, sample outputs, curriculum, and standards; move to paid work only when the next step is clear.';
+    description.textContent = 'Executive function and ADHD coaching, public curriculum, and transparent credentialing artifacts. Led by Jacob Rozansky, ICF-certified coach completing ADDCA ADHD coach training.';
     brand.appendChild(description);
 
     var dossier = document.createElement('ul');
     dossier.className = 'footer__dossier';
-    appendFooterDossierItem(dossier, 'Step 1', 'Start with a free diagnostic, toolkit, printable, or sample profile.');
-    appendFooterDossierItem(dossier, 'Step 2', 'Use the open curriculum and standards to understand what good support should look like.');
-    appendFooterDossierItem(dossier, 'Step 3', 'Use paid services when the route, scope, and owner are concrete.');
+    appendFooterDossierItem(dossier, 'Training Lens', 'ADDCA ADHD coaching in progress, integrated with ExEF\'s EF curriculum and scope controls.');
+    appendFooterDossierItem(dossier, 'Credential Boundary', 'ExEF credentials are internal standards workflows with public review criteria and verification.');
     brand.appendChild(dossier);
     grid.appendChild(brand);
 
-    appendFooterListSection(grid, 'Start Here', [
-      { href: 'free-executive-functioning-tests.html', label: 'Assessment Hub' },
-      { href: 'full-ef-profile.html', label: 'Sample Cross-Signal Profile' },
+    appendFooterListSection(grid, 'Coaching', [
       { href: 'coaching-home.html', label: 'Support Paths' },
-      { href: 'certification.html', label: 'Certification Path' }
+      { href: 'coaching-services.html', label: 'Services' },
+      { href: 'meet-the-team.html', label: 'Team' },
+      { href: 'free-executive-functioning-tests.html', label: 'Assessments' }
     ]);
-    appendFooterListSection(grid, 'Free Layer', [
-      { href: 'resources.html#assessments', label: 'Assessments and Tools' },
-      { href: 'resources.html#toolkits', label: 'Role-Based Toolkits' },
-      { href: 'curriculum.html', label: 'Open Curriculum' },
-      { href: 'resources.html#library', label: 'Reference Library' }
+    appendFooterListSection(grid, 'Pathway', [
+      { href: 'curriculum.html', label: 'Curriculum' },
+      { href: 'certification.html', label: 'Certification Path' },
+      { href: 'accreditation.html', label: 'Credential Status' },
+      { href: 'ExEF-Competency-Crosswalk-Map.html', label: 'Competency Crosswalk' },
+      { href: 'ExEF-Capstone-Transparency-Rubric.pdf', label: 'Capstone Rubric PDF' }
     ]);
-    appendFooterListSection(grid, 'Reviewed Next Steps', [
+    appendFooterListSection(grid, 'Resources', [
+      { href: 'resources.html', label: 'Resources' },
+      { href: 'printables.html', label: 'Printables' },
+      { href: 'open-ef-resources-directory.html', label: 'Open EF Directory' },
+      { href: 'blog.html', label: 'Blog' }
+    ]);
+    appendFooterListSection(grid, 'Connect', [
       { href: 'store.html', label: 'Services and Pricing' },
       { href: CONSULT_URL, label: 'Book a Consultation' },
-      { href: 'certification.html', label: 'Certification Standards' },
-      { href: 'store.html#paid-path', label: 'Free vs Paid Boundary' }
-    ]);
-    appendFooterListSection(grid, 'Evidence', [
-      { href: 'ExEF-Capstone-Transparency-Rubric.pdf', label: 'Capstone Rubric PDF', target: '_blank', rel: 'noopener' },
-      { href: 'ExEF-Competency-Crosswalk-Map.pdf', label: 'Competency Crosswalk', target: '_blank', rel: 'noopener' },
-      { href: 'verify.html', label: 'Credential Verification' },
-      { href: 'resources.html#source-access', label: 'Source Access Notes' },
-      { href: 'https://github.com/jacobpopcantstop/TheExecutiveFunctioningInstitute', label: 'GitHub Repository', target: '_blank', rel: 'noopener' }
+      { href: 'mailto:jacob@exef.org', label: 'jacob@exef.org' },
+      { href: 'search.html', label: 'Search' },
+      { href: 'verify.html', label: 'Verify Certificate' }
     ]);
     container.appendChild(grid);
 
@@ -138,7 +138,7 @@ window.EFI.registerMainModule(function (shared) {
     bottom.className = 'footer__bottom';
     var status = document.createElement('span');
     status.className = 'footer__status';
-    status.textContent = 'Built around Barkley, Brown, Dawson & Guare, and Ward with public routing, standards, and review artifacts.';
+    status.textContent = 'Built around Barkley, Brown, Dawson & Guare, Ward, ICF ethics, NBEFC context, and ADDCA ADHD coaching training in progress.';
     bottom.appendChild(status);
     container.appendChild(bottom);
   })();
@@ -162,15 +162,56 @@ window.EFI.registerMainModule(function (shared) {
   (function normalizePrimaryNav() {
     var currentPage = window.location.pathname.split('/').pop() || 'index.html';
     if (currentPage === 'admin.html') return;
+    if (document.querySelector('.nav__dropdown-trigger')) return;
 
-  var primaryLinks = [
-    { href: 'curriculum.html', label: 'Curriculum' },
-    { href: 'resources.html', label: 'Resources' },
-    { href: 'certification.html', label: 'Certification' },
-    { href: 'coaching-home.html', label: 'Support' },
-    { href: 'store.html', label: 'Store' },
-    { href: 'blog.html', label: 'Blog' }
-  ];
+    var assessmentPages = [
+      'free-executive-functioning-tests.html', 'esqr.html', 'ef-profile-story.html',
+      'conative-action-profile.html', 'environment-quiz.html', 'full-ef-profile.html',
+      'brown-clusters-tool.html', 'time-blindness-calibrator.html', 'task-start-friction.html'
+    ];
+    var resourcePages = [
+      'resources.html', 'blog.html', 'open-ef-resources-directory.html', 'printables.html',
+      'parent-toolkit.html', 'educator-toolkit.html', 'teacher-to-coach.html',
+      'executive-functioning-iep-goal-bank.html', 'barkley-model-guide.html',
+      'barkley-vs-brown.html', 'further-sources.html', 'scope-of-practice.html'
+    ];
+    var credentialPages = [
+      'curriculum.html', 'certification.html', 'accreditation.html',
+      'ExEF-Competency-Crosswalk-Map.html', 'ExEF-Capstone-Transparency-Rubric.html',
+      'certificate.html', 'verify.html'
+    ];
+
+    function isActive(pageList) {
+      return pageList.indexOf(currentPage) !== -1 || (/^module-/.test(currentPage) && pageList === credentialPages);
+    }
+
+    function makeNavLink(container, href, label, pageList) {
+      var className = 'nav__link' + (pageList && isActive(pageList) ? ' nav__link--active' : '');
+      return appendTextLink(container, href, label, className);
+    }
+
+    function appendCredentialDropdown(container) {
+      var dropdown = document.createElement('div');
+      dropdown.className = 'nav__dropdown';
+      var trigger = document.createElement('button');
+      trigger.className = 'nav__link' + (isActive(credentialPages) ? ' nav__link--active' : '') + ' nav__dropdown-trigger';
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.setAttribute('aria-haspopup', 'true');
+      var strong = document.createElement('strong');
+      strong.textContent = 'Pathway';
+      trigger.appendChild(strong);
+      trigger.appendChild(document.createTextNode(' '));
+      trigger.innerHTML += '<svg aria-hidden="true" viewBox="0 0 12 8" width="12" height="8" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 1 6 6 11 1"/></svg>';
+      dropdown.appendChild(trigger);
+      var menu = document.createElement('div');
+      menu.className = 'nav__dropdown-menu';
+      appendTextLink(menu, 'curriculum.html', 'Curriculum', 'nav__dropdown-item');
+      appendTextLink(menu, 'certification.html', 'Certification', 'nav__dropdown-item');
+      appendTextLink(menu, 'accreditation.html', 'Credential Status', 'nav__dropdown-item');
+      appendTextLink(menu, 'ExEF-Competency-Crosswalk-Map.html', 'Competency Crosswalk', 'nav__dropdown-item');
+      dropdown.appendChild(menu);
+      container.appendChild(dropdown);
+    }
 
     document.querySelectorAll('.nav__links').forEach(function (links) {
       var existingAuth = links.querySelector('.nav__auth');
@@ -179,21 +220,48 @@ window.EFI.registerMainModule(function (shared) {
 
       var primaryCluster = document.createElement('div');
       primaryCluster.className = 'nav__cluster';
-      primaryLinks.forEach(function (item) {
-        appendTextLink(primaryCluster, item.href, item.label, 'nav__link');
-      });
+      makeNavLink(primaryCluster, 'coaching-home.html', 'Coaching', ['coaching-home.html', 'coaching-contact.html', 'coaching-creative.html', 'coaching-about.html', 'coaching-methodology.html', 'coaching-services.html']);
+      appendCredentialDropdown(primaryCluster);
+      makeNavLink(primaryCluster, 'free-executive-functioning-tests.html', 'Assessments', assessmentPages);
+      makeNavLink(primaryCluster, 'resources.html', 'Resources', resourcePages);
+      makeNavLink(primaryCluster, 'meet-the-team.html', 'Team', ['meet-the-team.html', 'about.html']);
+      makeNavLink(primaryCluster, 'store.html', 'Store', ['store.html', 'checkout.html', 'checkout-return.html', 'enroll.html']);
       var authWrap = document.createElement('span');
       authWrap.className = 'nav__auth';
       authNodes.forEach(function (node) {
         authWrap.appendChild(node);
       });
-      primaryCluster.appendChild(authWrap);
+      links.appendChild(primaryCluster);
+
+      var supportCluster = document.createElement('div');
+      supportCluster.className = 'nav__cluster nav__cluster--support';
+      supportCluster.appendChild(authWrap);
       var consultLink = document.createElement('a');
       consultLink.href = CONSULT_URL;
       consultLink.className = 'nav__link nav__link--cta';
       consultLink.textContent = 'Book Consultation';
-      primaryCluster.appendChild(consultLink);
-      links.appendChild(primaryCluster);
+      supportCluster.appendChild(consultLink);
+      links.appendChild(supportCluster);
+    });
+  })();
+
+  (function initNavDropdowns() {
+    document.querySelectorAll('.nav__dropdown-trigger').forEach(function (trigger) {
+      trigger.addEventListener('click', function (event) {
+        event.preventDefault();
+        var expanded = trigger.getAttribute('aria-expanded') === 'true';
+        document.querySelectorAll('.nav__dropdown-trigger[aria-expanded="true"]').forEach(function (otherTrigger) {
+          if (otherTrigger !== trigger) otherTrigger.setAttribute('aria-expanded', 'false');
+        });
+        trigger.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      });
+    });
+
+    document.addEventListener('click', function (event) {
+      if (event.target && event.target.closest && event.target.closest('.nav__dropdown')) return;
+      document.querySelectorAll('.nav__dropdown-trigger[aria-expanded="true"]').forEach(function (trigger) {
+        trigger.setAttribute('aria-expanded', 'false');
+      });
     });
   })();
 
@@ -515,54 +583,14 @@ window.EFI.registerMainModule(function (shared) {
 
   (function initPageTransitions() {
     if (!document.body) return;
-    var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-    var leaveTimer = null;
 
     requestAnimationFrame(function () {
       document.body.classList.add('page-ready');
     });
 
     window.addEventListener('pageshow', function () {
-      if (leaveTimer) {
-        window.clearTimeout(leaveTimer);
-        leaveTimer = null;
-      }
       document.body.classList.remove('page-is-leaving');
       document.body.classList.add('page-ready');
-    });
-
-    document.addEventListener('click', function (e) {
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      var link = e.target && e.target.closest ? e.target.closest('a[href]') : null;
-      if (!link || link.hasAttribute('download')) return;
-      if ((link.getAttribute('target') || '').toLowerCase() === '_blank') return;
-      if (link.classList.contains('btn')) return;
-      if (link.closest('.accordion__content, form, .tool-panel, .resources-assessment-layout, .resources-role-layout')) return;
-
-      var rawHref = link.getAttribute('href');
-      if (!rawHref || rawHref.charAt(0) === '#' || /^(mailto:|tel:|javascript:)/i.test(rawHref)) return;
-
-      var url;
-      try {
-        url = new URL(link.href, window.location.href);
-      } catch (err) {
-        return;
-      }
-
-      if (url.origin !== window.location.origin) return;
-      if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return;
-
-      e.preventDefault();
-      document.body.classList.add('page-is-leaving');
-      if (leaveTimer) window.clearTimeout(leaveTimer);
-      leaveTimer = window.setTimeout(function () {
-        document.body.classList.remove('page-is-leaving');
-      }, 900);
-
-      window.setTimeout(function () {
-        window.location.href = url.href;
-      }, 180);
     });
   })();
 

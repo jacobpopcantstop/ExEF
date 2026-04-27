@@ -8,29 +8,32 @@ import glob
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 NEW_NAV_INNER = """
-        <a href="index.html" class="nav__link">Home</a>
-        <a href="free-executive-functioning-tests.html" class="nav__link">Assessments</a>
-        <a href="coaching-home.html" class="nav__link">Coaching</a>
-        <a href="blog.html" class="nav__link">Blog</a>
-        <a href="about.html" class="nav__link">About</a>
-        <div class="nav__dropdown">
-          <button class="nav__link nav__dropdown-trigger" aria-expanded="false" aria-haspopup="true">Learn <svg aria-hidden="true" viewBox="0 0 12 8" width="12" height="8" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 1 6 6 11 1"/></svg></button>
-          <div class="nav__dropdown-menu">
-            <a href="curriculum.html" class="nav__dropdown-item">Curriculum</a>
-            <a href="certification.html" class="nav__dropdown-item">Certification</a>
+        <div class="nav__cluster">
+          <a href="coaching-home.html" class="nav__link">Coaching</a>
+          <div class="nav__dropdown">
+            <button class="nav__link nav__dropdown-trigger" aria-expanded="false" aria-haspopup="true"><strong>Pathway</strong> <svg aria-hidden="true" viewBox="0 0 12 8" width="12" height="8" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 1 6 6 11 1"/></svg></button>
+            <div class="nav__dropdown-menu">
+              <a href="curriculum.html" class="nav__dropdown-item">Curriculum</a>
+              <a href="certification.html" class="nav__dropdown-item">Certification</a>
+              <a href="accreditation.html" class="nav__dropdown-item">Credential Status</a>
+              <a href="ExEF-Competency-Crosswalk-Map.html" class="nav__dropdown-item">Competency Crosswalk</a>
+            </div>
           </div>
+          <a href="free-executive-functioning-tests.html" class="nav__link">Assessments</a>
+          <a href="resources.html" class="nav__link">Resources</a>
+          <a href="meet-the-team.html" class="nav__link">Team</a>
+          <a href="store.html" class="nav__link">Store</a>
         </div>
-        <span class="nav__auth"></span>
-        <a href="#" class="nav__link nav__link--cta" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/jacobansky/30min'});return false;">Book a Consultation</a>
+        <div class="nav__cluster nav__cluster--support">
+          <span class="nav__auth"></span>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="nav__link nav__link--cta">Book Consultation</a>
+        </div>
       """
 
 # Active link mappings: filename -> (selector_text, is_dropdown)
 # For regular links, selector_text is the link text
 # For dropdown trigger, selector_text is "Learn"
 ACTIVE_MAP = {}
-
-# Home
-ACTIVE_MAP['index.html'] = ('Home', False)
 
 # Assessments
 for f in ['free-executive-functioning-tests.html', 'esqr.html', 'ef-profile-story.html',
@@ -43,15 +46,26 @@ for f in ['coaching-home.html', 'coaching-contact.html', 'coaching-creative.html
           'coaching-about.html', 'coaching-methodology.html', 'coaching-services.html']:
     ACTIVE_MAP[f] = ('Coaching', False)
 
-# Blog
-ACTIVE_MAP['blog.html'] = ('Blog', False)
+# Resources / public library
+for f in ['resources.html', 'blog.html', 'open-ef-resources-directory.html', 'printables.html',
+          'parent-toolkit.html', 'educator-toolkit.html', 'teacher-to-coach.html',
+          'executive-functioning-iep-goal-bank.html', 'barkley-model-guide.html',
+          'barkley-vs-brown.html', 'further-sources.html', 'scope-of-practice.html']:
+    ACTIVE_MAP[f] = ('Resources', False)
 
-# About
-ACTIVE_MAP['about.html'] = ('About', False)
+# Team / about
+for f in ['meet-the-team.html', 'about.html']:
+    ACTIVE_MAP[f] = ('Team', False)
 
-# Learn dropdown trigger - curriculum and modules
-for f in ['curriculum.html', 'certification.html', 'accreditation.html']:
-    ACTIVE_MAP[f] = ('Learn', True)
+# Store / purchase
+for f in ['store.html', 'checkout.html', 'checkout-return.html', 'enroll.html']:
+    ACTIVE_MAP[f] = ('Store', False)
+
+# Pathway dropdown trigger
+for f in ['curriculum.html', 'certification.html', 'accreditation.html',
+          'ExEF-Competency-Crosswalk-Map.html', 'ExEF-Capstone-Transparency-Rubric.html',
+          'certificate.html', 'verify.html']:
+    ACTIVE_MAP[f] = ('Pathway', True)
 
 # Module files
 for i in range(1, 20):
@@ -72,22 +86,23 @@ def apply_active_class(html, filename):
     if basename in ACTIVE_MAP:
         target_text, is_dropdown = ACTIVE_MAP[basename]
     elif basename.startswith('module-'):
-        target_text, is_dropdown = ('Learn', True)
+        target_text, is_dropdown = ('Pathway', True)
     else:
         return html
 
     if is_dropdown:
         # Add active class to the dropdown trigger button
         html = html.replace(
-            'class="nav__link nav__dropdown-trigger"',
-            'class="nav__link nav__link--active nav__dropdown-trigger"'
+            'class="nav__link nav__dropdown-trigger" aria-expanded="false" aria-haspopup="true"',
+            'class="nav__link nav__link--active nav__dropdown-trigger" aria-expanded="false" aria-haspopup="true"',
+            1
         )
     else:
         # Add active class to the matching <a> link
         # We need to find the link with the matching text
         escaped = re.escape(target_text)
-        pattern = r'(<a href="[^"]*" class="nav__link)">(' + escaped + r')</a>'
-        html = re.sub(pattern, r'\1 nav__link--active">\2</a>', html, count=1)
+        pattern = r'(<a href="[^"]*" class="nav__link)(">)(' + escaped + r')</a>'
+        html = re.sub(pattern, r'\1 nav__link--active\2\3</a>', html, count=1)
 
     return html
 
@@ -136,7 +151,7 @@ def main():
                 target, is_drop = ACTIVE_MAP[basename]
                 active_info = f' (active: {target}{"[dropdown]" if is_drop else ""})'
             elif basename.startswith('module-'):
-                active_info = ' (active: Learn[dropdown])'
+                active_info = ' (active: Pathway[dropdown])'
             updated.append(f'  ✓ {filename}{active_info}')
         else:
             skipped.append(f'  ✗ {filename} (no nav__links found)')

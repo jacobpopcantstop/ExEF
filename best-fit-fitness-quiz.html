@@ -15,7 +15,7 @@
   <link rel="icon" href="favicon.svg">
   <script src="js/theme-init.min.js"></script>
 </head>
-<body>
+<body class="page-fitness-quiz">
   <a href="#main-content" class="skip-link">Skip to main content</a>
   <nav class="nav" role="navigation" aria-label="Main navigation">
     <div class="nav__inner">
@@ -58,16 +58,18 @@
     <section class="section section--alt" id="fitness-questionnaire">
       <div class="container container--narrow">
         <form id="fitness-quiz-form" novalidate>
-          <div class="esqr-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="20" aria-label="Fitness quiz progress">
+          <div class="esqr-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="26" aria-label="Fitness quiz progress">
             <div class="esqr-progress__bar"><div class="esqr-progress__fill" id="fitness-progress-fill"></div></div>
-            <span class="esqr-progress__text" id="fitness-progress-text">0 of 20 answered</span>
+            <span class="esqr-progress__text" id="fitness-progress-text">0 of 26 answered</span>
           </div>
-          <div class="card" style="margin-top:var(--space-lg);"><p style="margin:0;"><strong>Scale:</strong> 0 = Not true for me, 4 = Very true for me.</p></div>
+          <div class="card fitness-scale-key" style="margin-top:var(--space-lg);">
+            <p style="margin:0;"><strong>How to answer:</strong> for each statement, pick the number that matches how true it feels for <em>you</em>. <span class="fitness-scale-key__legend"><span><strong>0</strong> Not true</span><span><strong>2</strong> Somewhat</span><span><strong>4</strong> Very true</span></span></p>
+          </div>
           <div id="fitness-question-groups" style="margin-top:var(--space-lg);"></div>
-          <p id="fitness-quiz-error" class="esqr-error" role="alert" hidden>Please answer all 20 questions before scoring your fit list.</p>
-          <div class="button-group" style="margin-top:var(--space-xl);">
-            <button type="submit" class="btn btn--primary btn--lg">Rank My Best-Fit Exercise Options</button>
-            <button type="button" class="btn btn--secondary btn--lg" id="fitness-reset-btn">Reset</button>
+          <p id="fitness-quiz-error" class="esqr-error" role="alert" hidden>Please answer all 26 questions before scoring your fit list.</p>
+          <div class="button-group fitness-cta-row" style="margin-top:var(--space-xl);">
+            <button type="submit" class="btn btn--primary btn--lg fitness-cta">Rank My Best-Fit Options</button>
+            <button type="button" class="btn btn--ghost btn--lg" id="fitness-reset-btn">Start over</button>
           </div>
         </form>
       </div>
@@ -75,14 +77,26 @@
 
     <section class="section" id="fitness-results" hidden>
       <div class="container container--narrow">
-        <div class="section-header"><span class="section-header__tag">Your Results</span><h2>Best-Fit Movement Ranking</h2><p id="fitness-summary"></p></div>
-        <div class="card">
-          <h3 style="margin-top:0;">Top 10 to test first</h3>
-          <ol id="fitness-top-list" class="quiz-rank-list"></ol>
-        </div>
+        <div class="section-header"><span class="section-header__tag">Your Results</span><h2>Your Best-Fit Movement Ranking</h2><p id="fitness-summary"></p></div>
+
+        <div class="card" id="fitness-profile-block" hidden></div>
+
         <div class="card" style="margin-top:var(--space-lg);">
-          <h3 style="margin-top:0;">Full 30-option ranking</h3>
-          <ol id="fitness-full-list" class="quiz-full-list"></ol>
+          <h3 style="margin-top:0;">Top three to test first</h3>
+          <p style="color:var(--color-text-light);">Pick <em>one</em>. Schedule two sessions in the next seven days. The bottleneck is consistency, not selection.</p>
+          <ol id="fitness-top-list" class="fitness-top-grid"></ol>
+        </div>
+
+        <div class="card" style="margin-top:var(--space-lg);">
+          <h3 style="margin-top:0;">Full ranking across 43 options</h3>
+          <p style="color:var(--color-text-light);">Scroll the full list when the top three don't fit your real life this week.</p>
+          <ol id="fitness-full-list" class="fitness-full-list"></ol>
+        </div>
+
+        <div class="card" style="margin-top:var(--space-lg);">
+          <h3 style="margin-top:0;">How the ranking is built</h3>
+          <p>You answered across ten preference dimensions: solo vs. social, indoor vs. outdoor, intensity, structure, variety, equipment access, mind-body, joint health, and cost sensitivity. Each of the 43 options has a known profile across the same dimensions; we score each by distance from yours. <strong>A 90% fit doesn't mean it's the &quot;best&quot; exercise &mdash; it means it's the most likely one you'll actually keep doing.</strong></p>
+          <p style="margin-bottom:0;color:var(--color-text-light);">Re-take this in eight weeks. Friction you didn't predict is the most useful data this tool produces.</p>
         </div>
 
         <div class="card" style="margin-top:var(--space-lg);">

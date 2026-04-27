@@ -8512,6 +8512,297 @@ figure img[width][height] {
   }
 }
 
+/* ===== Best-Fit Fitness Quiz ===== */
+.page-fitness-quiz .fitness-scale-key {
+  background: linear-gradient(135deg, rgba(36, 53, 67, 0.04), rgba(74, 158, 218, 0.06));
+  border: 1px solid rgba(36, 53, 67, 0.08);
+}
+.page-fitness-quiz .fitness-scale-key__legend {
+  display: inline-flex;
+  gap: 1.25rem;
+  margin-left: 0.75rem;
+  flex-wrap: wrap;
+  color: var(--color-text-light);
+}
+.page-fitness-quiz .fitness-scale-key__legend span strong { color: var(--color-text); }
+
+.page-fitness-quiz .fitness-q-card {
+  margin-bottom: var(--space-md);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.page-fitness-quiz .fitness-q-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.page-fitness-quiz .fitness-q-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+.page-fitness-quiz .fitness-q-card__num {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.85rem;
+  height: 1.85rem;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+.page-fitness-quiz .fitness-q-card__prompt {
+  margin: 0.15rem 0 0 0;
+  font-size: 1.02rem;
+  line-height: 1.4;
+}
+
+.page-fitness-quiz .fitness-scale {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+.page-fitness-quiz .fitness-pill {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 0.4rem;
+  min-height: 3.4rem;
+  border: 1.5px solid rgba(36, 53, 67, 0.18);
+  border-radius: 0.75rem;
+  background: #fff;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  text-align: center;
+  user-select: none;
+}
+.page-fitness-quiz .fitness-pill input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.page-fitness-quiz .fitness-pill:hover {
+  border-color: var(--color-primary);
+  background: rgba(74, 158, 218, 0.06);
+  transform: translateY(-1px);
+}
+.page-fitness-quiz .fitness-pill__num {
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.page-fitness-quiz .fitness-pill__anchor {
+  margin-top: 0.25rem;
+  font-size: 0.72rem;
+  color: var(--color-text-light);
+  letter-spacing: 0.01em;
+}
+.page-fitness-quiz .fitness-pill:has(input:checked) .fitness-pill__num,
+.page-fitness-quiz .fitness-pill:has(input:checked) .fitness-pill__anchor { color: #fff; }
+.page-fitness-quiz .fitness-pill:has(input:checked) {
+  background: linear-gradient(135deg, var(--color-primary), #2d7fb8);
+  border-color: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 4px 14px -6px rgba(36, 53, 67, 0.45);
+}
+.page-fitness-quiz .fitness-pill:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.page-fitness-quiz .fitness-cta-row { gap: var(--space-md); }
+.page-fitness-quiz .fitness-cta {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent, #16a34a));
+  border: none;
+  box-shadow: 0 6px 18px -8px rgba(36, 53, 67, 0.55);
+}
+.page-fitness-quiz .fitness-cta:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+.page-fitness-quiz .fitness-profile {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: var(--space-md);
+}
+.page-fitness-quiz .fitness-profile__row {
+  display: grid;
+  grid-template-columns: minmax(11rem, 1fr) minmax(0, 2fr) 2.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.92rem;
+}
+.page-fitness-quiz .fitness-profile__row--top .fitness-profile__label { font-weight: 700; color: var(--color-primary); }
+.page-fitness-quiz .fitness-profile__row--top .fitness-profile__fill {
+  background: linear-gradient(90deg, var(--color-primary), #2d7fb8);
+}
+.page-fitness-quiz .fitness-profile__bar {
+  position: relative;
+  height: 8px;
+  background: rgba(36, 53, 67, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.page-fitness-quiz .fitness-profile__fill {
+  height: 100%;
+  background: rgba(36, 53, 67, 0.35);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+.page-fitness-quiz .fitness-profile__value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-light);
+  font-size: 0.85rem;
+}
+
+.page-fitness-quiz .fitness-top-grid {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-md) 0 0 0;
+  display: grid;
+  gap: var(--space-md);
+}
+@media (min-width: 720px) {
+  .page-fitness-quiz .fitness-top-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.page-fitness-quiz .fitness-top-card {
+  background: linear-gradient(180deg, #fff, rgba(74, 158, 218, 0.04));
+  border: 1px solid rgba(36, 53, 67, 0.1);
+  border-radius: 1rem;
+  padding: 1.1rem 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.page-fitness-quiz .fitness-top-card__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.page-fitness-quiz .fitness-top-card__rank {
+  font-weight: 800;
+  color: var(--color-primary);
+  font-size: 1.05rem;
+}
+.page-fitness-quiz .fitness-top-card__name {
+  margin: 0;
+  flex: 1 1 auto;
+  font-size: 1.08rem;
+}
+.page-fitness-quiz .fitness-top-card__score {
+  background: rgba(74, 158, 218, 0.12);
+  color: var(--color-primary);
+  border-radius: 999px;
+  padding: 0.15rem 0.65rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+.page-fitness-quiz .fitness-top-card__why {
+  margin: 0;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.page-fitness-quiz .fitness-top-card__blurb {
+  margin: 0;
+  color: var(--color-text);
+}
+.page-fitness-quiz .fitness-top-card__tip {
+  margin: 0.25rem 0 0 0;
+  padding: 0.55rem 0.75rem;
+  background: rgba(36, 53, 67, 0.04);
+  border-left: 3px solid var(--color-primary);
+  border-radius: 0.4rem;
+  color: var(--color-text);
+  font-size: 0.92rem;
+}
+
+.page-fitness-quiz .fitness-full-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-sm) 0 0 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.page-fitness-quiz .fitness-row {
+  display: grid;
+  grid-template-columns: 1.75rem 1fr minmax(6rem, 30%) 3rem;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.5rem;
+  background: rgba(36, 53, 67, 0.025);
+  font-size: 0.92rem;
+}
+.page-fitness-quiz .fitness-row:hover { background: rgba(74, 158, 218, 0.07); }
+.page-fitness-quiz .fitness-row__rank {
+  color: var(--color-text-light);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+}
+.page-fitness-quiz .fitness-row__bar {
+  height: 6px;
+  background: rgba(36, 53, 67, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.page-fitness-quiz .fitness-row__bar > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), #2d7fb8);
+  border-radius: 999px;
+}
+.page-fitness-quiz .fitness-row__score {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 600px) {
+  .page-fitness-quiz .fitness-scale { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.35rem; }
+  .page-fitness-quiz .fitness-pill { min-height: 3.1rem; padding: 0.45rem 0.25rem; }
+  .page-fitness-quiz .fitness-pill__anchor { font-size: 0.62rem; }
+  .page-fitness-quiz .fitness-profile__row { grid-template-columns: 1fr; gap: 0.2rem; }
+  .page-fitness-quiz .fitness-profile__bar { width: 100%; }
+  .page-fitness-quiz .fitness-profile__value { text-align: left; }
+  .page-fitness-quiz .fitness-row { grid-template-columns: 1.5rem 1fr 2.5rem; }
+  .page-fitness-quiz .fitness-row__bar { display: none; }
+}
+
+[data-theme="dark"] .page-fitness-quiz .fitness-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: var(--color-text);
+}
+[data-theme="dark"] .page-fitness-quiz .fitness-pill:hover {
+  background: rgba(74, 158, 218, 0.12);
+  border-color: var(--color-primary);
+}
+[data-theme="dark"] .page-fitness-quiz .fitness-pill:has(input:checked) {
+  background: linear-gradient(135deg, var(--color-primary), #2d7fb8);
+}
+[data-theme="dark"] .page-fitness-quiz .fitness-top-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(74, 158, 218, 0.07));
+  border-color: rgba(255, 255, 255, 0.08);
+}
+[data-theme="dark"] .page-fitness-quiz .fitness-row { background: rgba(255, 255, 255, 0.03); }
+[data-theme="dark"] .page-fitness-quiz .fitness-row:hover { background: rgba(74, 158, 218, 0.12); }
+[data-theme="dark"] .page-fitness-quiz .fitness-top-card__tip { background: rgba(255, 255, 255, 0.04); }
+[data-theme="dark"] .page-fitness-quiz .fitness-top-card__score { background: rgba(74, 158, 218, 0.18); }
+[data-theme="dark"] .page-fitness-quiz .fitness-scale-key {
+  background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(74, 158, 218, 0.08));
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
 /* Source: css/src/90-dark-theme.css */
 /* ============================================
    Dark Mode Theme

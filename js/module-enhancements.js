@@ -111,7 +111,7 @@
         { title: 'Harvard Center on the Developing Child: InBrief', url: 'https://developingchild.harvard.edu/resources/inbrief-executive-function/' }
       ],
       'module-2.html': [
-        { title: 'Dawson & Guare ESQ-R materials', url: 'resources.html#assessments' },
+        { title: 'Dawson & Guare ESQ-R materials', url: 'free-executive-functioning-tests.html' },
         { title: 'BRIEF-2 overview', url: 'https://www.parinc.com/Products/Pkey/39' }
       ],
       'module-3.html': [
@@ -569,7 +569,7 @@
         { match: ['prefrontal'], text: 'PFC development is prolonged, so environmental supports are compensatory design features, not shortcuts.', links: [{ href: 'module-1.html', label: 'Module 1' }, { href: 'open-ef-resources-directory.html#citations', label: 'Citations' }] }
       ],
       'module-2.html': [
-        { match: ['intake'], text: 'A strong intake triangulates self-report, collateral patterns, and context variance to avoid over- or under-identification.', links: [{ href: 'resources.html#assessment', label: 'Assessment Tools' }, { href: 'brown-clusters-tool.html', label: 'Brown Clusters Tool' }] },
+        { match: ['intake'], text: 'A strong intake triangulates self-report, collateral patterns, and context variance to avoid over- or under-identification.', links: [{ href: 'free-executive-functioning-tests.html', label: 'Assessment Tools' }, { href: 'brown-clusters-tool.html', label: 'Brown Clusters Tool' }] },
         { match: ['esq-r'], text: 'ESQ-R profiles are most actionable when translated into two-week behavior targets with observable completion criteria.', links: [{ href: 'Conv17-305-dawson-executive-skills-questionnaire.pdf', label: 'ESQ-R PDF' }, { href: 'dashboard.html', label: 'Dashboard Tracking' }] },
         { match: ['brief'], text: 'Rating-scale interpretation should prioritize cross-setting discrepancies and function-level bottlenecks, not single-score labels.', links: [{ href: 'resources.html#reading', label: 'Reading Packets' }, { href: 'module-3.html', label: 'Coaching Architecture' }] }
       ],
@@ -656,7 +656,7 @@
         },
         'the intake architecture': {
           text: 'Action step: run intake in three passes: (1) presenting pain point, (2) context map by setting/time, (3) first 2-week behavior target with observable completion criteria.',
-          links: [{ href: 'resources.html#assessment', label: 'Assessment Toolkit' }, { href: 'module-3.html', label: 'Coaching Architecture' }]
+          links: [{ href: 'free-executive-functioning-tests.html', label: 'Assessment Toolkit' }, { href: 'module-3.html', label: 'Coaching Architecture' }]
         },
         'the executive skills questionnaire (esq-r)': {
           text: 'Action step: convert top-2 weak ESQ domains into one "start behavior" each (under 3 minutes) and one weekly review metric in dashboard.',

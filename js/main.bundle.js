@@ -1162,26 +1162,6 @@ window.EFI.registerMainModule(function (shared) {
     });
   })();
 
-  (function initNavDropdowns() {
-    document.querySelectorAll('.nav__dropdown-trigger').forEach(function (trigger) {
-      trigger.addEventListener('click', function (event) {
-        event.preventDefault();
-        var expanded = trigger.getAttribute('aria-expanded') === 'true';
-        document.querySelectorAll('.nav__dropdown-trigger[aria-expanded="true"]').forEach(function (otherTrigger) {
-          if (otherTrigger !== trigger) otherTrigger.setAttribute('aria-expanded', 'false');
-        });
-        trigger.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-      });
-    });
-
-    document.addEventListener('click', function (event) {
-      if (event.target && event.target.closest && event.target.closest('.nav__dropdown')) return;
-      document.querySelectorAll('.nav__dropdown-trigger[aria-expanded="true"]').forEach(function (trigger) {
-        trigger.setAttribute('aria-expanded', 'false');
-      });
-    });
-  })();
-
   (function injectFloatingStoreCTA() {
     if (!document.body.hasAttribute('data-enable-floating-store')) return;
     if (window.location.pathname.split('/').pop() === 'store.html') return;

@@ -105,21 +105,21 @@
 
   registerServiceWorker();
 
-  // Nav dropdown toggle
-  document.querySelectorAll('.nav__dropdown-trigger').forEach(function(trigger) {
-    trigger.addEventListener('click', function(e) {
+  document.addEventListener('click', function(e) {
+    var trigger = e.target && e.target.closest ? e.target.closest('.nav__dropdown-trigger') : null;
+
+    if (trigger) {
       e.preventDefault();
-      var expanded = this.getAttribute('aria-expanded') === 'true';
+      var expanded = trigger.getAttribute('aria-expanded') === 'true';
       document.querySelectorAll('.nav__dropdown-trigger').forEach(function(t) {
         t.setAttribute('aria-expanded', 'false');
       });
       if (!expanded) {
-        this.setAttribute('aria-expanded', 'true');
+        trigger.setAttribute('aria-expanded', 'true');
       }
-    });
-  });
+      return;
+    }
 
-  document.addEventListener('click', function(e) {
     if (!e.target.closest('.nav__dropdown')) {
       document.querySelectorAll('.nav__dropdown-trigger').forEach(function(t) {
         t.setAttribute('aria-expanded', 'false');

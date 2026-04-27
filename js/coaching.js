@@ -18,28 +18,13 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function initThemeToggle() {
-    var THEME_KEY = 'efi_theme';
+    // Dark mode has been retired sitewide. Strip any legacy toggle button that
+    // pre-rendered into a coaching page so it doesn't render as a dead control.
     var themeToggle = document.querySelector('.theme-toggle');
-    if (!themeToggle) return;
-
-    function syncThemeButton() {
-        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        themeToggle.textContent = isDark ? '\u2600' : '\u263E';
-        themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-        themeToggle.title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+    if (themeToggle && themeToggle.parentNode) {
+        themeToggle.parentNode.removeChild(themeToggle);
     }
-
-    syncThemeButton();
-
-    themeToggle.addEventListener('click', function () {
-        var current = document.documentElement.getAttribute('data-theme');
-        var next = current === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        try {
-            localStorage.setItem(THEME_KEY, next);
-        } catch (err) {}
-        syncThemeButton();
-    });
+    document.documentElement.removeAttribute('data-theme');
 }
 
 function injectInstituteCommerceLinks() {

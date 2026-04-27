@@ -1,6 +1,75 @@
 (function () {
   'use strict';
 
+  // Pointer-based swipe helper. Works for touch, pen, and mouse drag.
+  // Calls onSwipe(direction) where direction is -1 (left -> next) or 1 (right -> prev).
+  function attachSwipe(target, onSwipe, opts) {
+    if (!target) return;
+    var threshold = (opts && opts.threshold) || 40;     // px before it counts
+    var verticalGuard = (opts && opts.verticalGuard) || 1.2; // |dx|/|dy| must exceed this
+    var startX = 0, startY = 0, tracking = false, captured = false, pointerId = null;
+
+    function onDown(e) {
+      // Ignore non-primary buttons for mouse
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      tracking = true;
+      captured = false;
+      pointerId = e.pointerId;
+      startX = e.clientX;
+      startY = e.clientY;
+    }
+    function onMove(e) {
+      if (!tracking || e.pointerId !== pointerId) return;
+      var dx = e.clientX - startX;
+      var dy = e.clientY - startY;
+      // If they're clearly scrolling vertically, abandon.
+      if (!captured && Math.abs(dy) > 12 && Math.abs(dx) < Math.abs(dy)) {
+        tracking = false;
+        return;
+      }
+      if (!captured && Math.abs(dx) > 8) {
+        captured = true;
+        try { target.setPointerCapture(pointerId); } catch (err) {}
+      }
+      if (captured) {
+        // Block the page from scrolling horizontally with the gesture.
+        e.preventDefault();
+      }
+    }
+    function onUp(e) {
+      if (!tracking || e.pointerId !== pointerId) return;
+      var dx = e.clientX - startX;
+      var dy = e.clientY - startY;
+      var wasCaptured = captured;
+      tracking = false;
+      try { target.releasePointerCapture(pointerId); } catch (err) {}
+      pointerId = null;
+      var triggered = Math.abs(dx) >= threshold && Math.abs(dx) > Math.abs(dy) * verticalGuard;
+      if (triggered) onSwipe(dx < 0 ? -1 : 1);
+      // If the gesture was a real horizontal drag, suppress the click that
+      // would otherwise fire on whatever (link, button) we landed on.
+      if (wasCaptured || triggered) suppressNextClick = true;
+    }
+    function onCancel() { tracking = false; pointerId = null; }
+
+    var suppressNextClick = false;
+    target.addEventListener('click', function (e) {
+      if (suppressNextClick) {
+        e.preventDefault();
+        e.stopPropagation();
+        suppressNextClick = false;
+      }
+    }, true);
+
+    target.addEventListener('pointerdown', onDown);
+    target.addEventListener('pointermove', onMove, { passive: false });
+    target.addEventListener('pointerup', onUp);
+    target.addEventListener('pointercancel', onCancel);
+    target.addEventListener('lostpointercapture', onCancel);
+    // Hint to browsers that horizontal pan is consumed by us.
+    target.style.touchAction = 'pan-y';
+  }
+
   var carousel = document.querySelector('[data-insight-carousel]');
   var stage = document.querySelector('[data-insight-stage]');
   var dotsHost = document.querySelector('[data-insight-dots]');
@@ -103,6 +172,12 @@
     show(0);
     applyInsightLayoutMode();
     window.addEventListener('resize', applyInsightLayoutMode);
+
+    attachSwipe(carousel, function (dir) {
+      if (dir < 0) show(current + 1);
+      else show(current - 1);
+      restart();
+    });
   }
 
   // Tile carousel (assessments + resources, three at a time, smooth cycle)
@@ -138,19 +213,15 @@
     function render() {
       if (!items.length || !track) return;
       var vc = visibleCount();
-      if (isMobileTiles()) {
-        track.style.transform = 'none';
-      } else {
-        var first = items[0];
-        var style = window.getComputedStyle(track);
-        var gap = parseFloat(style.columnGap || style.gap || '0') || 0;
-        var itemWidth = first.getBoundingClientRect().width;
-        var offset = pageIndex * (itemWidth + gap);
-        track.style.transform = 'translateX(' + (-offset) + 'px)';
-      }
+      var first = items[0];
+      var style = window.getComputedStyle(track);
+      var gap = parseFloat(style.columnGap || style.gap || '0') || 0;
+      var itemWidth = first.getBoundingClientRect().width;
+      var offset = pageIndex * (itemWidth + gap);
+      track.style.transform = 'translateX(' + (-offset) + 'px)';
 
-      if (prevBtn) prevBtn.disabled = isMobileTiles() || pageIndex <= 0;
-      if (nextBtn) nextBtn.disabled = isMobileTiles() || pageIndex >= items.length - vc;
+      if (prevBtn) prevBtn.disabled = pageIndex <= 0;
+      if (nextBtn) nextBtn.disabled = pageIndex >= items.length - vc;
 
       if (tileDotsHost) {
         var dots = Array.prototype.slice.call(tileDotsHost.children);
@@ -236,6 +307,12 @@
     });
     window.addEventListener('load', render);
     tileStart();
+
+    attachSwipe(tileCarousel, function (dir) {
+      if (dir < 0) goTo(pageIndex + 1);
+      else goTo(pageIndex - 1);
+      tileRestart();
+    });
   }
 
   var NEWSLETTER_DISMISS_KEY = 'exef_newsletter_dismissed_v1';

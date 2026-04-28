@@ -126,25 +126,25 @@
       </div>
       <div class="service-lanes fade-in">
         <article class="service-lane">
-          <span class="service-lane__badge service-lane__badge--coming-soon">Coming Soon</span>
+          <span class="service-lane__badge service-lane__badge--active">Booking Now</span>
           <h3>EF &amp; ADHD Coaching</h3>
           <p>1:1 coaching for adults, professionals, and students. Sessions target task initiation, working memory, planning, emotional regulation, and time management using methods grounded in Barkley, Brown, Dawson &amp; Guare, and Ward.</p>
           <p class="service-lane__delivery">In-person (San Diego) &middot; Virtual</p>
           <a href="#coaching-packages" class="btn btn--primary btn--sm">See Coaching Packages</a>
         </article>
         <article class="service-lane">
-          <span class="service-lane__badge service-lane__badge--coming-soon">Coming Soon</span>
+          <span class="service-lane__badge service-lane__badge--active">Booking Now</span>
           <h3>Educational Specialist</h3>
           <p>Special-education expertise for students, families, and schools. Covers IEP &amp; 504 translation, academic remediation planning, learning-disability accommodations, and the day-to-day systems that bridge home and school.</p>
           <p class="service-lane__delivery">In-person (San Diego) &middot; Virtual</p>
           <a href="#ed-specialist-services" class="btn btn--primary btn--sm">See Ed Specialist Services</a>
         </article>
         <article class="service-lane">
-          <span class="service-lane__badge service-lane__badge--coming-soon">Coming Soon</span>
+          <span class="service-lane__badge service-lane__badge--coming-soon">Launching Fall 2026</span>
           <h3>Occupational Therapy</h3>
           <p>Sensory integration, motor planning, daily living skill development, and self-regulation strategies. OT services complement EF coaching by addressing the body-brain connection that underlies many executive functioning challenges.</p>
           <p class="service-lane__delivery">In-person (San Diego) &middot; Telehealth</p>
-          <a href="#ot-services" class="btn btn--secondary btn--sm">See OT Services</a>
+          <a href="#ot-interest-card" class="btn btn--secondary btn--sm">Join OT Interest List</a>
         </article>
       </div>
     </div>
@@ -262,7 +262,7 @@
           headline.textContent = 'All three lanes overlap for you.';
           rationale.textContent = 'You checked items spread evenly across coaching, educational specialist, and OT scope. A 20-minute consult will sort the sequence faster than another form.';
           ctaEl.textContent = 'Book a consult';
-          ctaEl.setAttribute('href', 'https://calendly.com/jacobansky/30min?month=2026-04');
+          ctaEl.setAttribute('href', 'https://calendly.com/jacobansky/30min?month=2026-04&utm_source=coaching-home&utm_content=selector-all-lanes');
           secondary.hidden = true;
           return;
         }
@@ -335,7 +335,7 @@
             <li>One 15-minute touch-up call between sessions</li>
           </ul>
           <p class="package-card__fit"><strong>Best for:</strong> Adults or students who want a short, decisive pilot before committing to ongoing work.</p>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--secondary btn--sm">Schedule Intake</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-foundations" class="btn btn--secondary btn--sm">Schedule Intake</a>
         </article>
         <article class="package-card package-card--featured" style="--pkg-color: var(--module-3);">
           <span class="package-card__flag">Most chosen</span>
@@ -352,7 +352,7 @@
             <li>Month-end progress review with metrics</li>
           </ul>
           <p class="package-card__fit"><strong>Best for:</strong> Adults or professionals building durable systems across a full quarter.</p>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--primary btn--sm">Schedule Intake</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-momentum" class="btn btn--primary btn--sm">Schedule Intake</a>
         </article>
         <article class="package-card" style="--pkg-color: var(--module-6);">
           <p class="package-card__eyebrow">Intensive</p>
@@ -368,7 +368,7 @@
             <li>Quarterly written progress report</li>
           </ul>
           <p class="package-card__fit"><strong>Best for:</strong> Clients integrating EF work with therapy, medication, or major life transitions.</p>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--secondary btn--sm">Schedule Intake</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-integration" class="btn btn--secondary btn--sm">Schedule Intake</a>
         </article>
       </div>
       <div class="grid grid--2 stagger fade-in" style="margin-top:var(--space-2xl);">
@@ -384,7 +384,7 @@
             <li>End-of-semester report for IEP/504 teams if requested</li>
           </ul>
           <p class="package-card__fit"><strong>Best for:</strong> Middle school, high school, or college students building independence.</p>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--secondary btn--sm">Schedule Intake</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-academic-semester" class="btn btn--secondary btn--sm">Schedule Intake</a>
         </article>
         <article class="package-card" style="--pkg-color: var(--module-1);">
           <p class="package-card__eyebrow">Flex</p>
@@ -398,7 +398,7 @@
             <li>Priority-rescheduling window included</li>
           </ul>
           <p class="package-card__fit"><strong>Best for:</strong> Alumni and returning clients who want periodic re-alignment without a package commitment.</p>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--secondary btn--sm">Book Session</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-single-session" class="btn btn--secondary btn--sm">Book Session</a>
         </article>
       </div>
       <p class="package-note">All packages include a free 20-minute discovery consult before you commit. Sliding-scale seats are available each quarter &mdash; ask during intake.</p>
@@ -548,9 +548,149 @@
           </ul>
         </article>
       </div>
-      <p class="package-note">OT services begin Fall 2026. Join the interest list during your coaching intake and you'll be scheduled first when slots open.</p>
+      <p class="package-note">OT services begin Fall 2026. Join the interest list to be first in line when intake opens &mdash; or mention OT during a coaching intake to skip the form.</p>
+      <div class="card fade-in" id="ot-interest-card" style="margin-top:var(--space-lg);max-width:520px;margin-left:auto;margin-right:auto;">
+        <h3 style="margin-top:0;">OT Interest List</h3>
+        <p style="color:var(--color-text-light);">No spam. We email once when scheduling opens, and once a quarter only if there's something useful (e.g. a sensory-friendly resource drop). Unsubscribe in one click.</p>
+        <form id="ot-interest-form" novalidate style="margin-top:var(--space-md);">
+          <label for="ot-interest-email" style="display:block;font-weight:600;margin-bottom:var(--space-xs);">Email</label>
+          <input type="email" id="ot-interest-email" name="email" required autocomplete="email" placeholder="you@example.com" style="width:100%;padding:var(--space-sm) var(--space-md);border:1px solid var(--color-border);border-radius:var(--border-radius);font-size:1rem;">
+          <fieldset style="border:0;padding:0;margin:var(--space-md) 0 0;">
+            <legend style="font-weight:600;margin-bottom:var(--space-xs);">What's the focus? <span style="font-weight:400;color:var(--color-text-light);font-size:0.9rem;">(optional)</span></legend>
+            <ul class="checklist" style="list-style:none;padding:0;margin:0;display:grid;gap:var(--space-xs);">
+              <li><label style="display:flex;gap:var(--space-sm);cursor:pointer;"><input type="checkbox" name="ot-focus" value="sensory"> <span>Sensory regulation</span></label></li>
+              <li><label style="display:flex;gap:var(--space-sm);cursor:pointer;"><input type="checkbox" name="ot-focus" value="adl"> <span>Daily living routines</span></label></li>
+              <li><label style="display:flex;gap:var(--space-sm);cursor:pointer;"><input type="checkbox" name="ot-focus" value="motor"> <span>Fine/visual-motor</span></label></li>
+              <li><label style="display:flex;gap:var(--space-sm);cursor:pointer;"><input type="checkbox" name="ot-focus" value="environment"> <span>School or workplace consult</span></label></li>
+            </ul>
+          </fieldset>
+          <p id="ot-interest-error" class="esqr-error" role="alert" hidden style="margin-top:var(--space-md);">Enter a valid email to join the list.</p>
+          <button type="submit" class="btn btn--primary btn--sm" style="margin-top:var(--space-md);" data-analytics-event="ot_interest_submit" data-analytics-label="OT interest list submit">Add Me to the List</button>
+        </form>
+        <p id="ot-interest-success" role="status" aria-live="polite" hidden style="margin-top:var(--space-md);padding:var(--space-sm) var(--space-md);background:rgba(34,139,84,0.08);border-left:3px solid var(--color-success, #228b54);border-radius:var(--border-radius);">You're on the list. We'll be in touch when scheduling opens.</p>
+      </div>
     </div>
   </section>
+
+  <script>
+    (function () {
+      var form = document.getElementById('ot-interest-form');
+      if (!form) return;
+      var emailEl = document.getElementById('ot-interest-email');
+      var errorEl = document.getElementById('ot-interest-error');
+      var successEl = document.getElementById('ot-interest-success');
+      var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = (emailEl.value || '').trim();
+        if (!EMAIL_RE.test(email)) {
+          errorEl.hidden = false;
+          emailEl.focus();
+          return;
+        }
+        errorEl.hidden = true;
+        var focus = Array.prototype.map.call(
+          form.querySelectorAll('input[name="ot-focus"]:checked'),
+          function (cb) { return cb.value; }
+        );
+        if (window.EFI && window.EFI.Analytics && typeof window.EFI.Analytics.track === 'function') {
+          window.EFI.Analytics.track('ot_interest_list_signup', {
+            email: email,
+            focus: focus
+          });
+        }
+        form.hidden = true;
+        successEl.hidden = false;
+        if (typeof successEl.focus === 'function') {
+          successEl.setAttribute('tabindex', '-1');
+          successEl.focus({ preventScroll: false });
+        }
+      });
+    })();
+  </script>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="container container--narrow">
+      <div class="section-header fade-in">
+        <span class="section-header__tag">FAQ</span>
+        <h2>Common questions about the lanes</h2>
+        <p>Most people land on this page asking the same five things. Here are the honest answers.</p>
+      </div>
+      <div class="fade-in" style="display:grid;gap:var(--space-md);">
+        <details class="card" style="padding:var(--space-lg);">
+          <summary style="font-weight:700;cursor:pointer;font-size:1.05rem;">Do I need coaching, OT, an educational specialist, or therapy?</summary>
+          <p style="margin-top:var(--space-md);color:var(--color-text-light);">Coaching builds adult and student systems for follow-through, planning, and time management. An educational specialist owns the school side &mdash; IEPs, 504s, accommodations, study routines. OT covers sensory regulation, motor planning, and daily living when the body is the bottleneck. Therapy is required when safety, severe mood instability, or active trauma symptoms are present. The lanes overlap; the <a href="#specialist-selector">&ldquo;I need&hellip;&rdquo; selector</a> at the top of this page is the fastest way to triage.</p>
+        </details>
+        <details class="card" style="padding:var(--space-lg);">
+          <summary style="font-weight:700;cursor:pointer;font-size:1.05rem;">How is EF coaching different from therapy?</summary>
+          <p style="margin-top:var(--space-md);color:var(--color-text-light);">Coaching is skill-building and implementation work. Therapy is clinical care for diagnosable conditions. ExEF coaches do not diagnose, treat mental-health conditions, or provide psychotherapy. When clinical concerns surface, we refer out. Full scope detail lives on the <a href="scope-of-practice.html">scope-of-practice page</a>.</p>
+        </details>
+        <details class="card" style="padding:var(--space-lg);">
+          <summary style="font-weight:700;cursor:pointer;font-size:1.05rem;">Are sessions covered by insurance?</summary>
+          <p style="margin-top:var(--space-md);color:var(--color-text-light);">Coaching and educational specialist services are typically not insurance-reimbursable in the US. OT services may be billable depending on plan, state, and presenting concerns &mdash; we'll provide a superbill if requested. Sliding-scale seats open each quarter; ask during intake.</p>
+        </details>
+        <details class="card" style="padding:var(--space-lg);">
+          <summary style="font-weight:700;cursor:pointer;font-size:1.05rem;">Do you serve adults, kids, or both?</summary>
+          <p style="margin-top:var(--space-md);color:var(--color-text-light);">Coaching primarily serves adults and older students (high school onward). The educational specialist lane covers K&ndash;12 and college transition. OT will serve children and adults across the regulation/motor/ADL spectrum when it launches Fall 2026.</p>
+        </details>
+        <details class="card" style="padding:var(--space-lg);">
+          <summary style="font-weight:700;cursor:pointer;font-size:1.05rem;">Can I switch lanes or run two at once?</summary>
+          <p style="margin-top:var(--space-md);color:var(--color-text-light);">Yes &mdash; many clients combine coaching with OT or educational specialist work. We coordinate scope so the lanes don't duplicate. The 20-minute discovery consult is the right place to talk through sequence.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Do I need coaching, OT, an educational specialist, or therapy?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Coaching builds adult and student systems for follow-through, planning, and time management. An educational specialist owns the school side: IEPs, 504s, accommodations, study routines. OT covers sensory regulation, motor planning, and daily living when the body is the bottleneck. Therapy is required when safety, severe mood instability, or active trauma symptoms are present."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is EF coaching different from therapy?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Coaching is skill-building and implementation work. Therapy is clinical care for diagnosable conditions. ExEF coaches do not diagnose, treat mental-health conditions, or provide psychotherapy. When clinical concerns surface, we refer out."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are sessions covered by insurance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Coaching and educational specialist services are typically not insurance-reimbursable in the US. OT services may be billable depending on plan, state, and presenting concerns; we provide a superbill if requested. Sliding-scale seats open each quarter."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you serve adults, kids, or both?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Coaching primarily serves adults and older students (high school onward). The educational specialist lane covers K-12 and college transition. OT will serve children and adults across the regulation, motor, and ADL spectrum when it launches Fall 2026."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I switch lanes or run two at once?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Many clients combine coaching with OT or educational specialist work. We coordinate scope so the lanes do not duplicate. The 20-minute discovery consult is the right place to talk through sequence."
+        }
+      }
+    ]
+  }
+  </script>
 
   <!-- Final CTA -->
   <section class="section section--alt" id="cta">
@@ -586,7 +726,7 @@
           <h4>Coaching</h4>
           <ul class="footer__links">
             <li><a href="coaching-home.html">Support Paths</a></li>
-            <li><a href="coaching-services.html">Services</a></li>
+            <li><a href="coaching-home.html#service-lanes">Services</a></li>
             <li><a href="meet-the-team.html">Team</a></li>
             <li><a href="free-executive-functioning-tests.html">Assessments</a></li>
           </ul>

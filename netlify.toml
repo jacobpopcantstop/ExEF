@@ -50,33 +50,35 @@
 
 [[redirects]]
   from = "/coaching-services.html"
-  to = "/coaching/services/"
+  to = "/coaching-home.html#service-lanes"
   status = 301
+  force = true
 
 [[redirects]]
   from = "/coaching/services"
-  to = "/coaching/services/"
+  to = "/coaching-home.html#service-lanes"
   status = 301
 
 [[redirects]]
   from = "/coaching/services/"
-  to = "/coaching-services.html"
-  status = 200
-
-[[redirects]]
-  from = "/coaching-about.html"
-  to = "/coaching/about/"
+  to = "/coaching-home.html#service-lanes"
   status = 301
 
 [[redirects]]
+  from = "/coaching-about.html"
+  to = "/coaching-home.html#support-team"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/coaching/about"
-  to = "/coaching/about/"
+  to = "/coaching-home.html#support-team"
   status = 301
 
 [[redirects]]
   from = "/coaching/about/"
-  to = "/coaching-about.html"
-  status = 200
+  to = "/coaching-home.html#support-team"
+  status = 301
 
 [[redirects]]
   from = "/coaching-contact.html"

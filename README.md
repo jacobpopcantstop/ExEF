@@ -39,8 +39,6 @@ The Executive Functioning Institute provides a rigorous six-module certification
 - **teacher-to-coach.html** — Educator transition landing page + ROI calculator
 - **coaching-home.html** — Unified EFI coaching practice page
 - **coaching-methodology.html** — Bridge page to coaching approach section
-- **coaching-services.html** — Bridge page to coaching services section
-- **coaching-about.html** — Bridge page to coaching practice section
 - **coaching-contact.html** — Coaching consultation request page
 - **educator-launchpad.html** — Bridge page to teacher-to-coach launchpad
 - **gap-analyzer.html** — Download gate for skills gap analyzer lead magnet

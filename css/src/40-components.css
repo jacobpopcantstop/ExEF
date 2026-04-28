@@ -1276,6 +1276,11 @@ select.form-control {
   color: var(--color-accent);
 }
 
+.service-lane__badge--consultation {
+  background: rgba(41, 128, 185, 0.1);
+  color: #23618a;
+}
+
 .service-lane h3 {
   font-family: var(--font-heading);
   font-size: 1.25rem;

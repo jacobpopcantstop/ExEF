@@ -621,7 +621,7 @@
       heading.style.color = 'var(--color-accent)';
       heading.textContent = 'All Modules Complete - Capstone Is Your Final Step';
       var body = document.createElement('p');
-      body.appendChild(document.createTextNode('You have passed all six modules. Submit your capstone practicum to complete the certification pathway. Review the '));
+      body.appendChild(document.createTextNode('You have passed all required Pathway modules. Submit your capstone practicum to complete the certification pathway. Review the '));
       var rubricLink = document.createElement('a');
       rubricLink.href = 'certification.html#transparency-rubric';
       rubricLink.textContent = 'rubric expectations';

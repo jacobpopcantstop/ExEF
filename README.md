@@ -12,13 +12,13 @@ EFI is an asynchronous-first product:
 
 ## About
 
-The Executive Functioning Institute provides a rigorous six-module certification curriculum that trains professionals to become Certified Executive Functioning Coaches (CEFC). The program bridges the gap between theoretical neuroscience and practical coaching, training coaches to be the "external frontal lobe" their clients need.
+The Executive Functioning Institute provides a rigorous Pathway certification curriculum that trains professionals to become Certified Executive Functioning Coaches (CEFC). The program bridges the gap between theoretical neuroscience and practical coaching, training coaches to be the "external frontal lobe" their clients need.
 
 ## Site Structure
 
 - **index.html** — Homepage with program overview, three foundational models, and certification path
 - **about.html** — Mission, theoretical foundations (Barkley, Brown, Dawson & Guare), and the 360 Thinking model
-- **curriculum.html** — Complete six-module curriculum overview with units, topics, and assignments
+- **curriculum.html** — Complete Pathway curriculum overview with units, topics, and assignments
 - **certification.html** — Certification requirements, capstone practicum, peer review, and ethics
 - **resources.html** — Curated public resource hub for assessments, toolkits, templates, and directory access
 - **getting-started.html** — Bridge page pointing to homepage start paths

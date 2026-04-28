@@ -17,6 +17,8 @@ EFI.Auth = (function () {
   var ACTION_PLAN_STORAGE_KEY = 'efi_action_plans_v1';
   var REFLECTION_STORAGE_KEY = 'efi_reflections_v1';
   var ADHERENCE_STORAGE_KEY = 'efi_adherence_v1';
+  var LEGACY_PASSWORD_SUNSET_DATE = '2026-04-28';
+  var LEGACY_PASSWORD_METRICS_KEY = 'efi_legacy_password_attempts';
   var LEARNING_LOOP_SYNC_MS = 15000;
   var learningLoopSyncTimer = null;
   var learningLoopSyncBound = false;
@@ -67,15 +69,17 @@ EFI.Auth = (function () {
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
   }
 
-  function hashPasswordLegacy(pw) {
-    // Legacy hash retained for migration of older local users.
-    var hash = 0;
-    for (var i = 0; i < pw.length; i++) {
-      var ch = pw.charCodeAt(i);
-      hash = ((hash << 5) - hash) + ch;
-      hash |= 0;
-    }
-    return 'h' + Math.abs(hash).toString(36);
+  function recordLegacyPasswordAttempt(email) {
+    try {
+      var metrics = JSON.parse(localStorage.getItem(LEGACY_PASSWORD_METRICS_KEY)) || {};
+      var key = String(email || 'unknown').toLowerCase().trim() || 'unknown';
+      metrics[key] = {
+        count: ((metrics[key] && metrics[key].count) || 0) + 1,
+        lastAttemptAt: new Date().toISOString(),
+        sunsetDate: LEGACY_PASSWORD_SUNSET_DATE
+      };
+      localStorage.setItem(LEGACY_PASSWORD_METRICS_KEY, JSON.stringify(metrics));
+    } catch (e) {}
   }
 
   function bytesToBase64(bytes) {
@@ -93,7 +97,7 @@ EFI.Auth = (function () {
 
   async function hashPassword(pw, saltBase64) {
     if (!window.crypto || !window.crypto.subtle) {
-      return { algo: 'legacy', digest: hashPasswordLegacy(pw) };
+      throw new Error('This browser does not support the required secure password storage.');
     }
 
     var saltBytes = saltBase64 ? base64ToBytes(saltBase64) : window.crypto.getRandomValues(new Uint8Array(16));
@@ -423,7 +427,12 @@ EFI.Auth = (function () {
     if (password.length < 6) {
       return { ok: false, error: 'Password must be at least 6 characters.' };
     }
-    var hashed = await hashPassword(password);
+    var hashed;
+    try {
+      hashed = await hashPassword(password);
+    } catch (err) {
+      return { ok: false, error: err.message };
+    }
     users[key] = {
       name: name.trim(),
       email: key,
@@ -483,18 +492,19 @@ EFI.Auth = (function () {
     }
     var isValid = false;
     if ((user.passwordAlgo || 'legacy') === 'pbkdf2-sha256') {
-      var hashed = await hashPassword(password, user.passwordSalt);
+      var hashed;
+      try {
+        hashed = await hashPassword(password, user.passwordSalt);
+      } catch (err) {
+        return { ok: false, error: err.message };
+      }
       isValid = hashed.digest === user.passwordHash;
     } else {
-      isValid = hashPasswordLegacy(password) === user.passwordHash;
-      if (isValid) {
-        var migrated = await hashPassword(password);
-        user.passwordHash = migrated.digest;
-        user.passwordSalt = migrated.salt || null;
-        user.passwordAlgo = migrated.algo;
-        users[key] = user;
-        saveUsers(users);
-      }
+      recordLegacyPasswordAttempt(key);
+      return {
+        ok: false,
+        error: 'This local account uses a retired password format. Create a new account or contact ExEF support to restore access.'
+      };
     }
 
     if (!isValid) {

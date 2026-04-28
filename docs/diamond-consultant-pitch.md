@@ -15,11 +15,11 @@ EFI is building the infrastructure to put that kind of expertise where families 
 
 ## What EFI Is
 
-The Executive Functioning Institute is an open-curriculum coaching and credentialing program built around the research of Barkley, Brown, Dawson & Guare, and Ward. The public side is free — an open curriculum, assessment tools, and planning resources anyone can use. The paid side is reviewer-led: coaching, certification review, and (coming soon) specialist referrals.
+The Executive Functioning Institute is an open-curriculum coaching and credentialing program built around the research of Barkley, Brown, Dawson & Guare, and Ward. The public side is free — an open curriculum, assessment tools, and planning resources anyone can use. The paid side is reviewer-led: coaching, certification review, and consultation-based specialist referrals.
 
 The site already has a public certification pathway for EF coaches. The next layer — the one I'm building now — is a specialist services directory: connecting families with the right person depending on whether their problem is a coaching problem, a school-system problem, or a sensory/motor problem.
 
-Educational specialist services is one of those three lanes. It's currently listed as "coming soon." You're the first person I've thought of to make it real.
+Educational specialist services is one of those three lanes. It now routes through consultation so ExEF can match the request to the right support model before promising a specific service shape.
 
 ---
 

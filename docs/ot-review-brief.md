@@ -4,7 +4,7 @@
 
 The Executive Functioning Institute is an asynchronous executive functioning coaching certification and coaching platform. The site includes:
 
-- a six-module curriculum
+- a Pathway curriculum
 - public educational resources
 - executive functioning tools and assessments
 - certification and coaching pages

@@ -262,7 +262,7 @@ async function issuePurchase(body, event) {
       });
       return json(403, {
         ok: false,
-        error: 'Certificate products require all six modules passed and capstone passed.',
+        error: 'Certificate products require all required Pathway modules passed and capstone passed.',
         eligibility: {
           all_modules_passed: allModulesPassed,
           capstone_passed: capstonePassed

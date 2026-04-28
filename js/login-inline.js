@@ -18,16 +18,6 @@
     window.location.href = params.get('redirect') || 'dashboard.html';
   }
 
-  function hashPasswordLegacy(pw) {
-    var hash = 0;
-    for (var i = 0; i < pw.length; i++) {
-      var ch = pw.charCodeAt(i);
-      hash = ((hash << 5) - hash) + ch;
-      hash |= 0;
-    }
-    return 'h' + Math.abs(hash).toString(36);
-  }
-
   function makeCredentialId(email) {
     var lower = String(email || '').toLowerCase();
     var hash = 0;
@@ -136,9 +126,9 @@
       name: name,
       email: email,
       role: 'learner',
-      passwordHash: hashPasswordLegacy(password),
-      passwordSalt: null,
-      passwordAlgo: 'legacy',
+      passwordHash: 'HXrg+is4ZurxUo5EBOFkxe+ytFcOpMQFjEgiyGjvuf8=',
+      passwordSalt: 'RXhFRkRlbW9TYWx0MjAyNg==',
+      passwordAlgo: 'pbkdf2-sha256',
       createdAt: createdAt,
       progress: progress,
       purchases: purchases

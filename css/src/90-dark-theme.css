@@ -1230,6 +1230,11 @@
   color: #f39c12;
 }
 
+[data-theme="dark"] .service-lane__badge--consultation {
+  background: rgba(74, 144, 226, 0.18);
+  color: var(--color-primary-light);
+}
+
 [data-theme="dark"] .creative-callout {
   background: #1a2332;
   border-color: rgba(127, 192, 255, 0.12);

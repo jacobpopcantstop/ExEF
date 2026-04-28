@@ -101,6 +101,11 @@
   status = 301
 
 [[redirects]]
+  from = "/module-a-neuroscience.html"
+  to = "/modules/1/"
+  status = 301
+
+[[redirects]]
   from = "/modules/1/"
   to = "/module-1.html"
   status = 200
@@ -121,12 +126,22 @@
   status = 301
 
 [[redirects]]
+  from = "/module-b-pedagogy.html"
+  to = "/modules/3/"
+  status = 301
+
+[[redirects]]
   from = "/modules/3/"
   to = "/module-3.html"
   status = 200
 
 [[redirects]]
   from = "/module-4.html"
+  to = "/modules/4/"
+  status = 301
+
+[[redirects]]
+  from = "/module-c-interventions.html"
   to = "/modules/4/"
   status = 301
 
@@ -218,6 +233,16 @@
 [[redirects]]
   from = "/contact.html"
   to = "/coaching/contact/"
+  status = 301
+
+[[redirects]]
+  from = "/checkout.html"
+  to = "/store.html"
+  status = 301
+
+[[redirects]]
+  from = "/coach-directory.html"
+  to = "/coaching-home.html"
   status = 301
 
 [[headers]]

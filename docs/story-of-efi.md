@@ -8,7 +8,7 @@ From the beginning, EFI positioned itself as an asynchronous-first certification
 
 ## The first layer: curriculum and public trust
 
-EFI's first major form was a public curriculum experience. The six-module certification path was laid out clearly, with each module tied to established executive functioning frameworks:
+EFI's first major form was a public curriculum experience. The original six-module certification path was laid out clearly, with each module tied to established executive functioning frameworks:
 
 - Barkley for inhibition and self-regulation
 - Brown for cognitive management clusters
@@ -98,7 +98,7 @@ Several rounds of rubric-driven and conversion-driven improvements reshaped the 
 - service worker support
 - better live-region and focus behavior on result surfaces
 
-EFI also became visually richer. It moved away from feeling like a text-only teaching repository and toward something closer to an institute archive or field manual. Real photographs and documentary-style visuals were added across the six modules, and page layouts were revised to better support evidence, artifacts, and public-facing credibility.
+EFI also became visually richer. It moved away from feeling like a text-only teaching repository and toward something closer to an institute archive or field manual. Real photographs and documentary-style visuals were added across the module sequence, and page layouts were revised to better support evidence, artifacts, and public-facing credibility.
 
 ## The sixth layer: documentation discipline
 

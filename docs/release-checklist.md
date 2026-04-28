@@ -55,7 +55,7 @@ Canonical outstanding roadmap: `docs/progress.md`
 ## 4) Live Stripe purchase verification
 
 - [ ] Create or use a real learner account on the deployed site.
-- [ ] Start checkout from the live [store.html](/Users/jacobrozansky/exef/store.html).
+- [ ] Start checkout from the live `store.html` on the deployed site.
 - [ ] Complete one real purchase for the lowest-risk live offer.
 - [ ] Confirm:
   - Stripe Checkout opens successfully
@@ -128,7 +128,7 @@ Canonical outstanding roadmap: `docs/progress.md`
   - any footer/contact/legal surfaces that must match
 - [ ] Confirm canonical tags and sitemap include any new pages or route aliases.
 - [ ] Confirm `netlify.toml` security headers are present in the deployed response.
-- [ ] Smoke-test dark mode and mobile navigation on the live site.
+- [ ] Smoke-test mobile navigation on the live site.
 - [ ] Confirm the directory citation section and `Further Sources` source corpus are updated for any new citation additions.
 
 ## 9) Uptime workflow verification

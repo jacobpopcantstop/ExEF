@@ -156,6 +156,36 @@
   status = 200
 
 [[redirects]]
+  from = "/module-7.html"
+  to = "/modules/7/"
+  status = 301
+
+[[redirects]]
+  from = "/modules/7/"
+  to = "/module-7.html"
+  status = 200
+
+[[redirects]]
+  from = "/module-8.html"
+  to = "/modules/8/"
+  status = 301
+
+[[redirects]]
+  from = "/modules/8/"
+  to = "/module-8.html"
+  status = 200
+
+[[redirects]]
+  from = "/module-9.html"
+  to = "/modules/9/"
+  status = 301
+
+[[redirects]]
+  from = "/modules/9/"
+  to = "/module-9.html"
+  status = 200
+
+[[redirects]]
   from = "/search.html"
   to = "/search/"
   status = 301

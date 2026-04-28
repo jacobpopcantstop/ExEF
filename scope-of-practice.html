@@ -8,6 +8,13 @@
   <link rel="canonical" href="https://executivefunctioninginstitute.com/scope-of-practice.html" />
   <link rel="icon" href="favicon.svg" />
   <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .matrix--wide .matrix__row { grid-template-columns: 150px repeat(4, 1fr); }
+    @media (max-width: 768px) {
+      .matrix--wide .matrix__row { grid-template-columns: 1fr; }
+      .matrix--wide .matrix__row > div { border-right: none; }
+    }
+  </style>
   <meta property="og:image" content="https://www.theexecutivefunctioninginstitute.com/images/og-image.svg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -45,19 +52,19 @@
   <header class="page-header">
     <div class="container">
       <h1>Coaching vs Therapy: Scope of Practice</h1>
-      <p>Operational boundaries, non-diagnostic language, referral triggers, and ethical limits for ExEF coaching practice.</p>
+      <p>Operational boundaries, non-diagnostic language, referral triggers, and ethical limits across ExEF's coaching, educational specialist, and OT support lanes.</p>
     </div>
   </header>
   <main id="main-content">
     <section class="section">
       <div class="container">
-        <div class="matrix">
-          <div class="matrix__row matrix__row--head"><div>Area</div><div>EF Coaching</div><div>Therapy / Clinical Care</div></div>
-          <div class="matrix__row"><div>Primary Aim</div><div>Skill building + implementation systems</div><div>Mental health diagnosis/treatment</div></div>
-          <div class="matrix__row"><div>Primary Method</div><div>Planning, routines, accountability design</div><div>Clinical interventions, psychotherapy protocols</div></div>
-          <div class="matrix__row"><div>Assessment Role</div><div>Educational and coaching-oriented interpretation</div><div>Clinical evaluation and diagnosis</div></div>
-          <div class="matrix__row"><div>School Support Role</div><div>Preparation, parent education, accommodation translation</div><div>Legal representation or licensed advocacy where required</div></div>
-          <div class="matrix__row"><div>Referral Trigger</div><div>Persistent safety concerns or clinical symptom escalation</div><div>Appropriate intake into treatment pathway</div></div>
+        <div class="matrix matrix--wide">
+          <div class="matrix__row matrix__row--head"><div>Area</div><div>EF Coaching</div><div>Educational Specialist</div><div>Occupational Therapy</div><div>Therapy / Clinical Care</div></div>
+          <div class="matrix__row"><div>Primary Aim</div><div>Skill building + implementation systems</div><div>Academic access, IEP/504 translation, learning systems</div><div>Sensory regulation, motor planning, daily living skills</div><div>Mental health diagnosis/treatment</div></div>
+          <div class="matrix__row"><div>Primary Method</div><div>Planning, routines, accountability design</div><div>Document review, school advocacy, study/homework systems</div><div>Sensory integration, ADL training, embodied regulation</div><div>Clinical interventions, psychotherapy protocols</div></div>
+          <div class="matrix__row"><div>Assessment Role</div><div>Educational and coaching-oriented interpretation</div><div>Educational testing review and accommodations mapping</div><div>OT evaluation: sensory, motor, ADL, visual-motor</div><div>Clinical evaluation and diagnosis</div></div>
+          <div class="matrix__row"><div>School Support Role</div><div>Preparation, parent education, accommodation translation</div><div>IEP/504 attendance, advocacy, academic remediation plans</div><div>Sensory-friendly environmental consultation, AT recommendations</div><div>Legal representation or licensed advocacy where required</div></div>
+          <div class="matrix__row"><div>Referral Trigger</div><div>Persistent safety concerns or clinical symptom escalation</div><div>Sensory/motor barriers driving the breakdown &rarr; OT; clinical symptoms &rarr; therapy</div><div>Diagnosed mental-health concerns or learning-disability evaluation needs</div><div>Appropriate intake into treatment pathway</div></div>
         </div>
         <div class="callout callout--warm mt-xl">
           <div class="callout__label">Critical Practice Rule</div>
@@ -109,7 +116,7 @@
           <h4>Coaching</h4>
           <ul class="footer__links">
             <li><a href="coaching-home.html">Support Paths</a></li>
-            <li><a href="coaching-services.html">Services</a></li>
+            <li><a href="coaching-home.html#service-lanes">Services</a></li>
             <li><a href="meet-the-team.html">Team</a></li>
             <li><a href="free-executive-functioning-tests.html">Assessments</a></li>
           </ul>

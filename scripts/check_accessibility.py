@@ -21,8 +21,8 @@ class A11yParser(HTMLParser):
         attr = dict(attrs)
         if tag == 'html' and not attr.get('lang'):
             self.issues.append('Missing lang attribute on <html>.')
-        if tag == 'img' and not attr.get('alt'):
-            self.issues.append('Image missing alt text.')
+        if tag == 'img' and attr.get('alt') is None:
+            self.issues.append('Image missing alt attribute.')
         if tag == 'a' and not (attr.get('href') or '').strip():
             self.issues.append('Anchor missing href.')
         if tag == 'button':

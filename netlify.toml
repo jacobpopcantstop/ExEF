@@ -50,33 +50,35 @@
 
 [[redirects]]
   from = "/coaching-services.html"
-  to = "/coaching/services/"
+  to = "/coaching-home.html#service-lanes"
   status = 301
+  force = true
 
 [[redirects]]
   from = "/coaching/services"
-  to = "/coaching/services/"
+  to = "/coaching-home.html#service-lanes"
   status = 301
 
 [[redirects]]
   from = "/coaching/services/"
-  to = "/coaching-services.html"
-  status = 200
-
-[[redirects]]
-  from = "/coaching-about.html"
-  to = "/coaching/about/"
+  to = "/coaching-home.html#service-lanes"
   status = 301
 
 [[redirects]]
+  from = "/coaching-about.html"
+  to = "/coaching-home.html#support-team"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/coaching/about"
-  to = "/coaching/about/"
+  to = "/coaching-home.html#support-team"
   status = 301
 
 [[redirects]]
   from = "/coaching/about/"
-  to = "/coaching-about.html"
-  status = 200
+  to = "/coaching-home.html#support-team"
+  status = 301
 
 [[redirects]]
   from = "/coaching-contact.html"
@@ -151,6 +153,36 @@
 [[redirects]]
   from = "/modules/6/"
   to = "/module-6.html"
+  status = 200
+
+[[redirects]]
+  from = "/module-7.html"
+  to = "/modules/7/"
+  status = 301
+
+[[redirects]]
+  from = "/modules/7/"
+  to = "/module-7.html"
+  status = 200
+
+[[redirects]]
+  from = "/module-8.html"
+  to = "/modules/8/"
+  status = 301
+
+[[redirects]]
+  from = "/modules/8/"
+  to = "/module-8.html"
+  status = 200
+
+[[redirects]]
+  from = "/module-9.html"
+  to = "/modules/9/"
+  status = 301
+
+[[redirects]]
+  from = "/modules/9/"
+  to = "/module-9.html"
   status = 200
 
 [[redirects]]

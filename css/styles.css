@@ -307,20 +307,20 @@ p {
 }
 
 .nav__logo-icon {
-  width: 54px;
-  height: 40px;
-  background: linear-gradient(135deg, #1a5276, #1e8449);
+  width: 56px;
+  height: 56px;
+  background: url("../images/exef-logo.svg") center / cover no-repeat;
   border: none;
-  border-radius: 2px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
   flex-shrink: 0;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.18);
 }
 
 .nav-pixel-wave {
@@ -3257,9 +3257,9 @@ blockquote cite {
 }
 
 .footer__logo .nav__logo-icon {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.16);
-  color: var(--color-white);
+  background: url("../images/exef-logo.svg") center / cover no-repeat;
+  border-color: transparent;
+  color: transparent;
 }
 
 .footer__brand--institutional p {

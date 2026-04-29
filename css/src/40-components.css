@@ -725,9 +725,9 @@ blockquote cite {
 }
 
 .footer__logo .nav__logo-icon {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.16);
-  color: var(--color-white);
+  background: url("../images/exef-logo.svg") center / cover no-repeat;
+  border-color: transparent;
+  color: transparent;
 }
 
 .footer__brand--institutional p {

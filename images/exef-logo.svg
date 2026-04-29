@@ -1,15 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
   <title id="title">ExEF logo</title>
-  <desc id="desc">A rounded square gradient icon with a stylized white capital E for Expert EF.</desc>
+  <desc id="desc">A rounded square blue-to-green gradient logo with white ExEF serif lettering.</desc>
   <defs>
     <linearGradient id="exefLogoBg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1a5276"/>
-      <stop offset="100%" stop-color="#1e8449"/>
+      <stop offset="0%" stop-color="#06407d"/>
+      <stop offset="48%" stop-color="#075f74"/>
+      <stop offset="100%" stop-color="#10824b"/>
     </linearGradient>
+    <filter id="logoShadow" x="-12%" y="-12%" width="124%" height="124%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#061923" flood-opacity="0.22"/>
+    </filter>
+    <filter id="letterShadow" x="-5%" y="-15%" width="110%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#001f2b" flood-opacity="0.28"/>
+    </filter>
   </defs>
-  <rect width="64" height="64" rx="10" fill="url(#exefLogoBg)"/>
-  <rect x="16" y="15" width="22" height="5" rx="1" fill="#ffffff"/>
-  <rect x="16" y="15" width="5" height="34" rx="1" fill="#ffffff"/>
-  <rect x="16" y="29" width="16" height="5" rx="1" fill="rgba(255,255,255,0.75)"/>
-  <rect x="16" y="44" width="22" height="5" rx="1" fill="#ffffff"/>
+  <rect x="72" y="72" width="880" height="880" rx="86" fill="url(#exefLogoBg)" filter="url(#logoShadow)"/>
+  <text x="512" y="590"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        fill="#fffdf9"
+        font-family="Georgia, 'Times New Roman', Times, serif"
+        font-size="286"
+        font-weight="700"
+        letter-spacing="-18"
+        filter="url(#letterShadow)">ExEF</text>
 </svg>

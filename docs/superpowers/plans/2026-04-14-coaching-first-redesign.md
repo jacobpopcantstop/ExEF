@@ -868,7 +868,7 @@ Keep head, nav, footer. Replace everything inside `<main>`:
           <div>
             <h2 style="margin-top:0;">Jacob Rozansky</h2>
             <p style="color:var(--color-text-muted); font-size:0.9rem; margin-bottom:var(--space-md);">
-              ICF-Certified Coach &bull; ADDCA ADHD Coaching (in progress) &bull; PhD, Occupational Therapy &bull; M.Ed. &bull; Ed.S.
+              Completing ADDCA ADHD coach training (ICF &amp; PAAC accredited program) &bull; PhD, Occupational Therapy &bull; M.Ed. &bull; Ed.S.
             </p>
             <p>
               I started the Executive Functioning Institute because I saw a gap between what the research says about executive function and the support most people actually get. Too often, EF challenges get reduced to "try harder" or "just use a planner." That's not how the brain works.

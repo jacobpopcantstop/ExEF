@@ -111,7 +111,7 @@ Strip down to 5 lean sections. Remove: hero sheet/dossier, institute dossier, pu
 **Section 2: Jacob Rozansky (featured)**
 - Photo placeholder (div with initials or icon until photo is provided)
 - Name: Jacob Rozansky
-- Credentials: ICF-Certified Coach | ADDCA ADHD Coaching (in progress) | PhD, Occupational Therapy | M.Ed. | Ed.S.
+- Credentials: Completing ADDCA ADHD coach training (ICF & PAAC accredited program) | PhD, Occupational Therapy | M.Ed. | Ed.S.
 - Personal statement: 3-4 sentences on why EF coaching matters. Written by Jacob (placeholder for now).
 - Contact: jacob@exef.org
 

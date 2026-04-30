@@ -739,8 +739,10 @@
     });
 
     var overallScore = areas.reduce(function (sum, area) { return sum + area.score; }, 0) / Math.max(1, areas.length);
-    var strengths = areas.slice(0, 2);
-    var growthAreas = areas.slice(-2).reverse();
+    var STRENGTH_FLOOR = 3.4;
+    var GROWTH_CEILING = 3.4;
+    var strengths = areas.filter(function (area) { return area.score >= STRENGTH_FLOOR; }).slice(0, 2);
+    var growthAreas = areas.filter(function (area) { return area.score < GROWTH_CEILING; }).slice(-2).reverse();
     var signalPressure = {
       planning: 0,
       activation: 0,
@@ -784,19 +786,34 @@
   function buildNarrative(result) {
     var top = result.strengths[0];
     var growth = result.growthAreas[0];
+    var highest = result.areas[0];
+    var lowest = result.areas[result.areas.length - 1];
     var overallBand = scoreBand(result.overallScore);
-    var narrative = 'Your strongest current base looks like ' + top.name.toLowerCase() + ', while the biggest drag appears in ' + growth.name.toLowerCase() + '. ';
-    if (result.overallScore >= 4) {
-      narrative += 'Overall, this profile reads like a solid system with a few pressure points worth tightening.';
-    } else if (result.overallScore >= 3) {
-      narrative += 'Overall, this profile looks workable but uneven. Stronger days probably depend on setup and conditions more than outsiders realize.';
+    var lede;
+    var title;
+
+    if (top && growth) {
+      lede = 'Your strongest current base looks like ' + top.name.toLowerCase() + ', while the biggest drag appears in ' + growth.name.toLowerCase() + '. ';
+      title = overallBand + ': ' + growth.name + ' is the main leverage point';
+    } else if (growth) {
+      lede = 'No area is yet scoring as a clear strength. The most pressing leverage point right now is ' + growth.name.toLowerCase() + ', and your highest current score is ' + highest.name.toLowerCase() + ' at ' + highest.score.toFixed(1) + '/5. ';
+      title = overallBand + ': ' + growth.name + ' is the main leverage point';
+    } else if (top) {
+      lede = 'Every area scored above the growth threshold, so this is mostly a strengths picture. Your strongest base is ' + top.name.toLowerCase() + ', and the area to keep an eye on is ' + lowest.name.toLowerCase() + ' at ' + lowest.score.toFixed(1) + '/5. ';
+      title = overallBand + ': ' + top.name + ' is the strongest base';
     } else {
-      narrative += 'Overall, this profile suggests that daily demands may be outrunning your current support systems, which makes external scaffolding especially important right now.';
+      lede = 'Every area is sitting in the mixed-signal range. There is no single dominant strength or weakness yet, which usually means the day-to-day picture depends on conditions more than fixed traits. ';
+      title = overallBand + ': mixed-signal profile across all areas';
     }
-    return {
-      title: overallBand + ': ' + growth.name + ' is the main leverage point',
-      lede: narrative
-    };
+
+    if (result.overallScore >= 4) {
+      lede += 'Overall, this profile reads like a solid system with a few pressure points worth tightening.';
+    } else if (result.overallScore >= 3) {
+      lede += 'Overall, this profile looks workable but uneven. Stronger days probably depend on setup and conditions more than outsiders realize.';
+    } else {
+      lede += 'Overall, this profile suggests that daily demands may be outrunning your current support systems, which makes external scaffolding especially important right now.';
+    }
+    return { title: title, lede: lede };
   }
 
   function buildSignalSummary(result) {
@@ -1043,10 +1060,14 @@
     if (ledeEl) ledeEl.textContent = narrative.lede;
     if (summaryEl) {
       clearNode(summaryEl);
+      var highestArea = result.areas[0];
+      var lowestArea = result.areas[result.areas.length - 1];
+      var strongestLabel = result.strengths.length ? result.strengths[0].name : 'No area cleared the strength threshold; highest is ' + highestArea.name + ' (' + highestArea.score.toFixed(1) + '/5)';
+      var leverageLabel = result.growthAreas.length ? result.growthAreas[0].name : 'No area dropped below the growth threshold; lowest is ' + lowestArea.name + ' (' + lowestArea.score.toFixed(1) + '/5)';
       [
         { label: 'Overall score:', value: result.overallScore.toFixed(1) + '/5' },
-        { label: 'Strongest current base:', value: result.strengths[0].name },
-        { label: 'Main leverage point:', value: result.growthAreas[0].name, marginBottom: '0' }
+        { label: 'Strongest current base:', value: strongestLabel },
+        { label: 'Main leverage point:', value: leverageLabel, marginBottom: '0' }
       ].forEach(function (item) {
         var p = document.createElement('p');
         if (item.marginBottom) p.style.marginBottom = item.marginBottom;

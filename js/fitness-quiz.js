@@ -173,8 +173,7 @@
     questions.forEach(function (q) {
       var raw = answers[q.id];
       if (typeof raw !== 'number') return;
-      var value = q.invert ? 4 - raw : raw;
-      target[q.dim] += value;
+      target[q.dim] += raw;
       counts[q.dim] += 1;
     });
     dimensions.forEach(function (d) {

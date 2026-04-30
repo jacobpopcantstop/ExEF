@@ -503,10 +503,13 @@
     var q = QUESTIONS[currentIndex];
     var ans = answers[currentIndex];
 
-    /* progress */
-    var pct = Math.round((currentIndex / QUESTIONS.length) * 100);
+    /* progress: count scenarios fully answered (both most + least chosen) */
+    var answeredCount = answers.reduce(function (acc, entry) {
+      return acc + (entry && entry.most && entry.least ? 1 : 0);
+    }, 0);
+    var pct = Math.round((answeredCount / QUESTIONS.length) * 100);
     progressFill.style.width = pct + '%';
-    progressText.textContent = 'Scenario ' + (currentIndex + 1) + ' of ' + QUESTIONS.length;
+    progressText.textContent = 'Scenario ' + (currentIndex + 1) + ' of ' + QUESTIONS.length + ' (' + answeredCount + ' answered)';
 
     /* prompt */
     promptEl.textContent = q.prompt;

@@ -505,7 +505,9 @@
       appendLabeledParagraph(fastReadEl, 'Most likely energy leak:', results.priorityDomains[0].title + ' (' + results.priorityDomains[0].score + '/20)');
     }
     if (results.strengthDomains[0]) {
-      appendLabeledParagraph(fastReadEl, 'Most stable scaffold:', results.strengthDomains[0].title + ' (' + results.strengthDomains[0].score + '/20)');
+      var top = results.strengthDomains[0];
+      var topLabel = top.score >= 14 ? 'Most stable scaffold:' : 'Highest of a weak set:';
+      appendLabeledParagraph(fastReadEl, topLabel, top.title + ' (' + top.score + '/20)');
     }
   }
 
@@ -671,7 +673,10 @@
 
     clearNode(strengthsEl);
     results.strengthDomains.forEach(function (domainScore, index) {
-      renderDomainPanel(strengthsEl, domainScore, index === 0 ? 'Strongest domain' : 'Second strongest');
+      var qualified = domainScore.score >= 14;
+      var primaryLabel = qualified ? 'Strongest domain' : 'Highest current score';
+      var secondaryLabel = qualified ? 'Second strongest' : 'Second-highest current score';
+      renderDomainPanel(strengthsEl, domainScore, index === 0 ? primaryLabel : secondaryLabel);
     });
 
     renderQuickWins(results);

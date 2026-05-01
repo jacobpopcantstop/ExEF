@@ -303,7 +303,7 @@
           resultEl.setAttribute('tabindex', '-1');
           resultEl.focus({ preventScroll: false });
         }
-        resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.setTimeout(function () { resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
       });
 
       resetBtn.addEventListener('click', function () {

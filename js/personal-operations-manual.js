@@ -15,6 +15,7 @@
   var shareStatus = document.getElementById('pom-share-status');
   var downloadHtmlBtn = document.getElementById('pom-download-html');
   var downloadTextBtn = document.getElementById('pom-download-text');
+  var downloadPdfBtn = document.getElementById('pom-download-pdf');
   var copyTextBtn = document.getElementById('pom-copy-text');
   var clearDraftBtn = document.getElementById('pom-clear-draft');
   var photoInput = document.getElementById('pom-photo');
@@ -589,6 +590,39 @@
     });
   }
 
+
+  function exportPreviewPdf(state) {
+    if (!window.html2canvas || !window.jspdf || !window.jspdf.jsPDF) {
+      setStatus('PDF engine is still loading. Try again in a moment.');
+      return;
+    }
+    setStatus('Rendering PDF...');
+    window.html2canvas(previewShell, { scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false }).then(function (canvas) {
+      var jsPDF = window.jspdf.jsPDF;
+      var doc = new jsPDF('p', 'pt', 'a4');
+      var pageW = doc.internal.pageSize.getWidth();
+      var pageH = doc.internal.pageSize.getHeight();
+      var imgW = pageW - 40;
+      var imgH = canvas.height * imgW / canvas.width;
+      var y = 20;
+      var remaining = imgH;
+      var imgData = canvas.toDataURL('image/png');
+      doc.addImage(imgData, 'PNG', 20, y, imgW, imgH);
+      remaining -= (pageH - 40);
+      while (remaining > 0) {
+        doc.addPage();
+        y = 20 - (imgH - remaining);
+        doc.addImage(imgData, 'PNG', 20, y, imgW, imgH);
+        remaining -= (pageH - 40);
+      }
+      doc.save(buildFileStem(state) + '-manual.pdf');
+      setStatus('PDF downloaded.');
+    }).catch(function (err) {
+      setStatus(err && err.message ? err.message : 'Unable to export PDF.');
+    });
+  }
+
+
   downloadTextBtn.addEventListener('click', function () {
     var state = collectState();
     downloadFile(buildFileStem(state) + '-personal-operating-manual.txt', buildPlainText(state), 'text/plain;charset=utf-8');
@@ -600,6 +634,16 @@
     downloadFile(buildFileStem(state) + '-personal-operating-manual.html', buildExportHtml(state), 'text/html;charset=utf-8');
     setStatus('Downloaded a formatted HTML version of your manual.');
   });
+
+
+
+  if (downloadPdfBtn) {
+    downloadPdfBtn.addEventListener('click', function () {
+      var state = collectState();
+      renderPreview(state);
+      exportPreviewPdf(state);
+    });
+  }
 
   copyTextBtn.addEventListener('click', function () {
     var state = collectState();

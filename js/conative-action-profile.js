@@ -454,6 +454,8 @@
   var chartEl        = document.getElementById('cap-chart');
   var analysisEl     = document.getElementById('cap-analysis');
   var dateEl         = document.getElementById('cap-result-date');
+  var historyCard    = document.getElementById('cap-history-card');
+  var historyEl      = document.getElementById('cap-history');
 
   // ── Helpers ────────────────────────────────────────────────────
   function show(el) { if (el) el.style.display = ''; }
@@ -776,7 +778,34 @@
       analysisEl.appendChild(card);
     });
 
+    renderHistoryList();
     setMessage('Your profile is ready to copy or export.');
+  }
+
+  function renderHistoryList() {
+    if (!historyCard || !historyEl) return;
+    var history = readJson(HISTORY_KEY, []);
+    if (!Array.isArray(history) || history.length < 2) {
+      historyCard.hidden = true;
+      return;
+    }
+    historyEl.innerHTML = '';
+    history.slice(-5).reverse().forEach(function (entry) {
+      if (!entry || !entry.scores) return;
+      var item = document.createElement('li');
+      var when = entry.generatedAt ? new Date(entry.generatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'previous';
+      var scores = entry.scores;
+      var topTrait = TRAIT_ORDER.slice().sort(function (a, b) {
+        var sa = Number(scores[a] || 0);
+        var sb = Number(scores[b] || 0);
+        if (sb !== sa) return sb - sa;
+        return a.localeCompare(b);
+      })[0];
+      var topName = (TRAITS[topTrait] && TRAITS[topTrait].title) || topTrait;
+      item.textContent = when + ' — strongest mode: ' + topName + ' ' + Number(scores[topTrait] || 0) + '/10';
+      historyEl.appendChild(item);
+    });
+    historyCard.hidden = false;
   }
 
   // ── Event wiring ───────────────────────────────────────────────

@@ -211,7 +211,8 @@
         score: signalMap[key]
       };
     }).sort(function (a, b) {
-      return b.score - a.score;
+      if (b.score !== a.score) return b.score - a.score;
+      return a.key.localeCompare(b.key);
     });
   }
 

@@ -315,10 +315,24 @@
       };
     });
 
-    return dimensions.sort(function (a, b) { return b.friction - a.friction; });
+    return dimensions.sort(function (a, b) {
+      if (b.friction !== a.friction) return b.friction - a.friction;
+      return a.key.localeCompare(b.key);
+    });
   }
 
+  var LOW_FRICTION_PROFILE = {
+    id: 'low-friction',
+    name: 'Low Current Friction',
+    lede: 'No clear friction archetype dominates right now. Treat this as a baseline you can compare against if your situation changes.',
+    needs: [],
+    narrative: 'Across the friction dimensions, none crosses 30/100. This is a baseline tracking pattern, not an active intervention plan. The "experiment" below is offered as a maintenance check, not as a struggle protocol.'
+  };
+
   function chooseProfile(sortedDimensions) {
+    var topFriction = sortedDimensions[0] ? Number(sortedDimensions[0].friction || 0) : 0;
+    if (topFriction < 30) return LOW_FRICTION_PROFILE;
+
     var byKey = {};
     sortedDimensions.forEach(function (item) {
       byKey[item.key] = item.friction;

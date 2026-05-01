@@ -782,7 +782,8 @@
         })
       };
     }).sort(function (a, b) {
-      return b.score - a.score;
+      if (b.score !== a.score) return b.score - a.score;
+      return a.name.localeCompare(b.name);
     });
 
     var validity = computeValidity(answers, scale);
@@ -799,10 +800,24 @@
       environment: 0
     };
 
+    /* Normalize: divide each contribution by the number of areas that map to that
+     * signal so signals with multiple source areas (e.g. planning) do not get a
+     * structural advantage over single-area signals (activation, regulation, environment). */
+    var areasPerSignal = {};
+    config.areas.forEach(function (area) {
+      areasPerSignal[area.signal] = (areasPerSignal[area.signal] || 0) + 1;
+    });
+
     growthAreas.forEach(function (area, index) {
       if (signalPressure[area.signal] !== undefined) {
-        signalPressure[area.signal] += index === 0 ? 2 : 1;
+        var weight = index === 0 ? 2 : 1;
+        var divisor = Math.max(1, areasPerSignal[area.signal] || 1);
+        signalPressure[area.signal] += weight / divisor;
       }
+    });
+
+    Object.keys(signalPressure).forEach(function (key) {
+      signalPressure[key] = Number(signalPressure[key].toFixed(2));
     });
 
     return {

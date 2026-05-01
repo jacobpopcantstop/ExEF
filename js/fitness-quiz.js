@@ -54,7 +54,13 @@
     { id: 'q23', label: 'A monthly cost above $20–30 would be hard to sustain.',                      dim: 'cost' },
     { id: 'q24', label: 'I want exercise that builds community, not just fitness.',                   dim: 'social' },
     { id: 'q25', label: 'I prefer landing softly — low-impact movement over high-impact.',            dim: 'joint' },
-    { id: 'q26', label: 'I have access to gym, studio, or class memberships if I want them.',         dim: 'equipment' }
+    { id: 'q26', label: 'I have access to gym, studio, or class memberships if I want them.',         dim: 'equipment' },
+    // Additions for v3 — bring under-represented dimensions up to 3 items each
+    { id: 'q27', label: 'I move more consistently when training happens outdoors.',                   dim: 'outdoor' },
+    { id: 'q28', label: 'I am comfortable using gym machines or specialized equipment.',              dim: 'equipment' },
+    { id: 'q29', label: 'I want exercise that settles my nervous system after stressful days.',       dim: 'mindbody' },
+    { id: 'q30', label: 'I avoid activities with hard impact like jumping or pounding pavement.',     dim: 'joint' },
+    { id: 'q31', label: 'I would rather skip activities that require ongoing membership fees.',        dim: 'cost' }
   ];
 
   // Each option is [name, profile, blurb, sessionTip]
@@ -198,12 +204,18 @@
       // 5 dims of 5-point scale -> max distance per dim is 5; use 5 dims worth of avg.
       var maxDist = dimensions.length * 5;
       var score = Math.max(0, Math.round(100 - (dist / maxDist) * 100));
-      matches.sort(function (a, b) { return b.strength - a.strength; });
+      matches.sort(function (a, b) {
+        if (b.strength !== a.strength) return b.strength - a.strength;
+        return a.dim.localeCompare(b.dim);
+      });
       return {
         name: name, score: score, blurb: blurb, tip: tip,
         matchDims: matches.slice(0, 3).map(function (m) { return m.dim; })
       };
-    }).sort(function (a, b) { return b.score - a.score; });
+    }).sort(function (a, b) {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.name.localeCompare(b.name);
+    });
   }
 
   function topUserDims(target, n) {

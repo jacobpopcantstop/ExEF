@@ -382,6 +382,23 @@
     tileCarousel.addEventListener('focusin', function () { tilePaused = true; });
     tileCarousel.addEventListener('focusout', function () { tilePaused = false; });
 
+    // Keyboard navigation: ArrowLeft/ArrowRight when focus is inside the carousel
+    tileCarousel.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      var tag = e.target && e.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      e.preventDefault();
+      if (isMobileTiles()) {
+        var nextIdx = e.key === 'ArrowRight'
+          ? Math.min(items.length - 1, pageIndex + 1)
+          : Math.max(0, pageIndex - 1);
+        scrollTileTo(nextIdx);
+      } else {
+        goTo(pageIndex + (e.key === 'ArrowRight' ? 1 : -1));
+        tileRestart();
+      }
+    });
+
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) tilePaused = true;
     });

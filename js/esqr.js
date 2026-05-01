@@ -570,7 +570,8 @@
     });
 
     clearNode(questionsWrap);
-    config.areas.forEach(function (area, areaIndex) {
+    var runningNumber = 0;
+    config.areas.forEach(function (area) {
       var questions = grouped[area.id] || [];
       var fieldset = document.createElement('fieldset');
       fieldset.className = 'esqr-skill-group fade-in visible';
@@ -583,8 +584,9 @@
       intro.className = 'esqr-area-intro';
       intro.textContent = area.intro;
       fieldset.appendChild(intro);
-      questions.forEach(function (question, questionIndex) {
-        var itemNumber = areaIndex * 5 + questionIndex + 1;
+      questions.forEach(function (question) {
+        runningNumber += 1;
+        var itemNumber = runningNumber;
         var item = document.createElement('div');
         item.className = 'esqr-item';
         var text = document.createElement('p');
@@ -701,8 +703,51 @@
     return 'Support needed';
   }
 
+  function scoreItem(question, raw, scale) {
+    var value = Number(raw || 0);
+    if (!value) return 0;
+    return question.reverse ? (scale.max + scale.min - value) : value;
+  }
+
+  function computeValidity(answers, scale) {
+    var rawValues = config.questions
+      .map(function (q) { return Number(answers[q.id] || 0); })
+      .filter(function (v) { return v > 0; });
+    if (rawValues.length < 5) {
+      return { straightLineRatio: 0, acquiescenceGap: 0, suspect: false };
+    }
+    var counts = {};
+    rawValues.forEach(function (v) { counts[v] = (counts[v] || 0) + 1; });
+    var dominant = Object.keys(counts).reduce(function (best, key) {
+      return counts[key] > best ? counts[key] : best;
+    }, 0);
+    var straightLineRatio = dominant / rawValues.length;
+
+    var positiveScores = [];
+    var reverseConverted = [];
+    config.questions.forEach(function (q) {
+      var raw = Number(answers[q.id] || 0);
+      if (!raw) return;
+      if (q.reverse) reverseConverted.push(scale.max + scale.min - raw);
+      else positiveScores.push(raw);
+    });
+    function mean(list) {
+      return list.length ? list.reduce(function (s, v) { return s + v; }, 0) / list.length : 0;
+    }
+    var gap = (positiveScores.length && reverseConverted.length)
+      ? Math.abs(mean(positiveScores) - mean(reverseConverted))
+      : 0;
+
+    return {
+      straightLineRatio: Number(straightLineRatio.toFixed(2)),
+      acquiescenceGap: Number(gap.toFixed(2)),
+      suspect: straightLineRatio >= 0.85 || gap >= 1.75
+    };
+  }
+
   function computeResults() {
     var answers = getAnswers();
+    var scale = getScale();
     var groupedQuestions = {};
     config.questions.forEach(function (question) {
       if (!groupedQuestions[question.areaId]) groupedQuestions[question.areaId] = [];
@@ -712,7 +757,7 @@
     var areas = config.areas.map(function (area) {
       var questions = groupedQuestions[area.id] || [];
       var values = questions.map(function (question) {
-        return Number(answers[question.id] || 0);
+        return scoreItem(question, answers[question.id], scale);
       });
       var total = values.reduce(function (sum, value) { return sum + value; }, 0);
       var average = values.length ? (total / values.length) : 0;
@@ -730,17 +775,24 @@
           return {
             id: question.id,
             prompt: question.prompt,
-            score: Number(answers[question.id] || 0)
+            reverse: !!question.reverse,
+            score: scoreItem(question, answers[question.id], scale),
+            raw: Number(answers[question.id] || 0)
           };
         })
       };
     }).sort(function (a, b) {
-      return b.score - a.score;
+      if (b.score !== a.score) return b.score - a.score;
+      return a.name.localeCompare(b.name);
     });
 
+    var validity = computeValidity(answers, scale);
+
     var overallScore = areas.reduce(function (sum, area) { return sum + area.score; }, 0) / Math.max(1, areas.length);
-    var strengths = areas.slice(0, 2);
-    var growthAreas = areas.slice(-2).reverse();
+    var STRENGTH_FLOOR = 3.4;
+    var GROWTH_CEILING = 3.4;
+    var strengths = areas.filter(function (area) { return area.score >= STRENGTH_FLOOR; }).slice(0, 2);
+    var growthAreas = areas.filter(function (area) { return area.score < GROWTH_CEILING; }).slice(-2).reverse();
     var signalPressure = {
       planning: 0,
       activation: 0,
@@ -748,10 +800,24 @@
       environment: 0
     };
 
+    /* Normalize: divide each contribution by the number of areas that map to that
+     * signal so signals with multiple source areas (e.g. planning) do not get a
+     * structural advantage over single-area signals (activation, regulation, environment). */
+    var areasPerSignal = {};
+    config.areas.forEach(function (area) {
+      areasPerSignal[area.signal] = (areasPerSignal[area.signal] || 0) + 1;
+    });
+
     growthAreas.forEach(function (area, index) {
       if (signalPressure[area.signal] !== undefined) {
-        signalPressure[area.signal] += index === 0 ? 2 : 1;
+        var weight = index === 0 ? 2 : 1;
+        var divisor = Math.max(1, areasPerSignal[area.signal] || 1);
+        signalPressure[area.signal] += weight / divisor;
       }
+    });
+
+    Object.keys(signalPressure).forEach(function (key) {
+      signalPressure[key] = Number(signalPressure[key].toFixed(2));
     });
 
     return {
@@ -760,7 +826,8 @@
       strengths: strengths,
       growthAreas: growthAreas,
       overallScore: Number(overallScore.toFixed(2)),
-      signalPressure: signalPressure
+      signalPressure: signalPressure,
+      validity: validity
     };
   }
 
@@ -784,19 +851,34 @@
   function buildNarrative(result) {
     var top = result.strengths[0];
     var growth = result.growthAreas[0];
+    var highest = result.areas[0];
+    var lowest = result.areas[result.areas.length - 1];
     var overallBand = scoreBand(result.overallScore);
-    var narrative = 'Your strongest current base looks like ' + top.name.toLowerCase() + ', while the biggest drag appears in ' + growth.name.toLowerCase() + '. ';
-    if (result.overallScore >= 4) {
-      narrative += 'Overall, this profile reads like a solid system with a few pressure points worth tightening.';
-    } else if (result.overallScore >= 3) {
-      narrative += 'Overall, this profile looks workable but uneven. Stronger days probably depend on setup and conditions more than outsiders realize.';
+    var lede;
+    var title;
+
+    if (top && growth) {
+      lede = 'Your strongest current base looks like ' + top.name.toLowerCase() + ', while the biggest drag appears in ' + growth.name.toLowerCase() + '. ';
+      title = overallBand + ': ' + growth.name + ' is the main leverage point';
+    } else if (growth) {
+      lede = 'No area is yet scoring as a clear strength. The most pressing leverage point right now is ' + growth.name.toLowerCase() + ', and your highest current score is ' + highest.name.toLowerCase() + ' at ' + highest.score.toFixed(1) + '/5. ';
+      title = overallBand + ': ' + growth.name + ' is the main leverage point';
+    } else if (top) {
+      lede = 'Every area scored above the growth threshold, so this is mostly a strengths picture. Your strongest base is ' + top.name.toLowerCase() + ', and the area to keep an eye on is ' + lowest.name.toLowerCase() + ' at ' + lowest.score.toFixed(1) + '/5. ';
+      title = overallBand + ': ' + top.name + ' is the strongest base';
     } else {
-      narrative += 'Overall, this profile suggests that daily demands may be outrunning your current support systems, which makes external scaffolding especially important right now.';
+      lede = 'Every area is sitting in the mixed-signal range. There is no single dominant strength or weakness yet, which usually means the day-to-day picture depends on conditions more than fixed traits. ';
+      title = overallBand + ': mixed-signal profile across all areas';
     }
-    return {
-      title: overallBand + ': ' + growth.name + ' is the main leverage point',
-      lede: narrative
-    };
+
+    if (result.overallScore >= 4) {
+      lede += 'Overall, this profile reads like a solid system with a few pressure points worth tightening.';
+    } else if (result.overallScore >= 3) {
+      lede += 'Overall, this profile looks workable but uneven. Stronger days probably depend on setup and conditions more than outsiders realize.';
+    } else {
+      lede += 'Overall, this profile suggests that daily demands may be outrunning your current support systems, which makes external scaffolding especially important right now.';
+    }
+    return { title: title, lede: lede };
   }
 
   function buildSignalSummary(result) {
@@ -976,6 +1058,13 @@
     lines.push('');
     lines.push('Overall score: ' + lastResultsPayload.overallScore.toFixed(1) + '/5');
     lines.push('Cross-signal note: ' + lastResultsPayload.signalSummary);
+    if (lastResultsPayload.validity) {
+      lines.push('Response check: straight-line ratio ' +
+        Math.round(lastResultsPayload.validity.straightLineRatio * 100) + '%, reverse-item gap ' +
+        lastResultsPayload.validity.acquiescenceGap.toFixed(1) + '/4' +
+        (lastResultsPayload.validity.suspect ? ' (suspect; consider retaking with more variation)' : '')
+      );
+    }
     lines.push('');
     lines.push('Current strengths:');
     lastResultsPayload.strengths.forEach(function (area) {
@@ -1036,17 +1125,31 @@
       profileTitle: narrative.title,
       profileNarrative: narrative.lede,
       nextTools: nextTools,
-      offer: offer
+      offer: offer,
+      validity: result.validity
     };
 
     if (titleEl) titleEl.textContent = narrative.title;
-    if (ledeEl) ledeEl.textContent = narrative.lede;
+    if (ledeEl) {
+      var ledeText = narrative.lede;
+      if (result.validity && result.validity.suspect) {
+        ledeText += ' Heads up: your answers show a uniform response pattern (straight-line ratio ' +
+          Math.round(result.validity.straightLineRatio * 100) + '%, reverse-item gap ' +
+          result.validity.acquiescenceGap.toFixed(1) +
+          '/4). Re-take with more variation to get a more reliable read.';
+      }
+      ledeEl.textContent = ledeText;
+    }
     if (summaryEl) {
       clearNode(summaryEl);
+      var highestArea = result.areas[0];
+      var lowestArea = result.areas[result.areas.length - 1];
+      var strongestLabel = result.strengths.length ? result.strengths[0].name : 'No area cleared the strength threshold; highest is ' + highestArea.name + ' (' + highestArea.score.toFixed(1) + '/5)';
+      var leverageLabel = result.growthAreas.length ? result.growthAreas[0].name : 'No area dropped below the growth threshold; lowest is ' + lowestArea.name + ' (' + lowestArea.score.toFixed(1) + '/5)';
       [
         { label: 'Overall score:', value: result.overallScore.toFixed(1) + '/5' },
-        { label: 'Strongest current base:', value: result.strengths[0].name },
-        { label: 'Main leverage point:', value: result.growthAreas[0].name, marginBottom: '0' }
+        { label: 'Strongest current base:', value: strongestLabel },
+        { label: 'Main leverage point:', value: leverageLabel, marginBottom: '0' }
       ].forEach(function (item) {
         var p = document.createElement('p');
         if (item.marginBottom) p.style.marginBottom = item.marginBottom;

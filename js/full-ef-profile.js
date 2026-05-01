@@ -94,7 +94,8 @@
 
       var fill = document.createElement('div');
       fill.className = 'full-profile-signal-bars__fill';
-      fill.style.width = Math.max(8, (item.score / 6) * 100) + '%';
+      var pct = Math.max(8, Math.min(100, (item.score / 6) * 100));
+      fill.style.width = pct + '%';
       track.appendChild(fill);
       row.appendChild(track);
 
@@ -149,7 +150,8 @@
       return Math.abs(b.meanDelta) - Math.abs(a.meanDelta);
     });
     return {
-      count: entries.length,
+      count: ratios.length,
+      totalEntries: entries.length,
       meanFactor: Number(mean.toFixed(2)),
       plan30: Math.round(30 * mean),
       averageDelta: Math.round(averageDelta),
@@ -209,7 +211,8 @@
         score: signalMap[key]
       };
     }).sort(function (a, b) {
-      return b.score - a.score;
+      if (b.score !== a.score) return b.score - a.score;
+      return a.key.localeCompare(b.key);
     });
   }
 
@@ -273,13 +276,14 @@
       signalMap.environment += 2;
     }
 
-    if (esqrGrowth.indexOf('organization') !== -1 || esqrGrowth.indexOf('metacognition') !== -1) {
+    /* Reinforce signal map with current 5-area ESQ-R names. */
+    if (esqrGrowth.indexOf('organization') !== -1 || esqrGrowth.indexOf('self-monitoring') !== -1) {
       signalMap.planning += 1;
     }
-    if (esqrGrowth.indexOf('task initiation') !== -1 || esqrGrowth.indexOf('goal-directed persistence') !== -1) {
+    if (esqrGrowth.indexOf('initiation') !== -1 || esqrGrowth.indexOf('follow-through') !== -1) {
       signalMap.activation += 1;
     }
-    if (esqrGrowth.indexOf('emotional control') !== -1 || esqrGrowth.indexOf('stress tolerance') !== -1) {
+    if (esqrGrowth.indexOf('regulation') !== -1 || esqrGrowth.indexOf('flexibility') !== -1) {
       signalMap.regulation += 1;
     }
     if (taskBlockers.indexOf('environment') !== -1 || taskBlockers.indexOf('context') !== -1) {

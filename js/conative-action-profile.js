@@ -454,6 +454,8 @@
   var chartEl        = document.getElementById('cap-chart');
   var analysisEl     = document.getElementById('cap-analysis');
   var dateEl         = document.getElementById('cap-result-date');
+  var historyCard    = document.getElementById('cap-history-card');
+  var historyEl      = document.getElementById('cap-history');
 
   // ── Helpers ────────────────────────────────────────────────────
   function show(el) { if (el) el.style.display = ''; }
@@ -503,10 +505,13 @@
     var q = QUESTIONS[currentIndex];
     var ans = answers[currentIndex];
 
-    /* progress */
-    var pct = Math.round((currentIndex / QUESTIONS.length) * 100);
+    /* progress: count scenarios fully answered (both most + least chosen) */
+    var answeredCount = answers.reduce(function (acc, entry) {
+      return acc + (entry && entry.most && entry.least ? 1 : 0);
+    }, 0);
+    var pct = Math.round((answeredCount / QUESTIONS.length) * 100);
     progressFill.style.width = pct + '%';
-    progressText.textContent = 'Scenario ' + (currentIndex + 1) + ' of ' + QUESTIONS.length;
+    progressText.textContent = 'Scenario ' + (currentIndex + 1) + ' of ' + QUESTIONS.length + ' (' + answeredCount + ' answered)';
 
     /* prompt */
     promptEl.textContent = q.prompt;
@@ -603,11 +608,13 @@
 
     // Map raw scores to 1-10 scale.
     // With 36 questions, max theoretical raw is 36 (all most) and min is -36 (all least).
-    // Practical range clusters around -12 to +12. Factor of 0.25 gives good spread:
-    // raw 0 → 6, raw +8 → 8, raw +12 → 9, raw -8 → 4, raw -12 → 3
+    // Practical range clusters around -12 to +12. Baseline 5 keeps Prevent/Initiate
+    // thresholds symmetric around raw 0:
+    //   raw 0 → 5 (Respond), raw +8 → 7 (Initiate), raw -8 → 3 (Prevent),
+    //   raw +12 → 8, raw -12 → 2, raw +20 → 10 (clamped), raw -20 → 1 (clamped)
     var mapped = {};
     TRAIT_ORDER.forEach(function (trait) {
-      var score = Math.round(5.5 + (raw[trait] * 0.25));
+      var score = Math.round(5 + (raw[trait] * 0.25));
       if (score < 1) score = 1;
       if (score > 10) score = 10;
       mapped[trait] = score;
@@ -771,7 +778,34 @@
       analysisEl.appendChild(card);
     });
 
+    renderHistoryList();
     setMessage('Your profile is ready to copy or export.');
+  }
+
+  function renderHistoryList() {
+    if (!historyCard || !historyEl) return;
+    var history = readJson(HISTORY_KEY, []);
+    if (!Array.isArray(history) || history.length < 2) {
+      historyCard.hidden = true;
+      return;
+    }
+    historyEl.innerHTML = '';
+    history.slice(-5).reverse().forEach(function (entry) {
+      if (!entry || !entry.scores) return;
+      var item = document.createElement('li');
+      var when = entry.generatedAt ? new Date(entry.generatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'previous';
+      var scores = entry.scores;
+      var topTrait = TRAIT_ORDER.slice().sort(function (a, b) {
+        var sa = Number(scores[a] || 0);
+        var sb = Number(scores[b] || 0);
+        if (sb !== sa) return sb - sa;
+        return a.localeCompare(b);
+      })[0];
+      var topName = (TRAITS[topTrait] && TRAITS[topTrait].title) || topTrait;
+      item.textContent = when + ' — strongest mode: ' + topName + ' ' + Number(scores[topTrait] || 0) + '/10';
+      historyEl.appendChild(item);
+    });
+    historyCard.hidden = false;
   }
 
   // ── Event wiring ───────────────────────────────────────────────

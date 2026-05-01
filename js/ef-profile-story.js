@@ -28,7 +28,7 @@
   var config = null;
   var lastResult = null;
   var FALLBACK_CONFIG = {
-    version: '2026-02-27',
+    version: '2026-04-30',
     scale: {
       min: 1,
       max: 5,
@@ -56,7 +56,11 @@
       { id: 'q9', prompt: 'I rely on deadline pressure to finally begin.', dimension: 'initiation_friction' },
       { id: 'q10', prompt: 'My schedule often assumes ideal conditions instead of realistic constraints.', dimension: 'time_realism' },
       { id: 'q11', prompt: 'When priorities shift, I feel overloaded and struggle to re-sequence tasks.', dimension: 'overwhelm_sensitivity' },
-      { id: 'q12', prompt: 'If I miss one day, it is hard to recover momentum the next day.', dimension: 'recovery_speed' }
+      { id: 'q12', prompt: 'If I miss one day, it is hard to recover momentum the next day.', dimension: 'recovery_speed' },
+      { id: 'q13', prompt: 'Conflict, criticism, or even mild rejection lingers and affects my work for hours.', dimension: 'emotional_reactivity' },
+      { id: 'q14', prompt: 'When my space is messy or noisy, my work quality drops faster than I expect.', dimension: 'environment_dependence' },
+      { id: 'q15', prompt: 'I jump into multi-step work without sketching milestones or completion criteria.', dimension: 'planning_depth' },
+      { id: 'q16', prompt: 'Multi-week projects tend to stall once the initial energy runs out.', dimension: 'follow_through' }
     ]
   };
 
@@ -299,20 +303,36 @@
 
     var dimensions = Object.keys(buckets).map(function (key) {
       var values = buckets[key];
-      var avg = values.length ? (values.reduce(function (sum, value) { return sum + value; }, 0) / values.length) : min;
-      var normalized = ((avg - min) / Math.max(1, (max - min))) * 100;
+      var hasData = values.length > 0;
+      var avg = hasData ? (values.reduce(function (sum, value) { return sum + value; }, 0) / values.length) : 0;
+      var normalized = hasData ? ((avg - min) / Math.max(1, (max - min))) * 100 : 0;
       return {
         key: key,
         label: getDimensionLabel(key),
         average: Number(avg.toFixed(2)),
-        friction: Math.round(normalized)
+        friction: Math.round(normalized),
+        itemCount: values.length
       };
     });
 
-    return dimensions.sort(function (a, b) { return b.friction - a.friction; });
+    return dimensions.sort(function (a, b) {
+      if (b.friction !== a.friction) return b.friction - a.friction;
+      return a.key.localeCompare(b.key);
+    });
   }
 
+  var LOW_FRICTION_PROFILE = {
+    id: 'low-friction',
+    name: 'Low Current Friction',
+    lede: 'No clear friction archetype dominates right now. Treat this as a baseline you can compare against if your situation changes.',
+    needs: [],
+    narrative: 'Across the friction dimensions, none crosses 30/100. This is a baseline tracking pattern, not an active intervention plan. The "experiment" below is offered as a maintenance check, not as a struggle protocol.'
+  };
+
   function chooseProfile(sortedDimensions) {
+    var topFriction = sortedDimensions[0] ? Number(sortedDimensions[0].friction || 0) : 0;
+    if (topFriction < 30) return LOW_FRICTION_PROFILE;
+
     var byKey = {};
     sortedDimensions.forEach(function (item) {
       byKey[item.key] = item.friction;
@@ -341,8 +361,15 @@
 
   function buildNarrative(profile, topDimension, secondDimension, lowDimension) {
     var intensity = severityLabel(topDimension.friction);
-    return 'Your current pattern lines up with "' + profile.name + '". ' +
-      profile.narrative + ' ' +
+    var lead;
+    if (topDimension.friction < 45) {
+      lead = 'Friction is sitting in the low-to-moderate range across the board, so this is a fine-tuning picture rather than a crisis. The closest archetype is "' + profile.name + '", but the match is loose. ' +
+        profile.narrative + ' ';
+    } else {
+      lead = 'Your current pattern lines up with "' + profile.name + '". ' +
+        profile.narrative + ' ';
+    }
+    return lead +
       'Right now, the strongest friction shows up in ' + topDimension.label.toLowerCase() + ' (' + topDimension.friction + '/100, ' + intensity + ') and ' +
       secondDimension.label.toLowerCase() + ' (' + secondDimension.friction + '/100). ' +
       'Your best leverage this week is ' + lowDimension.label.toLowerCase() + ' (' + lowDimension.friction + '/100), which can anchor consistency while you reduce the top friction areas.';

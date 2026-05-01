@@ -454,6 +454,13 @@
       var score = answers.reduce(function (sum, value) {
         return sum + Number(value || 0);
       }, 0);
+      var lowestItem = null;
+      answers.forEach(function (value, index) {
+        if (value == null) return;
+        if (lowestItem === null || value < lowestItem.score) {
+          lowestItem = { index: index, score: value, prompt: domain.items[index] };
+        }
+      });
       return {
         id: domain.id,
         title: domain.title,
@@ -463,6 +470,7 @@
         answers: answers,
         band: scoreBandForDomain(score),
         quickWins: domain.quickWins.slice(),
+        lowestItem: lowestItem,
         sabotage: domain.sabotage,
         overview: domain.overview
       };
@@ -473,10 +481,12 @@
     }, 0);
 
     var sortedByNeed = domainScores.slice().sort(function (a, b) {
-      return a.score - b.score;
+      if (a.score !== b.score) return a.score - b.score;
+      return a.id.localeCompare(b.id);
     });
     var sortedByStrength = domainScores.slice().sort(function (a, b) {
-      return b.score - a.score;
+      if (b.score !== a.score) return b.score - a.score;
+      return a.id.localeCompare(b.id);
     });
 
     return {
@@ -505,7 +515,9 @@
       appendLabeledParagraph(fastReadEl, 'Most likely energy leak:', results.priorityDomains[0].title + ' (' + results.priorityDomains[0].score + '/20)');
     }
     if (results.strengthDomains[0]) {
-      appendLabeledParagraph(fastReadEl, 'Most stable scaffold:', results.strengthDomains[0].title + ' (' + results.strengthDomains[0].score + '/20)');
+      var top = results.strengthDomains[0];
+      var topLabel = top.score >= 14 ? 'Most stable scaffold:' : 'Highest of a weak set:';
+      appendLabeledParagraph(fastReadEl, topLabel, top.title + ' (' + top.score + '/20)');
     }
   }
 
@@ -564,6 +576,14 @@
     appendLabeledParagraph(card, 'Score:', domainScore.score + ' / 20');
     appendLabeledParagraph(card, 'Read:', domainScore.band.label);
     appendParagraph(card, domainScore.sabotage, 'environment-result-muted');
+
+    if (domainScore.lowestItem) {
+      appendLabeledParagraph(
+        card,
+        'Lowest item (' + domainScore.lowestItem.score + '/4):',
+        domainScore.lowestItem.prompt
+      );
+    }
 
     var list = document.createElement('ul');
     list.className = 'checklist';
@@ -671,7 +691,10 @@
 
     clearNode(strengthsEl);
     results.strengthDomains.forEach(function (domainScore, index) {
-      renderDomainPanel(strengthsEl, domainScore, index === 0 ? 'Strongest domain' : 'Second strongest');
+      var qualified = domainScore.score >= 14;
+      var primaryLabel = qualified ? 'Strongest domain' : 'Highest current score';
+      var secondaryLabel = qualified ? 'Second strongest' : 'Second-highest current score';
+      renderDomainPanel(strengthsEl, domainScore, index === 0 ? primaryLabel : secondaryLabel);
     });
 
     renderQuickWins(results);

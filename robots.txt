@@ -5,4 +5,4 @@ Disallow: /website-todos.html
 Disallow: /weekly-scoreboard.html
 Disallow: /lead-tracker.csv
 Disallow: /outreach-list-template.csv
-Sitemap: https://www.theexecutivefunctioninginstitute.com/sitemap.xml
+Sitemap: https://exef.org/sitemap.xml

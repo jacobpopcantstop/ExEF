@@ -50,4 +50,4 @@ Interpretation Notes
 - Final release follows EFI feedback release workflow.
 
 Contact
-info@theexecutivefunctioninginstitute.com
+info@exef.org

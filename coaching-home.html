@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Executive Functioning Services | ExEF</title>
-  <meta name="description" content="Free executive functioning consultations, assessments, and resources now; 1:1 coaching with Jacob begins in fall 2026 after ADDCA Basic Coaching Skills begins.">
+  <meta name="description" content="Executive function coaching for creative ADHD brains, including the ExEF Beta Sprint offer and practical systems support.">
   <link rel="preload" href="css/styles.css" as="style">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="favicon.svg">
@@ -44,7 +44,7 @@
         </div>
         <div class="nav__cluster nav__cluster--support">
           <span class="nav__auth"></span>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="nav__link nav__link--cta">Book Consultation</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="nav__link nav__link--cta">Book a 15-minute fit call</a>
         </div>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -69,10 +69,10 @@
              decoding="async">
       </figure>
       <p class="hero__badge">ExEF Services | San Diego &amp; Online</p>
-      <h1>Executive Functioning Services</h1>
+      <h1>Executive function coaching for creative ADHD brains.</h1>
       <p class="hero__subtitle">Evidence-based EF coaching for adults navigating ADHD, professionals hitting a ceiling, and students building independence &mdash; grounded in the frameworks of Barkley, Brown, Dawson &amp; Guare, and Ward. Available in person in San Diego and virtually everywhere.</p>
       <div class="hero__actions" style="margin-top:var(--space-xl)">
-        <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--primary btn--lg">Schedule a Consultation</a>
+        <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--primary btn--lg">Book a 15-minute fit call</a>
         <a href="free-executive-functioning-tests.html" class="btn btn--secondary btn--lg">Start With Free Tools</a>
       </div>
       <p class="hero__byline" style="margin-top:var(--space-md);font-size:0.92rem;color:var(--color-text-muted);">
@@ -94,7 +94,7 @@
           <div class="team-showcase__portrait" aria-hidden="true">JR</div>
           <h3>Jacob Rozansky</h3>
           <p class="team-showcase__role">Founder &middot; ADDCA ADHD coach training in progress</p>
-          <p>Free consultations are open now; 1:1 coaching begins in fall 2026. Founding clients can reserve beta/sliding-scale pricing while using the free assessments and resources.</p>
+          <p>Beta Sprint spots are open now: 4 sessions for $200 for the first 5 clients. Fit calls focus on scope, goals, and whether coaching is the right next step.</p>
         </article>
         <article class="team-showcase__card">
           <div class="team-showcase__portrait" aria-hidden="true">DB</div>
@@ -111,7 +111,7 @@
       </div>
       <div class="text-center" style="margin-top:var(--space-xl)">
         <a href="meet-the-team.html" class="btn btn--secondary">Full Team Bios</a>
-        <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--primary" style="margin-left:var(--space-md);">Book a Free Consultation</a>
+        <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--primary" style="margin-left:var(--space-md);">Book a 15-minute fit call</a>
       </div>
     </div>
   </section>
@@ -130,7 +130,7 @@
           <h3>EF &amp; ADHD Coaching</h3>
           <p>1:1 coaching for adults, professionals, and students. Sessions target task initiation, working memory, planning, emotional regulation, and time management using methods grounded in Barkley, Brown, Dawson &amp; Guare, and Ward.</p>
           <p class="service-lane__delivery">In-person (San Diego) &middot; Virtual</p>
-          <a href="#coaching-packages" class="btn btn--primary btn--sm">See Coaching Packages</a>
+          <a href="beta-sprint.html" class="btn btn--primary btn--sm">See Beta Sprint details</a>
         </article>
         <article class="service-lane">
           <span class="service-lane__badge service-lane__badge--active">Booking Now</span>
@@ -184,7 +184,7 @@
         <h3 id="specialist-selector-headline" style="margin-top:var(--space-xs);"></h3>
         <p id="specialist-selector-rationale" style="color:var(--color-text-light);"></p>
         <div class="button-group" style="margin-top:var(--space-md);">
-          <a id="specialist-selector-cta" href="#coaching-packages" class="btn btn--primary btn--sm">See the offer</a>
+          <a id="specialist-selector-cta" href="beta-sprint.html" class="btn btn--primary btn--sm">See Beta Sprint details</a>
           <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--secondary btn--sm" data-analytics-event="specialist_selector_consult" data-analytics-label="Selector consult CTA">Book a 20-min consult instead</a>
         </div>
         <p id="specialist-selector-secondary" style="margin-top:var(--space-md);color:var(--color-text-light);font-size:0.92rem;" hidden></p>
@@ -210,7 +210,7 @@
 
       var LANES = {
         coach: {
-          label: 'Fall 2026 coaching with Jacob',
+          label: 'EF coaching with Jacob',
           person: 'Jacob Rozansky',
           short: 'coaching',
           why: 'building adult systems, ADHD-aware planning, and follow-through',
@@ -260,7 +260,7 @@
         var allTied = ranked.every(function (r) { return r.score === ranked[0].score; });
         if (allTied && total >= 3) {
           headline.textContent = 'All three lanes overlap for you.';
-          rationale.textContent = 'You checked items spread evenly across coaching, educational specialist, and OT scope. A 20-minute consult will sort the sequence faster than another form.';
+          rationale.textContent = 'You checked items spread evenly across coaching, educational specialist, and OT scope. A 15-minute fit call will sort the sequence faster than another form.';
           ctaEl.textContent = 'Book a consult';
           ctaEl.setAttribute('href', 'https://calendly.com/jacobansky/30min?month=2026-04&utm_source=coaching-home&utm_content=selector-all-lanes');
           secondary.hidden = true;
@@ -313,6 +313,29 @@
     })();
   </script>
 
+
+  <!-- Beta Sprint Offer -->
+  <section class="section" id="beta-sprint">
+    <div class="container container--narrow">
+      <div class="section-header fade-in">
+        <span class="section-header__tag">Core Offer</span>
+        <h2>The ExEF Beta Sprint</h2>
+        <p>A 4-session executive function coaching sprint for creative adults with ADHD who want practical help with starting, planning, follow-through, and finishing projects.</p>
+      </div>
+      <div class="card fade-in">
+        <p><strong>4-session Beta Sprint: $200</strong> &mdash; available for the first 5 beta clients only.</p>
+        <p>Across four sessions, we identify one major friction point, build a practical system, test it in real life, and adjust based on what actually happens.</p>
+        <ol>
+          <li><strong>Session 1: Friction Map</strong> &mdash; primary friction point + measurable goal.</li>
+          <li><strong>Session 2: System Build</strong> &mdash; one system + action/fallback plan.</li>
+          <li><strong>Session 3: Real-Life Test</strong> &mdash; review and revise the system.</li>
+          <li><strong>Session 4: Maintenance Plan</strong> &mdash; keep/continue decisions + testimonial request.</li>
+        </ol>
+        <p><a href="https://calendly.com/jacobansky/30min?month=2026-04&utm_source=coaching-home&utm_content=beta-sprint-fit-call" class="btn btn--primary">Book a 15-minute fit call</a></p>
+      </div>
+    </div>
+  </section>
+
   <!-- Coaching Packages -->
   <section class="section section--alt" id="coaching-packages">
     <div class="container">
@@ -335,7 +358,7 @@
             <li>One 15-minute touch-up call between sessions</li>
           </ul>
           <p class="package-card__fit"><strong>Best for:</strong> Adults or students who want a short, decisive pilot before committing to ongoing work.</p>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-foundations" class="btn btn--secondary btn--sm">Schedule Intake</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-foundations" class="btn btn--secondary btn--sm">Book fit call</a>
         </article>
         <article class="package-card package-card--featured" style="--pkg-color: var(--module-3);">
           <span class="package-card__flag">Most chosen</span>
@@ -352,7 +375,7 @@
             <li>Month-end progress review with metrics</li>
           </ul>
           <p class="package-card__fit"><strong>Best for:</strong> Adults or professionals building durable systems across a full quarter.</p>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-momentum" class="btn btn--primary btn--sm">Schedule Intake</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-momentum" class="btn btn--primary btn--sm">Book fit call</a>
         </article>
         <article class="package-card" style="--pkg-color: var(--module-6);">
           <p class="package-card__eyebrow">Intensive</p>
@@ -368,7 +391,7 @@
             <li>Quarterly written progress report</li>
           </ul>
           <p class="package-card__fit"><strong>Best for:</strong> Clients integrating EF work with therapy, medication, or major life transitions.</p>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-integration" class="btn btn--secondary btn--sm">Schedule Intake</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-integration" class="btn btn--secondary btn--sm">Book fit call</a>
         </article>
       </div>
       <div class="grid grid--2 stagger fade-in" style="margin-top:var(--space-2xl);">
@@ -384,7 +407,7 @@
             <li>End-of-semester report for IEP/504 teams if requested</li>
           </ul>
           <p class="package-card__fit"><strong>Best for:</strong> Middle school, high school, or college students building independence.</p>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-academic-semester" class="btn btn--secondary btn--sm">Schedule Intake</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-academic-semester" class="btn btn--secondary btn--sm">Book fit call</a>
         </article>
         <article class="package-card" style="--pkg-color: var(--module-1);">
           <p class="package-card__eyebrow">Flex</p>
@@ -401,7 +424,7 @@
           <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=coaching-home&amp;utm_content=ef-coaching-single-session" class="btn btn--secondary btn--sm">Book Session</a>
         </article>
       </div>
-      <p class="package-note">All packages include a free 20-minute discovery consult before you commit. Sliding-scale seats are available each quarter &mdash; ask during intake.</p>
+      <p class="package-note">All packages include a 15-minute fit call before you commit. Sliding-scale seats are available each quarter &mdash; ask during intake.</p>
     </div>
   </section>
 
@@ -610,6 +633,19 @@
     })();
   </script>
 
+  <section class="section section--alt" id="scope-statement">
+    <div class="container container--narrow">
+      <div class="section-header fade-in">
+        <span class="section-header__tag">Scope and Safety</span>
+        <h2>Coaching scope statement</h2>
+      </div>
+      <div class="card fade-in">
+        <p>ExEF provides executive function coaching and practical skills support. Coaching is not therapy, diagnosis, medical treatment, occupational therapy assessment, crisis support, or legal/academic accommodation documentation.</p>
+        <p>When needs fall outside coaching, we may recommend support from an appropriate licensed professional.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- FAQ -->
   <section class="section" id="faq">
     <div class="container container--narrow">
@@ -637,7 +673,7 @@
         </details>
         <details class="card" style="padding:var(--space-lg);">
           <summary style="font-weight:700;cursor:pointer;font-size:1.05rem;">Can I switch lanes or run two at once?</summary>
-          <p style="margin-top:var(--space-md);color:var(--color-text-light);">Yes &mdash; many clients combine coaching with OT or educational specialist work. We coordinate scope so the lanes don't duplicate. The 20-minute discovery consult is the right place to talk through sequence.</p>
+          <p style="margin-top:var(--space-md);color:var(--color-text-light);">Yes &mdash; many clients combine coaching with OT or educational specialist work. We coordinate scope so the lanes don't duplicate. The 15-minute fit call is the right place to talk through sequence.</p>
         </details>
       </div>
     </div>
@@ -685,7 +721,7 @@
         "name": "Can I switch lanes or run two at once?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. Many clients combine coaching with OT or educational specialist work. We coordinate scope so the lanes do not duplicate. The 20-minute discovery consult is the right place to talk through sequence."
+          "text": "Yes. Many clients combine coaching with OT or educational specialist work. We coordinate scope so the lanes do not duplicate. The 15-minute fit call is the right place to talk through sequence."
         }
       }
     ]
@@ -697,10 +733,10 @@
     <div class="container" style="text-align:center;max-width:var(--max-width-narrow)">
       <div class="section-header fade-in">
         <h2>Ready to start?</h2>
-        <p>Schedule a free 20-minute consultation to discuss your needs and find the right service lane. No pressure, no obligation.</p>
+        <p>Schedule a 15-minute fit call to discuss your needs and find the right service lane. No pressure, no obligation.</p>
       </div>
       <div class="fade-in" style="margin-top:var(--space-xl)">
-        <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--primary btn--lg">Schedule a Consultation</a>
+        <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="btn btn--primary btn--lg">Book a 15-minute fit call</a>
       </div>
     </div>
   </section>
@@ -754,7 +790,7 @@
           <h4>Connect</h4>
           <ul class="footer__links">
             <li><a href="store.html">Services and Pricing</a></li>
-            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a Consultation</a></li>
+            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a 15-minute fit call</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="search.html">Search</a></li>
             <li><a href="verify.html">Verify Certificate</a></li>

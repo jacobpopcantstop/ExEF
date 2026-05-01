@@ -150,7 +150,8 @@
       return Math.abs(b.meanDelta) - Math.abs(a.meanDelta);
     });
     return {
-      count: entries.length,
+      count: ratios.length,
+      totalEntries: entries.length,
       meanFactor: Number(mean.toFixed(2)),
       plan30: Math.round(30 * mean),
       averageDelta: Math.round(averageDelta),

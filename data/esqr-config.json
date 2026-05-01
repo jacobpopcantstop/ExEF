@@ -1,7 +1,7 @@
 {
-  "version": "2026-03-13",
+  "version": "2026-04-30",
   "title": "ExEF ESQ-R Interactive Intake",
-  "description": "A 25-item, 5-area executive-function intake experience aligned to ExEF's current public ESQ-R framing.",
+  "description": "A 30-item, 5-area executive-function intake experience aligned to ExEF's current public ESQ-R framing. Includes one reverse-keyed validity item per area to detect straight-line responding.",
   "scale": {
     "min": 1,
     "max": 5,
@@ -103,6 +103,12 @@
     { "id": "q22", "areaId": "regulation-flexibility", "prompt": "When plans change, I can adapt without losing the whole day." },
     { "id": "q23", "areaId": "regulation-flexibility", "prompt": "I can handle feedback without shutting down, spiraling, or over-correcting." },
     { "id": "q24", "areaId": "regulation-flexibility", "prompt": "Pressure makes me more focused more often than it makes me freeze." },
-    { "id": "q25", "areaId": "regulation-flexibility", "prompt": "If something goes wrong, I can recover and move to the next step without staying stuck there." }
+    { "id": "q25", "areaId": "regulation-flexibility", "prompt": "If something goes wrong, I can recover and move to the next step without staying stuck there." },
+
+    { "id": "q26", "areaId": "planning-time", "reverse": true, "prompt": "When my plan meets reality, it usually falls apart instead of holding up." },
+    { "id": "q27", "areaId": "initiation-follow-through", "reverse": true, "prompt": "I tend to wait until deadline pressure forces me to start important work." },
+    { "id": "q28", "areaId": "attention-working-memory", "reverse": true, "prompt": "I often lose track of what I was doing partway through a task." },
+    { "id": "q29", "areaId": "organization-monitoring", "reverse": true, "prompt": "My systems break down whenever life gets unexpectedly busy." },
+    { "id": "q30", "areaId": "regulation-flexibility", "reverse": true, "prompt": "When something goes wrong, I get stuck replaying it instead of moving on." }
   ]
 }

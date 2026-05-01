@@ -303,13 +303,15 @@
 
     var dimensions = Object.keys(buckets).map(function (key) {
       var values = buckets[key];
-      var avg = values.length ? (values.reduce(function (sum, value) { return sum + value; }, 0) / values.length) : min;
-      var normalized = ((avg - min) / Math.max(1, (max - min))) * 100;
+      var hasData = values.length > 0;
+      var avg = hasData ? (values.reduce(function (sum, value) { return sum + value; }, 0) / values.length) : 0;
+      var normalized = hasData ? ((avg - min) / Math.max(1, (max - min))) * 100 : 0;
       return {
         key: key,
         label: getDimensionLabel(key),
         average: Number(avg.toFixed(2)),
-        friction: Math.round(normalized)
+        friction: Math.round(normalized),
+        itemCount: values.length
       };
     });
 

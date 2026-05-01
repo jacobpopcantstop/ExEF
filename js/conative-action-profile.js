@@ -606,11 +606,13 @@
 
     // Map raw scores to 1-10 scale.
     // With 36 questions, max theoretical raw is 36 (all most) and min is -36 (all least).
-    // Practical range clusters around -12 to +12. Factor of 0.25 gives good spread:
-    // raw 0 → 6, raw +8 → 8, raw +12 → 9, raw -8 → 4, raw -12 → 3
+    // Practical range clusters around -12 to +12. Baseline 5 keeps Prevent/Initiate
+    // thresholds symmetric around raw 0:
+    //   raw 0 → 5 (Respond), raw +8 → 7 (Initiate), raw -8 → 3 (Prevent),
+    //   raw +12 → 8, raw -12 → 2, raw +20 → 10 (clamped), raw -20 → 1 (clamped)
     var mapped = {};
     TRAIT_ORDER.forEach(function (trait) {
-      var score = Math.round(5.5 + (raw[trait] * 0.25));
+      var score = Math.round(5 + (raw[trait] * 0.25));
       if (score < 1) score = 1;
       if (score > 10) score = 10;
       mapped[trait] = score;

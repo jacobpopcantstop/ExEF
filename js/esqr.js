@@ -570,7 +570,8 @@
     });
 
     clearNode(questionsWrap);
-    config.areas.forEach(function (area, areaIndex) {
+    var runningNumber = 0;
+    config.areas.forEach(function (area) {
       var questions = grouped[area.id] || [];
       var fieldset = document.createElement('fieldset');
       fieldset.className = 'esqr-skill-group fade-in visible';
@@ -583,8 +584,9 @@
       intro.className = 'esqr-area-intro';
       intro.textContent = area.intro;
       fieldset.appendChild(intro);
-      questions.forEach(function (question, questionIndex) {
-        var itemNumber = areaIndex * 5 + questionIndex + 1;
+      questions.forEach(function (question) {
+        runningNumber += 1;
+        var itemNumber = runningNumber;
         var item = document.createElement('div');
         item.className = 'esqr-item';
         var text = document.createElement('p');
@@ -701,8 +703,51 @@
     return 'Support needed';
   }
 
+  function scoreItem(question, raw, scale) {
+    var value = Number(raw || 0);
+    if (!value) return 0;
+    return question.reverse ? (scale.max + scale.min - value) : value;
+  }
+
+  function computeValidity(answers, scale) {
+    var rawValues = config.questions
+      .map(function (q) { return Number(answers[q.id] || 0); })
+      .filter(function (v) { return v > 0; });
+    if (rawValues.length < 5) {
+      return { straightLineRatio: 0, acquiescenceGap: 0, suspect: false };
+    }
+    var counts = {};
+    rawValues.forEach(function (v) { counts[v] = (counts[v] || 0) + 1; });
+    var dominant = Object.keys(counts).reduce(function (best, key) {
+      return counts[key] > best ? counts[key] : best;
+    }, 0);
+    var straightLineRatio = dominant / rawValues.length;
+
+    var positiveScores = [];
+    var reverseConverted = [];
+    config.questions.forEach(function (q) {
+      var raw = Number(answers[q.id] || 0);
+      if (!raw) return;
+      if (q.reverse) reverseConverted.push(scale.max + scale.min - raw);
+      else positiveScores.push(raw);
+    });
+    function mean(list) {
+      return list.length ? list.reduce(function (s, v) { return s + v; }, 0) / list.length : 0;
+    }
+    var gap = (positiveScores.length && reverseConverted.length)
+      ? Math.abs(mean(positiveScores) - mean(reverseConverted))
+      : 0;
+
+    return {
+      straightLineRatio: Number(straightLineRatio.toFixed(2)),
+      acquiescenceGap: Number(gap.toFixed(2)),
+      suspect: straightLineRatio >= 0.85 || gap >= 1.75
+    };
+  }
+
   function computeResults() {
     var answers = getAnswers();
+    var scale = getScale();
     var groupedQuestions = {};
     config.questions.forEach(function (question) {
       if (!groupedQuestions[question.areaId]) groupedQuestions[question.areaId] = [];
@@ -712,7 +757,7 @@
     var areas = config.areas.map(function (area) {
       var questions = groupedQuestions[area.id] || [];
       var values = questions.map(function (question) {
-        return Number(answers[question.id] || 0);
+        return scoreItem(question, answers[question.id], scale);
       });
       var total = values.reduce(function (sum, value) { return sum + value; }, 0);
       var average = values.length ? (total / values.length) : 0;
@@ -730,13 +775,17 @@
           return {
             id: question.id,
             prompt: question.prompt,
-            score: Number(answers[question.id] || 0)
+            reverse: !!question.reverse,
+            score: scoreItem(question, answers[question.id], scale),
+            raw: Number(answers[question.id] || 0)
           };
         })
       };
     }).sort(function (a, b) {
       return b.score - a.score;
     });
+
+    var validity = computeValidity(answers, scale);
 
     var overallScore = areas.reduce(function (sum, area) { return sum + area.score; }, 0) / Math.max(1, areas.length);
     var STRENGTH_FLOOR = 3.4;
@@ -762,7 +811,8 @@
       strengths: strengths,
       growthAreas: growthAreas,
       overallScore: Number(overallScore.toFixed(2)),
-      signalPressure: signalPressure
+      signalPressure: signalPressure,
+      validity: validity
     };
   }
 
@@ -993,6 +1043,13 @@
     lines.push('');
     lines.push('Overall score: ' + lastResultsPayload.overallScore.toFixed(1) + '/5');
     lines.push('Cross-signal note: ' + lastResultsPayload.signalSummary);
+    if (lastResultsPayload.validity) {
+      lines.push('Response check: straight-line ratio ' +
+        Math.round(lastResultsPayload.validity.straightLineRatio * 100) + '%, reverse-item gap ' +
+        lastResultsPayload.validity.acquiescenceGap.toFixed(1) + '/4' +
+        (lastResultsPayload.validity.suspect ? ' (suspect; consider retaking with more variation)' : '')
+      );
+    }
     lines.push('');
     lines.push('Current strengths:');
     lastResultsPayload.strengths.forEach(function (area) {
@@ -1053,11 +1110,21 @@
       profileTitle: narrative.title,
       profileNarrative: narrative.lede,
       nextTools: nextTools,
-      offer: offer
+      offer: offer,
+      validity: result.validity
     };
 
     if (titleEl) titleEl.textContent = narrative.title;
-    if (ledeEl) ledeEl.textContent = narrative.lede;
+    if (ledeEl) {
+      var ledeText = narrative.lede;
+      if (result.validity && result.validity.suspect) {
+        ledeText += ' Heads up: your answers show a uniform response pattern (straight-line ratio ' +
+          Math.round(result.validity.straightLineRatio * 100) + '%, reverse-item gap ' +
+          result.validity.acquiescenceGap.toFixed(1) +
+          '/4). Re-take with more variation to get a more reliable read.';
+      }
+      ledeEl.textContent = ledeText;
+    }
     if (summaryEl) {
       clearNode(summaryEl);
       var highestArea = result.areas[0];

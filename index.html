@@ -21,22 +21,56 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "ProfessionalService",
+    "@id": "https://exef.org/#organization",
     "name": "ExEF",
+    "alternateName": "Executive Functioning Institute",
     "url": "https://exef.org/",
-    "sameAs": ["https://github.com/jacobpopcantstop/TheExecutiveFunctioningInstitute"]
+    "description": "Executive function and ADHD coaching for adults, students, and professionals. Skills-based 1:1 coaching grounded in Barkley, Brown, Dawson & Guare, and Ward frameworks.",
+    "founder": { "@id": "https://exef.org/#jacob-rozansky" },
+    "areaServed": { "@type": "Place", "name": "San Diego, California and online (United States)" },
+    "serviceType": ["Executive function coaching", "ADHD coaching"],
+    "email": "jacob@exef.org",
+    "knowsAbout": ["Executive function", "ADHD coaching", "Task initiation", "Working memory", "Time blindness", "Self-regulation"],
+    "sameAs": ["https://github.com/jacobpopcantstop/exef"]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": "https://exef.org/#jacob-rozansky",
+    "name": "Jacob Rozansky",
+    "jobTitle": "Executive Function Coach (in training)",
+    "email": "jacob@exef.org",
+    "url": "https://exef.org/meet-the-team.html",
+    "worksFor": { "@id": "https://exef.org/#organization" },
+    "description": "Founder of ExEF. Completing ADDCA ADHD coach training (ICF & PAAC accredited program).",
+    "knowsAbout": ["Executive function", "ADHD coaching", "Task initiation", "ADDCA ADHD coach training"]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://exef.org/#website",
+    "url": "https://exef.org/",
+    "name": "ExEF",
+    "publisher": { "@id": "https://exef.org/#organization" },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://exef.org/search.html?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
   }
   </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Course",
-    "name": "CEFC Internal Certification Pathway",
-    "description": "A module-based internal certification pathway in executive function coaching grounded in Barkley, Brown, Dawson & Guare, and Ward frameworks.",
-    "provider": {
-      "@type": "Organization",
-      "name": "ExEF"
-    }
+    "name": "ExEF Open Curriculum",
+    "description": "An open executive function curriculum grounded in Barkley, Brown, Dawson & Guare, and Ward frameworks.",
+    "provider": { "@id": "https://exef.org/#organization" }
   }
   </script>
 </head>

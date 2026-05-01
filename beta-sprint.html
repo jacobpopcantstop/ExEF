@@ -7,36 +7,91 @@
   <meta name="description" content="The ExEF Beta Sprint is a 4-session executive function coaching sprint for creative adults with ADHD. Beta rate: $200 for the first 5 clients." />
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="icon" href="favicon.svg" />
+  <script src="js/theme-init.min.js"></script>
 </head>
 <body class="page-coaching">
-  <main>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">ExEF</div>
+        <span>Expert EF</span>
+      </a>
+      <div class="nav__links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="coaching-home.html" class="nav__link">Coaching</a>
+        <a href="store.html" class="nav__link">Store</a>
+        <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="nav__link nav__link--cta">Book a 15-minute fit call</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main-content">
     <section class="page-header">
       <div class="container container--narrow">
+        <nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="index.html">Home</a></li> <li aria-current="page">Beta Sprint</li></ol></nav>
         <p class="hero__badge">ExEF Core Offer</p>
         <h1>The ExEF Beta Sprint</h1>
-        <p class="hero__subtitle">A 4-session executive function coaching sprint for creative adults with ADHD who want practical help with starting, planning, follow-through, and finishing projects.</p>
-        <p><strong>4-session Beta Sprint: $200</strong> (first 5 beta clients only).</p>
+        <p class="hero__subtitle">A focused 4-session executive function coaching sprint for creative adults with ADHD who want practical help starting, planning, following through, and finishing the work that matters.</p>
+        <p style="margin-top:var(--space-md);"><strong>Beta rate: $200 for 4 sessions</strong> &mdash; first 5 beta clients only.</p>
         <div class="hero__actions" style="margin-top:var(--space-lg)">
           <a class="btn btn--primary btn--lg" href="https://calendly.com/jacobansky/30min?month=2026-04&utm_source=beta-sprint-page&utm_content=hero-fit-call">Book a 15-minute fit call</a>
-          <a class="btn btn--secondary btn--lg" href="coaching-contact.html">Contact</a>
+          <a class="btn btn--secondary btn--lg" href="index.html">&larr; Back to home</a>
         </div>
       </div>
     </section>
 
-    <section class="section">
+    <div class="container container--narrow">
+      <figure class="page-hero-figure page-hero-figure--responsive" style="margin-top:var(--space-xl);">
+        <img src="images/focus.jpg"
+             srcset="images/focus-640.jpg 640w, images/focus-960.jpg 960w, images/focus.jpg 2048w"
+             sizes="(max-width: 640px) 96vw, (max-width: 1024px) 90vw, 900px"
+             alt="A focused workspace — the kind of deliberate, sustained attention the Beta Sprint is built to support"
+             loading="eager" decoding="async">
+      </figure>
+    </div>
+
+    <section class="section section--tight" aria-label="On this page">
       <div class="container container--narrow">
-        <h2>What we do in the sprint</h2>
-        <ol>
-          <li><strong>Session 1: Friction Map</strong> — identify one primary EF friction point, one target situation, and one measurable goal.</li>
-          <li><strong>Session 2: System Build</strong> — build one practical system, one action plan, and one fallback plan.</li>
-          <li><strong>Session 3: Real-Life Test</strong> — review what happened and revise the system for real-world constraints.</li>
-          <li><strong>Session 4: Maintenance Plan</strong> — decide what to keep, what to continue, and whether ongoing support makes sense.</li>
-        </ol>
+        <nav class="card" aria-labelledby="beta-toc-heading">
+          <h2 id="beta-toc-heading" style="margin-top:0;font-size:1.1rem;">On this page</h2>
+          <ol style="columns:2;column-gap:var(--space-xl);margin:0;padding-left:1.25rem;">
+            <li><a href="#sprint-structure">What we do in the sprint</a></li>
+            <li><a href="#sprint-fit">Does this sound familiar?</a></li>
+            <li><a href="#sprint-scope">Scope and safety</a></li>
+            <li><a href="#sprint-boundaries">Boundary script</a></li>
+            <li><a href="#sprint-next">Next step</a></li>
+          </ol>
+        </nav>
       </div>
     </section>
 
+    <section class="section" id="sprint-structure">
+      <div class="container container--narrow">
+        <h2>What we do in the sprint</h2>
+        <div class="grid grid--2 stagger">
+          <div class="card">
+            <h3>1. Friction Map</h3>
+            <p>Identify one primary EF friction point, one target situation, and one measurable goal.</p>
+          </div>
+          <div class="card">
+            <h3>2. System Build</h3>
+            <p>Build one practical system, one action plan, and one fallback plan.</p>
+          </div>
+          <div class="card">
+            <h3>3. Real-Life Test</h3>
+            <p>Review what actually happened and revise the system for real-world constraints.</p>
+          </div>
+          <div class="card">
+            <h3>4. Maintenance Plan</h3>
+            <p>Decide what to keep, what to continue, and whether ongoing support makes sense.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <section class="section">
+    <section class="section section--alt" id="sprint-fit">
       <div class="container container--narrow">
         <h2>Does this sound familiar?</h2>
         <ul class="checklist">
@@ -50,19 +105,7 @@
       </div>
     </section>
 
-    <section class="section section--alt">
-      <div class="container container--narrow">
-        <h2>Who this is for</h2>
-        <ul class="checklist">
-          <li>You know what to do, but cannot reliably start.</li>
-          <li>You have too many ideas and no clear next step.</li>
-          <li>You make plans that disappear by mid-week.</li>
-          <li>You struggle with task avoidance, time blindness, follow-through, or finishing.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="section">
+    <section class="section" id="sprint-scope">
       <div class="container container--narrow">
         <h2>Scope and safety</h2>
         <p>ExEF provides executive function coaching and practical skills support. Coaching is not therapy, diagnosis, medical treatment, occupational therapy assessment, crisis support, or legal/academic accommodation documentation.</p>
@@ -70,11 +113,10 @@
       </div>
     </section>
 
-
-    <section class="section section--alt">
+    <section class="section section--alt" id="sprint-boundaries">
       <div class="container container--narrow">
         <h2>Boundary script and referral-out triggers</h2>
-        <p><strong>Boundary script:</strong> “That’s outside the scope of coaching, and I don’t want to pretend I’m qualified to advise on it. I can help with the executive-function side, but I’d recommend bringing the clinical/legal/medical piece to the appropriate licensed professional.”</p>
+        <p><strong>Boundary script:</strong> &ldquo;That&rsquo;s outside the scope of coaching, and I don&rsquo;t want to pretend I&rsquo;m qualified to advise on it. I can help with the executive-function side, but I&rsquo;d recommend bringing the clinical/legal/medical piece to the appropriate licensed professional.&rdquo;</p>
         <ul class="checklist">
           <li>Active self-harm or immediate crisis</li>
           <li>Severe depression/anxiety requiring clinical care</li>
@@ -84,11 +126,14 @@
       </div>
     </section>
 
-    <section class="section section--alt">
+    <section class="cta-section" id="sprint-next">
       <div class="container container--narrow text-center">
         <h2>Next step</h2>
         <p>If this sounds useful, book a fit call and we can decide together whether the Beta Sprint is the right match.</p>
-        <a class="btn btn--primary btn--lg" href="https://calendly.com/jacobansky/30min?month=2026-04&utm_source=beta-sprint-page&utm_content=bottom-fit-call">Book a 15-minute fit call</a>
+        <div class="cta-section__actions">
+          <a class="btn btn--primary btn--lg" href="https://calendly.com/jacobansky/30min?month=2026-04&utm_source=beta-sprint-page&utm_content=bottom-fit-call">Book a 15-minute fit call</a>
+          <a class="btn btn--outline-white btn--lg" href="index.html">&larr; Back to home</a>
+        </div>
       </div>
     </section>
   </main>

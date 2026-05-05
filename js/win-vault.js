@@ -1,0 +1,275 @@
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = 'exef_win_vault_visual_v1';
+  var MAX_WINS = 8;
+  var prompts = [
+    'What felt a little easier, lighter, or more possible than usual?',
+    'What did you start, even if it stayed imperfect?',
+    'What did you protect your future self from?',
+    'Where did you recover instead of spiraling?',
+    'What did you ask for, clarify, postpone, or simplify?',
+    'What tiny piece of maintenance did you handle?',
+    'What choice matched your real energy today?',
+    'What did you notice sooner than you used to?',
+    'Where did you make something 5 percent more workable?',
+    'What gave you a moment of pride, pleasure, relief, or satisfaction?'
+  ];
+  var promptIndex = 0;
+  var wins = [];
+
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  function cleanText(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function readWins() {
+    try {
+      var parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      return Array.isArray(parsed) ? parsed.map(cleanText).filter(Boolean).slice(0, MAX_WINS) : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function writeWins() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(wins));
+  }
+
+  function setStatus(message) {
+    var status = $('win-vault-status');
+    if (status) status.textContent = message || '';
+  }
+
+  function formatDate() {
+    return new Date().toLocaleDateString(undefined, {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+
+  function renderPrompt() {
+    var prompt = $('win-vault-prompt');
+    if (prompt) prompt.textContent = prompts[promptIndex % prompts.length];
+  }
+
+  function renderWins() {
+    var list = $('win-vault-list');
+    var empty = $('win-vault-empty');
+    var date = $('win-vault-date');
+    if (!list || !empty) return;
+
+    if (date) date.textContent = formatDate();
+    while (list.firstChild) list.removeChild(list.firstChild);
+
+    wins.forEach(function (win, index) {
+      var item = document.createElement('li');
+      item.textContent = win;
+
+      var remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'win-vault__remove';
+      remove.setAttribute('aria-label', 'Remove win');
+      remove.textContent = 'x';
+      remove.addEventListener('click', function () {
+        wins.splice(index, 1);
+        writeWins();
+        renderWins();
+        setStatus('Removed from the visual.');
+      });
+
+      item.appendChild(remove);
+      list.appendChild(item);
+    });
+
+    empty.hidden = wins.length > 0;
+  }
+
+  function addWin(text) {
+    if (wins.length >= MAX_WINS) {
+      setStatus('This visual holds up to ' + MAX_WINS + ' wins. Remove one to add another.');
+      return false;
+    }
+    wins.push(text);
+    writeWins();
+    renderWins();
+    return true;
+  }
+
+  function pad(value) {
+    return String(value).padStart(2, '0');
+  }
+
+  function wrapLines(ctx, text, maxWidth) {
+    var words = text.split(' ');
+    var lines = [];
+    var line = '';
+    words.forEach(function (word) {
+      var test = line ? line + ' ' + word : word;
+      if (ctx.measureText(test).width > maxWidth && line) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = test;
+      }
+    });
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  function roundedRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+  }
+
+  function downloadPng() {
+    if (!wins.length) {
+      setStatus('Add at least one win before downloading.');
+      return;
+    }
+
+    var canvas = document.createElement('canvas');
+    canvas.className = 'win-vault__canvas';
+    canvas.width = 1200;
+    canvas.height = 1600;
+    var ctx = canvas.getContext('2d');
+    var margin = 104;
+    var y = 120;
+
+    ctx.fillStyle = '#f7f9f4';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#ffffff';
+    roundedRect(ctx, 54, 54, canvas.width - 108, canvas.height - 108, 36);
+    ctx.fill();
+
+    ctx.fillStyle = '#27ae60';
+    roundedRect(ctx, 54, 54, 20, canvas.height - 108, 10);
+    ctx.fill();
+
+    var accent = ctx.createLinearGradient(margin, canvas.height - 136, canvas.width - margin, canvas.height - 136);
+    accent.addColorStop(0, '#27ae60');
+    accent.addColorStop(0.52, '#9a6b2f');
+    accent.addColorStop(1, '#2980b9');
+    ctx.fillStyle = accent;
+    roundedRect(ctx, margin, canvas.height - 146, canvas.width - margin * 2, 12, 6);
+    ctx.fill();
+
+    ctx.fillStyle = '#6b7a86';
+    ctx.font = '700 28px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+    ctx.fillText('WIN VAULT', margin, y);
+
+    y += 96;
+    ctx.fillStyle = '#162b3c';
+    ctx.font = '800 84px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+    wrapLines(ctx, 'Wins worth keeping nearby', 760).forEach(function (line) {
+      ctx.fillText(line, margin, y);
+      y += 88;
+    });
+
+    ctx.fillStyle = '#6b7a86';
+    ctx.font = '700 28px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+    ctx.fillText(formatDate().toUpperCase(), margin, y + 16);
+    y += 88;
+
+    wins.forEach(function (win, index) {
+      var lines = wrapLines(ctx, win, 850);
+      var cardHeight = Math.max(112, 48 + lines.length * 42);
+      ctx.fillStyle = '#ffffff';
+      roundedRect(ctx, margin, y, canvas.width - margin * 2, cardHeight, 20);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(22, 43, 60, 0.14)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(39, 174, 96, 0.13)';
+      ctx.beginPath();
+      ctx.arc(margin + 42, y + 48, 24, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#206f45';
+      ctx.font = '800 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(pad(index + 1), margin + 42, y + 55);
+      ctx.textAlign = 'left';
+
+      ctx.fillStyle = '#162b3c';
+      ctx.font = '800 34px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      lines.forEach(function (line, index) {
+        ctx.fillText(line, margin + 90, y + 56 + index * 42);
+      });
+      y += cardHeight + 28;
+    });
+
+    var link = document.createElement('a');
+    link.download = 'exef-win-vault.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    setStatus('Visual downloaded.');
+  }
+
+  function init() {
+    var form = $('win-vault-form');
+    var input = $('win-vault-input');
+    var newPrompt = $('win-vault-new-prompt');
+    var print = $('win-vault-print');
+    var download = $('win-vault-download');
+    var clear = $('win-vault-clear');
+
+    wins = readWins();
+    promptIndex = Math.floor(Math.random() * prompts.length);
+    renderPrompt();
+    renderWins();
+
+    if (newPrompt) {
+      newPrompt.addEventListener('click', function () {
+        promptIndex = (promptIndex + 1) % prompts.length;
+        renderPrompt();
+      });
+    }
+
+    if (form && input) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var text = cleanText(input.value);
+        if (!text) {
+          setStatus('Add one small win first.');
+          input.focus();
+          return;
+        }
+        if (addWin(text)) {
+          input.value = '';
+          setStatus('Added to the visual.');
+        }
+      });
+    }
+
+    if (print) print.addEventListener('click', window.print.bind(window));
+    if (download) download.addEventListener('click', downloadPng);
+    if (clear) {
+      clear.addEventListener('click', function () {
+        wins = [];
+        writeWins();
+        renderWins();
+        setStatus('Visual cleared.');
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

@@ -70,11 +70,6 @@
 
   function highlightActiveNavLinks() {
     var currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    var credentialPages = [
-      'curriculum.html', 'certification.html', 'accreditation.html',
-      'ExEF-Competency-Crosswalk-Map.html', 'ExEF-Capstone-Transparency-Rubric.html',
-      'certificate.html', 'verify.html'
-    ];
     document.querySelectorAll('.nav__link').forEach(function (link) {
       link.classList.remove('nav__link--active');
       link.removeAttribute('aria-current');
@@ -86,13 +81,6 @@
       }
     });
 
-    if (credentialPages.indexOf(currentPage) !== -1 || /^module-/.test(currentPage)) {
-      var credentialTrigger = document.querySelector('.nav__dropdown-trigger');
-      if (credentialTrigger) {
-        credentialTrigger.classList.add('nav__link--active');
-        credentialTrigger.setAttribute('aria-current', 'page');
-      }
-    }
   }
 
   EFI.highlightActiveNavLinks = highlightActiveNavLinks;

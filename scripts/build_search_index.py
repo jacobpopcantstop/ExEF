@@ -40,9 +40,17 @@ class TextExtractor(HTMLParser):
 
 def build_index():
     root = Path(__file__).parent.parent
+    visibility_path = root / 'data' / 'site-visibility.json'
+    try:
+        visibility = json.loads(visibility_path.read_text(encoding='utf-8'))
+    except FileNotFoundError:
+        visibility = {}
+    ignored_pages = set(visibility.get('hiddenPages', [])) | set(visibility.get('utilityPages', []))
     pages = []
 
     for html_file in sorted(root.glob('*.html')):
+        if html_file.name in ignored_pages:
+            continue
         # Skip bridge/utility pages
         if html_file.name.startswith('module-') and html_file.stem[-1].isalpha() and len(html_file.stem) > 8:
             continue

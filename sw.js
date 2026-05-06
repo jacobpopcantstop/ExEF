@@ -2,8 +2,8 @@
 
 // Bump cache names when shared navigation or critical assets change so clients
 // don't stay pinned to an older site shell after deploy.
-var STATIC_CACHE = 'exef-static-v10';
-var PAGE_CACHE = 'exef-pages-v8';
+var STATIC_CACHE = 'exef-static-v11';
+var PAGE_CACHE = 'exef-pages-v9';
 var ALL_CACHES = [STATIC_CACHE, PAGE_CACHE];
 
 var CORE_PAGES = [
@@ -11,19 +11,21 @@ var CORE_PAGES = [
   '/index.html',
   '/about.html',
   '/blog.html',
-  '/curriculum.html',
   '/resources.html',
   '/executive-functioning-iep-goal-bank.html',
   '/getting-started.html',
   '/free-executive-functioning-tests.html',
   '/search.html',
-  '/certification.html'
+  '/win-page.html'
 ];
 
 var SHARED_ASSETS = [
   '/css/styles.css',
   '/favicon.svg',
   '/images/exef-og-card.svg',
+  '/images/jacob-headshot.jpg',
+  '/images/jacob-headshot-640.jpg',
+  '/images/jacob-headshot-960.jpg',
   '/js/main.min.js',
   '/js/main.bundle.min.js',
   '/js/homepage-ux.js',

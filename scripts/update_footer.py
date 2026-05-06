@@ -12,15 +12,15 @@ NEW_FOOTER = '''\
     <div class="container">
       <div class="footer__grid footer__grid--institutional">
         <div class="footer__brand">
-          <p class="footer__eyebrow">Executive Function Coaching + Credentialing</p>
+          <p class="footer__eyebrow">Executive Function Coaching</p>
           <a href="index.html" class="nav__logo" style="color:var(--color-white);">
             <div class="nav__logo-icon">ExEF</div>
             <span>Expert EF</span>
           </a>
-          <p>Executive function and ADHD coaching, public curriculum, and transparent credentialing artifacts. Led by Jacob Rozansky, ICF-certified coach completing ADDCA ADHD coach training.</p>
+          <p>Executive function and ADHD coaching with Jacob Rozansky. Free assessments, practical tools, and short-form resources to help you find the next workable step.</p>
           <ul class="footer__dossier">
-            <li><span>Training Lens</span><strong>ADDCA ADHD coaching in progress, integrated with ExEF's EF curriculum and scope controls.</strong></li>
-            <li><span>Credential Boundary</span><strong>ExEF credentials are internal standards workflows with public review criteria and verification.</strong></li>
+            <li><span>Training Lens</span><strong>ADDCA ADHD coaching in progress, integrated with ExEF's coaching scope controls.</strong></li>
+            <li><span>Scope</span><strong>Skills-based coaching, not therapy, diagnosis, or medical treatment.</strong></li>
           </ul>
         </div>
         <div>
@@ -30,16 +30,6 @@ NEW_FOOTER = '''\
             <li><a href="coaching-services.html">Services</a></li>
             <li><a href="meet-the-team.html">Team</a></li>
             <li><a href="free-executive-functioning-tests.html">Assessments</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4><strong>Pathway</strong></h4>
-          <ul class="footer__links">
-            <li><a href="curriculum.html">Curriculum</a></li>
-            <li><a href="certification.html">Certification Path</a></li>
-            <li><a href="accreditation.html">Credential Status</a></li>
-            <li><a href="ExEF-Competency-Crosswalk-Map.html">Competency Crosswalk</a></li>
-            <li><a href="ExEF-Capstone-Transparency-Rubric.pdf">Capstone Rubric PDF</a></li>
           </ul>
         </div>
         <div>
@@ -58,7 +48,6 @@ NEW_FOOTER = '''\
             <li><a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a Consultation</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="search.html">Search</a></li>
-            <li><a href="verify.html">Verify Certificate</a></li>
           </ul>
         </div>
       </div>

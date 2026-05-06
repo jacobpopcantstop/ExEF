@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var STORAGE_KEY = 'exef_win_vault_visual_v1';
+  var STORAGE_KEY = 'exef_win_page_visual_v1';
   var MAX_WINS = 8;
   var prompts = [
     'What felt a little easier, lighter, or more possible than usual?',
@@ -169,7 +169,7 @@
 
     ctx.fillStyle = '#6b7a86';
     ctx.font = '700 28px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-    ctx.fillText('WIN VAULT', margin, y);
+    ctx.fillText('WIN PAGE', margin, y);
 
     y += 96;
     ctx.fillStyle = '#162b3c';
@@ -213,7 +213,7 @@
     });
 
     var link = document.createElement('a');
-    link.download = 'exef-win-vault.png';
+    link.download = 'exef-win-page.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
     setStatus('Visual downloaded.');

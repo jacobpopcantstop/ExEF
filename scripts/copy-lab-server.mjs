@@ -3,6 +3,7 @@ import path from 'node:path';
 import http from 'node:http';
 import { fileURLToPath } from 'node:url';
 import {
+  getCopyLabPageSet,
   getWorkspaceState,
   saveChunkEdit,
   skipChunk
@@ -111,6 +112,10 @@ const server = http.createServer(async (request, response) => {
 
     if (request.method === 'GET' && url.pathname.startsWith('/preview/')) {
       const relativePath = decodeURIComponent(url.pathname.replace('/preview/', ''));
+      if (!getCopyLabPageSet(rootDir).has(relativePath)) {
+        sendText(response, 404, 'Not found');
+        return;
+      }
       const targetPath = path.resolve(rootDir, relativePath);
       if (!targetPath.startsWith(rootDir) || !targetPath.endsWith('.html') || !fs.existsSync(targetPath)) {
         sendText(response, 404, 'Not found');

@@ -184,11 +184,36 @@ export function extractEditableChunks(source, relativePath) {
 }
 
 export function listHtmlFiles(rootDir) {
+  const visiblePages = getCopyLabPageSet(rootDir);
   return fs
     .readdirSync(rootDir, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.html'))
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.html') && visiblePages.has(entry.name))
     .map((entry) => entry.name)
     .sort((a, b) => a.localeCompare(b));
+}
+
+export function loadVisibilityConfig(rootDir) {
+  const configPath = path.join(rootDir, 'data', 'site-visibility.json');
+  try {
+    return JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  } catch (error) {
+    return {};
+  }
+}
+
+export function getCopyLabPageSet(rootDir) {
+  const config = loadVisibilityConfig(rootDir);
+  if (Array.isArray(config.copyLabOnlyPages) && config.copyLabOnlyPages.length) {
+    return new Set(config.copyLabOnlyPages);
+  }
+
+  const hidden = new Set([...(config.hiddenPages || []), ...(config.utilityPages || [])]);
+  return new Set(
+    fs
+      .readdirSync(rootDir, { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.endsWith('.html') && !hidden.has(entry.name))
+      .map((entry) => entry.name)
+  );
 }
 
 export function extractWorkspaceChunks(rootDir) {
@@ -288,6 +313,9 @@ export function saveChunkEdit(rootDir, progressPath, payload) {
   if (!relativePath) {
     throw new Error('Invalid chunk id.');
   }
+  if (!getCopyLabPageSet(rootDir).has(relativePath)) {
+    throw new Error('That page is not part of the current Copy Lab editing surface.');
+  }
 
   const filePath = path.join(rootDir, relativePath);
   const source = fs.readFileSync(filePath, 'utf8');
@@ -333,6 +361,10 @@ export function skipChunk(rootDir, progressPath, payload) {
   const { id } = payload || {};
   if (!id) {
     throw new Error('Missing chunk id.');
+  }
+  const [relativePath] = id.split('::');
+  if (!relativePath || !getCopyLabPageSet(rootDir).has(relativePath)) {
+    throw new Error('That page is not part of the current Copy Lab editing surface.');
   }
 
   const progress = loadProgress(progressPath);

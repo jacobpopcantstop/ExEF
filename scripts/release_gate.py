@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from html.parser import HTMLParser
 from pathlib import Path
+import json
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
@@ -18,7 +19,17 @@ REQUIRED_HEADERS = [
     "Strict-Transport-Security",
     "Content-Security-Policy",
 ]
-IGNORED_HTML = {"404.html"}
+
+def load_visibility() -> dict:
+    path = ROOT / "data" / "site-visibility.json"
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {}
+
+
+VISIBILITY = load_visibility()
+IGNORED_HTML = {"404.html", *VISIBILITY.get("hiddenPages", []), *VISIBILITY.get("utilityPages", [])}
 CANONICAL_OVERRIDES = {
     "checkout.html": CANONICAL_DOMAIN + "store.html#purchase-status",
     "coaching-home.html": CANONICAL_DOMAIN + "coaching/",

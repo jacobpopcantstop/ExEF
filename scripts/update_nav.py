@@ -10,15 +10,6 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 NEW_NAV_INNER = """
         <div class="nav__cluster">
           <a href="coaching-home.html" class="nav__link">Coaching</a>
-          <div class="nav__dropdown">
-            <button class="nav__link nav__dropdown-trigger" aria-expanded="false" aria-haspopup="true"><strong>Pathway</strong> <svg aria-hidden="true" viewBox="0 0 12 8" width="12" height="8" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 1 6 6 11 1"/></svg></button>
-            <div class="nav__dropdown-menu">
-              <a href="curriculum.html" class="nav__dropdown-item">Curriculum</a>
-              <a href="certification.html" class="nav__dropdown-item">Certification</a>
-              <a href="accreditation.html" class="nav__dropdown-item">Credential Status</a>
-              <a href="ExEF-Competency-Crosswalk-Map.html" class="nav__dropdown-item">Competency Crosswalk</a>
-            </div>
-          </div>
           <a href="free-executive-functioning-tests.html" class="nav__link">Assessments</a>
           <a href="resources.html" class="nav__link">Resources</a>
           <a href="meet-the-team.html" class="nav__link">Team</a>
@@ -61,22 +52,6 @@ for f in ['meet-the-team.html', 'about.html']:
 for f in ['store.html', 'checkout.html', 'checkout-return.html', 'enroll.html']:
     ACTIVE_MAP[f] = ('Store', False)
 
-# Pathway dropdown trigger
-for f in ['curriculum.html', 'certification.html', 'accreditation.html',
-          'ExEF-Competency-Crosswalk-Map.html', 'ExEF-Capstone-Transparency-Rubric.html',
-          'certificate.html', 'verify.html']:
-    ACTIVE_MAP[f] = ('Pathway', True)
-
-# Module files
-for i in range(1, 20):
-    ACTIVE_MAP[f'module-{i}.html'] = ('Learn', True)
-# Also handle letter modules
-for letter in 'abcdefghij':
-    ACTIVE_MAP[f'module-{letter}-neuroscience.html'] = ('Learn', True)
-    ACTIVE_MAP[f'module-{letter}-pedagogy.html'] = ('Learn', True)
-    ACTIVE_MAP[f'module-{letter}-interventions.html'] = ('Learn', True)
-    ACTIVE_MAP[f'module-{letter}.html'] = ('Learn', True)
-
 
 def apply_active_class(html, filename):
     """Add nav__link--active to the appropriate link for this page."""
@@ -85,8 +60,6 @@ def apply_active_class(html, filename):
     # Check exact match first
     if basename in ACTIVE_MAP:
         target_text, is_dropdown = ACTIVE_MAP[basename]
-    elif basename.startswith('module-'):
-        target_text, is_dropdown = ('Pathway', True)
     else:
         return html
 
@@ -150,8 +123,6 @@ def main():
             if basename in ACTIVE_MAP:
                 target, is_drop = ACTIVE_MAP[basename]
                 active_info = f' (active: {target}{"[dropdown]" if is_drop else ""})'
-            elif basename.startswith('module-'):
-                active_info = ' (active: Pathway[dropdown])'
             updated.append(f'  ✓ {filename}{active_info}')
         else:
             skipped.append(f'  ✗ {filename} (no nav__links found)')

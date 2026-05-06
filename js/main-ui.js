@@ -79,7 +79,7 @@ window.EFI.registerMainModule(function (shared) {
     brand.className = 'footer__brand footer__brand--institutional';
     var eyebrow = document.createElement('p');
     eyebrow.className = 'footer__eyebrow';
-    eyebrow.textContent = 'Executive Function Coaching + Credentialing';
+    eyebrow.textContent = 'Executive Function Coaching';
     brand.appendChild(eyebrow);
 
     var logo = document.createElement('a');
@@ -96,13 +96,13 @@ window.EFI.registerMainModule(function (shared) {
     brand.appendChild(logo);
 
     var description = document.createElement('p');
-    description.textContent = 'Executive function and ADHD coaching, public curriculum, and transparent credentialing artifacts. Led by Jacob Rozansky, ICF-certified coach completing ADDCA ADHD coach training.';
+    description.textContent = 'Executive function and ADHD coaching with Jacob Rozansky. Free assessments, practical tools, and short-form resources to help you find the next workable step.';
     brand.appendChild(description);
 
     var dossier = document.createElement('ul');
     dossier.className = 'footer__dossier';
-    appendFooterDossierItem(dossier, 'Training Lens', 'ADDCA ADHD coaching in progress, integrated with ExEF\'s EF curriculum and scope controls.');
-    appendFooterDossierItem(dossier, 'Credential Boundary', 'ExEF credentials are internal standards workflows with public review criteria and verification.');
+    appendFooterDossierItem(dossier, 'Training Lens', 'ADDCA ADHD coaching in progress, integrated with ExEF\'s coaching scope controls.');
+    appendFooterDossierItem(dossier, 'Scope', 'Skills-based coaching, not therapy, diagnosis, or medical treatment.');
     brand.appendChild(dossier);
     grid.appendChild(brand);
 
@@ -111,13 +111,6 @@ window.EFI.registerMainModule(function (shared) {
       { href: 'coaching-services.html', label: 'Services' },
       { href: 'meet-the-team.html', label: 'Team' },
       { href: 'free-executive-functioning-tests.html', label: 'Assessments' }
-    ]);
-    appendFooterListSection(grid, 'Pathway', [
-      { href: 'curriculum.html', label: 'Curriculum' },
-      { href: 'certification.html', label: 'Certification Path' },
-      { href: 'accreditation.html', label: 'Credential Status' },
-      { href: 'ExEF-Competency-Crosswalk-Map.html', label: 'Competency Crosswalk' },
-      { href: 'ExEF-Capstone-Transparency-Rubric.pdf', label: 'Capstone Rubric PDF' }
     ]);
     appendFooterListSection(grid, 'Resources', [
       { href: 'resources.html', label: 'Resources' },
@@ -129,8 +122,7 @@ window.EFI.registerMainModule(function (shared) {
       { href: 'store.html', label: 'Services and Pricing' },
       { href: CONSULT_URL, label: 'Book a Consultation' },
       { href: 'mailto:jacob@exef.org', label: 'jacob@exef.org' },
-      { href: 'search.html', label: 'Search' },
-      { href: 'verify.html', label: 'Verify Certificate' }
+      { href: 'search.html', label: 'Search' }
     ]);
     container.appendChild(grid);
 
@@ -150,13 +142,11 @@ window.EFI.registerMainModule(function (shared) {
       if (footerBottom.querySelector('.footer__legal')) return;
       var legal = document.createElement('span');
       legal.className = 'footer__legal';
-      appendTextLink(legal, 'privacy.html', 'Privacy');
-      legal.appendChild(document.createTextNode(' · '));
-      appendTextLink(legal, 'terms.html', 'Terms');
-      legal.appendChild(document.createTextNode(' · '));
-      appendTextLink(legal, 'verify.html', 'Verify Certificate');
-      footerBottom.appendChild(legal);
-    });
+    appendTextLink(legal, 'privacy.html', 'Privacy');
+    legal.appendChild(document.createTextNode(' · '));
+    appendTextLink(legal, 'terms.html', 'Terms');
+    footerBottom.appendChild(legal);
+  });
   })();
 
   (function normalizePrimaryNav() {
@@ -175,42 +165,13 @@ window.EFI.registerMainModule(function (shared) {
       'executive-functioning-iep-goal-bank.html', 'barkley-model-guide.html',
       'barkley-vs-brown.html', 'further-sources.html', 'scope-of-practice.html'
     ];
-    var credentialPages = [
-      'curriculum.html', 'certification.html', 'accreditation.html',
-      'ExEF-Competency-Crosswalk-Map.html', 'ExEF-Capstone-Transparency-Rubric.html',
-      'certificate.html', 'verify.html'
-    ];
-
     function isActive(pageList) {
-      return pageList.indexOf(currentPage) !== -1 || (/^module-/.test(currentPage) && pageList === credentialPages);
+      return pageList.indexOf(currentPage) !== -1;
     }
 
     function makeNavLink(container, href, label, pageList) {
       var className = 'nav__link' + (pageList && isActive(pageList) ? ' nav__link--active' : '');
       return appendTextLink(container, href, label, className);
-    }
-
-    function appendCredentialDropdown(container) {
-      var dropdown = document.createElement('div');
-      dropdown.className = 'nav__dropdown';
-      var trigger = document.createElement('button');
-      trigger.className = 'nav__link' + (isActive(credentialPages) ? ' nav__link--active' : '') + ' nav__dropdown-trigger';
-      trigger.setAttribute('aria-expanded', 'false');
-      trigger.setAttribute('aria-haspopup', 'true');
-      var strong = document.createElement('strong');
-      strong.textContent = 'Pathway';
-      trigger.appendChild(strong);
-      trigger.appendChild(document.createTextNode(' '));
-      trigger.innerHTML += '<svg aria-hidden="true" viewBox="0 0 12 8" width="12" height="8" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 1 6 6 11 1"/></svg>';
-      dropdown.appendChild(trigger);
-      var menu = document.createElement('div');
-      menu.className = 'nav__dropdown-menu';
-      appendTextLink(menu, 'curriculum.html', 'Curriculum', 'nav__dropdown-item');
-      appendTextLink(menu, 'certification.html', 'Certification', 'nav__dropdown-item');
-      appendTextLink(menu, 'accreditation.html', 'Credential Status', 'nav__dropdown-item');
-      appendTextLink(menu, 'ExEF-Competency-Crosswalk-Map.html', 'Competency Crosswalk', 'nav__dropdown-item');
-      dropdown.appendChild(menu);
-      container.appendChild(dropdown);
     }
 
     document.querySelectorAll('.nav__links').forEach(function (links) {
@@ -221,7 +182,6 @@ window.EFI.registerMainModule(function (shared) {
       var primaryCluster = document.createElement('div');
       primaryCluster.className = 'nav__cluster';
       makeNavLink(primaryCluster, 'coaching-home.html', 'Coaching', ['coaching-home.html', 'coaching-contact.html', 'coaching-creative.html', 'coaching-about.html', 'coaching-methodology.html', 'coaching-services.html']);
-      appendCredentialDropdown(primaryCluster);
       makeNavLink(primaryCluster, 'free-executive-functioning-tests.html', 'Assessments', assessmentPages);
       makeNavLink(primaryCluster, 'resources.html', 'Resources', resourcePages);
       makeNavLink(primaryCluster, 'meet-the-team.html', 'Team', ['meet-the-team.html', 'about.html']);

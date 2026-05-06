@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {
   extractEditableChunks,
+  listHtmlFiles,
   getWorkspaceState,
   htmlToPlainText,
   loadProgress,
@@ -72,4 +73,45 @@ test('skipChunk awards a point and leaves the chunk available for later', () => 
   assert.equal(skipped.stats.points, 1);
   assert.equal(skipped.stats.skips, 1);
   assert.equal(skipped.stats.remaining, 1);
+});
+
+test('Copy Lab only queues configured site-relevant pages', () => {
+  const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), 'copy-lab-root-'));
+  fs.mkdirSync(path.join(rootDir, 'data'));
+  fs.writeFileSync(path.join(rootDir, 'data/site-visibility.json'), JSON.stringify({
+    hiddenPages: ['hidden-pathway.html'],
+    copyLabOnlyPages: ['live-page.html']
+  }));
+  fs.writeFileSync(path.join(rootDir, 'live-page.html'), '<main><p>This live page should be available for careful copy editing.</p></main>');
+  fs.writeFileSync(path.join(rootDir, 'hidden-pathway.html'), '<main><p>This hidden page should not be queued for copy editing.</p></main>');
+  fs.writeFileSync(path.join(rootDir, 'utility.html'), '<main><p>This utility page should not be queued either.</p></main>');
+
+  assert.deepEqual(listHtmlFiles(rootDir), ['live-page.html']);
+  const state = getWorkspaceState(rootDir, path.join(rootDir, 'tmp/progress.json'));
+  assert.equal(state.stats.total, 1);
+  assert.equal(state.pages[0].file, 'live-page.html');
+});
+
+test('save and skip reject chunks outside the current Copy Lab surface', () => {
+  const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), 'copy-lab-root-'));
+  const progressPath = path.join(rootDir, 'tmp/progress.json');
+  fs.mkdirSync(path.join(rootDir, 'data'));
+  fs.writeFileSync(path.join(rootDir, 'data/site-visibility.json'), JSON.stringify({
+    hiddenPages: ['hidden-pathway.html'],
+    copyLabOnlyPages: ['live-page.html']
+  }));
+  fs.writeFileSync(path.join(rootDir, 'hidden-pathway.html'), '<main><p>This hidden pathway page should never be edited through Copy Lab.</p></main>');
+
+  assert.throws(
+    () => saveChunkEdit(rootDir, progressPath, {
+      id: 'hidden-pathway.html::p::1',
+      originalText: 'This hidden pathway page should never be edited through Copy Lab.',
+      updatedText: 'This edit should be rejected before touching the file.'
+    }),
+    /not part of the current Copy Lab/
+  );
+  assert.throws(
+    () => skipChunk(rootDir, progressPath, { id: 'hidden-pathway.html::p::1' }),
+    /not part of the current Copy Lab/
+  );
 });

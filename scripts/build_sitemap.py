@@ -4,13 +4,25 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
 import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DOMAIN = "https://executivefunctioninginstitute.com/"
 SITEMAP = ROOT / "sitemap.xml"
-IGNORED = {"404.html"}
+
+
+def load_visibility() -> dict:
+    path = ROOT / "data" / "site-visibility.json"
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {}
+
+
+VISIBILITY = load_visibility()
+IGNORED = {"404.html", *VISIBILITY.get("hiddenPages", []), *VISIBILITY.get("utilityPages", [])}
 
 PRIORITIES = {
     "index.html": "1.0",

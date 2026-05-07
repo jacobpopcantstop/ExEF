@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DOMAIN = "https://executivefunctioninginstitute.com/"
+DOMAIN = "https://exef.org/"
 SITEMAP = ROOT / "sitemap.xml"
 
 

@@ -63,33 +63,35 @@
 
   var HARDER_MISCONCEPTIONS = ['willpower_over_protocol', 'planning_without_transfer', 'ethics_scope_drift'];
 
+  function isHardQuestion(q) {
+    if (!q) return false;
+    if (q.difficulty === 'hard') return true;
+    return HARDER_MISCONCEPTIONS.indexOf(q.misconception_primary) !== -1 ||
+           HARDER_MISCONCEPTIONS.indexOf(q.misconception_secondary) !== -1;
+  }
+
+  function isEasyQuestion(q) {
+    return !!(q && q.difficulty === 'easy' && !isHardQuestion(q));
+  }
+
   function selectAdaptiveQuestions(questions, adherenceLevel) {
     if (!Array.isArray(questions) || !questions.length) return questions;
 
     if (adherenceLevel === 'high') {
-      var hard = questions.filter(function(q) {
-        return HARDER_MISCONCEPTIONS.indexOf(q.misconception_primary) !== -1 ||
-               HARDER_MISCONCEPTIONS.indexOf(q.misconception_secondary) !== -1;
-      });
-      var easy = questions.filter(function(q) {
-        return HARDER_MISCONCEPTIONS.indexOf(q.misconception_primary) === -1 &&
-               HARDER_MISCONCEPTIONS.indexOf(q.misconception_secondary) === -1;
-      });
+      var hard = questions.filter(isHardQuestion);
+      var rest = questions.filter(function (q) { return !isHardQuestion(q); });
       // Present harder items first; cap at 6, floor at 5
-      return hard.concat(easy).slice(0, Math.max(5, Math.min(6, questions.length)));
+      return hard.concat(rest).slice(0, Math.max(5, Math.min(6, questions.length)));
     }
 
     if (adherenceLevel === 'low') {
-      // Simpler concepts first for maximum reinforcement
-      var simpleFirst = questions.filter(function(q) {
-        return HARDER_MISCONCEPTIONS.indexOf(q.misconception_primary) === -1 &&
-               HARDER_MISCONCEPTIONS.indexOf(q.misconception_secondary) === -1;
+      // Easiest first, then medium, then hard for maximum reinforcement
+      var easyFirst = questions.filter(isEasyQuestion);
+      var hardLast = questions.filter(isHardQuestion);
+      var medium = questions.filter(function (q) {
+        return !isEasyQuestion(q) && !isHardQuestion(q);
       });
-      var harderLast = questions.filter(function(q) {
-        return HARDER_MISCONCEPTIONS.indexOf(q.misconception_primary) !== -1 ||
-               HARDER_MISCONCEPTIONS.indexOf(q.misconception_secondary) !== -1;
-      });
-      return simpleFirst.concat(harderLast);
+      return easyFirst.concat(medium).concat(hardLast);
     }
 
     return questions; // medium: standard order, all questions

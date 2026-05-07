@@ -10,7 +10,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
-CANONICAL_DOMAIN = "https://executivefunctioninginstitute.com/"
+CANONICAL_DOMAIN = "https://exef.org/"
 REQUIRED_HEADERS = [
     "X-Frame-Options",
     "X-Content-Type-Options",

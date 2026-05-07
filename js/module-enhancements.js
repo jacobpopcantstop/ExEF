@@ -1069,7 +1069,7 @@
       banner.appendChild(bannerIntro);
       banner.appendChild(buildChecklist([
         {
-          href: 'coaching-services.html',
+          href: 'coaching-home.html#service-lanes',
           label: 'Schedule a check-in with a coach',
           suffix: ' — 20 minutes can reset momentum.'
         },

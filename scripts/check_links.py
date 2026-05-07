@@ -5,6 +5,7 @@ import sys
 import argparse
 import urllib.request
 import urllib.error
+import json
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -14,6 +15,8 @@ class Parser(HTMLParser):
         self.links = []
     def handle_starttag(self, tag, attrs):
         d = dict(attrs)
+        if tag == 'link' and d.get('rel') == 'canonical':
+            return
         if tag in ('a', 'link') and 'href' in d:
             self.links.append(d['href'])
         if tag == 'script' and 'src' in d:
@@ -25,7 +28,14 @@ args = parser.parse_args()
 
 bad = []
 external = set()
+try:
+    visibility = json.loads((ROOT / 'data' / 'site-visibility.json').read_text(encoding='utf-8'))
+except FileNotFoundError:
+    visibility = {}
+hidden_pages = set(visibility.get('hiddenPages', []))
 for html in ROOT.glob('*.html'):
+    if html.name in hidden_pages:
+        continue
     p = Parser()
     p.feed(html.read_text(encoding='utf-8', errors='ignore'))
     for link in p.links:

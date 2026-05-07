@@ -27,7 +27,7 @@ NEW_FOOTER = '''\
           <h4>Coaching</h4>
           <ul class="footer__links">
             <li><a href="coaching-home.html">Support Paths</a></li>
-            <li><a href="coaching-services.html">Services</a></li>
+            <li><a href="coaching-home.html#service-lanes">Services</a></li>
             <li><a href="meet-the-team.html">Team</a></li>
             <li><a href="free-executive-functioning-tests.html">Assessments</a></li>
           </ul>
@@ -44,7 +44,7 @@ NEW_FOOTER = '''\
         <div>
           <h4>Connect</h4>
           <ul class="footer__links">
-            <li><a href="store.html">Services and Pricing</a></li>
+            <li><a href="coaching-home.html#service-lanes">Services</a></li>
             <li><a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a Consultation</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="search.html">Search</a></li>

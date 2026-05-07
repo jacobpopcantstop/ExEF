@@ -1025,7 +1025,7 @@ window.EFI.registerMainModule(function (shared) {
 
     appendFooterListSection(grid, 'Coaching', [
       { href: 'coaching-home.html', label: 'Support Paths' },
-      { href: 'coaching-services.html', label: 'Services' },
+      { href: 'coaching-home.html#service-lanes', label: 'Services' },
       { href: 'meet-the-team.html', label: 'Team' },
       { href: 'free-executive-functioning-tests.html', label: 'Assessments' }
     ]);
@@ -1036,7 +1036,7 @@ window.EFI.registerMainModule(function (shared) {
       { href: 'blog.html', label: 'Blog' }
     ]);
     appendFooterListSection(grid, 'Connect', [
-      { href: 'store.html', label: 'Services and Pricing' },
+      { href: 'coaching-home.html#service-lanes', label: 'Services' },
       { href: CONSULT_URL, label: 'Book a Consultation' },
       { href: 'mailto:jacob@exef.org', label: 'jacob@exef.org' },
       { href: 'search.html', label: 'Search' }
@@ -1098,11 +1098,10 @@ window.EFI.registerMainModule(function (shared) {
 
       var primaryCluster = document.createElement('div');
       primaryCluster.className = 'nav__cluster';
-      makeNavLink(primaryCluster, 'coaching-home.html', 'Coaching', ['coaching-home.html', 'coaching-contact.html', 'coaching-creative.html', 'coaching-about.html', 'coaching-methodology.html', 'coaching-services.html']);
+      makeNavLink(primaryCluster, 'coaching-home.html', 'Coaching', ['coaching-home.html', 'coaching-contact.html', 'coaching-creative.html', 'coaching-about.html', 'coaching-methodology.html']);
       makeNavLink(primaryCluster, 'free-executive-functioning-tests.html', 'Assessments', assessmentPages);
       makeNavLink(primaryCluster, 'resources.html', 'Resources', resourcePages);
       makeNavLink(primaryCluster, 'meet-the-team.html', 'Team', ['meet-the-team.html', 'about.html']);
-      makeNavLink(primaryCluster, 'store.html', 'Store', ['store.html', 'checkout.html', 'checkout-return.html', 'enroll.html']);
       var authWrap = document.createElement('span');
       authWrap.className = 'nav__auth';
       authNodes.forEach(function (node) {
@@ -1120,19 +1119,6 @@ window.EFI.registerMainModule(function (shared) {
       supportCluster.appendChild(consultLink);
       links.appendChild(supportCluster);
     });
-  })();
-
-  (function injectFloatingStoreCTA() {
-    if (!document.body.hasAttribute('data-enable-floating-store')) return;
-    if (window.location.pathname.split('/').pop() === 'store.html') return;
-    if (window.location.pathname.split('/').pop() === 'checkout.html') return;
-    if (document.querySelector('.floating-store-cta')) return;
-    var cta = document.createElement('a');
-    cta.href = 'store.html';
-    cta.className = 'floating-store-cta';
-    cta.textContent = 'Reviewed Services';
-    cta.setAttribute('data-analytics-event', 'floating_store_click');
-    document.body.appendChild(cta);
   })();
 
   (function injectModuleScrollProgress() {

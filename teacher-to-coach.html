@@ -20,7 +20,6 @@
           <a href="free-executive-functioning-tests.html" class="nav__link">Assessments</a>
           <a href="resources.html" class="nav__link nav__link--active">Resources</a>
           <a href="meet-the-team.html" class="nav__link">Team</a>
-          <a href="store.html" class="nav__link">Store</a>
         </div>
         <div class="nav__cluster nav__cluster--support">
           <span class="nav__auth"></span>
@@ -40,13 +39,13 @@
             <p>This page helps educators test the transition path in the right order before they spend money.</p>
             <ul class="checklist">
               <li>Step 1: use ROI and launchpad tools to test whether a coaching shift is actually viable</li>
-              <li>Step 2: inspect certification standards and public artifacts if the role change still fits</li>
-              <li>Step 3: compare reviewed services only after the standards and scope are clear</li>
+              <li>Step 2: compare the scope boundaries against the kind of support you want to provide</li>
+              <li>Step 3: use the resource hub to choose the next public tool or planning page</li>
             </ul>
             <div class="button-group">
               <a class="btn btn--primary btn--sm" href="#launchpad">Start Free Launchpad</a>
-              <a class="btn btn--secondary btn--sm" href="certification.html">Review Standards</a>
-              <a class="btn btn--ghost btn--sm" href="store.html#store-router">Compare Reviewed Services</a>
+              <a class="btn btn--secondary btn--sm" href="scope-of-practice.html">Review Scope</a>
+              <a class="btn btn--ghost btn--sm" href="resources.html">Browse Resources</a>
             </div>
           </article>
         </div>
@@ -55,7 +54,7 @@
 
     <section class="section">
       <div class="container grid grid--2 gap-2xl">
-        <div class="card"><h2>Transition Realities</h2><ul class="checklist"><li>From grading compliance to building self-regulation</li><li>From district constraints to scalable private practice</li><li>From fixed salary to client-capacity planning</li></ul><div class="journey-links"><a class="btn btn--primary btn--sm" href="#launchpad" data-analytics-event="teacher_to_coach_to_launchpad">Start Free Launchpad</a><a class="btn btn--secondary btn--sm" href="gap-analyzer.html" data-analytics-event="teacher_to_coach_to_gap_analyzer">Check Skills Gap</a></div></div>
+        <div class="card"><h2>Transition Realities</h2><ul class="checklist"><li>From grading compliance to building self-regulation</li><li>From district constraints to scalable private practice</li><li>From fixed salary to client-capacity planning</li></ul><div class="journey-links"><a class="btn btn--primary btn--sm" href="#launchpad" data-analytics-event="teacher_to_coach_to_launchpad">Start Free Launchpad</a><a class="btn btn--secondary btn--sm" href="scope-of-practice.html" data-analytics-event="teacher_to_coach_to_scope">Review Scope</a></div></div>
         <div class="tool-panel"><h2>Coaching ROI Calculator</h2><p>Estimate the weekly client load needed to model a target income at common rate points. ExEF uses $225/hour here as an internal planning example rather than a guaranteed market rate.</p><form id="roi-form"><div class="form-group"><label for="salary">Current annual salary (USD)</label><input id="salary" class="form-control" type="number" min="1" value="70000" required></div><div class="form-group"><label for="hours">Billable hours per client per month</label><input id="hours" class="form-control" type="number" min="1" value="4" required></div><div class="form-group"><label for="rate">Target hourly rate</label><select id="rate" class="form-control"><option value="200">$200/hr</option><option value="225" selected>$225/hr</option><option value="250">$250/hr</option></select></div><button class="btn btn--primary" type="submit" data-analytics-event="roi_calculate_submit">Calculate</button></form><div id="roi-output" class="tool-output" aria-live="polite" role="status" tabindex="-1"></div><p style="font-size:0.82rem;color:var(--color-text-muted);margin-top:var(--space-sm);">Illustrative planning tool only. This tool does not function as an earnings guarantee, pricing recommendation, or financial advice.</p></div>
       </div>
     </section>
@@ -80,8 +79,8 @@
             </div>
             <div class="journey-links">
               <button class="btn btn--primary btn--sm" type="submit" id="launchpad-submit" data-analytics-event="launchpad_submit_click">Start Free Course</button>
-              <a class="btn btn--secondary btn--sm" href="certification.html" data-analytics-event="launchpad_to_store">Review Standards</a>
-              <a class="btn btn--ghost btn--sm" href="store.html#store-router">Compare Services Later</a>
+              <a class="btn btn--secondary btn--sm" href="scope-of-practice.html" data-analytics-event="launchpad_to_scope">Review Scope</a>
+              <a class="btn btn--ghost btn--sm" href="resources.html">Browse Resources</a>
             </div>
           </form>
           <p id="launchpad-output" class="notice" style="display:none;margin-top:1rem;" role="status" aria-live="polite" tabindex="-1"></p>
@@ -133,7 +132,7 @@
           <h4>Coaching</h4>
           <ul class="footer__links">
             <li><a href="coaching-home.html">Support Paths</a></li>
-            <li><a href="coaching-services.html">Services</a></li>
+            <li><a href="coaching-home.html#service-lanes">Services</a></li>
             <li><a href="meet-the-team.html">Team</a></li>
             <li><a href="free-executive-functioning-tests.html">Assessments</a></li>
           </ul>
@@ -150,7 +149,7 @@
         <div>
           <h4>Connect</h4>
           <ul class="footer__links">
-            <li><a href="store.html">Services and Pricing</a></li>
+            <li><a href="coaching-home.html#service-lanes">Services</a></li>
             <li><a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a Consultation</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="search.html">Search</a></li>

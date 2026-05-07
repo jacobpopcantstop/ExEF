@@ -8388,6 +8388,11 @@ body.page-home .page-hero-figure--responsive img {
   border-radius: var(--border-radius-lg);
 }
 
+.page-hero-figure--jacob-bio img,
+body.page-home .page-hero-figure--jacob-bio img {
+  object-position: center 34%;
+}
+
 @media (max-width: 960px) {
   .page-hero-figure--responsive img,
   body.page-home .page-hero-figure--responsive img {

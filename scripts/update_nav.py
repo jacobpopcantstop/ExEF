@@ -13,7 +13,6 @@ NEW_NAV_INNER = """
           <a href="free-executive-functioning-tests.html" class="nav__link">Assessments</a>
           <a href="resources.html" class="nav__link">Resources</a>
           <a href="meet-the-team.html" class="nav__link">Team</a>
-          <a href="store.html" class="nav__link">Store</a>
         </div>
         <div class="nav__cluster nav__cluster--support">
           <span class="nav__auth"></span>
@@ -34,7 +33,7 @@ for f in ['free-executive-functioning-tests.html', 'esqr.html', 'ef-profile-stor
 
 # Coaching
 for f in ['coaching-home.html', 'coaching-contact.html', 'coaching-creative.html',
-          'coaching-about.html', 'coaching-methodology.html', 'coaching-services.html']:
+          'coaching-about.html', 'coaching-methodology.html']:
     ACTIVE_MAP[f] = ('Coaching', False)
 
 # Resources / public library
@@ -47,11 +46,6 @@ for f in ['resources.html', 'blog.html', 'open-ef-resources-directory.html', 'pr
 # Team / about
 for f in ['meet-the-team.html', 'about.html']:
     ACTIVE_MAP[f] = ('Team', False)
-
-# Store / purchase
-for f in ['store.html', 'checkout.html', 'checkout-return.html', 'enroll.html']:
-    ACTIVE_MAP[f] = ('Store', False)
-
 
 def apply_active_class(html, filename):
     """Add nav__link--active to the appropriate link for this page."""

@@ -385,6 +385,7 @@
     lines.push('- Error handling: wrap the main loop in try/catch. On fatal error, send me a single notification email (not one per thread) and store last-error + timestamp in UserProperties so the digest can surface it.');
     if (data.draftCategories.length > 0) {
       lines.push('- Drafts: only create a draft if Gemini returns a confidence >= ' + data.confidence.toFixed(2) + '. Otherwise label the thread for manual review with a "Review" label.');
+      lines.push('- Draft age limit: never create a draft reply for any email or thread whose most recent message is more than 30 days old. Label it for manual review instead.');
     }
     lines.push('- Include a one-time setup() function that (a) creates any missing labels so the first run does not fail on a MailLabel lookup, (b) installs the time-based triggers for the main sweep (hourly) and digest (daily), checking first whether each already exists to avoid duplicates. Non-dev users will forget to install triggers manually and the script will silently never run.');
     lines.push('');

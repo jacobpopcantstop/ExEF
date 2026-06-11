@@ -30,7 +30,10 @@ function b64urlDecode(input) {
 }
 
 function signingSecret() {
-  return requiredEnv('EFI_PURCHASE_SIGNING_SECRET') || requiredEnv('EFI_DOWNLOAD_SIGNING_SECRET') || 'efi-dev-signing-secret';
+  const secret = requiredEnv('EFI_PURCHASE_SIGNING_SECRET') || requiredEnv('EFI_DOWNLOAD_SIGNING_SECRET');
+  if (secret) return secret;
+  if (process.env.NETLIFY_DEV === 'true') return 'efi-dev-signing-secret';
+  throw new Error('EFI_PURCHASE_SIGNING_SECRET is not configured');
 }
 
 function sign(payload) {
@@ -93,7 +96,10 @@ async function saveAudit(entry) {
 }
 
 function csrfSecret() {
-  return requiredEnv('EFI_CSRF_SIGNING_SECRET') || 'efi-dev-csrf-secret';
+  const secret = requiredEnv('EFI_CSRF_SIGNING_SECRET');
+  if (secret) return secret;
+  if (process.env.NETLIFY_DEV === 'true') return 'efi-dev-csrf-secret';
+  throw new Error('EFI_CSRF_SIGNING_SECRET is not configured');
 }
 
 function signCsrfPayload(raw) {

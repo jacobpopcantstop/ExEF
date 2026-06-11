@@ -21,8 +21,23 @@ def load_visibility() -> dict:
         return {}
 
 
+def load_robots_disallowed() -> set:
+    """Pages disallowed in robots.txt must not appear in the sitemap."""
+    disallowed = set()
+    try:
+        for line in (ROOT / "robots.txt").read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line.lower().startswith("disallow:"):
+                path = line.split(":", 1)[1].strip().lstrip("/")
+                if path.endswith(".html"):
+                    disallowed.add(path)
+    except FileNotFoundError:
+        pass
+    return disallowed
+
+
 VISIBILITY = load_visibility()
-IGNORED = {"404.html", *VISIBILITY.get("hiddenPages", []), *VISIBILITY.get("utilityPages", [])}
+IGNORED = {"404.html", *VISIBILITY.get("hiddenPages", []), *VISIBILITY.get("utilityPages", []), *load_robots_disallowed()}
 
 PRIORITIES = {
     "index.html": "1.0",

@@ -1,6 +1,12 @@
 const { json, parseBody, requiredEnv, baseUrl, log } = require('./_common');
 const db = require('./_db');
 
+function getClientIp(event) {
+  const forwarded = String((event.headers && event.headers['x-forwarded-for']) || '').trim();
+  if (forwarded) return forwarded.split(',')[0].trim();
+  return String((event.headers && (event.headers['client-ip'] || event.headers['x-nf-client-connection-ip'])) || '').trim() || 'unknown';
+}
+
 function hasSupabaseAuth() {
   return !!(requiredEnv('SUPABASE_URL') && requiredEnv('SUPABASE_ANON_KEY'));
 }
@@ -86,12 +92,16 @@ exports.handler = async function (event) {
     if (!hasSupabaseAuth()) return json(503, { ok: false, error: 'Managed auth is not configured' });
 
     if (action === 'register') {
+      const ip = getClientIp(event);
+      const ipLimit = await db.consumeRateLimit('auth-register-ip:' + ip, 60 * 60 * 1000, 5);
+      if (!ipLimit.allowed) return json(429, { ok: false, error: 'Too many registration attempts. Please try again later.' });
+
       const email = String(body.email || '').trim().toLowerCase();
       const password = String(body.password || '');
       const name = String(body.name || '').trim();
       const emailRedirectTo = requiredEnv('BASE_URL') || baseUrl(event);
       if (!email || !email.includes('@')) return json(400, { ok: false, error: 'Valid email required' });
-      if (password.length < 6) return json(400, { ok: false, error: 'Password must be at least 6 characters' });
+      if (password.length < 8) return json(400, { ok: false, error: 'Password must be at least 8 characters' });
 
       const auth = await supabaseAuth('signup', {
         method: 'POST',
@@ -127,6 +137,11 @@ exports.handler = async function (event) {
     if (action === 'login') {
       const email = String(body.email || '').trim().toLowerCase();
       const password = String(body.password || '');
+      const ip = getClientIp(event);
+      const ipLimit = await db.consumeRateLimit('auth-login-ip:' + ip, 15 * 60 * 1000, 10);
+      if (!ipLimit.allowed) return json(429, { ok: false, error: 'Too many login attempts. Please try again later.' });
+      const emailLimit = await db.consumeRateLimit('auth-login-email:' + email, 15 * 60 * 1000, 8);
+      if (!emailLimit.allowed) return json(429, { ok: false, error: 'Too many login attempts for this account. Please try again later.' });
       const auth = await supabaseAuth('token?grant_type=password', {
         method: 'POST',
         body: { email, password }

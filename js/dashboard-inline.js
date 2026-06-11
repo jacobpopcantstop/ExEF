@@ -296,7 +296,10 @@
       if (row.feedback && row.feedback.reviewer_override && row.feedback.reviewer_override.reviewer_notes) {
         var reviewerNotes = document.createElement('p');
         reviewerNotes.style.margin = 'var(--space-xs) 0 0';
-        reviewerNotes.innerHTML = '<strong>Reviewer notes:</strong> ' + row.feedback.reviewer_override.reviewer_notes;
+        var reviewerLabel = document.createElement('strong');
+        reviewerLabel.textContent = 'Reviewer notes:';
+        reviewerNotes.appendChild(reviewerLabel);
+        reviewerNotes.appendChild(document.createTextNode(' ' + row.feedback.reviewer_override.reviewer_notes));
         card.appendChild(reviewerNotes);
       }
 

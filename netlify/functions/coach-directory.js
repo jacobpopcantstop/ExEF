@@ -14,7 +14,10 @@ function getClientIp(event) {
 }
 
 function csrfSecret() {
-  return requiredEnv('EFI_CSRF_SIGNING_SECRET') || 'efi-dev-csrf-secret';
+  const secret = requiredEnv('EFI_CSRF_SIGNING_SECRET');
+  if (secret) return secret;
+  if (process.env.NETLIFY_DEV === 'true') return 'efi-dev-csrf-secret';
+  throw new Error('EFI_CSRF_SIGNING_SECRET is not configured');
 }
 
 function signCsrfPayload(raw) {

@@ -2,7 +2,24 @@
 
 ## Unreleased
 
+### Security
+- Fixed stored XSS in dashboard reviewer notes (`js/dashboard-inline.js`) by rendering notes as text instead of HTML.
+- Signing/CSRF secrets now fail closed: dev fallback secrets only apply under `netlify dev`, never in deployed environments.
+- CORS now defaults to `https://exef.org` instead of `*` when `EFI_CORS_ORIGIN` is unset.
+- Stripe webhook demo-secret path is disabled in the production deploy context.
+- Added IP and per-email rate limiting to login and registration endpoints.
+- Raised minimum registration password length from 6 to 8 characters.
+- Expanded `Permissions-Policy` to deny accelerometer, gyroscope, magnetometer, payment, and USB.
+
+### Fixed
+- Sitemap no longer lists pages disallowed in `robots.txt` (`scripts/build_sitemap.py` now reads robots.txt).
+- Added missing canonical tag to `quality-of-life-wheel.html`.
+- Homepage now loads minified `homepage-ux.min.js`.
+- Untracked generated artifacts (`output/`, `tmp/`) and moved unlinked source DOCX files out of the web root into `docs/source-materials/`.
+
 ### Added
+- `scripts/optimize_images.py` — in-place lossy JPEG / lossless PNG compression (saved ~49 MB across `images/`).
+- Product/Offer JSON-LD structured data on `store.html`.
 - Reviewer/Admin operations page (`admin.html`) with role-gated access.
 - Static accessibility checker and CI workflow.
 - Netlify deployment headers/CSP baseline.

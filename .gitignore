@@ -29,9 +29,8 @@ npm-debug.log*
 
 # Local planning and generated artifacts
 .superpowers/
-output/playwright/*.json
-output/playwright/*.png
-output/spreadsheet/
+output/
 supabase/.temp/
 test-results/
-tmp/copy-lab-progress.json
+playwright-report/
+tmp/

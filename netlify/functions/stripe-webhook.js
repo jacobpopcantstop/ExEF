@@ -17,7 +17,10 @@ function b64urlEncode(input) {
 }
 
 function signingSecret() {
-  return requiredEnv('EFI_PURCHASE_SIGNING_SECRET') || requiredEnv('EFI_DOWNLOAD_SIGNING_SECRET') || 'efi-dev-signing-secret';
+  const secret = requiredEnv('EFI_PURCHASE_SIGNING_SECRET') || requiredEnv('EFI_DOWNLOAD_SIGNING_SECRET');
+  if (secret) return secret;
+  if (process.env.NETLIFY_DEV === 'true') return 'efi-dev-signing-secret';
+  throw new Error('EFI_PURCHASE_SIGNING_SECRET is not configured');
 }
 
 function sign(payload) {
@@ -115,7 +118,7 @@ exports.handler = async function (event) {
     if (!verifyStripeSignature(rawBody, sig, stripeSecret)) {
       return json(400, { ok: false, error: 'Invalid Stripe signature' });
     }
-  } else if (demoSecret) {
+  } else if (demoSecret && process.env.CONTEXT !== 'production') {
     const header = event.headers['x-efi-webhook-secret'] || '';
     if (header !== demoSecret) return json(401, { ok: false, error: 'Invalid demo webhook secret' });
   } else {

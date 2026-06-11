@@ -47,15 +47,28 @@ EFI.Auth = (function () {
   }
 
   function getAccessToken() {
-    return localStorage.getItem(ACCESS_TOKEN_KEY) || '';
+    var token = sessionStorage.getItem(ACCESS_TOKEN_KEY) || '';
+    if (token) return token;
+    // Migrate tokens stored by earlier versions out of localStorage.
+    var legacy = localStorage.getItem(ACCESS_TOKEN_KEY) || '';
+    if (legacy) {
+      sessionStorage.setItem(ACCESS_TOKEN_KEY, legacy);
+      var legacyRefresh = localStorage.getItem(REFRESH_TOKEN_KEY) || '';
+      if (legacyRefresh) sessionStorage.setItem(REFRESH_TOKEN_KEY, legacyRefresh);
+      localStorage.removeItem(ACCESS_TOKEN_KEY);
+      localStorage.removeItem(REFRESH_TOKEN_KEY);
+    }
+    return legacy;
   }
 
   function setManagedTokens(accessToken, refreshToken) {
-    if (accessToken) localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-    if (refreshToken) localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    if (accessToken) sessionStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+    if (refreshToken) sessionStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
   }
 
   function clearManagedTokens() {
+    sessionStorage.removeItem(ACCESS_TOKEN_KEY);
+    sessionStorage.removeItem(REFRESH_TOKEN_KEY);
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
   }
@@ -424,8 +437,8 @@ EFI.Auth = (function () {
     if (users[key]) {
       return { ok: false, error: 'An account with this email already exists.' };
     }
-    if (password.length < 6) {
-      return { ok: false, error: 'Password must be at least 6 characters.' };
+    if (password.length < 8) {
+      return { ok: false, error: 'Password must be at least 8 characters.' };
     }
     var hashed;
     try {
@@ -1101,6 +1114,11 @@ EFI.Auth = (function () {
 
   /* Init on page load */
   document.addEventListener('DOMContentLoaded', function () {
+    var bootSession = getSession();
+    if (bootSession && bootSession.mode === 'managed' && !getAccessToken()) {
+      // Managed token expired with the browser session — drop the stale session.
+      localStorage.removeItem(SESSION_KEY);
+    }
     var existingUser = getCurrentUser();
     if (existingUser && existingUser.progress) {
       hydrateLearningLoopToLocal(existingUser.progress);

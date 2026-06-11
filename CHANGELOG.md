@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Security
+- Self-hosted html2canvas and jsPDF in `js/vendor/` and removed `cdn.jsdelivr.net` from the CSP, eliminating the third-party CDN script dependency.
+- Auth tokens now live in `sessionStorage` (cleared when the browser closes) instead of `localStorage`, with one-time migration; stale managed sessions without a token are dropped on page load.
 - Fixed stored XSS in dashboard reviewer notes (`js/dashboard-inline.js`) by rendering notes as text instead of HTML.
 - Signing/CSRF secrets now fail closed: dev fallback secrets only apply under `netlify dev`, never in deployed environments.
 - CORS now defaults to `https://exef.org` instead of `*` when `EFI_CORS_ORIGIN` is unset.
@@ -18,7 +20,8 @@
 - Untracked generated artifacts (`output/`, `tmp/`) and moved unlinked source DOCX files out of the web root into `docs/source-materials/`.
 
 ### Added
-- `scripts/optimize_images.py` — in-place lossy JPEG / lossless PNG compression (saved ~49 MB across `images/`).
+- `scripts/optimize_images.py` — in-place JPEG re-encoding and PNG optimization/quantization (saved ~61 MB across `images/`; directory now 38 MB).
+- `scripts/check_perf_budget.py` — performance budget gate (per-image, total images, CSS, and JS size limits) wired into `release_gate.py`.
 - Product/Offer JSON-LD structured data on `store.html`.
 - Reviewer/Admin operations page (`admin.html`) with role-gated access.
 - Static accessibility checker and CI workflow.

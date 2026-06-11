@@ -157,6 +157,8 @@
   function launchDemoAccount() {
     localStorage.removeItem('efi_access_token');
     localStorage.removeItem('efi_refresh_token');
+    sessionStorage.removeItem('efi_access_token');
+    sessionStorage.removeItem('efi_refresh_token');
     EFI.Auth.importPrototypeData(buildDemoPayload());
     redirectAfterAuth();
   }

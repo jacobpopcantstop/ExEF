@@ -41,6 +41,16 @@ def optimize(path: Path) -> int:
         img.save(tmp, "JPEG", quality=JPEG_QUALITY, optimize=True, progressive=True)
     elif suffix == ".png":
         img.save(tmp, "PNG", optimize=True)
+        # Large PNGs (diagrams/illustrations) usually shrink far more with an
+        # adaptive 256-color palette; keep it only when it saves at least 30%.
+        if original_size > 1024 * 1024 and img.mode in ("RGB", "RGBA"):
+            quant = img.quantize(colors=256, method=Image.FASTOCTREE)
+            tmp_q = path.with_suffix(".q.tmp")
+            quant.save(tmp_q, "PNG", optimize=True)
+            if tmp_q.stat().st_size < tmp.stat().st_size * 0.7:
+                tmp_q.replace(tmp)
+            else:
+                tmp_q.unlink()
     else:
         return 0
 

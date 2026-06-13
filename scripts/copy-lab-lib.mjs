@@ -216,6 +216,22 @@ export function getCopyLabPageSet(rootDir) {
   );
 }
 
+export function getCopyLabPriorityOrder(rootDir) {
+  const config = loadVisibilityConfig(rootDir);
+  return Array.isArray(config.copyLabPriorityOrder) ? config.copyLabPriorityOrder : [];
+}
+
+function fileComparator(rootDir) {
+  const order = getCopyLabPriorityOrder(rootDir);
+  const rank = new Map(order.map((file, index) => [file, index]));
+  return (a, b) => {
+    const rankA = rank.has(a) ? rank.get(a) : order.length;
+    const rankB = rank.has(b) ? rank.get(b) : order.length;
+    if (rankA !== rankB) return rankA - rankB;
+    return a.localeCompare(b);
+  };
+}
+
 export function extractWorkspaceChunks(rootDir) {
   const files = listHtmlFiles(rootDir);
   const chunks = [];
@@ -225,8 +241,9 @@ export function extractWorkspaceChunks(rootDir) {
     chunks.push(...extractEditableChunks(source, relativePath));
   });
 
+  const compareFiles = fileComparator(rootDir);
   return chunks.sort((a, b) => {
-    if (a.file !== b.file) return a.file.localeCompare(b.file);
+    if (a.file !== b.file) return compareFiles(a.file, b.file);
     return a.line - b.line;
   });
 }
@@ -257,7 +274,8 @@ export function getWorkspaceState(rootDir, progressPath, selectedFile = '') {
     }
   });
 
-  pages.push(...Array.from(byFile.values()).sort((a, b) => a.file.localeCompare(b.file)));
+  const compareFiles = fileComparator(rootDir);
+  pages.push(...Array.from(byFile.values()).sort((a, b) => compareFiles(a.file, b.file)));
 
   const total = filteredChunks.length;
   const completedCount = filteredChunks.filter((chunk) => progress.completed[chunk.id]).length;

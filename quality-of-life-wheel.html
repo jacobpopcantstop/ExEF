@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quality of Life Wheel | ExEF</title>
-  <meta name="description" content="An interactive Quality of Life Wheel. Rate your satisfaction across eight areas of life, define what each one means to you, and reflect on the patterns you notice.">
+  <meta name="description" content="An interactive Quality of Life Wheel. Rate how much you agree with statements across eight areas of life, define what each one means to you, and reflect on the patterns you notice.">
   <link rel="canonical" href="https://exef.org/quality-of-life-wheel.html" />
   <link rel="icon" href="favicon.svg">
 
@@ -177,14 +177,14 @@
       transition: var(--transition);
     }
     .sub-row:focus-within { border-color: var(--color-border); background: var(--color-white); }
-    .sub-name { font-family: var(--font-heading); font-size: 0.92rem; font-weight: 600; color: var(--color-heading); }
+    .sub-name { font-family: var(--font-body); font-size: 0.92rem; font-weight: 500; color: var(--color-heading); line-height: 1.45; }
     .sub-val {
       font-family: var(--font-heading); font-weight: 700; font-size: 0.92rem; text-align: center;
       min-width: 1.9rem; padding: 1px 7px; border-radius: 999px;
       background: var(--track-color); color: var(--track-text, #fff);
     }
     .sub-slider-row { display: flex; align-items: center; gap: 8px; grid-column: 1 / -1; }
-    .sub-slider-row .ends { font-size: 0.7rem; color: var(--color-text-muted); }
+    .sub-slider-row .ends { font-size: 0.7rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; white-space: nowrap; }
     input[type="range"] {
       -webkit-appearance: none; appearance: none; flex: 1; height: 5px; border-radius: 999px;
       background: linear-gradient(to right, var(--track-color) 0%, var(--track-color) var(--fill, 0%), var(--color-border) var(--fill, 0%), var(--color-border) 100%);
@@ -280,7 +280,7 @@
       <div class="container container--narrow">
         <p class="eyebrow">Self-Awareness Exercise</p>
         <h1>The Quality of Life Wheel</h1>
-        <p class="lead">A simple snapshot of your life as you see it today. How satisfied are you with each area right now? The center of the wheel is <strong>0</strong> and the outer edge is <strong>10</strong>. Each area has three parts you can rate separately, and you can mark how much each one matters to you.</p>
+        <p class="lead">A simple snapshot of your life as you see it today. For each statement, rate how much you agree &mdash; <strong>1</strong> means you strongly disagree and <strong>10</strong> means you strongly agree. Each area has three statements you can rate separately, and you can mark how much each one matters to you.</p>
       </div>
     </header>
 
@@ -302,16 +302,16 @@
             <div class="wheel-stage">
               <div class="wheel-wrap">
                 <svg class="wheel-svg" viewBox="0 0 520 520" id="wheel" role="img"
-                     aria-label="Quality of Life Wheel. Click or drag within each slice to set your satisfaction from the center (0) outward (10).">
+                     aria-label="Quality of Life Wheel. Click or drag within each slice to set your agreement from the center (1, disagree) outward (10, agree).">
                 </svg>
               </div>
-              <p class="score-pill">Weighted average <strong id="avg">0.0</strong> / 10</p>
+              <p class="score-pill">Weighted average <strong id="avg">5.0</strong> / 10</p>
               <p class="wheel-hint">Click or drag inside any slice to set its value. The sliders on the right stay in sync.</p>
             </div>
 
             <div>
               <h2 style="margin-bottom: var(--space-xs);">Define &amp; self-rate</h2>
-              <p style="color: var(--color-text-light); margin-bottom: var(--space-lg);">Define what each area means to you, then rate each part from 0 to 10. Mark how much it matters and the score adjusts.</p>
+              <p style="color: var(--color-text-light); margin-bottom: var(--space-lg);">Define what each area means to you, then rate how much you agree with each statement from 1 (disagree) to 10 (agree). Mark how much it matters and the score adjusts.</p>
               <div class="cats" id="cats"></div>
             </div>
           </div>
@@ -381,48 +381,48 @@
     // key they form a hyphenated id that is safe for querySelector.
     var CATEGORIES = [
       { key: "family", name: "Family", color: "#5fa3a0", subs: [
-        { key: "relationships", name: "Relationships" },
-        { key: "home",          name: "Home" },
-        { key: "time",          name: "Quality Time" }
+        { key: "relationships", name: "Relationships", statement: "I have strong, supportive relationships with my family members." },
+        { key: "home",          name: "Home", statement: "My home environment feels comfortable and supports my well-being." },
+        { key: "time",          name: "Quality Time", statement: "I spend enough quality time with the people who matter most to me." }
       ]},
       { key: "emotional", name: "Emotional", color: "#d98a3d", subs: [
-        { key: "awareness",  name: "Awareness" },
-        { key: "regulation", name: "Regulation" },
-        { key: "resilience", name: "Resilience" }
+        { key: "awareness",  name: "Awareness", statement: "I'm able to recognize and name what I'm feeling in the moment." },
+        { key: "regulation", name: "Regulation", statement: "I can manage my emotions effectively, even under stress." },
+        { key: "resilience", name: "Resilience", statement: "I bounce back from setbacks and difficult emotions reasonably well." }
       ]},
       { key: "spiritual", name: "Spiritual", color: "#8e7cc3", subs: [
-        { key: "purpose",     name: "Purpose" },
-        { key: "mindfulness", name: "Mindfulness" },
-        { key: "values",      name: "Values" }
+        { key: "purpose",     name: "Purpose", statement: "I feel a sense of purpose or meaning in my life." },
+        { key: "mindfulness", name: "Mindfulness", statement: "I regularly take time to be present and reflect." },
+        { key: "values",      name: "Values", statement: "My daily life aligns with my core values and beliefs." }
       ]},
       { key: "physical", name: "Physical", color: "#5aa469", subs: [
-        { key: "exercise",  name: "Exercise" },
-        { key: "sleep",     name: "Sleep" },
-        { key: "nutrition", name: "Nutrition" }
+        { key: "exercise",  name: "Exercise", statement: "I get enough physical movement or exercise to feel good in my body." },
+        { key: "sleep",     name: "Sleep", statement: "I get enough quality sleep on a regular basis." },
+        { key: "nutrition", name: "Nutrition", statement: "I eat in a way that supports my energy and health." }
       ]},
       { key: "financial", name: "Financial", color: "#4f93b8", subs: [
-        { key: "income",   name: "Income" },
-        { key: "saving",   name: "Saving" },
-        { key: "spending", name: "Spending" }
+        { key: "income",   name: "Income", statement: "My income meets my current needs." },
+        { key: "saving",   name: "Saving", statement: "I feel confident about my savings and financial cushion." },
+        { key: "spending", name: "Spending", statement: "I feel in control of my spending habits." }
       ]},
       { key: "career", name: "Career", color: "#b5683f", subs: [
-        { key: "purpose", name: "Purpose" },
-        { key: "growth",  name: "Growth" },
-        { key: "balance", name: "Balance" }
+        { key: "purpose", name: "Purpose", statement: "My work feels meaningful and aligned with what matters to me." },
+        { key: "growth",  name: "Growth", statement: "I have opportunities to learn and grow in my career." },
+        { key: "balance", name: "Balance", statement: "I maintain a healthy balance between work and the rest of my life." }
       ]},
       { key: "educational", name: "Educational", color: "#7c5a9e", subs: [
-        { key: "curiosity",  name: "Curiosity" },
-        { key: "skills",     name: "Skills" },
-        { key: "reflection", name: "Reflection" }
+        { key: "curiosity",  name: "Curiosity", statement: "I make time to learn about things that interest me." },
+        { key: "skills",     name: "Skills", statement: "I'm developing skills that matter to my goals." },
+        { key: "reflection", name: "Reflection", statement: "I take time to reflect on what I'm learning and how I'm growing." }
       ]},
       { key: "social", name: "Social", color: "#d4707f", subs: [
-        { key: "friends",    name: "Friends" },
-        { key: "community",  name: "Community" },
-        { key: "connection", name: "Connection" }
+        { key: "friends",    name: "Friends", statement: "I have friendships that feel supportive and fulfilling." },
+        { key: "community",  name: "Community", statement: "I feel connected to a community or group I belong to." },
+        { key: "connection", name: "Connection", statement: "I feel genuinely connected to the people around me." }
       ]}
     ];
 
-    var STORAGE_KEY = "exef-qol-wheel-v4";
+    var STORAGE_KEY = "exef-qol-wheel-v5";
     var SVGNS = "http://www.w3.org/2000/svg";
     var CX = 260, CY = 260, R = 150;
     var N_CATS = CATEGORIES.length;            // 8
@@ -462,10 +462,11 @@
           key: cat.key + "-" + s.key,         // hyphenated, querySelector-safe
           catKey: cat.key,
           subName: s.name,
+          statement: s.statement,
           color: shades[si],
           textColor: idealText(shades[si]),
           globalIndex: ci * SUBS_PER + si,
-          value: 0,
+          value: 5,
           importance: "medium"
         };
         SUBS.push(rec);
@@ -575,13 +576,13 @@
           var rec = subByKey[cat.key + "-" + sub.key];
           html +=
             '<div class="sub-row" style="--track-color:' + rec.color + ';--track-text:' + rec.textColor + '">' +
-              '<span class="sub-name">' + sub.name + '</span>' +
-              '<span class="sub-val" id="val-' + rec.key + '">0</span>' +
+              '<span class="sub-name">' + sub.statement + '</span>' +
+              '<span class="sub-val" id="val-' + rec.key + '">5</span>' +
               '<div class="sub-slider-row">' +
-                '<span class="ends">0</span>' +
-                '<input type="range" id="range-' + rec.key + '" min="0" max="10" step="1" value="0" ' +
-                  'aria-label="' + cat.name + ' &ndash; ' + sub.name + ' satisfaction, 0 to 10">' +
-                '<span class="ends">10</span>' +
+                '<span class="ends">Disagree</span>' +
+                '<input type="range" id="range-' + rec.key + '" min="1" max="10" step="1" value="5" ' +
+                  'aria-label="' + cat.name + ' &ndash; ' + sub.name + ': ' + sub.statement + ' From 1 (strongly disagree) to 10 (strongly agree)">' +
+                '<span class="ends">Agree</span>' +
               '</div>' +
               '<div class="imp-row" role="group" aria-label="' + sub.name + ' importance">' +
                 '<span class="imp-label">Importance</span>' +
@@ -696,7 +697,7 @@
         var item = data.subs && data.subs[s.key];
         if (item) {
           setImportance(s.key, item.importance || "medium");
-          setSubValue(s.key, typeof item.value === "number" ? item.value : 0);
+          setSubValue(s.key, typeof item.value === "number" ? item.value : 5);
         }
       });
     }
@@ -712,7 +713,7 @@
         lines.push("=== " + cat.name.toUpperCase() + "  (avg " + weightedAvg(recs).toFixed(1) + "/10) ===");
         if (cat.text) lines.push("  Definition: " + cat.text);
         recs.forEach(function (rec) {
-          lines.push("  " + rec.subName + ": " + rec.value + "/10  [importance: " + rec.importance + "]");
+          lines.push("  " + rec.subName + " - \"" + rec.statement + "\": " + rec.value + "/10  [importance: " + rec.importance + "]");
         });
         lines.push("");
       });
@@ -726,14 +727,14 @@
     }
 
     function resetAll() {
-      if (!confirm("Reset every rating, importance, and definition back to zero?")) return;
+      if (!confirm("Reset every rating, importance, and definition back to the middle?")) return;
       CATEGORIES.forEach(function (cat) {
         cat.text = "";
         $("text-" + cat.key).value = "";
       });
       SUBS.forEach(function (s) {
         setImportance(s.key, "medium");
-        setSubValue(s.key, 0);
+        setSubValue(s.key, 5);
       });
     }
 

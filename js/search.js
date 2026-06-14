@@ -6,9 +6,16 @@
   var inputEl = document.getElementById('search-input');
   var statusEl = document.getElementById('search-status');
   var resultsEl = document.getElementById('search-results');
+  var formEl = document.getElementById('search-form');
 
   if (!inputEl || !statusEl || !resultsEl) {
     return;
+  }
+
+  if (formEl) {
+    formEl.addEventListener('submit', function (event) {
+      event.preventDefault();
+    });
   }
 
   var state = {

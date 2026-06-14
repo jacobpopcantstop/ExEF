@@ -39,6 +39,7 @@
           <a href="free-executive-functioning-tests.html" class="nav__link">Assessments</a>
           <a href="resources.html" class="nav__link nav__link--active">Resources</a>
           <a href="meet-the-team.html" class="nav__link">Team</a>
+          <a href="blog.html" class="nav__link nav__link--active">Blog</a>
         </div>
         <div class="nav__cluster nav__cluster--support">
           <span class="nav__auth"></span>
@@ -59,7 +60,27 @@
     <div class="container">
       <div class="section-header">
         <h1>Blog</h1>
+        <p>New posts every Friday &mdash; practical, short-form thinking on executive function, ADHD, and building systems that work with your brain.</p>
       </div>
+
+      <section class="newsletter-strip fade-in" id="blog-newsletter-strip" aria-label="Join the ExEF mailing list">
+        <div class="newsletter-strip__copy">
+          <p class="newsletter-strip__eyebrow">New Blogs Every Friday</p>
+          <h3>Join the mailing list to get notified when a new post goes up.</h3>
+          <p>Short emails. Useful releases. More clarity, less shame.</p>
+        </div>
+        <form class="newsletter-strip__form" id="blog-newsletter-form">
+          <label class="sr-only" for="blog-newsletter-name">Name</label>
+          <input id="blog-newsletter-name" class="form-control" type="text" placeholder="Your name">
+          <label class="sr-only" for="blog-newsletter-email">Email</label>
+          <input id="blog-newsletter-email" class="form-control" type="email" placeholder="you@example.com" required>
+          <label class="newsletter-strip__consent"><input id="blog-newsletter-consent" type="checkbox" required> I want ExEF email updates and understand I can unsubscribe any time.</label>
+          <div class="newsletter-strip__actions">
+            <button type="submit" class="btn btn--primary btn--sm">Join the List</button>
+          </div>
+          <p id="blog-newsletter-status" class="newsletter-strip__status" aria-live="polite"></p>
+        </form>
+      </section>
 
       <div class="blog-grid" id="blog-posts">
         <article class="card blog-card">
@@ -131,5 +152,6 @@
 
   <script src="js/nav-auth.min.js" defer></script>
   <script src="js/main.min.js" defer></script>
+  <script src="js/blog.min.js" defer></script>
 </body>
 </html>

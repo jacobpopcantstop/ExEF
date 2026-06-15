@@ -5,118 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quality of Life Wheel | ExEF</title>
   <meta name="description" content="An interactive Quality of Life Wheel. Rate how much you agree with statements across eight areas of life, define what each one means to you, and reflect on the patterns you notice.">
-  <link rel="canonical" href="https://exef.org/quality-of-life-wheel.html" />
+  <link rel="preload" href="css/styles.css" as="style">
+  <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="favicon.svg">
+  <link rel="canonical" href="https://exef.org/quality-of-life-wheel.html">
+  <meta property="og:title" content="Quality of Life Wheel | ExEF">
+  <meta property="og:description" content="Rate how much you agree with statements across eight areas of life, define what each one means to you, and reflect on the patterns you notice.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ExEF">
+  <meta property="og:image" content="https://exef.org/images/exef-og-card.svg">
+  <meta property="og:image:type" content="image/svg+xml">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:image" content="https://exef.org/images/exef-og-card.svg">
+  <script src="js/theme-init.min.js"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2WLZPV0PD6"></script>
+  <script src="js/google-analytics.min.js" defer></script>
 
   <style>
-    :root {
-      --color-primary: #274960;
-      --color-primary-light: #3b637e;
-      --color-primary-dark: #162b3c;
-      --color-accent: #7c5a2b;
-      --color-accent-light: #9a7440;
-      --color-accent-dark: #5f431d;
-      --color-warm: #9d4e22;
-      --color-warm-light: #bb6a38;
-      --color-bg: #f5f1e8;
-      --color-bg-alt: #ebe4d7;
-      --color-text: #243543;
-      --color-text-light: #3a4f60;
-      --color-text-muted: #575f5a;
-      --color-white: #ffffff;
-      --color-border: #c9c0b1;
-      --color-heading: #162b3c;
-
-      --font-heading: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
-      --font-body: 'Avenir Next', 'Helvetica Neue', 'Segoe UI', sans-serif;
-
-      --space-xs: 0.25rem;
-      --space-sm: 0.5rem;
-      --space-md: 1rem;
-      --space-lg: 1.5rem;
-      --space-xl: 2rem;
-      --space-2xl: 3rem;
-      --space-3xl: 4rem;
-      --space-4xl: 6rem;
-
-      --max-width: 1200px;
-      --max-width-narrow: 820px;
-      --border-radius: 2px;
-      --border-radius-lg: 4px;
-
-      --shadow-sm: 0 1px 2px rgba(22, 43, 60, 0.06);
-      --shadow-md: 0 6px 14px rgba(22, 43, 60, 0.06);
-      --shadow-lg: 0 10px 22px rgba(22, 43, 60, 0.08);
-      --shadow-xl: 0 14px 28px rgba(22, 43, 60, 0.1);
-      --focus-ring: 0 0 0 3px rgba(36, 113, 163, 0.4);
-      --transition: 0.2s ease;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--font-body);
-      color: var(--color-text);
-      background-color: var(--color-bg);
-      background-image:
-        radial-gradient(circle at top left, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0) 36%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0));
-      line-height: 1.7;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    h1, h2, h3, h4 { font-family: var(--font-heading); color: var(--color-heading); line-height: 1.2; }
-    h1 { font-size: 2.6rem; font-weight: 700; letter-spacing: -0.02em; }
-    h2 { font-size: 1.85rem; font-weight: 700; letter-spacing: -0.02em; }
-    h3 { font-size: 1.3rem; font-weight: 600; }
-    p { margin-bottom: var(--space-md); }
-    a { color: var(--color-primary-dark); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 var(--space-lg); }
-    .container--narrow { max-width: var(--max-width-narrow); }
-
-    /* Nav */
-    .nav { background: var(--color-primary-dark); position: sticky; top: 0; z-index: 50; box-shadow: var(--shadow-md); }
-    .nav__inner { max-width: var(--max-width); margin: 0 auto; padding: var(--space-sm) var(--space-lg); display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); }
-    .nav__logo { display: flex; align-items: center; gap: var(--space-sm); color: var(--color-white); font-weight: 700; }
-    .nav__logo:hover { text-decoration: none; }
-    .nav__logo-icon { background: var(--color-accent); color: var(--color-white); font-weight: 700; font-family: var(--font-heading); padding: 4px 8px; border-radius: var(--border-radius); letter-spacing: 0.04em; }
-    .nav__links { display: flex; align-items: center; gap: var(--space-lg); }
-    .nav__link { color: rgba(255,255,255,0.82); font-size: 0.95rem; }
-    .nav__link:hover { color: var(--color-white); text-decoration: none; }
-    .nav__link--cta { background: var(--color-accent); color: var(--color-white); padding: 0.5rem 0.95rem; border-radius: var(--border-radius); }
-    .nav__link--cta:hover { background: var(--color-accent-light); }
-    @media (max-width: 760px) { .nav__links { gap: var(--space-md); } .nav__link--ghost { display: none; } }
-
-    /* Hero */
-    .hero { padding: var(--space-3xl) 0 var(--space-2xl); text-align: center; }
-    .hero .eyebrow { text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.78rem; font-weight: 700; color: var(--color-accent); margin-bottom: var(--space-sm); }
-    .hero p.lead { font-size: 1.18rem; line-height: 1.8; color: var(--color-text-light); max-width: 700px; margin: var(--space-md) auto 0; }
-
-    .section { padding: var(--space-2xl) 0; }
-
-    /* Card */
-    .card {
-      background: var(--color-white);
-      border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-lg);
-      box-shadow: var(--shadow-md);
-      padding: var(--space-xl);
-    }
-
-    .meta-row { display: flex; flex-wrap: wrap; gap: var(--space-lg); align-items: flex-end; margin-bottom: var(--space-xl); }
-    .field { flex: 1 1 220px; }
-    .field label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: 4px; }
-    .field input {
-      width: 100%; font-family: var(--font-body); font-size: 1rem; color: var(--color-text);
-      padding: 0.6rem 0.75rem; border: 1px solid var(--color-border); border-radius: var(--border-radius);
-      background: var(--color-bg); transition: var(--transition);
-    }
-    .field input:focus, textarea:focus { outline: none; box-shadow: var(--focus-ring); border-color: var(--color-primary-light); background: var(--color-white); }
-
     /* Wheel layout */
     .wheel-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-2xl); align-items: start; }
     @media (max-width: 900px) { .wheel-layout { grid-template-columns: 1fr; } }
@@ -143,6 +49,11 @@
     }
     .score-pill strong { font-family: var(--font-heading); font-size: 1.25rem; color: var(--color-primary-dark); }
 
+    /* Meta row (name + date) */
+    .meta-row { display: flex; flex-wrap: wrap; gap: var(--space-lg); align-items: flex-end; margin-bottom: var(--space-xl); }
+    .meta-row .field { flex: 1 1 220px; }
+    .meta-row .field label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: 4px; }
+
     /* Category cards — all visible */
     .cats { display: flex; flex-direction: column; gap: var(--space-lg); }
     .cat {
@@ -162,11 +73,12 @@
     }
 
     .cat__define-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-text-muted); display: block; margin-bottom: 4px; }
-    textarea {
+    .cat textarea {
       width: 100%; font-family: var(--font-body); font-size: 0.95rem; color: var(--color-text); line-height: 1.6;
       padding: 0.55rem 0.7rem; border: 1px solid var(--color-border); border-radius: var(--border-radius);
       background: var(--color-bg); resize: vertical; min-height: 48px; transition: var(--transition);
     }
+    .cat textarea:focus { outline: none; box-shadow: var(--focus-ring); border-color: var(--color-primary-light); background: var(--color-white); }
 
     /* Sub-area rows */
     .subs { margin-top: var(--space-md); display: flex; flex-direction: column; gap: var(--space-sm); }
@@ -185,20 +97,20 @@
     }
     .sub-slider-row { display: flex; align-items: center; gap: 8px; grid-column: 1 / -1; }
     .sub-slider-row .ends { font-size: 0.7rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; white-space: nowrap; }
-    input[type="range"] {
+    .sub-row input[type="range"] {
       -webkit-appearance: none; appearance: none; flex: 1; height: 5px; border-radius: 999px;
       background: linear-gradient(to right, var(--track-color) 0%, var(--track-color) var(--fill, 0%), var(--color-border) var(--fill, 0%), var(--color-border) 100%);
       cursor: pointer;
     }
-    input[type="range"]::-webkit-slider-thumb {
+    .sub-row input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%;
       background: var(--color-white); border: 3px solid var(--track-color); box-shadow: var(--shadow-sm); cursor: pointer;
     }
-    input[type="range"]::-moz-range-thumb {
+    .sub-row input[type="range"]::-moz-range-thumb {
       width: 18px; height: 18px; border-radius: 50%; background: var(--color-white);
       border: 3px solid var(--track-color); box-shadow: var(--shadow-sm); cursor: pointer;
     }
-    input[type="range"]:focus { outline: none; box-shadow: var(--focus-ring); border-radius: 999px; }
+    .sub-row input[type="range"]:focus { outline: none; box-shadow: var(--focus-ring); border-radius: 999px; }
 
     /* Importance pills */
     .imp-row { display: flex; align-items: center; gap: 6px; grid-column: 1 / -1; }
@@ -214,16 +126,6 @@
 
     /* Toolbar */
     .toolbar { display: flex; flex-wrap: wrap; gap: var(--space-sm); justify-content: center; margin-top: var(--space-xl); }
-    .btn {
-      font-family: var(--font-body); font-size: 0.92rem; font-weight: 600; cursor: pointer;
-      padding: 0.6rem 1.15rem; border-radius: var(--border-radius); border: 1px solid transparent; transition: var(--transition);
-    }
-    .btn--primary { background: var(--color-primary); color: var(--color-white); }
-    .btn--primary:hover { background: var(--color-primary-light); }
-    .btn--secondary { background: var(--color-white); color: var(--color-primary-dark); border-color: var(--color-border); }
-    .btn--secondary:hover { background: var(--color-bg-alt); }
-    .btn--ghost { background: transparent; color: var(--color-warm); border-color: transparent; }
-    .btn--ghost:hover { text-decoration: underline; }
     .save-note { text-align: center; font-size: 0.82rem; color: var(--color-text-muted); margin-top: var(--space-sm); min-height: 1.2em; }
 
     /* Reflection */
@@ -231,55 +133,68 @@
     .reflect-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2xl); }
     @media (max-width: 760px) { .reflect-grid { grid-template-columns: 1fr; gap: var(--space-xl); } }
     .reflect h3 { margin-bottom: var(--space-md); }
-    .reflect ul { list-style: none; display: flex; flex-direction: column; gap: var(--space-md); }
+    .reflect ul { list-style: none; display: flex; flex-direction: column; gap: var(--space-md); padding: 0; }
     .reflect li { position: relative; padding-left: 1.6rem; color: var(--color-text-light); }
     .reflect li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 9px; height: 9px; border-radius: 2px; background: var(--color-accent); }
     .reflect .sub-head { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; color: var(--color-accent); margin-bottom: var(--space-xs); }
 
     .quote { text-align: center; font-family: var(--font-heading); font-style: italic; font-size: 1.25rem; color: var(--color-primary-dark); line-height: 1.6; max-width: 640px; margin: var(--space-2xl) auto 0; }
-
-    /* Footer */
-    .footer { background: var(--color-primary-dark); color: rgba(255,255,255,0.82); padding: var(--space-2xl) 0; margin-top: var(--space-3xl); font-size: 0.9rem; }
-    .footer a { color: rgba(255,255,255,0.82); }
-    .footer a:hover { color: var(--color-white); }
-    .footer__bottom { display: flex; flex-wrap: wrap; gap: var(--space-md); justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.14); padding-top: var(--space-md); margin-top: var(--space-md); }
-
     .scope-note { font-size: 0.82rem; color: var(--color-text-muted); text-align: center; margin-top: var(--space-lg); }
 
     /* Print */
     @media print {
-      .nav, .toolbar, .save-note, .wheel-hint, .footer { display: none !important; }
+      .nav, .toolbar, .save-note, .wheel-hint, .footer, .back-to-top { display: none !important; }
       body { background: #fff; }
       .wheel-stage { position: static; }
       .card { box-shadow: none; border-color: #999; }
       .cat { break-inside: avoid; box-shadow: none; }
       .reflect { background: #fff; }
       .wheel-layout { grid-template-columns: 1fr; }
-      .hero { padding-top: var(--space-md); }
     }
   </style>
 </head>
-<body>
+<body class="page-quality-of-life-wheel">
 
-  <nav class="nav" aria-label="Main navigation">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Navigation -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
     <div class="nav__inner">
       <a href="index.html" class="nav__logo">
-        <span class="nav__logo-icon">ExEF</span>
+        <div class="nav__logo-icon">ExEF</div>
         <span>ExEF</span>
       </a>
-      <div class="nav__links">
-        <a href="resources.html" class="nav__link nav__link--ghost">Resources</a>
-        <a href="free-executive-functioning-tests.html" class="nav__link nav__link--ghost">Assessments</a>
-        <a href="blog.html" class="nav__link nav__link--ghost">Blog</a>
-        <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="nav__link nav__link--cta">Book Consultation</a>
+      <div class="nav__links" id="nav-links">
+        <div class="nav__cluster">
+          <a href="coaching-home.html" class="nav__link">Coaching</a>
+          <a href="free-executive-functioning-tests.html" class="nav__link">Assessments</a>
+          <a href="resources.html" class="nav__link">Resources</a>
+          <a href="meet-the-team.html" class="nav__link">Team</a>
+          <a href="blog.html" class="nav__link">Blog</a>
+        </div>
+        <div class="nav__cluster nav__cluster--support">
+          <span class="nav__auth"></span>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="nav__link nav__link--cta">Book Consultation</a>
+        </div>
       </div>
+      <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
     </div>
   </nav>
 
-  <main>
-    <header class="hero">
+  <main id="main-content">
+    <header class="page-header">
       <div class="container container--narrow">
-        <p class="eyebrow">Self-Awareness Exercise</p>
+        <nav aria-label="Breadcrumb">
+          <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="resources.html">Resources</a></li>
+            <li aria-current="page">Quality of Life Wheel</li>
+          </ol>
+        </nav>
         <h1>The Quality of Life Wheel</h1>
         <p class="lead">A simple snapshot of your life as you see it today. For each statement, rate how much you agree &mdash; <strong>1</strong> means you strongly disagree and <strong>10</strong> means you strongly agree. Each area has three statements you can rate separately, and you can mark how much each one matters to you.</p>
       </div>
@@ -291,11 +206,11 @@
           <div class="meta-row">
             <div class="field">
               <label for="name">Name</label>
-              <input type="text" id="name" autocomplete="name" placeholder="Your name">
+              <input type="text" id="name" class="form-control" autocomplete="name" placeholder="Your name">
             </div>
             <div class="field">
               <label for="date">Date</label>
-              <input type="date" id="date">
+              <input type="date" id="date" class="form-control">
             </div>
           </div>
 
@@ -362,17 +277,62 @@
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="footer">
     <div class="container">
-      <p style="color: var(--color-white); font-family: var(--font-heading); font-weight: 700; margin-bottom: var(--space-xs);">Executive Function Coaching &mdash; ExEF</p>
-      <p>Free assessments, practical tools, and short-form resources to help you find the next workable step.</p>
+      <div class="footer__grid footer__grid--institutional">
+        <div class="footer__brand">
+          <p class="footer__eyebrow">Executive Function Coaching</p>
+          <a href="index.html" class="nav__logo" style="color:var(--color-white);">
+            <div class="nav__logo-icon">ExEF</div>
+            <span>Expert EF</span>
+          </a>
+          <p>Executive function and ADHD coaching with Jacob Rozansky. Free assessments, practical tools, and short-form resources to help you find the next workable step.</p>
+          <ul class="footer__dossier">
+            <li><span>Training Lens</span><strong>ADDCA ADHD coaching in progress, integrated with ExEF's coaching scope controls.</strong></li>
+            <li><span>Scope</span><strong>Skills-based coaching, not therapy, diagnosis, or medical treatment.</strong></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Coaching</h4>
+          <ul class="footer__links">
+            <li><a href="coaching-home.html">Support Paths</a></li>
+            <li><a href="coaching-home.html#service-lanes">Services</a></li>
+            <li><a href="meet-the-team.html">Team</a></li>
+            <li><a href="free-executive-functioning-tests.html">Assessments</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <ul class="footer__links">
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="printables.html">Printables</a></li>
+            <li><a href="open-ef-resources-directory.html">Open EF Directory</a></li>
+            <li><a href="blog.html">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <ul class="footer__links">
+            <li><a href="coaching-home.html#service-lanes">Services</a></li>
+            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a Consultation</a></li>
+            <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
+            <li><a href="search.html">Search</a></li>
+          </ul>
+        </div>
+      </div>
       <div class="footer__bottom">
-        <span><a href="resources.html">Resources</a> &middot; <a href="free-executive-functioning-tests.html">Assessments</a> &middot; <a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a Consultation</a></span>
+        <span class="footer__status">Built around Barkley, Brown, Dawson &amp; Guare, Ward, ICF ethics, NBEFC context, and ADDCA ADHD coaching training in progress.</span>
         <span><a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a></span>
       </div>
     </div>
   </footer>
 
+  <!-- Back to Top -->
+  <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
+
+  <script src="js/nav-auth.min.js" defer></script>
+  <script src="js/main.min.js" defer></script>
   <script src="js/quality-of-life-wheel.min.js" defer></script>
 </body>
 </html>

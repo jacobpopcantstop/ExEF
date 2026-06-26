@@ -255,7 +255,8 @@
     $("val-" + key).textContent = val;
     var range = $("range-" + key);
     range.value = val;
-    range.style.setProperty("--fill", (val * 10) + "%");
+    var pct = (val - 1) / 9 * 100; // min=1,max=10 → 0–100%
+    range.style.setProperty("--fill", "calc(" + pct.toFixed(4) + "% - " + ((pct / 100 - 0.5) * 18).toFixed(2) + "px)");
     updateCatAverage(rec.catKey);
     updateGlobalAverage();
     save();

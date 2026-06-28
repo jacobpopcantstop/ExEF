@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExEF — Emotion Check-In</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%23274960'/><text x='16' y='21' font-family='Helvetica Neue,sans-serif' font-size='9' font-weight='800' fill='white' text-anchor='middle' letter-spacing='0.5'>ExEF</text></svg>">
+  <style>
+    :root {
+      --bg:        #f5f1e8;
+      --bg-alt:    #ebe4d7;
+      --primary:   #274960;
+      --pri-dark:  #162b3c;
+      --pri-light: #3b637e;
+      --text:      #243543;
+      --muted:     #575f5a;
+      --light:     #3a4f60;
+      --accent:    #7c5a2b;
+      --border:    #c9c0b1;
+      --border-l:  rgba(22,43,60,0.12);
+      --white:     #ffffff;
+      --fh: 'Iowan Old Style','Palatino Linotype','Book Antiqua',Georgia,serif;
+      --fb: 'Avenir Next','Helvetica Neue','Segoe UI',sans-serif;
+      --r:  2px;
+      --rl: 4px;
+      --sh: 0 1px 2px rgba(22,43,60,0.06);
+      --shm: 0 6px 14px rgba(22,43,60,0.07);
+      --t:  0.18s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--fb);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ─────────────────────────── */
+    .hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand-box {
+      width: 34px; height: 34px;
+      background: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      border-radius: var(--r);
+      flex-shrink: 0;
+    }
+    .brand-box span {
+      font-size: 10px; font-weight: 800; color: white; letter-spacing: 0.04em;
+    }
+
+    /* ── PROGRESS ───────────────────────── */
+    .prog { display: flex; align-items: center; }
+
+    .pd {
+      width: 26px; height: 26px; border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      background: var(--bg);
+      transition: all var(--t);
+    }
+    .pd.active { border-color: var(--primary); color: var(--primary); }
+    .pd.done   { border-color: var(--primary); background: var(--primary); color: white; }
+    .pd.done .pn { display: none; }
+    .pd.done::after { content: '✓'; font-size: 12px; }
+
+    .pl {
+      width: 24px; height: 1px;
+      background: var(--border);
+      margin: 0 3px;
+      transition: background var(--t);
+    }
+    .pl.done { background: var(--primary); }
+
+    /* ── LAYOUT ─────────────────────────── */
+    .wrap {
+      max-width: 660px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; animation: up .3s ease; }
+
+    @keyframes up {
+      from { opacity:0; transform:translateY(10px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ── STEP TYPOGRAPHY ────────────────── */
+    .eyebrow {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 10px;
+    }
+    .step-h {
+      font-family: var(--fh);
+      font-size: 30px; font-weight: 400;
+      color: var(--pri-dark); line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .step-sub {
+      font-size: 14px; color: var(--muted);
+      line-height: 1.65; margin-bottom: 28px;
+      max-width: 520px;
+    }
+
+    /* ── CARD ───────────────────────────── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border-l);
+      border-radius: var(--rl);
+      padding: 28px;
+      margin-bottom: 16px;
+      box-shadow: var(--sh);
+    }
+
+    /* ── VALENCE ────────────────────────── */
+    .v-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .v-btn {
+      display: flex; align-items: center; gap: 16px;
+      padding: 18px 20px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--rl);
+      background: var(--bg);
+      cursor: pointer;
+      transition: border-color var(--t), background var(--t), box-shadow var(--t);
+      text-align: left; width: 100%;
+    }
+    .v-btn:hover { border-color: var(--pri-light); background: #edf1f5; }
+    .v-btn.sel   { border-color: var(--primary); background: #edf1f5; box-shadow: inset 4px 0 0 var(--primary); }
+
+    .v-icon { font-size: 24px; flex-shrink: 0; }
+    .v-name { font-size: 15px; font-weight: 700; color: var(--pri-dark); margin-bottom: 2px; }
+    .v-desc { font-size: 13px; color: var(--muted); }
+
+    /* ── CHIPS ──────────────────────────── */
+    .chip-grid { display: flex; flex-wrap: wrap; gap: 7px; }
+
+    .chip {
+      padding: 7px 14px;
+      border-radius: var(--r);
+      border: 1px solid var(--border);
+      font-size: 13.5px; font-weight: 500;
+      color: var(--light);
+      cursor: pointer;
+      transition: border-color var(--t), background var(--t), color var(--t);
+      background: var(--bg-alt);
+      user-select: none;
+    }
+    .chip:hover { border-color: var(--pri-light); background: #dce6ed; color: var(--primary); }
+    .chip.sel   { background: var(--primary); border-color: var(--primary); color: white; font-weight: 600; }
+
+    /* ── EMOTION GROUPS ─────────────────── */
+    .eg { display: flex; flex-direction: column; gap: 26px; }
+
+    .gl {
+      font-size: 10.5px; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── ACTIONS ────────────────────────── */
+    .actions { display: flex; gap: 10px; align-items: stretch; }
+
+    .btn {
+      padding: 12px 22px;
+      border-radius: var(--r);
+      font-size: 14px; font-weight: 700;
+      cursor: pointer; border: none;
+      font-family: var(--fb);
+      letter-spacing: .02em;
+      transition: background var(--t), opacity var(--t), transform var(--t);
+    }
+    .btn-p { background: var(--primary); color: white; flex: 1; }
+    .btn-p:hover:not(:disabled) { background: var(--pri-dark); }
+    .btn-p:active:not(:disabled) { transform: scale(.99); }
+    .btn-p:disabled { opacity: .35; cursor: not-allowed; }
+
+    .btn-g {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border); white-space: nowrap;
+    }
+    .btn-g:hover { background: var(--bg-alt); color: var(--text); border-color: var(--muted); }
+
+    /* ── RESULT HEADER ──────────────────── */
+    .r-header { margin-bottom: 24px; }
+    .r-title {
+      font-family: var(--fh);
+      font-size: 30px; font-weight: 400;
+      color: var(--pri-dark); line-height: 1.25;
+      margin-bottom: 6px;
+    }
+    .r-sub { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+    /* ── WORD CLOUD ─────────────────────── */
+    .cloud-card {
+      padding: 24px 28px 28px;
+      margin-bottom: 10px;
+    }
+
+    .cloud-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cloud-label {
+      font-size: 10.5px; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .cloud-hint {
+      font-size: 11.5px; color: var(--muted);
+      font-weight: 400; text-transform: none;
+      letter-spacing: 0;
+    }
+
+    #wordCloud {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px 18px;
+      min-height: 120px;
+      padding: 8px 0;
+      user-select: none;
+    }
+
+    .cw {
+      font-family: var(--fh);
+      line-height: 1.15;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: flex-end;
+      cursor: default;
+    }
+    .cw.active { opacity: .7; }
+
+    .cw-text {
+      line-height: inherit;
+    }
+
+    /* corner resize tag */
+    .cw-tag {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      border-radius: 0 0 2px 0;
+      margin-left: 4px;
+      margin-bottom: 2px;
+      flex-shrink: 0;
+      opacity: 0;
+      cursor: nwse-resize;
+      touch-action: none;
+      transition: opacity .15s, transform .12s;
+    }
+    .cw:hover .cw-tag  { opacity: .45; }
+    .cw.active .cw-tag { opacity: .8; transform: scale(1.2); }
+
+    /* ── REFLECTION CARDS ───────────────── */
+    .r-section-label {
+      font-size: 10.5px; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted);
+      margin: 28px 0 14px;
+    }
+
+    .rc {
+      background: var(--white);
+      border: 1px solid var(--border-l);
+      border-radius: var(--rl);
+      padding: 20px 22px;
+      margin-bottom: 10px;
+      box-shadow: var(--sh);
+      animation: up .32s ease both;
+    }
+    .rc:nth-child(1){animation-delay:.03s}
+    .rc:nth-child(2){animation-delay:.08s}
+    .rc:nth-child(3){animation-delay:.13s}
+    .rc:nth-child(4){animation-delay:.18s}
+    .rc:nth-child(5){animation-delay:.23s}
+    .rc:nth-child(6){animation-delay:.28s}
+    .rc:nth-child(7){animation-delay:.33s}
+
+    .rc-fam {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+
+    .rc-emotions {
+      font-size: 13px; font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .rc-q {
+      font-size: 13.5px;
+      font-family: var(--fh);
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.7;
+      padding-top: 12px;
+      border-top: 1px solid rgba(22,43,60,.07);
+      padding-left: 12px;
+      position: relative;
+    }
+    .rc-q::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 12px; bottom: 0;
+      width: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      opacity: .45;
+    }
+
+    /* ── TOOLTIP ────────────────────────── */
+    #tt {
+      position: absolute; z-index: 999;
+      background: var(--pri-dark);
+      color: #e8edf2;
+      font-size: 12.5px; font-family: var(--fb);
+      line-height: 1.5; padding: 9px 13px;
+      border-radius: var(--rl);
+      max-width: 230px; width: max-content;
+      pointer-events: none;
+      box-shadow: var(--shm);
+      opacity: 0; transition: opacity .14s ease;
+    }
+    #tt.show { opacity: 1; }
+    #tt::after {
+      content: '';
+      position: absolute; top: 100%;
+      left: var(--al, 50%); transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--pri-dark);
+    }
+
+    /* ── PRINT ONLY ─────────────────────── */
+    .print-only { display: none; }
+
+    /* ── PRINT STYLES ───────────────────── */
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+      body { background: white; font-size: 11pt; }
+
+      /* Hide everything except result */
+      .hdr, #prog,
+      .screen:not(#sR),
+      #sR .actions,
+      .r-header,
+      .r-section-label,
+      .cloud-hint,
+      #tt { display: none !important; }
+
+      #sR { display: block !important; animation: none !important; }
+
+      .wrap { padding: 0; max-width: 100%; }
+
+      /* Print-only header */
+      .print-only {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 24pt;
+        padding-bottom: 10pt;
+        border-bottom: 1.5pt solid var(--primary);
+      }
+
+      .print-brand {
+        font-family: var(--fb);
+        font-size: 9pt; font-weight: 800;
+        letter-spacing: .12em; text-transform: uppercase;
+        color: var(--primary); margin-bottom: 3pt;
+      }
+      .print-title {
+        font-family: var(--fh);
+        font-size: 18pt; font-weight: 400;
+        color: var(--pri-dark);
+      }
+      .print-meta {
+        font-size: 9pt; color: var(--muted);
+        text-align: right; line-height: 1.6;
+      }
+
+      /* Word cloud on print */
+      .cloud-card {
+        border: none; box-shadow: none;
+        padding: 0 0 20pt 0;
+        margin-bottom: 20pt;
+        border-bottom: 1pt solid var(--border);
+      }
+      .cloud-top { display: none; }
+      #wordCloud {
+        min-height: auto;
+        gap: 8px 14px;
+        padding: 0;
+      }
+      .cw-tag { display: none; }
+
+      /* Reflection cards on print */
+      .rc {
+        box-shadow: none;
+        border: none;
+        border-bottom: 1pt solid var(--border);
+        border-radius: 0;
+        padding: 10pt 0;
+        margin-bottom: 0;
+        break-inside: avoid;
+        page-break-inside: avoid;
+        animation: none !important;
+      }
+      .rc:last-child { border-bottom: none; }
+    }
+
+    /* ── MOBILE ─────────────────────────── */
+    @media (max-width: 480px) {
+      .hdr { padding: 12px 16px; }
+      .wrap { padding: 28px 16px 64px; }
+      .card { padding: 20px 18px; }
+      .step-h { font-size: 25px; }
+      .r-title { font-size: 25px; }
+      .v-btn { gap: 12px; padding: 15px 16px; }
+      .pl { width: 16px; }
+      #tt { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="tt" role="tooltip" aria-hidden="true"></div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="brand-box"><span>ExEF</span></div>
+  <div class="prog" id="prog">
+    <div class="pd active" id="pd1"><span class="pn">1</span></div>
+    <div class="pl" id="pl1"></div>
+    <div class="pd" id="pd2"><span class="pn">2</span></div>
+    <div class="pl" id="pl2"></div>
+    <div class="pd" id="pd3"><span class="pn">3</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- STEP 1 -->
+  <section class="screen active" id="s1">
+    <p class="eyebrow">Step 1 of 3</p>
+    <h1 class="step-h">How are you feeling<br>right now?</h1>
+    <p class="step-sub">Choose the option that best describes your emotional landscape in this moment.</p>
+    <div class="card">
+      <div class="v-list">
+        <button class="v-btn" data-v="positive" aria-pressed="false" onclick="pickV(this)">
+          <div class="v-icon">☀️</div>
+          <div><div class="v-name">Mostly good</div><div class="v-desc">Positive, uplifting, or energizing feelings</div></div>
+        </button>
+        <button class="v-btn" data-v="negative" aria-pressed="false" onclick="pickV(this)">
+          <div class="v-icon">🌧️</div>
+          <div><div class="v-name">Mostly hard</div><div class="v-desc">Difficult, painful, or challenging feelings</div></div>
+        </button>
+        <button class="v-btn" data-v="mixed" aria-pressed="false" onclick="pickV(this)">
+          <div class="v-icon">🌤️</div>
+          <div><div class="v-name">Mixed / complicated</div><div class="v-desc">A blend of both, or hard to name</div></div>
+        </button>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-p" id="btn1" disabled onclick="go(2)">Continue →</button>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="screen" id="s2">
+    <p class="eyebrow">Step 2 of 3</p>
+    <h1 class="step-h">Which emotion families<br>resonate?</h1>
+    <p class="step-sub">Select one or more. Hover any name for a description.</p>
+    <div class="card">
+      <div class="chip-grid" id="famGrid"></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-g" onclick="go(1)">← Back</button>
+      <button class="btn btn-p" id="btn2" disabled onclick="go(3)">Continue →</button>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="screen" id="s3">
+    <p class="eyebrow">Step 3 of 3</p>
+    <h1 class="step-h">Name your specific emotions</h1>
+    <p class="step-sub">Select everything that feels true right now. Hover any word for its meaning.</p>
+    <div class="card">
+      <div class="eg" id="eg"></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-g" onclick="go(2)">← Back</button>
+      <button class="btn btn-p" id="btn3" disabled onclick="showR()">See my emotions →</button>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="sR">
+
+    <!-- print header -->
+    <div class="print-only">
+      <div>
+        <div class="print-brand">ExEF</div>
+        <div class="print-title">Emotion Check-In</div>
+      </div>
+      <div class="print-meta" id="pMeta"></div>
+    </div>
+
+    <div class="r-header">
+      <p class="eyebrow">Your emotional landscape</p>
+      <h1 class="r-title">Here's what you named.</h1>
+      <p class="r-sub">Take a moment to sit with these. <strong>Grab the corner tag on any word and drag it</strong> — let size reflect how much it's affecting you.</p>
+    </div>
+
+    <!-- word cloud -->
+    <div class="card cloud-card">
+      <div class="cloud-top">
+        <div class="cloud-label">Your emotions</div>
+        <div class="cloud-hint">drag the ⌟ corner of each word to resize</div>
+      </div>
+      <div id="wordCloud"></div>
+    </div>
+
+    <!-- reflection cards -->
+    <div class="r-section-label">Reflection prompts</div>
+    <div id="rCards"></div>
+
+    <div class="actions" style="margin-top:24px">
+      <button class="btn btn-g" style="flex:1" onclick="startOver()">← Start over</button>
+      <button class="btn btn-p" style="flex:1" onclick="window.print()">Print / Save PDF</button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────
+const FAMILIES = [
+  { name:"Aliveness / Joy",      valence:"positive",
+    color:"#a0620e",
+    emotions:["Amazed","Awe","Bliss","Delighted","Eager","Ecstatic","Enchanted","Energized","Enthusiastic","Excited","Happy","Inspired","Lively","Passionate","Playful","Refreshed","Satisfied","Thrilled"],
+    prompt:"What's alive in you right now — and what made space for this feeling to emerge?" },
+  { name:"Accepting / Open",     valence:"positive",
+    color:"#1e6b4a",
+    emotions:["Calm","Centered","Content","Fulfilled","Patient","Peaceful","Present","Relaxed","Serene","Trusting"],
+    prompt:"What have you let go of or accepted that's allowing this sense of openness right now?" },
+  { name:"Courageous / Powerful",valence:"positive",
+    color:"#1a5276",
+    emotions:["Adventurous","Brave","Capable","Confident","Daring","Determined","Grounded","Proud","Strong","Worthy"],
+    prompt:"Where in your life is this strength or courage most asking to be expressed or honored?" },
+  { name:"Connected / Loving",   valence:"positive",
+    color:"#7c3a3a",
+    emotions:["Accepting","Affectionate","Caring","Compassion","Empathy","Safe","Warm"],
+    prompt:"Who or what is this love and connection in service of — and how does that feel in your body?" },
+  { name:"Grateful",             valence:"positive",
+    color:"#117a65",
+    emotions:["Appreciative","Blessed","Fortunate","Humbled","Lucky","Moved","Thankful","Touched"],
+    prompt:"What does this gratitude reveal about what truly matters most to you?" },
+  { name:"Hopeful",              valence:"positive",
+    color:"#2471a3",
+    emotions:["Encouraged","Expectant","Optimistic","Trusting"],
+    prompt:"What possibility or future are you allowing yourself to believe in right now?" },
+  { name:"Curious",              valence:"positive",
+    color:"#6c3483",
+    emotions:["Engaged","Exploring","Fascinated","Interested","Intrigued","Stimulated"],
+    prompt:"What is this curiosity inviting you to explore, discover, or lean into?" },
+  { name:"Angry / Annoyed",      valence:"negative",
+    color:"#a93226",
+    emotions:["Agitated","Aggravated","Bitter","Contempt","Cynical","Disturbed","Edgy","Exasperated","Frustrated","Furious","Grouchy","Hostile","Impatient","Irritated","Irate","Moody","Outraged","Resentful","Upset","Vindictive"],
+    prompt:"What value or need of yours is not being honored right now? What does this anger want you to know?" },
+  { name:"Despair / Sad",        valence:"negative",
+    color:"#2c3e50",
+    emotions:["Anguish","Depressed","Despondent","Disappointed","Discouraged","Forlorn","Gloomy","Grief","Heartbroken","Hopeless","Lonely","Melancholy","Sorrow","Unhappy","Weary","Yearning"],
+    prompt:"What loss, longing, or unmet need lives underneath this sadness? What does it most need from you?" },
+  { name:"Fear",                 valence:"negative",
+    color:"#5b2c6f",
+    emotions:["Afraid","Anxious","Apprehensive","Frightened","Hesitant","Nervous","Panic","Paralyzed","Scared","Terrified","Worried"],
+    prompt:"What is this fear trying to protect you from — and is that protection still serving you?" },
+  { name:"Embarrassed / Shame",  valence:"negative",
+    color:"#78281f",
+    emotions:["Ashamed","Humiliated","Inhibited","Mortified","Self-conscious","Useless","Weak","Worthless"],
+    prompt:"Whose voice is behind this shame? Is this message truly yours — or was it handed to you?" },
+  { name:"Guilt",                valence:"negative",
+    color:"#6e2f1a",
+    emotions:["Regret","Remorseful","Sorry"],
+    prompt:"What action or choice is this guilt calling you to acknowledge, make amends for, or change?" },
+  { name:"Powerless",            valence:"negative",
+    color:"#154360",
+    emotions:["Impotent","Incapable","Resigned","Trapped","Victim"],
+    prompt:"Where have you been giving your power away — and what would it look like to reclaim even a small piece of it?" },
+  { name:"Fragile",              valence:"negative",
+    color:"#7b5ea7",
+    emotions:["Helpless","Sensitive"],
+    prompt:"What part of you is asking for more gentleness, care, or protection right now?" },
+  { name:"Disconnected / Numb",  valence:"mixed",
+    color:"#566573",
+    emotions:["Aloof","Bored","Confused","Distant","Empty","Indifferent","Isolated","Lethargic","Listless","Removed","Resistant","Shut Down","Withdrawn"],
+    prompt:"What might you be protecting yourself from by staying distant or numb — and is it safe to get a little closer to it?" },
+  { name:"Stressed / Tense",     valence:"mixed",
+    color:"#a04000",
+    emotions:["Burned out","Cranky","Depleted","Edgy","Exhausted","Frazzled","Overwhelmed","Rattled","Restless","Shaken","Tight","Worn out"],
+    prompt:"What would need to shift — even just 10% — for you to feel more ease or spaciousness right now?" },
+  { name:"Unsettled / Doubt",    valence:"mixed",
+    color:"#7d6608",
+    emotions:["Apprehensive","Concerned","Dissatisfied","Grouchy","Hesitant","Perplexed","Questioning","Reluctant","Skeptical","Suspicious","Ungrounded","Unsure","Worried"],
+    prompt:"What is this doubt or uncertainty asking you to slow down and look more carefully at?" },
+  { name:"Tender",               valence:"mixed",
+    color:"#1e8449",
+    emotions:["Calm","Caring","Loving","Reflective","Self-loving","Serene","Vulnerable","Warm"],
+    prompt:"What would it mean to fully allow and honor this tender, open part of yourself right now?" },
+];
+
+const DEFS = {
+  "Amazed":"Struck by wonder at something unexpected or extraordinary.",
+  "Awe":"Overwhelmed by something so vast or powerful it exceeds your frame.",
+  "Bliss":"Complete happiness — a state of effortless peace and joy.",
+  "Delighted":"Lit up with pleasure by something that genuinely pleases you.",
+  "Eager":"Keenly ready and wanting to dive in.",
+  "Ecstatic":"Joy so intense it overflows — a feeling of being transported.",
+  "Enchanted":"Captivated and charmed, as if under a magical spell.",
+  "Energized":"A surge of vitality that makes you ready to move and act.",
+  "Enthusiastic":"Fired up with active interest and excitement about something.",
+  "Excited":"Stirred up with anticipation — your nervous system saying yes.",
+  "Happy":"A general sense of pleasure, well-being, and things being good.",
+  "Inspired":"Filled with creative energy or a compelling urge to make something.",
+  "Lively":"Full of spirit and animation — alert and buzzing with presence.",
+  "Passionate":"Driven by deep, intense feeling toward someone or something.",
+  "Playful":"Lighthearted and spontaneous — enjoying life without heaviness.",
+  "Refreshed":"Renewed and restored, like a window just washed clean.",
+  "Satisfied":"A settled sense that something has been completed or fulfilled.",
+  "Thrilled":"Excitement at the edge of trembling — can barely contain it.",
+  "Calm":"Free from agitation — a quiet, steady inner stillness.",
+  "Centered":"Balanced and anchored in yourself — not pulled off your axis.",
+  "Content":"At peace with how things are; nothing feels missing right now.",
+  "Fulfilled":"A deep sense that your life and efforts carry meaning.",
+  "Patient":"Able to wait without urgency or distress.",
+  "Peaceful":"Inner quiet and freedom from conflict or disturbance.",
+  "Present":"Fully here — not drifting to past or future.",
+  "Relaxed":"Tension released; body and mind comfortable and easy.",
+  "Serene":"Calm and clear, like still water on a windless day.",
+  "Trusting":"Confident in the safety and reliability of someone or something.",
+  "Adventurous":"Willing to move toward the unknown with curiosity rather than fear.",
+  "Brave":"Facing fear or difficulty with resolve instead of retreat.",
+  "Capable":"Knowing you have what it takes to handle what's ahead.",
+  "Confident":"Secure in your judgment, abilities, and sense of self.",
+  "Daring":"Bold enough to act despite risk or uncertainty.",
+  "Determined":"Committed to your goal and not easily discouraged.",
+  "Grounded":"Firmly connected to yourself — stable and unshaken.",
+  "Proud":"Deep satisfaction in your own achievement, identity, or effort.",
+  "Strong":"Robust in will, body, or emotion — able to carry weight.",
+  "Worthy":"Believing you deserve care, respect, and good things.",
+  "Accepting":"Embracing someone or something as they are, without conditions.",
+  "Affectionate":"Expressing gentle, warm care toward another.",
+  "Caring":"Genuinely invested in another person's well-being.",
+  "Compassion":"Moved by another's suffering and wanting to ease it.",
+  "Empathy":"Attuning to someone's inner experience as if it were your own.",
+  "Safe":"Protected from harm and free to be yourself.",
+  "Warm":"A gentle, friendly goodwill toward people or the world.",
+  "Appreciative":"Noticing and valuing the goodness in what you've received.",
+  "Blessed":"Touched by a grace or fortune that goes beyond what you earned.",
+  "Fortunate":"Aware that circumstances have favored you in meaningful ways.",
+  "Humbled":"Moved to release ego when something greater or kinder meets you.",
+  "Lucky":"A light awareness that chance has gone in your favor.",
+  "Moved":"Emotionally stirred by something beautiful, kind, or significant.",
+  "Thankful":"Feeling and wanting to express gratitude for what's been given.",
+  "Touched":"Gently reached in your heart by an act of kindness or beauty.",
+  "Encouraged":"Given enough support or evidence to keep going.",
+  "Expectant":"Anticipating something good — leaning forward with open attention.",
+  "Optimistic":"Inclined to believe positive outcomes are likely.",
+  "Engaged":"Actively absorbed — fully in it, not just observing.",
+  "Exploring":"Moving into the unknown with openness and discovery.",
+  "Fascinated":"Deeply captivated — held still by something remarkable.",
+  "Interested":"Drawn toward something; wanting to learn or understand more.",
+  "Intrigued":"Caught by a mystery or puzzle that keeps pulling you in.",
+  "Stimulated":"Activated and alive from interesting ideas or input.",
+  "Agitated":"Restless and unsettled inside — difficulty staying still.",
+  "Aggravated":"Irritated beyond your patience threshold.",
+  "Bitter":"Holding resentment over a hurt or injustice that hasn't healed.",
+  "Contempt":"A mix of superiority and disdain toward someone or something.",
+  "Cynical":"Distrustful of people's motives; expecting the worst.",
+  "Disturbed":"Troubled by something that violates your sense of order or safety.",
+  "Edgy":"On edge and easily triggered — like everything is too loud.",
+  "Exasperated":"Worn out by repeated frustration or futility.",
+  "Frustrated":"Blocked from a goal despite effort; hitting a wall.",
+  "Furious":"Intense rage that's hard to contain or direct.",
+  "Grouchy":"Mildly irritable and prone to complaint.",
+  "Hostile":"Actively unfriendly — opposing rather than engaging.",
+  "Impatient":"Wanting things to move faster than they are.",
+  "Irritated":"Mildly annoyed by a persistent friction.",
+  "Irate":"Intensely angry about something felt as wrong or unjust.",
+  "Moody":"Shifting emotionally without a clear cause.",
+  "Outraged":"Angry because something has violated your values or sense of justice.",
+  "Resentful":"Carrying anger about being wronged — a slow-burning wound.",
+  "Upset":"Emotionally disturbed or distressed — often a mix of feelings.",
+  "Vindictive":"Wanting to get back at someone who hurt you.",
+  "Anguish":"Severe emotional pain that feels almost unbearable.",
+  "Depressed":"Persistent low mood with loss of energy, hope, and interest.",
+  "Despondent":"So without hope you've stopped caring what happens.",
+  "Disappointed":"Saddened because someone or something fell short of expectation.",
+  "Discouraged":"Lost the motivation or belief that things can improve.",
+  "Forlorn":"Lonely and abandoned — without comfort or hope.",
+  "Gloomy":"A heavy, dark inner atmosphere — difficulty finding light.",
+  "Grief":"Deep sorrow in the wake of a significant loss.",
+  "Heartbroken":"Devastated by loss or betrayal in something that mattered deeply.",
+  "Hopeless":"Unable to imagine a positive outcome — the future feels closed.",
+  "Lonely":"Isolated or disconnected, even when others are near.",
+  "Melancholy":"A quiet, lingering sadness — pensive and heavy.",
+  "Sorrow":"Deep grief or regret carried over time.",
+  "Unhappy":"A general state of dissatisfaction and low mood.",
+  "Weary":"Tired to the bone — physically, mentally, and emotionally.",
+  "Yearning":"A deep ache for something or someone out of reach.",
+  "Afraid":"Feeling threatened by a specific danger or harm.",
+  "Anxious":"Uneasy about uncertain outcomes — mind rehearsing what could go wrong.",
+  "Apprehensive":"A mild but persistent unease about what's coming.",
+  "Frightened":"Suddenly gripped by fear in response to a real or imagined threat.",
+  "Hesitant":"Holding back because something feels risky or uncertain.",
+  "Nervous":"Edgy anticipation — especially before something high-stakes.",
+  "Panic":"Sudden, overwhelming fear that disrupts thought and action.",
+  "Paralyzed":"Frozen and unable to move because fear has taken over.",
+  "Scared":"In the grip of fear — feeling unable to cope with what's coming.",
+  "Terrified":"Extreme fear that takes over body and mind.",
+  "Worried":"Preoccupied with potential problems or bad outcomes.",
+  "Ashamed":"Feeling bad about who you are, not just what you did.",
+  "Humiliated":"Made to feel deeply degraded or small in front of others.",
+  "Inhibited":"Held back from expressing yourself by fear of judgment.",
+  "Mortified":"So embarrassed you wish you could disappear.",
+  "Self-conscious":"Overly aware of how you appear — uncomfortably exposed.",
+  "Useless":"Believing you have no value or contribution to offer.",
+  "Weak":"Feeling like a failure of strength, will, or character.",
+  "Worthless":"Believing at the core that you don't matter or deserve good things.",
+  "Regret":"Wishing you had made a different choice — looking back with pain.",
+  "Remorseful":"Deeply sorry for harm caused — moved to make it right.",
+  "Sorry":"Acknowledging impact or wrongdoing with a desire to repair it.",
+  "Impotent":"Unable to act or change things despite wanting to.",
+  "Incapable":"Believing you lack the ability to do what's needed.",
+  "Resigned":"Accepting a bad situation because nothing seems worth trying.",
+  "Trapped":"Caught with no visible way out — options feel nonexistent.",
+  "Victim":"Feeling like things happen to you with no power to respond.",
+  "Helpless":"Unable to help yourself or change what's happening.",
+  "Sensitive":"More affected than usual by emotions, words, or the environment.",
+  "Aloof":"Detached and distant — not letting others in.",
+  "Bored":"Unstimulated — nothing seems interesting or worth engaging.",
+  "Confused":"Unable to make sense of what's happening inside or around you.",
+  "Distant":"Pulled away from others or yourself — not fully here.",
+  "Empty":"Feeling hollow inside — lacking meaning, energy, or feeling.",
+  "Indifferent":"Without preference or reaction — nothing seems to matter.",
+  "Isolated":"Cut off from others or from your own inner life.",
+  "Lethargic":"Heavy and slow — body and motivation both dragging.",
+  "Listless":"Without energy or direction — just drifting.",
+  "Removed":"Standing apart from what's happening — watching from a distance.",
+  "Resistant":"Pushing against something; unwilling to engage or change.",
+  "Shut Down":"Emotionally closed off — protecting yourself from feeling.",
+  "Withdrawn":"Pulled inward — less available to others or the world.",
+  "Burned out":"Depleted by sustained effort — reserves are empty.",
+  "Cranky":"Short-tempered and irritable from fatigue or accumulated stress.",
+  "Depleted":"Drained of energy, resources, or resilience.",
+  "Exhausted":"Completely spent — no energy left to give.",
+  "Frazzled":"Overwhelmed and frayed at the edges — pulled in too many directions.",
+  "Overwhelmed":"More coming at you than you can process or manage.",
+  "Rattled":"Shaken and disoriented by something unexpected.",
+  "Restless":"Unable to settle — a persistent urge to move or change something.",
+  "Shaken":"Unsettled by something that disrupted your equilibrium.",
+  "Tight":"Constricted — physically or emotionally bracing against something.",
+  "Worn out":"Tired through and through — running on fumes.",
+  "Concerned":"Mildly troubled by something that might be a problem.",
+  "Dissatisfied":"Things don't feel right — a persistent sense of not enough.",
+  "Perplexed":"Puzzled and unable to understand — searching for clarity.",
+  "Questioning":"Examining assumptions — not sure what to believe.",
+  "Reluctant":"Willing in theory but holding back in practice.",
+  "Skeptical":"Doubtful of claims or intentions — needing more evidence.",
+  "Suspicious":"Sensing something is off — distrusting what you see.",
+  "Ungrounded":"Floating and unmoored — lacking connection to your foundation.",
+  "Unsure":"Without confidence about what's true or what to do.",
+  "Loving":"Holding someone or something with genuine warmth and care.",
+  "Reflective":"Thoughtfully looking inward or backward with openness.",
+  "Self-loving":"Extending care and compassion toward yourself.",
+  "Vulnerable":"Open and exposed in a way that requires courage and trust.",
+};
+
+const FDEFS = {
+  "Aliveness / Joy":"The energy of being fully alive — delight, excitement, and thriving.",
+  "Accepting / Open":"Inner spaciousness — calm, contentment, and ease.",
+  "Courageous / Powerful":"Strength and agency — confidence, groundedness, and courage.",
+  "Connected / Loving":"The warmth of bond — love, care, and safety with others.",
+  "Grateful":"Appreciation for what you've received — moved by goodness.",
+  "Hopeful":"Leaning toward possibility — encouraged and expectant.",
+  "Curious":"An alert, alive interest in learning and exploring.",
+  "Angry / Annoyed":"Activation around unmet values or needs — frustration, irritation, rage.",
+  "Despair / Sad":"The weight of loss, disappointment, or longing.",
+  "Fear":"Alarm in the face of perceived threat or uncertainty.",
+  "Embarrassed / Shame":"Pain about your sense of self or how you appear to others.",
+  "Guilt":"A response to having caused harm — regret and remorse.",
+  "Powerless":"Feeling unable to act or change your situation.",
+  "Fragile":"Feeling raw, exposed, or too sensitive to cope right now.",
+  "Disconnected / Numb":"A muted or absent connection to yourself or others.",
+  "Stressed / Tense":"Overwhelm, depletion, and the strain of too much.",
+  "Unsettled / Doubt":"Inner restlessness — questioning, unease, and uncertainty.",
+  "Tender":"Soft openness — vulnerability, reflection, and self-compassion.",
+};
+
+// ── STATE ───────────────────────────────────────────────────
+const S = { valence:null, families:[], emotions:{} };
+
+// ── TOOLTIP ─────────────────────────────────────────────────
+const tt = document.getElementById('tt');
+let ttT;
+
+function showTT(el, text) {
+  clearTimeout(ttT);
+  tt.textContent = text;
+  tt.classList.add('show');
+  const r = el.getBoundingClientRect();
+  const w = Math.min(230, window.innerWidth - 16);
+  tt.style.maxWidth = w + 'px';
+  const tw = tt.getBoundingClientRect().width || w;
+  const th = tt.getBoundingClientRect().height || 40;
+  let l = r.left + r.width/2 - tw/2 + scrollX;
+  let t = r.top - th - 10 + scrollY;
+  l = Math.max(8+scrollX, Math.min(l, scrollX+innerWidth-tw-8));
+  if (t < scrollY+8) t = r.bottom + 10 + scrollY;
+  tt.style.left = l+'px'; tt.style.top = t+'px';
+  tt.style.setProperty('--al', Math.min(Math.max((r.left+r.width/2+scrollX)-l,12),tw-12)+'px');
+}
+function hideTT() { ttT = setTimeout(()=>tt.classList.remove('show'),80); }
+function bindTT(el, text) {
+  el.addEventListener('mouseenter', ()=>showTT(el,text));
+  el.addEventListener('mouseleave', hideTT);
+}
+
+// ── HELPERS ─────────────────────────────────────────────────
+function visFams() {
+  if (S.valence==='positive') return FAMILIES.filter(f=>f.valence==='positive');
+  if (S.valence==='negative') return FAMILIES.filter(f=>f.valence==='negative');
+  return FAMILIES;
+}
+function nEmo() { return Object.values(S.emotions).reduce((n,a)=>n+a.length,0); }
+
+// ── STEP 1 ──────────────────────────────────────────────────
+function pickV(btn) {
+  document.querySelectorAll('.v-btn').forEach(b=>{ b.classList.remove('sel'); b.setAttribute('aria-pressed','false'); });
+  btn.classList.add('sel'); btn.setAttribute('aria-pressed','true');
+  const prev = S.valence;
+  S.valence = btn.dataset.v;
+  if (prev!==S.valence) { S.families=[]; S.emotions={}; }
+  document.getElementById('btn1').disabled = false;
+}
+
+// ── STEP 2 ──────────────────────────────────────────────────
+function buildFams() {
+  const g = document.getElementById('famGrid');
+  g.innerHTML = '';
+  visFams().forEach(f => {
+    const sel = S.families.includes(f.name);
+    const c = document.createElement('button');
+    c.className = 'chip'+(sel?' sel':'');
+    c.setAttribute('aria-pressed', sel ? 'true' : 'false');
+    c.textContent = f.name;
+    c.onclick = ()=>toggleFam(c,f.name);
+    if (FDEFS[f.name]) bindTT(c,FDEFS[f.name]);
+    g.appendChild(c);
+  });
+  document.getElementById('btn2').disabled = S.families.length===0;
+}
+function toggleFam(chip, name) {
+  const i = S.families.indexOf(name);
+  if (i>-1) {
+    S.families.splice(i,1); delete S.emotions[name];
+    chip.classList.remove('sel'); chip.setAttribute('aria-pressed','false');
+  } else {
+    S.families.push(name);
+    chip.classList.add('sel'); chip.setAttribute('aria-pressed','true');
+  }
+  document.getElementById('btn2').disabled = S.families.length===0;
+}
+
+// ── STEP 3 ──────────────────────────────────────────────────
+function buildEmos() {
+  Object.keys(S.emotions).forEach(n=>{ if (!S.families.includes(n)) delete S.emotions[n]; });
+  const c = document.getElementById('eg');
+  c.innerHTML = '';
+  S.families.forEach(fn => {
+    const fam = FAMILIES.find(f=>f.name===fn);
+    if (!fam) return;
+    const g = document.createElement('div');
+    const l = document.createElement('div');
+    l.className='gl'; l.textContent=fam.name; g.appendChild(l);
+    const grid = document.createElement('div');
+    grid.className='chip-grid';
+    fam.emotions.forEach(e=>{
+      const sel = !!(S.emotions[fn]?.includes(e));
+      const ch = document.createElement('button');
+      ch.className='chip'+(sel?' sel':'');
+      ch.setAttribute('aria-pressed', sel ? 'true' : 'false');
+      ch.textContent=e;
+      ch.onclick=()=>toggleEmo(ch,fn,e);
+      if (DEFS[e]) bindTT(ch,DEFS[e]);
+      grid.appendChild(ch);
+    });
+    g.appendChild(grid);
+    c.appendChild(g);
+  });
+  document.getElementById('btn3').disabled = nEmo()===0;
+}
+function toggleEmo(chip,fn,e) {
+  if (!S.emotions[fn]) S.emotions[fn]=[];
+  const a=S.emotions[fn], i=a.indexOf(e);
+  if (i>-1) {
+    a.splice(i,1); chip.classList.remove('sel'); chip.setAttribute('aria-pressed','false');
+  } else {
+    a.push(e); chip.classList.add('sel'); chip.setAttribute('aria-pressed','true');
+  }
+  document.getElementById('btn3').disabled = nEmo()===0;
+}
+
+// ── WORD CLOUD ──────────────────────────────────────────────
+const SIZE_START = 24;
+const SIZE_MIN   = 12;
+const SIZE_MAX   = 80;
+// Diagonal drag: delta = dx + dy (SE = bigger, NW = smaller)
+// Sensitivity lower than vertical-only since diagonal combines two axes
+const SENS = 0.22;
+
+function buildCloud() {
+  const cloud = document.getElementById('wordCloud');
+  cloud.innerHTML = '';
+  const seen = new Set(); // deduplicate across families
+
+  S.families.forEach(fn => {
+    const emos = S.emotions[fn];
+    if (!emos || emos.length===0) return;
+    const fam = FAMILIES.find(f=>f.name===fn);
+    if (!fam) return;
+
+    emos.forEach(e => {
+      if (seen.has(e)) return; // skip if already rendered from another family
+      seen.add(e);
+      // wrapper
+      const wrap = document.createElement('span');
+      wrap.className = 'cw';
+      wrap.style.fontSize = SIZE_START + 'px';
+      wrap.style.color = fam.color;
+
+      // text node
+      const text = document.createElement('span');
+      text.className = 'cw-text';
+      text.textContent = e;
+      if (DEFS[e]) bindTT(text, DEFS[e]);
+
+      // corner drag handle
+      const tag = document.createElement('span');
+      tag.className = 'cw-tag';
+      tag.title = 'Drag to resize';
+
+      wrap.appendChild(text);
+      wrap.appendChild(tag);
+
+      // ── mouse: drag on the tag ──
+      tag.addEventListener('mousedown', ev => {
+        if (ev.button !== 0) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        const startX  = ev.clientX;
+        const startY  = ev.clientY;
+        const startSz = parseFloat(wrap.style.fontSize);
+        wrap.classList.add('active');
+
+        const onMove = mv => {
+          // SE drag (right+down) = larger; NW drag = smaller
+          const delta = (mv.clientX - startX) + (mv.clientY - startY);
+          wrap.style.fontSize = Math.min(SIZE_MAX, Math.max(SIZE_MIN, startSz + delta * SENS)) + 'px';
+        };
+        const onUp = () => {
+          wrap.classList.remove('active');
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+        };
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+
+      // ── touch: drag on the tag ──
+      let tX, tY, tSz;
+      tag.addEventListener('touchstart', ev => {
+        tX  = ev.touches[0].clientX;
+        tY  = ev.touches[0].clientY;
+        tSz = parseFloat(wrap.style.fontSize);
+        wrap.classList.add('active');
+        ev.stopPropagation();
+      }, {passive:true});
+      tag.addEventListener('touchmove', ev => {
+        ev.preventDefault();
+        const delta = (ev.touches[0].clientX - tX) + (ev.touches[0].clientY - tY);
+        wrap.style.fontSize = Math.min(SIZE_MAX, Math.max(SIZE_MIN, tSz + delta * SENS)) + 'px';
+      }, {passive:false});
+      tag.addEventListener('touchend', () => wrap.classList.remove('active'));
+
+      cloud.appendChild(wrap);
+    });
+  });
+}
+
+// ── REFLECTION CARDS ────────────────────────────────────────
+function buildCards() {
+  const c = document.getElementById('rCards');
+  c.innerHTML = '';
+  S.families.forEach(fn => {
+    const emos = S.emotions[fn];
+    if (!emos || emos.length===0) return;
+    const fam = FAMILIES.find(f=>f.name===fn);
+    if (!fam) return;
+    const card = document.createElement('div');
+    card.className = 'rc';
+    const fl = document.createElement('div');
+    fl.className = 'rc-fam';
+    fl.style.color = fam.color;
+    fl.textContent = fam.name;
+    const el = document.createElement('div');
+    el.className = 'rc-emotions';
+    el.style.color = fam.color;
+    el.textContent = emos.join(' · ');
+    const q = document.createElement('div');
+    q.className = 'rc-q';
+    q.textContent = fam.prompt;
+    card.appendChild(fl); card.appendChild(el); card.appendChild(q);
+    c.appendChild(card);
+  });
+}
+
+// ── NAV ─────────────────────────────────────────────────────
+function go(n) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('prog').style.visibility='visible';
+  if (n===1) document.getElementById('s1').classList.add('active');
+  else if (n===2) { buildFams(); document.getElementById('s2').classList.add('active'); }
+  else if (n===3) { buildEmos(); document.getElementById('s3').classList.add('active'); }
+  updProg(n);
+  scrollTo({top:0,behavior:'smooth'});
+}
+
+function showR() {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('prog').style.visibility='hidden';
+  const d = new Date();
+  document.getElementById('pMeta').innerHTML =
+    d.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) +
+    '<br>ExEF Emotion Check-In';
+  buildCloud();
+  buildCards();
+  document.getElementById('sR').classList.add('active');
+  scrollTo({top:0,behavior:'smooth'});
+}
+
+function startOver() {
+  S.valence=null; S.families=[]; S.emotions={};
+  document.querySelectorAll('.v-btn').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('btn1').disabled=true;
+  document.getElementById('prog').style.visibility='visible';
+  go(1);
+}
+
+function updProg(step) {
+  for (let i=1;i<=3;i++) {
+    const d=document.getElementById('pd'+i);
+    d.classList.remove('active','done');
+    if (i<step) d.classList.add('done');
+    else if (i===step) d.classList.add('active');
+  }
+  for (let i=1;i<=2;i++)
+    document.getElementById('pl'+i).classList.toggle('done',i<step);
+}
+</script>
+</body>
+</html>

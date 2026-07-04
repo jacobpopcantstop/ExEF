@@ -29,13 +29,20 @@
   function render(mount) {
     var tool = mount.getAttribute('data-tool') || pageSlug();
     var toolLabel = mount.getAttribute('data-tool-label') || 'this tool';
+    var asset = mount.getAttribute('data-asset') || '';
+    var heading = mount.getAttribute('data-heading') ||
+      (asset ? 'Get the complete printable PDF (free)' : 'Save your results + get the right next step');
+    var blurb = mount.getAttribute('data-blurb') ||
+      (asset
+        ? 'Enter your email and we’ll unlock a printable PDF of this entire resource, plus related ExEF tools and occasional updates.'
+        : 'Enter your email to keep what ' + toolLabel + ' showed you and receive related ExEF tools, planning resources, and occasional updates.');
     var url = bookingUrl(tool);
 
     mount.innerHTML =
       '<div class="container" style="max-width:var(--max-width-narrow);">' +
         '<div class="card" style="margin-top:var(--space-xl);">' +
-          '<h3 style="margin-top:0;">Save your results + get the right next step</h3>' +
-          '<p style="color:var(--color-text-light);">Enter your email to keep what ' + toolLabel + ' showed you and receive related ExEF tools, planning resources, and occasional updates.</p>' +
+          '<h3 style="margin-top:0;">' + heading + '</h3>' +
+          '<p style="color:var(--color-text-light);">' + blurb + '</p>' +
           '<form class="tlc-form">' +
             '<div class="grid grid--2" style="gap:var(--space-md);">' +
               '<div class="form-group">' +
@@ -67,6 +74,46 @@
 
     var form = mount.querySelector('.tlc-form');
     var status = mount.querySelector('.tlc-status');
+
+    function showSuccess(downloadHref) {
+      var wrap = document.createElement('div');
+      var lead = document.createElement('p');
+      lead.style.fontWeight = '600';
+      lead.textContent = downloadHref
+        ? 'You’re in. Your PDF is ready:'
+        : 'Saved. Check your inbox for your ExEF resources.';
+      wrap.appendChild(lead);
+      if (downloadHref) {
+        var dl = document.createElement('a');
+        dl.href = downloadHref;
+        dl.className = 'btn btn--primary btn--sm';
+        dl.target = '_blank';
+        dl.rel = 'noopener';
+        dl.textContent = 'Download the PDF';
+        dl.setAttribute('data-analytics-event', 'lead_magnet_download');
+        dl.setAttribute('data-analytics-label', tool);
+        wrap.appendChild(dl);
+        var note = document.createElement('p');
+        note.style.cssText = 'font-size:0.85rem;color:var(--color-text-muted);margin-top:var(--space-xs);';
+        note.textContent = 'Link expires in 15 minutes — download now or grab it from your inbox later.';
+        wrap.appendChild(note);
+      }
+      var next = document.createElement('p');
+      next.style.cssText = 'margin-top:var(--space-md);color:var(--color-text-light);';
+      next.textContent = 'Want to move faster? A free 30-minute consultation turns this into a concrete plan.';
+      wrap.appendChild(next);
+      var book = document.createElement('a');
+      book.href = CALENDLY_BASE + '?utm_source=' + encodeURIComponent(tool) + '&utm_medium=site&utm_content=post-submit';
+      book.className = 'btn btn--secondary btn--sm';
+      book.target = '_blank';
+      book.rel = 'noopener';
+      book.textContent = 'Book a 30-minute consultation';
+      book.setAttribute('data-analytics-event', 'book_call_click');
+      book.setAttribute('data-analytics-label', tool + '-post-submit');
+      wrap.appendChild(book);
+      form.replaceWith(wrap);
+    }
+
     form.addEventListener('submit', async function (event) {
       event.preventDefault();
       var email = mount.querySelector('#tlc-email').value.trim();
@@ -78,7 +125,7 @@
       }
       var submit = form.querySelector('button[type="submit"]');
       submit.disabled = true;
-      status.textContent = 'Saving...';
+      status.textContent = asset ? 'Unlocking your PDF...' : 'Saving...';
       try {
         var response = await fetch('/api/leads', {
           method: 'POST',
@@ -88,15 +135,20 @@
             email: email,
             consent: true,
             source: tool,
-            lead_type: 'tool_results',
+            lead_type: asset ? 'download_' + asset.replace(/-/g, '_') : 'tool_results',
             metadata: { tool: tool, page: pageSlug() + '.html' }
           })
         });
         var body = await response.json();
         if (!response.ok || !body.ok) throw new Error((body && body.error) || 'Unable to save right now.');
-        trackEvent('tool_lead_submitted', { tool: tool });
-        status.textContent = 'Saved. Check your inbox for your ExEF resources.';
-        form.reset();
+        var downloadHref = null;
+        if (asset) {
+          var signRes = await fetch('/api/sign-download?asset=' + encodeURIComponent(asset));
+          var signData = await signRes.json();
+          if (signRes.ok && signData.ok) downloadHref = signData.url;
+        }
+        trackEvent('tool_lead_submitted', { tool: tool, gated_asset: asset || null });
+        showSuccess(downloadHref);
       } catch (err) {
         status.textContent = err.message || 'Unable to save right now. Please try again.';
         submit.disabled = false;

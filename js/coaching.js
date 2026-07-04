@@ -356,6 +356,21 @@ async function submitLeadForm(form, payload, successMessage) {
         success.className = 'form-success';
         success.textContent = successMessage;
         form.appendChild(success);
+
+        var pageSlug = (window.location.pathname.split('/').pop() || 'coaching-contact.html').replace(/\.html$/, '');
+        var nudge = document.createElement('p');
+        nudge.style.cssText = 'margin-top:var(--space-md);color:var(--color-text-light);';
+        nudge.textContent = 'Want to skip the wait? Grab a consultation time directly:';
+        form.appendChild(nudge);
+        var book = document.createElement('a');
+        book.href = 'https://calendly.com/jacobansky/30min?utm_source=' + encodeURIComponent(pageSlug) + '&utm_medium=site&utm_content=post-submit';
+        book.className = 'btn btn--primary';
+        book.target = '_blank';
+        book.rel = 'noopener';
+        book.textContent = 'Book a 30-minute consultation';
+        book.setAttribute('data-analytics-event', 'book_call_click');
+        book.setAttribute('data-analytics-label', pageSlug + '-post-submit');
+        form.appendChild(book);
     } catch (err) {
         showInlineError(form, err.message || 'Submission failed. Please try again.');
         submitBtn.textContent = originalText;

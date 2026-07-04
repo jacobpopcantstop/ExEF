@@ -9,7 +9,8 @@ const log = {
 
 const ASSET_MAP = {
   'gap-analyzer': 'docs/assets/executive-function-skills-gap-analyzer.pdf',
-  'launch-plan': 'docs/assets/90-day-coaching-business-launch-plan.pdf'
+  'launch-plan': 'docs/assets/90-day-coaching-business-launch-plan.pdf',
+  'iep-goal-bank': 'docs/assets/executive-functioning-iep-goal-bank.pdf'
 };
 
 function json(statusCode, body) {
@@ -92,6 +93,55 @@ async function syncToMailerLite(email, name, groupKey) {
   }
 }
 
+// Instant "new lead" email to the practice owner via Resend
+// (https://resend.com — free tier covers internal notifications).
+// No-ops gracefully when EFI_RESEND_API_KEY is unset so lead capture
+// never depends on the notification path.
+async function sendLeadNotification(lead) {
+  const apiKey = requiredEnv('EFI_RESEND_API_KEY');
+  if (!apiKey) return { ok: false, skipped: true, reason: 'EFI_RESEND_API_KEY not set' };
+
+  const to = requiredEnv('EFI_LEAD_NOTIFY_EMAIL') || 'jacob@exef.org';
+  const from = requiredEnv('EFI_LEAD_NOTIFY_FROM') || 'ExEF Leads <onboarding@resend.dev>';
+  const meta = lead.metadata || {};
+  const lines = [
+    `New lead captured ${lead.captured_at}`,
+    '',
+    `Email:     ${lead.email}`,
+    `Name:      ${lead.name || '(not given)'}`,
+    `Type:      ${lead.lead_type}`,
+    `Source:    ${lead.source}`,
+    `Page:      ${meta.page || '(unknown)'}`,
+  ];
+  if (meta.interest) lines.push(`Interest:  ${meta.interest}`);
+  if (meta.phone) lines.push(`Phone:     ${meta.phone}`);
+  if (meta.student_age) lines.push(`Student:   ${meta.student_age}`);
+  if (meta.situation) lines.push('', 'Situation:', meta.situation);
+  lines.push('', `Lead ID: ${lead.lead_id}`);
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        from,
+        to: [to],
+        subject: `New lead: ${lead.lead_type} — ${lead.email}`,
+        text: lines.join('\n')
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) log.warn('lead notification failed', { status: res.status, error: data?.message });
+    return { ok: res.ok, status: res.status, id: data?.id };
+  } catch (err) {
+    log.warn('lead notification error', { error: err.message });
+    return { ok: false, error: err.message };
+  }
+}
+
 async function fanout(payload) {
   const targets = [
     requiredEnv('EFI_CRM_WEBHOOK_URL'),
@@ -130,5 +180,6 @@ module.exports = {
   normalizeEmail,
   requiredEnv,
   fanout,
+  sendLeadNotification,
   syncToMailerLite
 };

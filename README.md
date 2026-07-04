@@ -114,6 +114,8 @@ Set `EFI_SUBMISSIONS_CRON_SECRET` in production and rely on `netlify/functions/p
 - `python3 scripts/build_responsive_images.py` — regenerates smaller PNG variants for responsive image delivery.
 - `python3 scripts/build_webp_images.py` — generates WebP siblings for rasters referenced in HTML/JS (requires `pip install Pillow`).
 - `python3 scripts/apply_webp_pictures.py` — wraps raster `<img>` tags in `<picture>` elements with WebP sources (idempotent).
+
+Lead capture on free tools: pages opt in with `<section id="tool-lead-capture" data-tool="…" data-tool-label="…">` plus `js/tool-lead-capture.min.js`; the component posts to `/api/leads` (`lead_type: tool_results`) and renders a UTM-tagged consultation CTA. All Calendly links site-wide carry `utm_source=<page>&utm_medium=site&utm_content=<placement>` and fire a `book_call_click` analytics event.
 - `python3 scripts/optimize_images.py` — compresses oversized images in place (requires `pip install Pillow`).
 - `python3 scripts/check_perf_budget.py` — enforces asset size budgets (runs in the release gate).
 - `python3 scripts/minify_page_scripts.py` — regenerates `js/*.min.js` (requires `pip install rjsmin`).

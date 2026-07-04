@@ -39,7 +39,7 @@
         </div>
         <div class="nav__cluster nav__cluster--support">
           <span class="nav__auth"></span>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="nav__link nav__link--cta">Book Consultation</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=full-ef-profile&amp;utm_medium=site&amp;utm_content=nav-cta" class="nav__link nav__link--cta" data-analytics-event="book_call_click" data-analytics-label="full-ef-profile-nav-cta">Book Consultation</a>
         </div>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -210,11 +210,13 @@
         <h2>Don&rsquo;t leave with just a profile.</h2>
         <p>A Cross-Signal Profile shows you the pattern. The shortest path from pattern to plan is a 20-minute call.</p>
         <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
-          <a href="https://calendly.com/jacobansky/30min" class="btn btn--primary btn--lg">Book a 30-minute consultation</a>
+          <a href="https://calendly.com/jacobansky/30min?utm_source=full-ef-profile&amp;utm_medium=site&amp;utm_content=inline" class="btn btn--primary btn--lg" data-analytics-event="book_call_click" data-analytics-label="full-ef-profile-inline">Book a 30-minute consultation</a>
           <a href="coaching-home.html" class="btn btn--outline-white btn--lg">See Coaching Packages</a>
         </div>
       </div>
     </section>
+    <section class="section" id="tool-lead-capture" data-tool="full-ef-profile" data-tool-label="the Cross-Signal Profile"></section>
+
   </main>
 
   <footer class="footer">
@@ -254,7 +256,7 @@
           <h4>Connect</h4>
           <ul class="footer__links">
             <li><a href="coaching-home.html#service-lanes">Services</a></li>
-            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a Consultation</a></li>
+            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=full-ef-profile&amp;utm_medium=site&amp;utm_content=footer" data-analytics-event="book_call_click" data-analytics-label="full-ef-profile-footer">Book a Consultation</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="search.html">Search</a></li>
           </ul>
@@ -270,6 +272,7 @@
   <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
 
   <script src="js/nav-auth.min.js" defer></script>
+  <script src="js/tool-lead-capture.min.js" defer></script>
   <script src="js/main.min.js" defer></script>
   <script src="js/full-ef-profile.min.js"></script>
 </body>

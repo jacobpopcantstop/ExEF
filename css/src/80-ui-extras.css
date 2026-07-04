@@ -3458,9 +3458,6 @@ img {
   display: block;
 }
 
-figure img[width][height] {
-  aspect-ratio: attr(width) / attr(height);
-}
 
 @media (max-width: 640px) {
   .hero__title--accents {

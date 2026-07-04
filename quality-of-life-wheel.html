@@ -3,13 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quality of Life Wheel | ExEF</title>
+  <title>Quality of Life Wheel — Free Interactive Life Assessment | ExEF</title>
   <meta name="description" content="An interactive Quality of Life Wheel. Rate how much you agree with statements across eight areas of life, define what each one means to you, and reflect on the patterns you notice.">
   <link rel="preload" href="css/styles.css" as="style">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="favicon.svg">
   <link rel="canonical" href="https://exef.org/quality-of-life-wheel.html">
-  <meta property="og:title" content="Quality of Life Wheel | ExEF">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Quality of Life Wheel \u2014 Free Interactive Life Assessment",
+    "url": "https://exef.org/quality-of-life-wheel.html",
+    "description": "An interactive Quality of Life Wheel. Rate how much you agree with statements across eight areas of life, define what each one means to you, and reflect on the patterns you notice.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Web browser",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "ExEF",
+      "url": "https://exef.org/"
+    }
+  }
+  </script>
+  <meta property="og:title" content="Quality of Life Wheel — Free Interactive Life Assessment | ExEF">
   <meta property="og:description" content="Rate how much you agree with statements across eight areas of life, define what each one means to you, and reflect on the patterns you notice.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ExEF">
@@ -174,7 +196,7 @@
         </div>
         <div class="nav__cluster nav__cluster--support">
           <span class="nav__auth"></span>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="nav__link nav__link--cta">Book Consultation</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=quality-of-life-wheel&amp;utm_medium=site&amp;utm_content=nav-cta" class="nav__link nav__link--cta" data-analytics-event="book_call_click" data-analytics-label="quality-of-life-wheel-nav-cta">Book Consultation</a>
         </div>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -275,6 +297,8 @@
         <p class="scope-note">Based on the Wheel of Life, a widely used coaching self-awareness exercise. This is a reflective tool, not a clinical assessment, diagnosis, or treatment.</p>
       </div>
     </section>
+    <section class="section" id="tool-lead-capture" data-tool="quality-of-life-wheel" data-tool-label="the Quality of Life Wheel"></section>
+
   </main>
 
   <!-- Footer -->
@@ -315,7 +339,7 @@
           <h4>Connect</h4>
           <ul class="footer__links">
             <li><a href="coaching-home.html#service-lanes">Services</a></li>
-            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a Consultation</a></li>
+            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=quality-of-life-wheel&amp;utm_medium=site&amp;utm_content=footer" data-analytics-event="book_call_click" data-analytics-label="quality-of-life-wheel-footer">Book a Consultation</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="search.html">Search</a></li>
           </ul>
@@ -332,6 +356,7 @@
   <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
 
   <script src="js/nav-auth.min.js" defer></script>
+  <script src="js/tool-lead-capture.min.js" defer></script>
   <script src="js/main.min.js" defer></script>
   <script src="js/quality-of-life-wheel.min.js" defer></script>
 </body>

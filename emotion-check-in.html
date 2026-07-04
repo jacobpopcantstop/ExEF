@@ -3,7 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ExEF — Emotion Check-In</title>
+  <title>Free Emotion Check-In Tool — Name What You're Feeling | ExEF</title>
+  <meta name="description" content="Free interactive emotion check-in tool. Name what you're feeling, gauge intensity, and get a matched regulation strategy — built on ExEF's executive function coaching approach.">
+  <link rel="canonical" href="https://exef.org/emotion-check-in.html">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Free Emotion Check-In Tool \u2014 Name What You're Feeling",
+    "url": "https://exef.org/emotion-check-in.html",
+    "description": "Free interactive emotion check-in tool. Name what you're feeling, gauge intensity, and get a matched regulation strategy \u2014 built on ExEF's executive function coaching approach.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Web browser",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "ExEF",
+      "url": "https://exef.org/"
+    }
+  }
+  </script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%23274960'/><text x='16' y='21' font-family='Helvetica Neue,sans-serif' font-size='9' font-weight='800' fill='white' text-anchor='middle' letter-spacing='0.5'>ExEF</text></svg>">
   <style>
     :root {
@@ -564,7 +588,9 @@
     </div>
   </section>
 
-</main>
+  <section class="section" id="tool-lead-capture" data-tool="emotion-check-in" data-tool-label="the Emotion Check-In"></section>
+
+  </main>
 
 <script>
 // ── DATA ────────────────────────────────────────────────────
@@ -1102,5 +1128,6 @@ function updProg(step) {
     document.getElementById('pl'+i).classList.toggle('done',i<step);
 }
 </script>
-</body>
+  <script src="js/tool-lead-capture.min.js" defer></script>
+  </body>
 </html>

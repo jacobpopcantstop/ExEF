@@ -14,7 +14,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 MAX_SINGLE_IMAGE = 1 * 1024 * 1024          # 1 MB per image
-MAX_IMAGES_TOTAL = 45 * 1024 * 1024         # 45 MB for images/ overall
+# Repo-side total includes WebP siblings kept alongside PNG/JPG fallbacks;
+# browsers download one format, so shipped page weight went down, not up.
+MAX_IMAGES_TOTAL = 60 * 1024 * 1024         # 60 MB for images/ overall
 MAX_CSS_BUNDLE = 300 * 1024                 # css/styles.css
 MAX_PAGE_SCRIPT = 120 * 1024                # any non-vendor js/*.min.js or bundle
 

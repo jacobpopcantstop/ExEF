@@ -16,6 +16,28 @@
   <meta property="og:image:type" content="image/svg+xml">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:image" content="https://exef.org/images/exef-og-card.svg">  <link rel="canonical" href="https://exef.org/ef-profile-story.html">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Free Executive Functioning Quiz: EF Profile Story",
+    "url": "https://exef.org/ef-profile-story.html",
+    "description": "Take the free EF Profile Story quiz to get a narrative executive functioning profile, friction scores, and a practical 7-day experiment.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Web browser",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "ExEF",
+      "url": "https://exef.org/"
+    }
+  }
+  </script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-2WLZPV0PD6"></script>
   <script src="js/google-analytics.min.js" defer></script>
@@ -39,7 +61,7 @@
         </div>
         <div class="nav__cluster nav__cluster--support">
           <span class="nav__auth"></span>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="nav__link nav__link--cta">Book Consultation</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=ef-profile-story&amp;utm_medium=site&amp;utm_content=nav-cta" class="nav__link nav__link--cta" data-analytics-event="book_call_click" data-analytics-label="ef-profile-story-nav-cta">Book Consultation</a>
         </div>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -74,12 +96,12 @@
 
     <div class="container">
       <figure class="inline-figure inline-figure--nestled inline-figure--quiet">
-        <img src="images/puzzlepieces.jpg"
+        <picture><source type="image/webp" srcset="images/puzzlepieces-640.webp 640w, images/puzzlepieces-960.webp 960w, images/puzzlepieces.webp 2048w" sizes="(max-width: 768px) 92vw, 480px"><img src="images/puzzlepieces.jpg"
              srcset="images/puzzlepieces-640.jpg 640w, images/puzzlepieces-960.jpg 960w, images/puzzlepieces.jpg 2048w"
              sizes="(max-width: 768px) 92vw, 480px"
              width="2048" height="1365"
              alt="Puzzle pieces coming together, representing how multiple assessments build one coherent EF profile"
-             loading="lazy" decoding="async">
+             loading="lazy" decoding="async"></picture>
         <figcaption>Each assessment is one piece of the larger profile.</figcaption>
       </figure>
     </div>
@@ -172,11 +194,13 @@
         <h2>Don&rsquo;t leave with just a story.</h2>
         <p>Your EF story is a starting point, not a plan. The shortest path from insight to change is a 20-minute call.</p>
         <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
-          <a href="https://calendly.com/jacobansky/30min" class="btn btn--primary btn--lg">Book a 30-minute consultation</a>
+          <a href="https://calendly.com/jacobansky/30min?utm_source=ef-profile-story&amp;utm_medium=site&amp;utm_content=inline" class="btn btn--primary btn--lg" data-analytics-event="book_call_click" data-analytics-label="ef-profile-story-inline">Book a 30-minute consultation</a>
           <a href="coaching-home.html" class="btn btn--outline-white btn--lg">See Coaching Packages</a>
         </div>
       </div>
     </section>
+    <section class="section" id="tool-lead-capture" data-tool="ef-profile-story" data-tool-label="the EF Profile Story"></section>
+
   </main>
 
   <footer class="footer">
@@ -216,7 +240,7 @@
           <h4>Connect</h4>
           <ul class="footer__links">
             <li><a href="coaching-home.html#service-lanes">Services</a></li>
-            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a Consultation</a></li>
+            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=ef-profile-story&amp;utm_medium=site&amp;utm_content=footer" data-analytics-event="book_call_click" data-analytics-label="ef-profile-story-footer">Book a Consultation</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="search.html">Search</a></li>
           </ul>
@@ -232,6 +256,7 @@
   <button type="button" class="back-to-top" aria-label="Back to top">&#8593;</button>
 
   <script src="js/nav-auth.min.js" defer></script>
+  <script src="js/tool-lead-capture.min.js" defer></script>
   <script src="js/main.min.js" defer></script>
   <script src="js/ef-profile-story.min.js"></script>
 </body>

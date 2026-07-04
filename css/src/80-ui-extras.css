@@ -2278,9 +2278,31 @@ body.page-home .page-hero-figure--responsive img {
   border-radius: var(--border-radius-lg);
 }
 
-.page-hero-figure--jacob-bio img,
-body.page-home .page-hero-figure--jacob-bio img {
-  object-position: center 34%;
+/* Founder portrait: real portrait crop, not the 16:9 letterbox the
+   generic responsive figure applies. Double class beats the
+   --responsive media-query overrides regardless of source order. */
+.page-hero-figure--responsive.page-hero-figure--jacob-bio {
+  max-width: 400px;
+  justify-self: center;
+}
+
+.page-hero-figure--responsive.page-hero-figure--jacob-bio img,
+body.page-home .page-hero-figure--responsive.page-hero-figure--jacob-bio img {
+  aspect-ratio: 4 / 5;
+  object-position: center 22%;
+}
+
+@media (max-width: 640px) {
+  .page-hero-figure--responsive.page-hero-figure--jacob-bio {
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page-hero-figure--responsive.page-hero-figure--jacob-bio img,
+  body.page-home .page-hero-figure--responsive.page-hero-figure--jacob-bio img {
+    aspect-ratio: 1 / 1;
+  }
 }
 
 /* Brain Mode Quiz */
@@ -3458,9 +3480,6 @@ img {
   display: block;
 }
 
-figure img[width][height] {
-  aspect-ratio: attr(width) / attr(height);
-}
 
 @media (max-width: 640px) {
   .hero__title--accents {

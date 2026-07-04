@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Start Friction Diagnostic | ExEF</title>
+  <title>Why Can't I Start Tasks? Free Task Initiation Assessment | ExEF</title>
   <meta name="description" content="Use ExEF's free Task Start Friction Diagnostic to identify what blocks task initiation and generate a start protocol for a real situation.">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="favicon.svg">
-  <meta property="og:title" content="Task Start Friction Diagnostic | ExEF">
+  <meta property="og:title" content="Why Can't I Start Tasks? Free Task Initiation Assessment | ExEF">
   <meta property="og:description" content="A free ExEF diagnostic for turning start resistance into a concrete, low-friction first-step protocol.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ExEF">
@@ -16,6 +16,28 @@
   <meta property="og:image:type" content="image/svg+xml">
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:image" content="https://exef.org/images/exef-og-card.svg">  <link rel="canonical" href="https://exef.org/task-start-friction.html">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Why Can't I Start Tasks? Free Task Initiation Assessment",
+    "url": "https://exef.org/task-start-friction.html",
+    "description": "Use ExEF's free Task Start Friction Diagnostic to identify what blocks task initiation and generate a start protocol for a real situation.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Web browser",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "ExEF",
+      "url": "https://exef.org/"
+    }
+  }
+  </script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-2WLZPV0PD6"></script>
   <script src="js/google-analytics.min.js" defer></script>
@@ -38,7 +60,7 @@
         </div>
         <div class="nav__cluster nav__cluster--support">
           <span class="nav__auth"></span>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="nav__link nav__link--cta">Book Consultation</a>
+          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=task-start-friction&amp;utm_medium=site&amp;utm_content=nav-cta" class="nav__link nav__link--cta" data-analytics-event="book_call_click" data-analytics-label="task-start-friction-nav-cta">Book Consultation</a>
         </div>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -78,12 +100,12 @@
         </div>
 
         <figure class="inline-figure inline-figure--nestled inline-figure--quiet">
-          <img src="images/cheweduppen.jpg"
+          <picture><source type="image/webp" srcset="images/cheweduppen-640.webp 640w, images/cheweduppen-960.webp 960w, images/cheweduppen.webp 2048w" sizes="(max-width: 768px) 92vw, 480px"><img src="images/cheweduppen.jpg"
                srcset="images/cheweduppen-640.jpg 640w, images/cheweduppen-960.jpg 960w, images/cheweduppen.jpg 2048w"
                sizes="(max-width: 768px) 92vw, 480px"
                width="2048" height="1536"
                alt="A pen chewed from anxious nibbling, representing the visible residue of task-start friction"
-               loading="lazy" decoding="async">
+               loading="lazy" decoding="async"></picture>
           <figcaption>Friction leaves evidence on the things you touch while stuck.</figcaption>
         </figure>
 
@@ -144,11 +166,13 @@
         <h2>Don&rsquo;t leave with just a score.</h2>
         <p>Naming the friction point is a starting point, not a plan. The shortest path from this result to actual change is a 20-minute call.</p>
         <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
-          <a href="https://calendly.com/jacobansky/30min" class="btn btn--primary btn--lg">Book a 30-minute consultation</a>
+          <a href="https://calendly.com/jacobansky/30min?utm_source=task-start-friction&amp;utm_medium=site&amp;utm_content=inline" class="btn btn--primary btn--lg" data-analytics-event="book_call_click" data-analytics-label="task-start-friction-inline">Book a 30-minute consultation</a>
           <a href="coaching-home.html" class="btn btn--outline-white btn--lg">See Coaching Packages</a>
         </div>
       </div>
     </section>
+    <section class="section" id="tool-lead-capture" data-tool="task-start-friction" data-tool-label="the Task-Start Friction check"></section>
+
   </main>
 
   <footer class="footer">
@@ -188,7 +212,7 @@
           <h4>Connect</h4>
           <ul class="footer__links">
             <li><a href="coaching-home.html#service-lanes">Services</a></li>
-            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a Consultation</a></li>
+            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=task-start-friction&amp;utm_medium=site&amp;utm_content=footer" data-analytics-event="book_call_click" data-analytics-label="task-start-friction-footer">Book a Consultation</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="search.html">Search</a></li>
           </ul>
@@ -203,6 +227,7 @@
 
   <script src="js/nav-auth.min.js" defer></script>
   <script src="js/assessment-tools.min.js"></script>
+  <script src="js/tool-lead-capture.min.js" defer></script>
   <script src="js/main.min.js" defer></script>
 </body>
 </html>

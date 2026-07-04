@@ -278,6 +278,11 @@
   status = 301
 
 [[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
+
+[[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"

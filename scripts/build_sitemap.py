@@ -96,6 +96,8 @@ PRIORITIES = {
 }
 
 ROUTE_MAP = {
+    "index.html": "",
+    "blog.html": "blog/",
     "coaching-home.html": "coaching/",
     "coaching-methodology.html": "coaching/methodology/",
     "coaching-contact.html": "coaching/contact/",
@@ -113,6 +115,13 @@ ROUTE_MAP = {
 }
 
 
+def route_for(name: str) -> str:
+    """Public path for a page: pretty routes win, otherwise drop the .html."""
+    if name in ROUTE_MAP:
+        return ROUTE_MAP[name]
+    return name[: -len(".html")]
+
+
 def lastmod_for(path: Path) -> str:
     return path.stat().st_mtime_ns and path.stat().st_mtime and __import__("datetime").datetime.fromtimestamp(path.stat().st_mtime).date().isoformat()
 
@@ -124,7 +133,7 @@ def build() -> None:
       if html.name in IGNORED:
         continue
       url = ET.SubElement(urlset, "url")
-      ET.SubElement(url, "loc").text = DOMAIN + ROUTE_MAP.get(html.name, html.name)
+      ET.SubElement(url, "loc").text = DOMAIN + route_for(html.name)
       ET.SubElement(url, "lastmod").text = lastmod_for(html)
       ET.SubElement(url, "priority").text = PRIORITIES.get(html.name, "0.5")
     tree = ET.ElementTree(urlset)

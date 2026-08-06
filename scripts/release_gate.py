@@ -31,15 +31,17 @@ def load_visibility() -> dict:
 VISIBILITY = load_visibility()
 IGNORED_HTML = {"404.html", *VISIBILITY.get("hiddenPages", []), *VISIBILITY.get("utilityPages", [])}
 CANONICAL_OVERRIDES = {
-    "checkout.html": CANONICAL_DOMAIN + "store.html#purchase-status",
+    "index.html": CANONICAL_DOMAIN,
+    "blog.html": CANONICAL_DOMAIN + "blog/",
+    "checkout.html": CANONICAL_DOMAIN + "store#purchase-status",
     "coaching-home.html": CANONICAL_DOMAIN + "coaching/",
     "coaching-contact.html": CANONICAL_DOMAIN + "coaching/contact/",
     "coaching-methodology.html": CANONICAL_DOMAIN + "coaching/methodology/",
-    "educator-launchpad.html": CANONICAL_DOMAIN + "teacher-to-coach.html#launchpad",
-    "educator-toolkit.html": CANONICAL_DOMAIN + "resources.html#toolkits",
-    "enroll.html": CANONICAL_DOMAIN + "store.html",
-    "further-sources.html": CANONICAL_DOMAIN + "open-ef-resources-directory.html#citations",
-    "getting-started.html": CANONICAL_DOMAIN + "index.html#start-paths",
+    "educator-launchpad.html": CANONICAL_DOMAIN + "teacher-to-coach#launchpad",
+    "educator-toolkit.html": CANONICAL_DOMAIN + "resources#toolkits",
+    "enroll.html": CANONICAL_DOMAIN + "store",
+    "further-sources.html": CANONICAL_DOMAIN + "open-ef-resources-directory#citations",
+    "getting-started.html": CANONICAL_DOMAIN + "#start-paths",
     "module-1.html": CANONICAL_DOMAIN + "modules/1/",
     "module-2.html": CANONICAL_DOMAIN + "modules/2/",
     "module-3.html": CANONICAL_DOMAIN + "modules/3/",
@@ -52,10 +54,17 @@ CANONICAL_OVERRIDES = {
     "module-a-neuroscience.html": CANONICAL_DOMAIN + "modules/1/",
     "module-b-pedagogy.html": CANONICAL_DOMAIN + "modules/3/",
     "module-c-interventions.html": CANONICAL_DOMAIN + "modules/4/",
-    "parent-toolkit.html": CANONICAL_DOMAIN + "resources.html#toolkits",
+    "parent-toolkit.html": CANONICAL_DOMAIN + "resources#toolkits",
     "search.html": CANONICAL_DOMAIN + "search/",
     "verify.html": CANONICAL_DOMAIN + "verify/",
 }
+
+
+def canonical_for(name: str) -> str:
+    """Canonical URL for a page: overrides win, otherwise drop the .html."""
+    if name in CANONICAL_OVERRIDES:
+        return CANONICAL_OVERRIDES[name]
+    return CANONICAL_DOMAIN + name[: -len(".html")]
 
 
 class CanonicalParser(HTMLParser):
@@ -86,7 +95,7 @@ def check_canonical_tags() -> None:
             continue
         parser = CanonicalParser()
         parser.feed(html.read_text(encoding="utf-8", errors="ignore"))
-        expected = CANONICAL_OVERRIDES.get(html.name, CANONICAL_DOMAIN + html.name)
+        expected = canonical_for(html.name)
         if parser.canonical != expected:
             failures.append(
                 f"{html.name}: expected canonical '{expected}', found '{parser.canonical}'"
@@ -111,7 +120,7 @@ def check_sitemap() -> None:
         raise RuntimeError("Sitemap URL format check failed")
 
     expected = {
-        CANONICAL_OVERRIDES.get(html.name, CANONICAL_DOMAIN + html.name).split("#", 1)[0]
+        canonical_for(html.name).split("#", 1)[0]
         for html in ROOT.glob("*.html")
         if html.name not in IGNORED_HTML
     }

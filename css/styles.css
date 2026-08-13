@@ -9473,6 +9473,11 @@ body.page-home .page-hero-figure--responsive.page-hero-figure--jacob-bio img {
   color: var(--color-text-muted);
 }
 
+/* Cards without a headline price: the sub-line takes over the price slot's spacing. */
+.package-card h3 + .package-card__sub {
+  margin-top: var(--space-xs);
+}
+
 .package-card__list {
   margin: 0 0 var(--space-md);
 }

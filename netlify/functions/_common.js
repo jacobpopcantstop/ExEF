@@ -115,7 +115,10 @@ async function sendLeadNotification(lead) {
   ];
   if (meta.interest) lines.push(`Interest:  ${meta.interest}`);
   if (meta.phone) lines.push(`Phone:     ${meta.phone}`);
-  if (meta.student_age) lines.push(`Student:   ${meta.student_age}`);
+  if (meta.coaching_for) lines.push(`For:       ${meta.coaching_for}`);
+  if (meta.student_grade || meta.student_age) lines.push(`Student:   ${meta.student_grade || meta.student_age}`);
+  if (meta.service_type) lines.push(`Wants:     ${meta.service_type}`);
+  if (meta.needs_tutoring_redirect) lines.push('', '>> TUTORING REDIRECT: send referrals, do not book a coaching slot.');
   if (meta.situation) lines.push('', 'Situation:', meta.situation);
   lines.push('', `Lead ID: ${lead.lead_id}`);
 

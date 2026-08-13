@@ -269,7 +269,9 @@ async function submitContactLead(form) {
     var email = (form.querySelector('#email') || {}).value || '';
     var phone = (form.querySelector('#phone') || {}).value || '';
     var interest = (form.querySelector('#interest') || {}).value || '';
-    var studentAge = (form.querySelector('#student-age') || {}).value || '';
+    var coachingFor = (form.querySelector('#coaching-for') || {}).value || '';
+    var studentGrade = (form.querySelector('#student-grade') || {}).value || '';
+    var serviceType = (form.querySelector('#service-type') || {}).value || '';
     var situation = (form.querySelector('#situation') || {}).value || '';
     var howFound = (form.querySelector('#how-found') || {}).value || '';
     var newsletter = form.querySelector('input[name="newsletter"]') && form.querySelector('input[name="newsletter"]').checked;
@@ -289,7 +291,12 @@ async function submitContactLead(form) {
         metadata: {
             interest: interest,
             phone: phone,
-            student_age: studentAge,
+            coaching_for: coachingFor,
+            student_grade: studentGrade,
+            // student_age is retained so the existing lead-notification template keeps working
+            student_age: studentGrade,
+            service_type: serviceType,
+            needs_tutoring_redirect: serviceType === 'tutoring' || serviceType === 'both',
             situation: situation,
             how_found: howFound,
             newsletter_opt_in: !!newsletter,
@@ -297,7 +304,12 @@ async function submitContactLead(form) {
         }
     };
 
-    await submitLeadForm(form, payload, 'Thanks. Your message was sent. The ExEF coaching team will follow up within 24-48 hours.');
+    var successMessage = 'Thanks. Your message was sent. The ExEF coaching team will follow up within 24-48 hours.';
+    if (serviceType === 'tutoring' || serviceType === 'both') {
+        successMessage = 'Thanks. You marked subject tutoring, which ExEF does not provide - coaching works on planning, starting, and following through, not on the coursework itself. Expect an email with tutor referrals rather than a booking link.';
+    }
+
+    await submitLeadForm(form, payload, successMessage);
 }
 
 async function submitCubeLead(form) {

@@ -96,22 +96,11 @@ PRIORITIES = {
 }
 
 ROUTE_MAP = {
+    # Flat, extensionless URLs sitewide. Directory-style routes (coaching/,
+    # modules/N/, blog/) were retired: every link and asset path in this repo
+    # is document-relative, so a page served one directory deep resolved its
+    # assets to /coaching/css/... and rendered unstyled.
     "index.html": "",
-    "blog.html": "blog/",
-    "coaching-home.html": "coaching/",
-    "coaching-methodology.html": "coaching/methodology/",
-    "coaching-contact.html": "coaching/contact/",
-    "module-1.html": "modules/1/",
-    "module-2.html": "modules/2/",
-    "module-3.html": "modules/3/",
-    "module-4.html": "modules/4/",
-    "module-5.html": "modules/5/",
-    "module-6.html": "modules/6/",
-    "module-7.html": "modules/7/",
-    "module-8.html": "modules/8/",
-    "module-9.html": "modules/9/",
-    "search.html": "search/",
-    "verify.html": "verify/",
 }
 
 

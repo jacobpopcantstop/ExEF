@@ -6,7 +6,7 @@ Usage:
       --slug time-blindness-morning-routines \
       --title "Why Mornings Fall Apart (and How to Anchor Them)" \
       --description "A practical look at time blindness in morning routines." \
-      --cta-href time-blindness-calibrator.html \
+      --cta-href /time-blindness-calibrator \
       --cta-label "Take the Free Time Blindness Test"
 
 Creates blog-<slug>.html with Article JSON-LD, per-post UTM-tagged booking
@@ -31,7 +31,7 @@ def main() -> int:
     parser.add_argument("--slug", required=True, help="kebab-case slug; page becomes blog-<slug>.html")
     parser.add_argument("--title", required=True)
     parser.add_argument("--description", required=True, help="meta description / card excerpt")
-    parser.add_argument("--cta-href", default="free-executive-functioning-tests.html",
+    parser.add_argument("--cta-href", default="/free-executive-functioning-tests",
                         help="tool page the post funnels to")
     parser.add_argument("--cta-label", default="Explore the Free EF Assessments")
     parser.add_argument("--date", default=None, help="ISO date (default: today)")

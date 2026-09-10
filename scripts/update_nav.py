@@ -9,10 +9,10 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 NEW_NAV_INNER = """
         <div class="nav__cluster">
-          <a href="coaching-home.html" class="nav__link">Coaching</a>
-          <a href="free-executive-functioning-tests.html" class="nav__link">Assessments</a>
-          <a href="resources.html" class="nav__link">Resources</a>
-          <a href="meet-the-team.html" class="nav__link">Team</a>
+          <a href="/coaching-home" class="nav__link">Coaching</a>
+          <a href="/free-executive-functioning-tests" class="nav__link">Assessments</a>
+          <a href="/resources" class="nav__link">Resources</a>
+          <a href="/meet-the-team" class="nav__link">Team</a>
         </div>
         <div class="nav__cluster nav__cluster--support">
           <span class="nav__auth"></span>

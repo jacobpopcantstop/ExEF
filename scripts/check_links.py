@@ -22,6 +22,21 @@ class Parser(HTMLParser):
         if tag == 'script' and 'src' in d:
             self.links.append(d['src'])
 
+def resolves(target, parent):
+    """Map a public URL path back to a file on disk.
+
+    Page links are root-relative and extensionless ("/meet-the-team"), so they
+    resolve against the repo root with an implied .html. Asset references keep
+    their extension and stay document-relative.
+    """
+    if target.startswith('/'):
+        name = target.strip('/')
+        if not name:
+            return (ROOT / 'index.html').exists()
+        return (ROOT / name).exists() or (ROOT / f'{name}.html').exists()
+    return (parent / target).exists()
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--external', action='store_true', help='Also validate external HTTP/HTTPS links.')
 args = parser.parse_args()
@@ -47,7 +62,7 @@ for html in ROOT.glob('*.html'):
         target = link.split('#')[0].split('?')[0]
         if not target:
             continue
-        if not (html.parent / target).exists():
+        if not resolves(target, html.parent):
             bad.append((html.name, link))
 
 if bad:

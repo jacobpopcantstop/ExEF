@@ -3,6 +3,29 @@
   publish = "."
   functions = "netlify/functions"
 
+# ---------------------------------------------------------------------------
+# Redirects are evaluated top to bottom; the first match wins.
+#
+# WARNING: Netlify normalizes trailing slashes BEFORE matching, so a 301 whose
+# target differs from its source only by a trailing slash matches its own
+# target and loops forever. Four rules of exactly that shape
+#   /blog                 -> /blog/
+#   /coaching             -> /coaching/
+#   /coaching/methodology -> /coaching/methodology/
+#   /coaching/contact     -> /coaching/contact/
+# are why those URLs 301'd to themselves. Never reintroduce that shape. When a
+# slash variant needs to keep working, use a `status = 200` rewrite instead:
+# rewrites are terminal and cannot loop.
+# ---------------------------------------------------------------------------
+
+# Force non-www. Placed first so a www request is normalized in a single hop
+# and every path rule below runs against the canonical host.
+[[redirects]]
+  from = "https://www.exef.org/*"
+  to = "https://exef.org/:splat"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
@@ -39,203 +62,107 @@
   status = 404
   force = true
 
+# ---------------------------------------------------------------------------
+# Retired directory-style routes -> canonical flat URLs.
+#
+# These paths used to be served by `status = 200` rewrites. Every link and
+# asset path in this repo is document-relative (href="css/styles.css"), so a
+# page served one directory deep resolved its assets to /coaching/css/... and
+# rendered unstyled with every link 404ing. Flat URLs keep all pages at root
+# depth, which is what those relative paths require.
+# ---------------------------------------------------------------------------
+
 [[redirects]]
-  from = "/blog"
-  to = "/blog/"
+  from = "/coaching/methodology"
+  to = "/coaching-methodology"
   status = 301
   force = true
 
 [[redirects]]
-  from = "/blog/"
-  to = "/blog.html"
-  status = 200
-
-[[redirects]]
-  from = "/coaching-home.html"
-  to = "/coaching/"
-  status = 301
-
-[[redirects]]
-  from = "/coaching"
-  to = "/coaching/"
-  status = 301
-
-[[redirects]]
-  from = "/coaching/"
-  to = "/coaching-home.html"
-  status = 200
-
-[[redirects]]
-  from = "/coaching-methodology.html"
-  to = "/coaching/methodology/"
-  status = 301
-
-[[redirects]]
-  from = "/coaching/methodology"
-  to = "/coaching/methodology/"
-  status = 301
-
-[[redirects]]
-  from = "/coaching/methodology/"
-  to = "/coaching-methodology.html"
-  status = 200
-
-[[redirects]]
-  from = "/coaching-services.html"
-  to = "/coaching-home.html#service-lanes"
+  from = "/coaching/contact"
+  to = "/coaching-contact"
   status = 301
   force = true
 
 [[redirects]]
   from = "/coaching/services"
-  to = "/coaching-home.html#service-lanes"
-  status = 301
-
-[[redirects]]
-  from = "/coaching/services/"
-  to = "/coaching-home.html#service-lanes"
-  status = 301
-
-[[redirects]]
-  from = "/coaching-about.html"
-  to = "/coaching-home.html#support-team"
+  to = "/coaching-home#service-lanes"
   status = 301
   force = true
 
 [[redirects]]
   from = "/coaching/about"
-  to = "/coaching-home.html#support-team"
+  to = "/coaching-home#support-team"
   status = 301
+  force = true
 
 [[redirects]]
-  from = "/coaching/about/"
-  to = "/coaching-home.html#support-team"
+  from = "/coaching"
+  to = "/coaching-home"
   status = 301
+  force = true
 
 [[redirects]]
-  from = "/coaching-contact.html"
-  to = "/coaching/contact/"
+  from = "/modules/1"
+  to = "/module-1"
   status = 301
+  force = true
 
 [[redirects]]
-  from = "/coaching/contact"
-  to = "/coaching/contact/"
+  from = "/modules/2"
+  to = "/module-2"
   status = 301
+  force = true
 
 [[redirects]]
-  from = "/coaching/contact/"
-  to = "/coaching-contact.html"
+  from = "/modules/3"
+  to = "/module-3"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/modules/4"
+  to = "/module-4"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/modules/5"
+  to = "/module-5"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/modules/6"
+  to = "/module-6"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/modules/7"
+  to = "/module-7"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/modules/8"
+  to = "/module-8"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/modules/9"
+  to = "/module-9"
+  status = 301
+  force = true
+
+# /blog/, /search/ and /verify/ differ from their canonical URLs only by the
+# trailing slash, so they CANNOT be 301'd (see the warning above). Terminal
+# rewrites keep them serving 200; the canonical tag consolidates them.
+[[redirects]]
+  from = "/blog/"
+  to = "/blog.html"
   status = 200
-
-[[redirects]]
-  from = "/module-1.html"
-  to = "/modules/1/"
-  status = 301
-
-[[redirects]]
-  from = "/module-a-neuroscience.html"
-  to = "/modules/1/"
-  status = 301
-
-[[redirects]]
-  from = "/modules/1/"
-  to = "/module-1.html"
-  status = 200
-
-[[redirects]]
-  from = "/module-2.html"
-  to = "/modules/2/"
-  status = 301
-
-[[redirects]]
-  from = "/modules/2/"
-  to = "/module-2.html"
-  status = 200
-
-[[redirects]]
-  from = "/module-3.html"
-  to = "/modules/3/"
-  status = 301
-
-[[redirects]]
-  from = "/module-b-pedagogy.html"
-  to = "/modules/3/"
-  status = 301
-
-[[redirects]]
-  from = "/modules/3/"
-  to = "/module-3.html"
-  status = 200
-
-[[redirects]]
-  from = "/module-4.html"
-  to = "/modules/4/"
-  status = 301
-
-[[redirects]]
-  from = "/module-c-interventions.html"
-  to = "/modules/4/"
-  status = 301
-
-[[redirects]]
-  from = "/modules/4/"
-  to = "/module-4.html"
-  status = 200
-
-[[redirects]]
-  from = "/module-5.html"
-  to = "/modules/5/"
-  status = 301
-
-[[redirects]]
-  from = "/modules/5/"
-  to = "/module-5.html"
-  status = 200
-
-[[redirects]]
-  from = "/module-6.html"
-  to = "/modules/6/"
-  status = 301
-
-[[redirects]]
-  from = "/modules/6/"
-  to = "/module-6.html"
-  status = 200
-
-[[redirects]]
-  from = "/module-7.html"
-  to = "/modules/7/"
-  status = 301
-
-[[redirects]]
-  from = "/modules/7/"
-  to = "/module-7.html"
-  status = 200
-
-[[redirects]]
-  from = "/module-8.html"
-  to = "/modules/8/"
-  status = 301
-
-[[redirects]]
-  from = "/modules/8/"
-  to = "/module-8.html"
-  status = 200
-
-[[redirects]]
-  from = "/module-9.html"
-  to = "/modules/9/"
-  status = 301
-
-[[redirects]]
-  from = "/modules/9/"
-  to = "/module-9.html"
-  status = 200
-
-[[redirects]]
-  from = "/search.html"
-  to = "/search/"
-  status = 301
 
 [[redirects]]
   from = "/search/"
@@ -243,39 +170,93 @@
   status = 200
 
 [[redirects]]
-  from = "/verify.html"
-  to = "/verify/"
-  status = 301
-
-[[redirects]]
   from = "/verify/"
   to = "/verify.html"
   status = 200
 
+# --- Content aliases and legacy paths (targets differ from the generic
+# --- extensionless rule, so these must stay explicit and stay above it).
+
+[[redirects]]
+  from = "/coaching-services.html"
+  to = "/coaching-home#service-lanes"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/coaching-services"
+  to = "/coaching-home#service-lanes"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/coaching-about.html"
+  to = "/coaching-home#support-team"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/coaching-about"
+  to = "/coaching-home#support-team"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-a-neuroscience.html"
+  to = "/module-1"
+  status = 301
+
+[[redirects]]
+  from = "/module-b-pedagogy.html"
+  to = "/module-3"
+  status = 301
+
+[[redirects]]
+  from = "/module-c-interventions.html"
+  to = "/module-4"
+  status = 301
+
 [[redirects]]
   from = "/methodology.html"
-  to = "/coaching/methodology/"
+  to = "/coaching-methodology"
   status = 301
 
 [[redirects]]
   from = "/services.html"
-  to = "/coaching/services/"
+  to = "/coaching-home#service-lanes"
   status = 301
 
 [[redirects]]
   from = "/contact.html"
-  to = "/coaching/contact/"
+  to = "/coaching-contact"
   status = 301
 
 [[redirects]]
   from = "/checkout.html"
-  to = "/store.html"
+  to = "/store"
   status = 301
 
 [[redirects]]
   from = "/coach-directory.html"
-  to = "/coaching-home.html"
+  to = "/coaching-home"
   status = 301
+
+# --- Canonical URL enforcement (must stay last) ----------------------------
+
+# /index.html would otherwise become /index and 404.
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+# Force extensionless URLs. Safe against looping: the target never ends in
+# .html, so it cannot re-match this rule.
+[[redirects]]
+  from = "/*.html"
+  to = "/:splat"
+  status = 301
+  force = true
 
 [[headers]]
   for = "/images/*"

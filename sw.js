@@ -2,21 +2,23 @@
 
 // Bump cache names when shared navigation or critical assets change so clients
 // don't stay pinned to an older site shell after deploy.
-var STATIC_CACHE = 'exef-static-v12';
-var PAGE_CACHE = 'exef-pages-v9';
+var STATIC_CACHE = 'exef-static-v13';
+var PAGE_CACHE = 'exef-pages-v10';
 var ALL_CACHES = [STATIC_CACHE, PAGE_CACHE];
 
+// Extensionless URLs only. /*.html now 301s to the extensionless form, and
+// cache.put() rejects a redirected response, so precaching a .html path here
+// fails silently and leaves the page uncached for offline use.
 var CORE_PAGES = [
   '/',
-  '/index.html',
-  '/about.html',
-  '/blog.html',
-  '/resources.html',
-  '/executive-functioning-iep-goal-bank.html',
-  '/getting-started.html',
-  '/free-executive-functioning-tests.html',
-  '/search.html',
-  '/win-page.html'
+  '/about',
+  '/blog',
+  '/resources',
+  '/executive-functioning-iep-goal-bank',
+  '/getting-started',
+  '/free-executive-functioning-tests',
+  '/search',
+  '/win-page'
 ];
 
 var SHARED_ASSETS = [
@@ -122,7 +124,7 @@ async function networkFirstPage(request) {
       if (cached) return cached;
     }
 
-    return cache.match('/index.html');
+    return cache.match('/');
   }
 }
 

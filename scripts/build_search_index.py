@@ -63,7 +63,9 @@ def build_index():
 
         title = extractor.title or html_file.stem.replace('-', ' ').title()
         body = extractor.get_text()
-        url = '/' + html_file.name
+        # Extensionless: /*.html 301s, so emitting .html here would make
+        # every search result cost an extra redirect hop.
+        url = '/' if html_file.name == 'index.html' else '/' + html_file.stem
 
         if body:
             pages.append({'id': html_file.stem, 'title': title, 'body': body, 'url': url})

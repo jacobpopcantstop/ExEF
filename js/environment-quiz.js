@@ -4,6 +4,20 @@
   var form = document.getElementById('environment-quiz-form');
   if (!form) return;
 
+  // Completion is the conversion for this tool; queue it if the shared
+  // analytics bundle has not finished loading yet.
+  function trackEvent(name, props) {
+    try {
+      var EFI = window.EFI = window.EFI || {};
+      if (EFI.Analytics && typeof EFI.Analytics.track === 'function') {
+        EFI.Analytics.track(name, props || {});
+        return;
+      }
+      EFI._pendingAnalyticsEvents = EFI._pendingAnalyticsEvents || [];
+      EFI._pendingAnalyticsEvents.push([name, props || {}]);
+    } catch (e) {}
+  }
+
   var DRAFT_KEY = 'efi_environment_quiz_draft_v1';
   var RESULT_KEY = 'efi_environment_quiz_result_v1';
 
@@ -798,6 +812,7 @@
     var results = computeResults();
     writeJson(RESULT_KEY, results);
     renderResults(results);
+    trackEvent('assessment_completed', { tool: 'environment-quiz' });
     scrollToResults();
     setShareStatus('Environment report generated.');
   });

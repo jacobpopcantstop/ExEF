@@ -4,6 +4,20 @@
   var form = document.getElementById('fitness-quiz-form');
   if (!form) return;
 
+  // Completion is the conversion for this tool; queue it if the shared
+  // analytics bundle has not finished loading yet.
+  function trackEvent(name, props) {
+    try {
+      var EFI = window.EFI = window.EFI || {};
+      if (EFI.Analytics && typeof EFI.Analytics.track === 'function') {
+        EFI.Analytics.track(name, props || {});
+        return;
+      }
+      EFI._pendingAnalyticsEvents = EFI._pendingAnalyticsEvents || [];
+      EFI._pendingAnalyticsEvents.push([name, props || {}]);
+    } catch (e) {}
+  }
+
   var RESULT_KEY = 'efi_fitness_quiz_result_v2';
   var DRAFT_KEY = 'efi_fitness_quiz_draft_v2';
 
@@ -308,6 +322,7 @@
     var ranked = scoreExercises(target);
     try { localStorage.setItem(RESULT_KEY, JSON.stringify({ ranked: ranked, target: target })); } catch (e) {}
     renderResults(ranked, target);
+    trackEvent('assessment_completed', { tool: 'best-fit-fitness-quiz' });
   });
 
   document.getElementById('fitness-reset-btn').addEventListener('click', function () {

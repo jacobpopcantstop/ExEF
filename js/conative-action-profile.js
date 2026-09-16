@@ -4,6 +4,20 @@
   /* Gate: only run on pages that contain the CAP elements */
   if (!document.getElementById('cap-intro')) return;
 
+  // Completion is the conversion for this tool; queue it if the shared
+  // analytics bundle has not finished loading yet.
+  function trackEvent(name, props) {
+    try {
+      var EFI = window.EFI = window.EFI || {};
+      if (EFI.Analytics && typeof EFI.Analytics.track === 'function') {
+        EFI.Analytics.track(name, props || {});
+        return;
+      }
+      EFI._pendingAnalyticsEvents = EFI._pendingAnalyticsEvents || [];
+      EFI._pendingAnalyticsEvents.push([name, props || {}]);
+    } catch (e) {}
+  }
+
   // ── Constants ──────────────────────────────────────────────────
   var STORAGE_KEY = 'efi_conative_profile';
   var HISTORY_KEY = 'efi_conative_profile_history';
@@ -835,6 +849,7 @@
       show(resultsSection);
       show(nextSteps);
       renderResults(scores);
+      trackEvent('assessment_completed', { tool: 'conative-action-profile' });
       scrollTop();
     }
   });

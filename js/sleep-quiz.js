@@ -4,6 +4,20 @@
   var form = document.getElementById('sleep-quiz-form');
   if (!form) return;
 
+  // Completion is the conversion for this tool; queue it if the shared
+  // analytics bundle has not finished loading yet.
+  function trackEvent(name, props) {
+    try {
+      var EFI = window.EFI = window.EFI || {};
+      if (EFI.Analytics && typeof EFI.Analytics.track === 'function') {
+        EFI.Analytics.track(name, props || {});
+        return;
+      }
+      EFI._pendingAnalyticsEvents = EFI._pendingAnalyticsEvents || [];
+      EFI._pendingAnalyticsEvents.push([name, props || {}]);
+    } catch (e) {}
+  }
+
   var RESULT_KEY = 'efi_sleep_quiz_result_v2';
 
   /* domain: rhythm, latency, recovery, habits */
@@ -179,6 +193,7 @@
     }
     error.hidden = true;
     renderResult(state);
+    trackEvent('assessment_completed', { tool: 'sleep-functioning-quiz' });
   });
 
   document.getElementById('sleep-reset-btn').addEventListener('click', function () {

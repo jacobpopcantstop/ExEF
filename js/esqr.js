@@ -4,6 +4,20 @@
   var form = document.getElementById('esqr-form');
   if (!form) return;
 
+  // Completion is the conversion for this tool; queue it if the shared
+  // analytics bundle has not finished loading yet.
+  function trackEvent(name, props) {
+    try {
+      var EFI = window.EFI = window.EFI || {};
+      if (EFI.Analytics && typeof EFI.Analytics.track === 'function') {
+        EFI.Analytics.track(name, props || {});
+        return;
+      }
+      EFI._pendingAnalyticsEvents = EFI._pendingAnalyticsEvents || [];
+      EFI._pendingAnalyticsEvents.push([name, props || {}]);
+    } catch (e) {}
+  }
+
   var questionsWrap = document.getElementById('esqr-question-groups');
   var progressFill = document.getElementById('progress-fill');
   var progressText = document.getElementById('progress-text');
@@ -1264,6 +1278,7 @@
       }
       if (errorMsg) errorMsg.hidden = true;
       renderResults();
+      trackEvent('assessment_completed', { tool: 'esqr' });
     });
 
     if (resetBtn) {

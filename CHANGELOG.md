@@ -14,12 +14,19 @@
 - Expanded `Permissions-Policy` to deny accelerometer, gyroscope, magnetometer, payment, and USB.
 
 ### Fixed
+- `emotion-check-in.html` was the only page on the site with no Google Analytics tag and no shared analytics bundle, so all of its traffic and its email captures were invisible. It now loads both.
+- Rebuilt stale `js/quality-of-life-wheel.min.js`; the shipped minified file predated a slider-fill fix in its source.
 - Sitemap no longer lists pages disallowed in `robots.txt` (`scripts/build_sitemap.py` now reads robots.txt).
 - Added missing canonical tag to `quality-of-life-wheel.html`.
 - Homepage now loads minified `homepage-ux.min.js`.
 - Untracked generated artifacts (`output/`, `tmp/`) and moved unlinked source DOCX files out of the web root into `docs/source-materials/`.
 
 ### Added
+- GA4 event bridge in `js/main-analytics.js`: every `EFI.Analytics.track()` call is now mirrored into `gtag('event', …)`, so tool completions, lead submits, and booking clicks reach GA4 instead of only `/api/track-event`. GA4 previously reported zero key events because nothing but automatic page views ever reached it.
+- `assessment_completed` events on the six scored tools (ESQ-R, Conative Action Profile, Brain Mode Quiz, Environment Quiz, Sleep Functioning Quiz, Best-Fit Fitness Quiz), fired on submit only so restoring a saved result does not re-count as a completion.
+- `resource_download` events for ungated PDF/DOC/ZIP links. Sessions that landed on a page, downloaded a resource and left were previously scored as bounces. Named to avoid double-counting GA4 enhanced measurement's built-in `file_download`.
+- `docs/analytics-key-events.md` — which events to mark as Key Events in GA4, the custom dimensions they need, and the URL-split and sample-size caveats in the current reports.
+- `tests/e2e/analytics-ga4.spec.js` — end-to-end coverage for the GA4 bridge, including that `page_view` is not re-sent and that a restored quiz result does not re-fire a completion.
 - `scripts/optimize_images.py` — in-place JPEG re-encoding and PNG optimization/quantization (saved ~61 MB across `images/`; directory now 38 MB).
 - `scripts/check_perf_budget.py` — performance budget gate (per-image, total images, CSS, and JS size limits) wired into `release_gate.py`.
 - Product/Offer JSON-LD structured data on `store.html`.

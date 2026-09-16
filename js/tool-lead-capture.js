@@ -10,9 +10,14 @@
 
   function trackEvent(name, props) {
     try {
-      if (window.EFI && window.EFI.Analytics && typeof window.EFI.Analytics.track === 'function') {
-        window.EFI.Analytics.track(name, props || {});
+      var EFI = window.EFI = window.EFI || {};
+      if (EFI.Analytics && typeof EFI.Analytics.track === 'function') {
+        EFI.Analytics.track(name, props || {});
+        return;
       }
+      // Queue rather than drop: the shared analytics bundle may still be loading.
+      EFI._pendingAnalyticsEvents = EFI._pendingAnalyticsEvents || [];
+      EFI._pendingAnalyticsEvents.push([name, props || {}]);
     } catch (e) {}
   }
 

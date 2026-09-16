@@ -14,6 +14,7 @@ Use these first:
 - `website-grade-rubric.md` — current grading rubric and score target.
 - `deployment-baseline.md` — hosting and deployment baseline.
 - `sales-conversion-audit.md` — current conversion-specific findings.
+- `analytics-key-events.md` — GA4 event catalogue, which events to mark as key events, and how to read the current reports.
 - `supabase-schema.sql` — reference schema snapshot.
 - `data-retention-policy.md` — retention policy.
 - `editorial-style-guide.md` — copy/style conventions.

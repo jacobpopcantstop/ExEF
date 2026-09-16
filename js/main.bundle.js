@@ -172,6 +172,58 @@
         writeAssessmentEvents(list);
       }
 
+      // --- GA4 bridge ---------------------------------------------------
+      // Tracked events used to post only to /api/track-event, so GA4 saw
+      // nothing but automatic page views and reported zero key events.
+      // Every event below is mirrored into gtag so the conversions that
+      // matter (tool completions, lead submits, booking clicks, resource
+      // downloads) can be marked as Key Events in the GA4 admin.
+
+      // Names GA4 collects itself; re-sending them would double-count.
+      var GA_RESERVED_EVENTS = {
+        page_view: true,
+        first_visit: true,
+        session_start: true,
+        user_engagement: true
+      };
+
+      // GA4 allows [a-z0-9_], must start with a letter, 40 chars max.
+      function gaSafeName(name) {
+        return String(name == null ? '' : name)
+          .toLowerCase()
+          .replace(/[^a-z0-9_]/g, '_')
+          .replace(/^[^a-z]+/, '')
+          .slice(0, 40);
+      }
+
+      // GA4 takes up to 25 scalar params per event, 100 chars per value.
+      function gaSafeParams(properties, page, source) {
+        var params = {
+          page_slug: String(page || '').slice(0, 100),
+          traffic_source: String(source || 'direct').slice(0, 100)
+        };
+        var keys = Object.keys(properties || {});
+        for (var i = 0; i < keys.length && Object.keys(params).length < 25; i++) {
+          var value = properties[keys[i]];
+          if (value === null || value === undefined) continue;
+          if (typeof value === 'object') continue;
+          var key = gaSafeName(keys[i]);
+          if (!key || params[key] !== undefined) continue;
+          params[key] = typeof value === 'string' ? value.slice(0, 100) : value;
+        }
+        return params;
+      }
+
+      function sendToGa4(eventName, properties, page, source) {
+        if (!canPostTracking()) return;
+        if (typeof window.gtag !== 'function') return;
+        var name = gaSafeName(eventName);
+        if (!name || GA_RESERVED_EVENTS[name]) return;
+        try {
+          window.gtag('event', name, gaSafeParams(properties, page, source));
+        } catch (e) {}
+      }
+
       function track(eventName, properties) {
         var page = getCurrentPage();
         var params = new URLSearchParams(window.location.search || '');
@@ -189,6 +241,7 @@
 
         storeAssessmentEvent(payload);
         if (markEventSent(eventId)) {
+          sendToGa4(eventName, payload.properties, page, source);
           return post(payload);
         }
         return Promise.resolve();
@@ -199,6 +252,21 @@
         getAssessmentEvents: readAssessmentEvents
       };
 
+      // Page scripts load before this bundle finishes, so anything they
+      // tracked in the meantime is queued on EFI._pendingAnalyticsEvents.
+      var queued = Array.isArray(EFI._pendingAnalyticsEvents) ? EFI._pendingAnalyticsEvents : [];
+      // Leave a push-through sink behind rather than clearing the queue: a
+      // script that read the queue before this ran would otherwise push into
+      // an array nothing drains again.
+      EFI._pendingAnalyticsEvents = {
+        push: function (item) {
+          if (item && item[0]) track(item[0], item[1] || {});
+        }
+      };
+      queued.forEach(function (item) {
+        if (item && item[0]) track(item[0], item[1] || {});
+      });
+
       track('page_view', {
         title: document.title
       });
@@ -208,6 +276,37 @@
         if (!el) return;
         track(el.getAttribute('data-analytics-event'), {
           label: el.getAttribute('data-analytics-label') || el.textContent.trim().slice(0, 80)
+        });
+      });
+
+      // Downloading a PDF is a successful visit, but it adds no second page
+      // view, so those sessions were counted as bounces. Name the event
+      // resource_download rather than GA4's built-in file_download so it
+      // cannot double-count against enhanced measurement.
+      var DOWNLOADABLE = /\.(pdf|docx?|xlsx?|pptx?|csv|zip|txt)(?:[?#]|$)/i;
+
+      function decodeFileName(value) {
+        try {
+          return decodeURIComponent(value);
+        } catch (e) {
+          return value;
+        }
+      }
+
+      document.addEventListener('click', function (e) {
+        if (!e.target || !e.target.closest) return;
+        // Already covered by the data-analytics-event handler above.
+        if (e.target.closest('[data-analytics-event]')) return;
+        var link = e.target.closest('a[href]');
+        if (!link) return;
+        var href = link.getAttribute('href') || '';
+        if (!DOWNLOADABLE.test(href) && !link.hasAttribute('download')) return;
+        var fileName = href.split(/[?#]/)[0].split('/').pop() || href;
+        var extMatch = fileName.match(/\.([a-z0-9]+)$/i);
+        track('resource_download', {
+          file_name: decodeFileName(fileName).slice(0, 100),
+          file_extension: extMatch ? extMatch[1].toLowerCase() : 'unknown',
+          link_text: (link.textContent || '').trim().slice(0, 80)
         });
       });
     })();

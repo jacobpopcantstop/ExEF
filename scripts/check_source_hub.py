@@ -28,10 +28,10 @@ REQUIRED_PAGE_MARKERS = {
     "module-a-neuroscience.html": "Legacy Module A Has Been Folded Into Module 1",
     "module-c-interventions.html": "Legacy Module C Has Been Folded Into Module 4",
     "teacher-to-coach.html": "Further Sources: Business/Certification Citations",
-    "barkley-model-guide.html": "Further Sources: Barkley Citations",
+    "barkley-model-guide.html": "Primary sources",
     "brown-clusters-tool.html": "Further Sources: Brown Citations",
-    "resources.html": "open-ef-resources-directory.html#citations",
-    "further-sources.html": "open-ef-resources-directory.html#citations",
+    "resources.html": "open-ef-resources-directory#citations",
+    "further-sources.html": "open-ef-resources-directory#citations",
 }
 
 

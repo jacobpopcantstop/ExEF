@@ -14,6 +14,7 @@
 - Expanded `Permissions-Policy` to deny accelerometer, gyroscope, magnetometer, payment, and USB.
 
 ### Fixed
+- `scripts/check_source_hub.py` markers for `resources.html` and `further-sources.html` still referenced pre-extensionless `.html` URLs, so that release gate had been failing since 2026-09-10.
 - Removed the hardcoded `month=2026-04` parameter from every Calendly booking link (133 occurrences across 67 pages, plus `js/main-ui.js` and the `scripts/update_nav.py` / `scripts/update_footer.py` generators that reintroduce it on each run). Every primary booking CTA on the site was opening Calendly pinned to April 2026. UTM parameters are preserved.
 - `emotion-check-in.html` was the only page on the site with no Google Analytics tag and no shared analytics bundle, so all of its traffic and its email captures were invisible. It now loads both.
 - Rebuilt stale `js/quality-of-life-wheel.min.js`; the shipped minified file predated a slider-fill fix in its source.
@@ -48,6 +49,8 @@
 - Uptime probe workflow for production routes (`.github/workflows/uptime-check.yml`).
 
 ### Changed
+- `barkley-model-guide.html` is now the canonical Barkley page (244 → ~1,040 words). The full treatment — unified self-regulation, the four secondary functions, the developmental trajectory, and the extended phenotype — was lifted out of `module-1.html`, where it was buried behind course framing and unreachable by search. Module 1 keeps a condensed summary (enough to answer its own quiz) and links to the guide.
+- Replaced the guide's citation stub, which listed lecture videos as bare codes ("30 Essential Ideas 1B"), with properly attributed sources: Barkley (1997, *Psychological Bulletin*) and Barkley (2012, Guilford), plus the lecture series labelled by title and part.
 - Authentication password handling upgraded to PBKDF2 (`crypto.subtle`) with migration from legacy hashes.
 - Login/register handlers updated to async auth calls.
 - Expanded canonical URL coverage and sitemap route coverage.

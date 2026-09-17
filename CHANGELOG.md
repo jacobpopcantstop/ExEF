@@ -49,6 +49,7 @@
 - Uptime probe workflow for production routes (`.github/workflows/uptime-check.yml`).
 
 ### Changed
+- `brown-clusters-tool.html` is now the canonical Brown page (277 → ~868 words). The six-cluster treatment — including situational variability and the "dimmer switch" account of effort regulation — was lifted out of `module-1.html` and placed below the screener, so the explanation follows the thing the visitor just rated. Module 1 keeps a condensed summary and links to it. Added Brown (2013, Routledge) as a primary source alongside the existing secondary links.
 - `barkley-model-guide.html` is now the canonical Barkley page (244 → ~1,040 words). The full treatment — unified self-regulation, the four secondary functions, the developmental trajectory, and the extended phenotype — was lifted out of `module-1.html`, where it was buried behind course framing and unreachable by search. Module 1 keeps a condensed summary (enough to answer its own quiz) and links to the guide.
 - Replaced the guide's citation stub, which listed lecture videos as bare codes ("30 Essential Ideas 1B"), with properly attributed sources: Barkley (1997, *Psychological Bulletin*) and Barkley (2012, Guilford), plus the lecture series labelled by title and part.
 - Authentication password handling upgraded to PBKDF2 (`crypto.subtle`) with migration from legacy hashes.

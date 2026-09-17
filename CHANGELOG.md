@@ -14,6 +14,7 @@
 - Expanded `Permissions-Policy` to deny accelerometer, gyroscope, magnetometer, payment, and USB.
 
 ### Fixed
+- The public 360 Thinking page taught the method backwards. Its three cards ran Get Ready → Do → Done as if planning moved forwards, which inverts the one idea the model exists to teach: you plan from Done and work back. The page now leads with that.
 - `scripts/check_source_hub.py` markers for `resources.html` and `further-sources.html` still referenced pre-extensionless `.html` URLs, so that release gate had been failing since 2026-09-10.
 - Removed the hardcoded `month=2026-04` parameter from every Calendly booking link (133 occurrences across 67 pages, plus `js/main-ui.js` and the `scripts/update_nav.py` / `scripts/update_footer.py` generators that reintroduce it on each run). Every primary booking CTA on the site was opening Calendly pinned to April 2026. UTM parameters are preserved.
 - `emotion-check-in.html` was the only page on the site with no Google Analytics tag and no shared analytics bundle, so all of its traffic and its email captures were invisible. It now loads both.
@@ -49,6 +50,7 @@
 - Uptime probe workflow for production routes (`.github/workflows/uptime-check.yml`).
 
 ### Changed
+- `ward-360-thinking.html` is now the canonical 360 Thinking page (160 → ~637 words), carrying the Get Ready, Do, Done treatment and the time-blindness toolkit lifted from `module-4.html`, and naming Sarah Ward and Kristen Jacobsen with a source link to their own practice site. Module 4 keeps a condensed summary and links to it.
 - `brown-clusters-tool.html` is now the canonical Brown page (277 → ~868 words). The six-cluster treatment — including situational variability and the "dimmer switch" account of effort regulation — was lifted out of `module-1.html` and placed below the screener, so the explanation follows the thing the visitor just rated. Module 1 keeps a condensed summary and links to it. Added Brown (2013, Routledge) as a primary source alongside the existing secondary links.
 - `barkley-model-guide.html` is now the canonical Barkley page (244 → ~1,040 words). The full treatment — unified self-regulation, the four secondary functions, the developmental trajectory, and the extended phenotype — was lifted out of `module-1.html`, where it was buried behind course framing and unreachable by search. Module 1 keeps a condensed summary (enough to answer its own quiz) and links to the guide.
 - Replaced the guide's citation stub, which listed lecture videos as bare codes ("30 Essential Ideas 1B"), with properly attributed sources: Barkley (1997, *Psychological Bulletin*) and Barkley (2012, Guilford), plus the lecture series labelled by title and part.

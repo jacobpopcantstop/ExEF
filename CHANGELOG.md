@@ -14,6 +14,7 @@
 - Expanded `Permissions-Policy` to deny accelerometer, gyroscope, magnetometer, payment, and USB.
 
 ### Fixed
+- Removed the hardcoded `month=2026-04` parameter from every Calendly booking link (133 occurrences across 67 pages, plus `js/main-ui.js` and the `scripts/update_nav.py` / `scripts/update_footer.py` generators that reintroduce it on each run). Every primary booking CTA on the site was opening Calendly pinned to April 2026. UTM parameters are preserved.
 - `emotion-check-in.html` was the only page on the site with no Google Analytics tag and no shared analytics bundle, so all of its traffic and its email captures were invisible. It now loads both.
 - Rebuilt stale `js/quality-of-life-wheel.min.js`; the shipped minified file predated a slider-fill fix in its source.
 - Sitemap no longer lists pages disallowed in `robots.txt` (`scripts/build_sitemap.py` now reads robots.txt).

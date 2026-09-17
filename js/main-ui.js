@@ -6,7 +6,7 @@ window.EFI.registerMainModule = window.EFI.registerMainModule || function (fn) {
 
 window.EFI.registerMainModule(function (shared) {
   'use strict';
-  var CONSULT_URL = 'https://calendly.com/jacobansky/30min?month=2026-04';
+  var CONSULT_URL = 'https://calendly.com/jacobansky/30min';
 
   function clearNode(node) {
     while (node && node.firstChild) node.removeChild(node.firstChild);

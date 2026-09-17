@@ -45,7 +45,7 @@ NEW_FOOTER = '''\
           <h4>Connect</h4>
           <ul class="footer__links">
             <li><a href="/coaching-home#service-lanes">Services</a></li>
-            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04">Book a Consultation</a></li>
+            <li><a href="https://calendly.com/jacobansky/30min">Book a Consultation</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="/search">Search</a></li>
           </ul>

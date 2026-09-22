@@ -127,6 +127,28 @@ def check_netlify_headers() -> None:
         raise RuntimeError("Netlify header check failed")
 
 
+RETIRED_COMMERCE_ROUTES = [
+    "/store", "/store.html", "/checkout", "/checkout.html",
+    "/checkout-return", "/checkout-return.html", "/enroll", "/enroll.html",
+]
+
+
+def check_retired_commerce_routes() -> None:
+    """The site sells coaching via discovery calls; the old store must stay unreachable."""
+    print("[gate] retired purchase routes redirect")
+    body = (ROOT / "netlify.toml").read_text(encoding="utf-8", errors="ignore")
+    blocks = body.split("[[redirects]]")
+    missing = []
+    for route in RETIRED_COMMERCE_ROUTES:
+        rule = next((b for b in blocks if f'from = "{route}"' in b), "")
+        if 'status = 301' not in rule or 'force = true' not in rule or 'to = "/coaching-home' not in rule:
+            missing.append(route)
+    if missing:
+        for route in missing:
+            print(f" - {route} must 301 (force) to /coaching-home in netlify.toml")
+        raise RuntimeError("Retired purchase route check failed")
+
+
 def main() -> int:
     try:
         run_command(["python3", "scripts/build_css.py"], "css build")
@@ -147,6 +169,7 @@ def main() -> int:
         check_canonical_tags()
         check_sitemap()
         check_netlify_headers()
+        check_retired_commerce_routes()
     except RuntimeError as err:
         print(f"[gate] release gate failed: {err}")
         return 1

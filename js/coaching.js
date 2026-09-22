@@ -5,7 +5,6 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     replaceLegacyGlyphIcons();
-    injectInstituteCommerceLinks();
     initThemeToggle();
     initMobileMenu();
     initSmoothScroll();
@@ -25,36 +24,6 @@ function initThemeToggle() {
         themeToggle.parentNode.removeChild(themeToggle);
     }
     document.documentElement.removeAttribute('data-theme');
-}
-
-function injectInstituteCommerceLinks() {
-    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'coaching-home.html';
-    document.querySelectorAll('.nav-links').forEach(function (list) {
-        if (!list || list.querySelector('a[href="store.html"]')) return;
-
-        var getStarted = list.querySelector('a[href="coaching-contact.html"]');
-        var storeItem = document.createElement('li');
-        var storeLink = document.createElement('a');
-        storeLink.href = 'store.html';
-        if (currentPage === 'store.html') storeLink.className = 'active';
-        storeLink.textContent = 'ExEF Store';
-        storeItem.appendChild(storeLink);
-
-        var certItem = document.createElement('li');
-        var certLink = document.createElement('a');
-        certLink.href = 'certification.html';
-        if (currentPage === 'certification.html') certLink.className = 'active';
-        certLink.textContent = 'Certification';
-        certItem.appendChild(certLink);
-
-        if (getStarted && getStarted.parentNode) {
-            list.insertBefore(storeItem, getStarted.parentNode);
-            list.insertBefore(certItem, getStarted.parentNode);
-        } else {
-            list.appendChild(certItem);
-            list.appendChild(storeItem);
-        }
-    });
 }
 
 function replaceLegacyGlyphIcons() {

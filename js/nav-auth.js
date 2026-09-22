@@ -29,6 +29,11 @@
       container.appendChild(link);
     }
 
+    // The public site is coaching-only, so signed-out visitors only see a
+    // Login link inside the (unlisted) learner program pages.
+    var page = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/\.html$/, '');
+    var isLearnerPage = /^(login|dashboard|curriculum|certification|certificate|verify|module-.+)$/.test(page);
+
     authLinks.forEach(function (el) {
       clearNode(el);
       if (session) {
@@ -36,7 +41,7 @@
         if (session.role === 'admin' || session.role === 'reviewer') {
           appendNavLink(el, 'admin.html', 'Admin');
         }
-      } else {
+      } else if (isLearnerPage) {
         appendNavLink(el, 'login.html', 'Login');
       }
     });

@@ -5,7 +5,7 @@ test.describe('Navigation — Search link', () => {
 
   test('Search link present in rebuilt footer on representative pages', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    const pages = ['index.html', 'curriculum.html', 'resources.html'];
+    const pages = ['index.html', 'coaching-home.html', 'resources.html'];
     for (const p of pages) {
       await page.goto(`/${p}`);
       await page.waitForSelector('.nav__cluster', { timeout: 10000 });

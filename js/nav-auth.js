@@ -2,48 +2,11 @@
 (function () {
   'use strict';
 
-  var SESSION_KEY = 'efi_session';
-
-  function getSession() {
-    try {
-      return JSON.parse(localStorage.getItem(SESSION_KEY)) || null;
-    } catch (e) {
-      return null;
-    }
-  }
-
+  // The learner program (login, dashboard, certification) is retired and its
+  // URLs redirect to coaching, so the nav's auth slot stays empty for everyone.
   function renderNavAuth() {
-    var session = getSession();
-    var authLinks = document.querySelectorAll('.nav__auth');
-    if (!authLinks.length) return;
-
-    function clearNode(node) {
-      while (node.firstChild) node.removeChild(node.firstChild);
-    }
-
-    function appendNavLink(container, href, label) {
-      var link = document.createElement('a');
-      link.href = href;
-      link.className = 'nav__link';
-      link.textContent = label;
-      container.appendChild(link);
-    }
-
-    // The public site is coaching-only, so signed-out visitors only see a
-    // Login link inside the (unlisted) learner program pages.
-    var page = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/\.html$/, '');
-    var isLearnerPage = /^(login|dashboard|curriculum|certification|certificate|verify|module-.+)$/.test(page);
-
-    authLinks.forEach(function (el) {
-      clearNode(el);
-      if (session) {
-        appendNavLink(el, 'dashboard.html', 'Dashboard');
-        if (session.role === 'admin' || session.role === 'reviewer') {
-          appendNavLink(el, 'admin.html', 'Admin');
-        }
-      } else if (isLearnerPage) {
-        appendNavLink(el, 'login.html', 'Login');
-      }
+    document.querySelectorAll('.nav__auth').forEach(function (el) {
+      while (el.firstChild) el.removeChild(el.firstChild);
     });
 
     if (window.EFI && typeof window.EFI.highlightActiveNavLinks === 'function') {

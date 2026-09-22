@@ -127,26 +127,35 @@ def check_netlify_headers() -> None:
         raise RuntimeError("Netlify header check failed")
 
 
-RETIRED_COMMERCE_ROUTES = [
-    "/store", "/store.html", "/checkout", "/checkout.html",
-    "/checkout-return", "/checkout-return.html", "/enroll", "/enroll.html",
+RETIRED_PAGES = [
+    # purchase path
+    "store", "checkout", "checkout-return", "enroll",
+    # certification program
+    "accreditation", "certificate", "certification", "coach-directory",
+    "coach-directory-policy", "community", "curriculum", "dashboard",
+    "educator-launchpad", "gap-analyzer", "launch-plan", "login", "starter-kit",
+    "teacher-to-coach", "verify", "ExEF-Capstone-Transparency-Rubric",
+    "ExEF-Competency-Crosswalk-Map",
+    *[f"module-{m}" for m in [*"123456789", "a-neuroscience", "b-pedagogy", "c-interventions"]],
 ]
+RETIRED_ROUTES = [route for page in RETIRED_PAGES for route in (f"/{page}", f"/{page}.html")] + ["/modules/*"]
 
 
-def check_retired_commerce_routes() -> None:
-    """The site sells coaching via discovery calls; the old store must stay unreachable."""
-    print("[gate] retired purchase routes redirect")
+def check_retired_routes() -> None:
+    """The site sells coaching via discovery calls; the retired store and
+    certification program must stay unreachable."""
+    print("[gate] retired store/program routes redirect to coaching")
     body = (ROOT / "netlify.toml").read_text(encoding="utf-8", errors="ignore")
     blocks = body.split("[[redirects]]")
     missing = []
-    for route in RETIRED_COMMERCE_ROUTES:
+    for route in RETIRED_ROUTES:
         rule = next((b for b in blocks if f'from = "{route}"' in b), "")
         if 'status = 301' not in rule or 'force = true' not in rule or 'to = "/coaching-home' not in rule:
             missing.append(route)
     if missing:
         for route in missing:
             print(f" - {route} must 301 (force) to /coaching-home in netlify.toml")
-        raise RuntimeError("Retired purchase route check failed")
+        raise RuntimeError("Retired route check failed")
 
 
 def main() -> int:
@@ -169,7 +178,7 @@ def main() -> int:
         check_canonical_tags()
         check_sitemap()
         check_netlify_headers()
-        check_retired_commerce_routes()
+        check_retired_routes()
     except RuntimeError as err:
         print(f"[gate] release gate failed: {err}")
         return 1

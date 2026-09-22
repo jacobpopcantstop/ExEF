@@ -46,6 +46,7 @@ function loadAuthWithUser(user) {
     clearTimeout,
     TextEncoder,
     localStorage: storage,
+    sessionStorage: createStorage(),
     fetch: () => Promise.resolve({
       ok: true,
       json: () => Promise.resolve({ ok: true })

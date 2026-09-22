@@ -940,6 +940,14 @@ body.page-resources .page-header {
   gap: var(--space-xl);
 }
 
+/* This rule loads after 50-accessibility-responsive.css, so its mobile
+   override never won; stack offers on phones here. */
+@media (max-width: 640px) {
+  .offer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .store-cart-btn {
   min-width: 140px;
 }

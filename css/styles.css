@@ -4741,6 +4741,12 @@ select.form-control {
   transform: translateY(0);
 }
 
+/* Long inline code (API keys, commands) must wrap instead of widening the page. */
+p code,
+li code {
+  overflow-wrap: anywhere;
+}
+
 /* --- Forced Colors / High Contrast Mode --- */
 @media (forced-colors: active) {
   .btn {
@@ -4819,6 +4825,7 @@ select.form-control {
   margin-bottom: var(--space-xl);
   background: var(--color-white);
   position: relative;
+  min-width: 0; /* fieldsets default to min-content and overflow narrow screens */
 }
 
 .esqr-skill-group__legend {
@@ -7048,6 +7055,14 @@ body.page-resources .page-header {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-xl);
+}
+
+/* This rule loads after 50-accessibility-responsive.css, so its mobile
+   override never won; stack offers on phones here. */
+@media (max-width: 640px) {
+  .offer-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .store-cart-btn {

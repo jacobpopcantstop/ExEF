@@ -6,14 +6,17 @@ test.describe('Lazy Loading — images', () => {
     const pages = ['index.html', 'resources.html', 'about.html', 'store.html', 'curriculum.html'];
     for (const p of pages) {
       await page.goto(`/${p}`, { waitUntil: 'domcontentloaded' });
-      const images = page.locator('img[src^="images/"]');
-      const count = await images.count();
-      for (let i = 0; i < count; i++) {
-        const img = images.nth(i);
-        await expect(img).toHaveAttribute('loading', 'lazy', {
-          timeout: 2000
-        });
-      }
+      // Above-the-fold images and the hero (fetchpriority="high") should load
+      // eagerly for LCP, so only other images below the first viewport are checked.
+      const eagerBelowFold = await page.evaluate(() => {
+        const fold = window.innerHeight;
+        return Array.from(document.querySelectorAll('img[src^="images/"]'))
+          .filter((img) => img.getBoundingClientRect().top + window.scrollY > fold)
+          .filter((img) => img.getAttribute('fetchpriority') !== 'high')
+          .filter((img) => img.getAttribute('loading') !== 'lazy')
+          .map((img) => img.getAttribute('src'));
+      });
+      expect(eagerBelowFold, `${p} below-fold images without loading="lazy"`).toEqual([]);
     }
   });
 

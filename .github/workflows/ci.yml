@@ -44,7 +44,7 @@ jobs:
           node-version: '22'
 
       - name: Run tests
-        run: node --test 'tests/*.test.mjs' || true
+        run: node --test 'tests/*.test.mjs'
 
   e2e:
     name: E2E

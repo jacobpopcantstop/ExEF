@@ -3,6 +3,10 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
+// Signing secrets are normally set in Netlify; give the handlers test values.
+process.env.EFI_CSRF_SIGNING_SECRET ??= 'test-csrf-signing-secret';
+process.env.EFI_PURCHASE_SIGNING_SECRET ??= 'test-purchase-signing-secret';
+
 const db = require('../netlify/functions/_db.js');
 const verify = require('../netlify/functions/verify.js');
 const stripeWebhook = require('../netlify/functions/stripe-webhook.js');

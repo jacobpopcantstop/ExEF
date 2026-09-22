@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">Predicted versus actual thesis completion time</title>
+<desc id="d">Bar chart: students predicted their honors thesis would take 33.9 days; it actually took 55.5 days on average.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="40" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="24" fill="#243543" text-anchor="middle" font-weight="bold">How long will your thesis take?</text>
+<path d="M90.0 320.0 L108.0 320.1 L126.7 319.6 L143.6 320.5 L162.0 319.7 L179.8 319.6 L197.2 320.3 L216.9 320.5 L234.3 319.6 L251.8 319.1 L270.5 319.5 L287.5 321.2 L305.6 321.1 L324.3 320.6 L342.3 319.2 L360.5 319.4 L377.8 319.1 L394.9 319.7 L412.8 319.7 L432.8 321.2 L449.8 319.1 L467.6 319.0 L485.3 320.3 L504.3 318.9 L522.0 319.8 L539.8 319.1 L557.7 319.0 L576.4 320.4 L594.3 319.8 L613.1 319.7 L630.0 320.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="170" y="198" width="120" height="122" fill="#ebe4d7" stroke="#243543" stroke-width="3"/>
+<rect x="430" y="120" width="120" height="200" fill="#274960" stroke="#243543" stroke-width="3"/>
+<text x="230" y="185.96" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="20" fill="#243543" text-anchor="middle" font-weight="bold">33.9 days</text>
+<text x="490" y="108.19999999999999" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="20" fill="#274960" text-anchor="middle" font-weight="bold">55.5 days</text>
+<text x="230" y="350" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="17" fill="#243543" text-anchor="middle" font-weight="normal">What students predicted</text>
+<text x="490" y="350" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="17" fill="#243543" text-anchor="middle" font-weight="normal">What it actually took</text>
+<text x="360" y="385" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">Data: Buehler, Griffin &amp; Ross (1994). This is ordinary human bias, before ADHD enters the picture.</text>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">The brain's front office</title>
+<desc id="d">An org chart: the goal at the top, with three stick-figure departments below labeled The Brakes (inhibition), The Whiteboard (working memory) and The Plan B Desk (cognitive flexibility).</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="40" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="24" fill="#243543" text-anchor="middle" font-weight="bold">Your brain's front office</text>
+<rect x="300" y="62" width="120" height="40" rx="8" fill="#274960"/>
+<text x="360" y="88" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="18" fill="#fff" text-anchor="middle" font-weight="bold">THE GOAL</text>
+<path d="M360.0 102.0 L359.6 116.3 L360.0 130.0" fill="none" stroke="#243543" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M130.0 130.0 L147.4 130.2 L168.0 129.6 L185.3 129.7 L204.2 130.4 L222.2 131.1 L240.9 129.6 L258.5 130.3 L277.7 129.3 L296.3 129.9 L314.7 129.0 L332.0 128.8 L350.6 129.4 L368.8 129.3 L388.4 130.3 L405.6 130.0 L423.6 131.1 L443.8 130.2 L460.4 131.1 L478.9 128.9 L497.8 129.7 L517.2 129.2 L533.7 129.9 L552.1 130.4 L571.6 130.9 L590.0 130.0" fill="none" stroke="#243543" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M130.0 130.0 L129.5 140.0 L130.0 150.0" fill="none" stroke="#243543" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M360.0 130.0 L360.9 140.0 L360.0 150.0" fill="none" stroke="#243543" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M590.0 130.0 L589.9 139.8 L590.0 150.0" fill="none" stroke="#243543" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="60" y="262" width="140" height="14" fill="#ebe4d7" stroke="#243543" stroke-width="2.5"/>
+<circle cx="130" cy="170" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M130.0 184.0 L130.0 203.9 L130.0 224.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M104.0 218.0 L116.1 209.0 L130.0 200.0 L143.0 210.1 L156.0 218.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M112.0 262.0 L121.6 244.0 L130.0 224.0 L137.9 241.8 L148.0 262.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="125" cy="167" r="1.8" fill="#243543"/><circle cx="135" cy="167" r="1.8" fill="#243543"/>
+<path d="M125.0 176.0 L129.3 176.3 L135.0 176.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="130" y="304" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="17" fill="#243543" text-anchor="middle" font-weight="bold">The Brakes</text>
+<text x="130" y="326" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">inhibition</text>
+<rect x="290" y="262" width="140" height="14" fill="#ebe4d7" stroke="#243543" stroke-width="2.5"/>
+<circle cx="360" cy="170" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M360.0 184.0 L359.0 203.2 L360.0 224.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M334.0 218.0 L346.8 209.2 L360.0 200.0 L373.1 209.2 L386.0 218.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M342.0 262.0 L351.1 242.1 L360.0 224.0 L368.5 242.8 L378.0 262.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="355" cy="168" r="1.8" fill="#243543"/><circle cx="365" cy="168" r="1.8" fill="#243543"/>
+<path d="M354 178 Q360 173 366 178" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<path d="M351.0 160.0 L354.2 162.0 L358.0 162.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M362.0 162.0 L364.8 161.7 L369.0 160.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="360" y="304" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="17" fill="#243543" text-anchor="middle" font-weight="bold">The Whiteboard</text>
+<text x="360" y="326" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">working memory</text>
+<rect x="520" y="262" width="140" height="14" fill="#ebe4d7" stroke="#243543" stroke-width="2.5"/>
+<circle cx="590" cy="170" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M590.0 184.0 L590.2 203.3 L590.0 224.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M564.0 218.0 L576.2 209.3 L590.0 200.0 L602.2 209.5 L616.0 218.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M572.0 262.0 L582.1 243.9 L590.0 224.0 L599.6 242.3 L608.0 262.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="585" cy="167" r="1.8" fill="#243543"/><circle cx="595" cy="167" r="1.8" fill="#243543"/>
+<path d="M584 174 Q590 180 596 174" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<text x="590" y="304" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="17" fill="#243543" text-anchor="middle" font-weight="bold">The Plan B Desk</text>
+<text x="590" y="326" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">cognitive flexibility</text>
+<text x="360" y="380" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">Executive dysfunction = the office is understaffed, not the boss being lazy.</text>
+</svg>

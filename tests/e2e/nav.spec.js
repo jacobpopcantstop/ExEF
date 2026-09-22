@@ -38,6 +38,20 @@ test.describe('Navigation — Search link', () => {
 
 });
 
+test.describe('Navigation — active state', () => {
+
+  test('highlights the current section on extensionless URLs', async ({ page }) => {
+    // Production serves /resources (no .html); emulate Netlify's pretty URLs.
+    await page.route('**/resources', (route) => route.fulfill({ path: 'resources.html' }));
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/resources');
+    const active = page.locator('.nav__link--active');
+    await expect(active).toHaveCount(1, { timeout: 10000 });
+    await expect(active).toHaveText('Resources');
+  });
+
+});
+
 test.describe('Dark Mode (retired)', () => {
 
   test('a stale dark preference is cleared and never applied', async ({ page }) => {

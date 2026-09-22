@@ -129,7 +129,7 @@
     }
 
     function renderDashboardRecheckCard(plans) {
-      var page = window.location.pathname.split('/').pop() || 'index.html';
+      var page = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
       if (page !== 'dashboard.html') return;
       var duePlans = (plans || []).filter(isDue);
       if (!duePlans.length) return;
@@ -348,7 +348,7 @@
     }
 
     function renderDashboardPracticeCard(plans) {
-      var page = window.location.pathname.split('/').pop() || 'index.html';
+      var page = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
       if (page !== 'dashboard.html') return;
       var anchor = document.querySelector('main .container') || document.querySelector('main');
       if (!anchor) return;
@@ -468,7 +468,7 @@
     }
 
     function renderEducationKpiCard(plans, reflections) {
-      var page = window.location.pathname.split('/').pop() || 'index.html';
+      var page = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
       if (page !== 'dashboard.html') return;
       var anchor = document.querySelector('main .container') || document.querySelector('main');
       if (!anchor) return;
@@ -594,7 +594,7 @@
     }
 
     function renderDashboardMasteryCard(plans) {
-      var page = window.location.pathname.split('/').pop() || 'index.html';
+      var page = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
       if (page !== 'dashboard.html') return;
       var anchor = document.querySelector('main .container') || document.querySelector('main');
       if (!anchor) return;
@@ -639,7 +639,7 @@
     }
 
     function renderDashboardLearningQueue(plans) {
-      var page = window.location.pathname.split('/').pop() || 'index.html';
+      var page = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
       if (page !== 'dashboard.html') return;
       var anchor = document.querySelector('main .container') || document.querySelector('main');
       if (!anchor) return;

@@ -22,7 +22,7 @@
   }
 
   function pageSlug() {
-    var page = window.location.pathname.split('/').pop() || 'index.html';
+    var page = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     return page.replace(/\.html$/, '');
   }
 

@@ -445,7 +445,7 @@
     }
 
     function renderDashboardRecheckCard(plans) {
-      var page = window.location.pathname.split('/').pop() || 'index.html';
+      var page = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
       if (page !== 'dashboard.html') return;
       var duePlans = (plans || []).filter(isDue);
       if (!duePlans.length) return;
@@ -664,7 +664,7 @@
     }
 
     function renderDashboardPracticeCard(plans) {
-      var page = window.location.pathname.split('/').pop() || 'index.html';
+      var page = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
       if (page !== 'dashboard.html') return;
       var anchor = document.querySelector('main .container') || document.querySelector('main');
       if (!anchor) return;
@@ -784,7 +784,7 @@
     }
 
     function renderEducationKpiCard(plans, reflections) {
-      var page = window.location.pathname.split('/').pop() || 'index.html';
+      var page = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
       if (page !== 'dashboard.html') return;
       var anchor = document.querySelector('main .container') || document.querySelector('main');
       if (!anchor) return;
@@ -910,7 +910,7 @@
     }
 
     function renderDashboardMasteryCard(plans) {
-      var page = window.location.pathname.split('/').pop() || 'index.html';
+      var page = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
       if (page !== 'dashboard.html') return;
       var anchor = document.querySelector('main .container') || document.querySelector('main');
       if (!anchor) return;
@@ -955,7 +955,7 @@
     }
 
     function renderDashboardLearningQueue(plans) {
-      var page = window.location.pathname.split('/').pop() || 'index.html';
+      var page = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
       if (page !== 'dashboard.html') return;
       var anchor = document.querySelector('main .container') || document.querySelector('main');
       if (!anchor) return;
@@ -1166,7 +1166,7 @@ window.EFI.registerMainModule(function (shared) {
   })();
 
   (function normalizePrimaryNav() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     if (currentPage === 'admin.html') return;
     if (document.querySelector('.nav__dropdown-trigger')) return;
 
@@ -1221,7 +1221,7 @@ window.EFI.registerMainModule(function (shared) {
   })();
 
   (function injectModuleScrollProgress() {
-    var currentPage = window.location.pathname.split('/').pop() || '';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || '';
     if (!/^module-\d+\.html$/.test(currentPage)) return;
     if (document.querySelector('.module-scroll-progress')) return;
 
@@ -1246,7 +1246,7 @@ window.EFI.registerMainModule(function (shared) {
   })();
 
   (function injectSourceAccessReminder() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     var sourceHeavy = [
       'module-1.html',
       'module-4.html',
@@ -1272,7 +1272,7 @@ window.EFI.registerMainModule(function (shared) {
   })();
 
   (function injectGettingStartedPrompts() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     if (currentPage === 'index.html') return;
     if (currentPage !== 'curriculum.html') return;
     if (document.getElementById('getting-started-guide-card')) return;
@@ -1302,7 +1302,7 @@ window.EFI.registerMainModule(function (shared) {
   })();
 
   (function loadAssessmentTools() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     if (['time-blindness-calibrator.html', 'task-start-friction.html'].indexOf(currentPage) === -1) return;
     if (document.querySelector('script[data-src="js/assessment-tools.js"]')) return;
     var s = document.createElement('script');
@@ -1313,7 +1313,7 @@ window.EFI.registerMainModule(function (shared) {
   })();
 
   (function loadModuleEnhancements() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     var isModulePage = /^module-(1|2|3|4|5|6|a-neuroscience|b-pedagogy|c-interventions)\.html$/.test(currentPage);
     if (!isModulePage && currentPage !== 'curriculum.html') return;
     if (document.querySelector('script[data-src="js/module-enhancements.js"]')) return;
@@ -1325,7 +1325,7 @@ window.EFI.registerMainModule(function (shared) {
   })();
 
   (function injectBrokenLinkReportButtons() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     if (['404.html', 'resources.html'].indexOf(currentPage) === -1) return;
     if (document.getElementById('report-broken-link-btn')) return;
 

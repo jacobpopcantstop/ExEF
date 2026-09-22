@@ -28,7 +28,7 @@ function initThemeToggle() {
 }
 
 function injectInstituteCommerceLinks() {
-    var currentPage = window.location.pathname.split('/').pop() || 'coaching-home.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'coaching-home.html';
     document.querySelectorAll('.nav-links').forEach(function (list) {
         if (!list || list.querySelector('a[href="store.html"]')) return;
 
@@ -369,7 +369,7 @@ async function submitLeadForm(form, payload, successMessage) {
         success.textContent = successMessage;
         form.appendChild(success);
 
-        var pageSlug = (window.location.pathname.split('/').pop() || 'coaching-contact.html').replace(/\.html$/, '');
+        var pageSlug = (window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'coaching-contact.html').replace(/\.html$/, '');
         var nudge = document.createElement('p');
         nudge.style.cssText = 'margin-top:var(--space-md);color:var(--color-text-light);';
         nudge.textContent = 'Want to skip the wait? Grab a consultation time directly:';

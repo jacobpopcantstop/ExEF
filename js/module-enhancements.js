@@ -52,7 +52,7 @@
   }
 
   (function injectSectionCitationFootnotes() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     if (!/^module-(1|2|3|4|5|6)\.html$/.test(currentPage)) return;
 
     var citationsByPage = {
@@ -104,7 +104,7 @@
   })();
 
   (function injectModuleReadingPanel() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     var readingByModule = {
       'module-1.html': [
         { title: 'Barkley (2012): Executive Functions, What They Are', url: 'https://www.routledge.com/Executive-Functions-What-They-Are-How-They-Work-and-Why-They-Evolved/Barkley/p/book/9781462506965' },
@@ -161,7 +161,7 @@
   })();
 
   (function injectModuleCitationPanel() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     var citationByModule = {
       'module-1.html': ['Barkley (2012)', 'Brown (2013)', 'Harvard Center on the Developing Child'],
       'module-2.html': ['Dawson & Guare ESQ-R', 'BRIEF-2 Technical Manual', 'Barkley Point-of-Performance principle'],
@@ -191,7 +191,7 @@
   })();
 
   (function injectModuleAssessmentPreview() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     var previewByModule = {
       'module-1.html': { test: 'Unit Test 1: Inhibition + Time Blindness', assignment: 'Assignment 1.1 Temporal Horizon Analysis' },
       'module-2.html': { test: 'Unit Test 2: Intake + Assessment Interpretation', assignment: 'Assignment 2.1 Intake Simulation Packet' },
@@ -230,7 +230,7 @@
   })();
 
   (function injectModuleKnowledgeCheck() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     var checks = {
       'module-1.html': {
         items: [
@@ -548,7 +548,7 @@
   })();
 
   (function injectLearnMorePanels() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     if (!/^module-|^curriculum\.html$/.test(currentPage)) return;
     var deepDives = {
       'module-b-pedagogy.html': [
@@ -943,7 +943,7 @@
   })();
 
   (function injectModuleToc() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     if (!/^module-(1|2|3|4|5|6|a-neuroscience|b-pedagogy|c-interventions)\.html$/.test(currentPage)) return;
     if (document.querySelector('.module-toc')) return;
     var main = document.querySelector('main');
@@ -1125,7 +1125,7 @@
     }
 
     // Only run on module pages to avoid intruding on non-learning pages
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     if (/^module-/.test(currentPage) && shouldShowIntervention()) {
       renderInterventionBanner();
     }

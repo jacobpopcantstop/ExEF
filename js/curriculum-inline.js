@@ -1,0 +1,27 @@
+// Extracted from curriculum.html so it runs under the site CSP (script-src 'self').
+(function () {
+  function hasAdvancedAccess() {
+    if (!window.EFI || !EFI.Auth) return false;
+    if (typeof EFI.Auth.hasRole === 'function' && EFI.Auth.hasRole(['admin', 'reviewer'])) return true;
+    if (typeof EFI.Auth.hasPurchased === 'function') {
+      if (EFI.Auth.hasPurchased('cefc-enrollment') || EFI.Auth.hasPurchased('capstone-review')) return true;
+    }
+    if (typeof EFI.Auth.getCertificationStatus === 'function') {
+      var s = EFI.Auth.getCertificationStatus();
+      if (s && (s.fullyCertified || s.certificatePurchased || s.eligibleForCertificate)) return true;
+    }
+    return false;
+  }
+  function evaluate() {
+    var tier = document.querySelector('[data-advanced-tier]');
+    if (!tier) return;
+    if (hasAdvancedAccess()) tier.classList.add('advanced-tier--unlocked');
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.EFI && EFI.Auth && typeof EFI.Auth.refreshManagedSession === 'function') {
+      Promise.resolve(EFI.Auth.refreshManagedSession()).finally(evaluate);
+    } else {
+      evaluate();
+    }
+  });
+})();

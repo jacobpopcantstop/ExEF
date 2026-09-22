@@ -1,0 +1,40 @@
+// Extracted from certification.html so it runs under the site CSP (script-src 'self').
+(function () {
+  var form = document.getElementById('certification-interest-form');
+  var status = document.getElementById('certification-interest-status');
+  if (!form) return;
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    var name = document.getElementById('cert-interest-name').value.trim();
+    var email = document.getElementById('cert-interest-email').value.trim();
+    var role = document.getElementById('cert-interest-role').value;
+    var notes = document.getElementById('cert-interest-notes').value.trim();
+    var submit = form.querySelector('button[type="submit"]');
+    var original = submit ? submit.textContent : '';
+    if (submit) { submit.disabled = true; submit.textContent = 'Adding...'; }
+    if (status) { status.style.color = 'var(--color-text-muted)'; status.textContent = 'Saving your interest...'; }
+    try {
+      var response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          consent: true,
+          source: 'certification_interest',
+          lead_type: 'certification_interest',
+          metadata: { page: 'certification.html', role: role, notes: notes }
+        })
+      });
+      var body = await response.json();
+      if (!response.ok || !body.ok) throw new Error((body && body.error) || 'Unable to save right now.');
+      status.textContent = 'Thanks. We\u2019ll email you when certification opens.';
+      form.reset();
+    } catch (err) {
+      if (status) { status.style.color = 'var(--color-danger, #b42318)'; status.textContent = err.message || 'Unable to save right now.'; }
+    } finally {
+      if (submit) { submit.disabled = false; submit.textContent = original; }
+    }
+  });
+})();

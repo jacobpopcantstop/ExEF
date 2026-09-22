@@ -134,7 +134,7 @@ RETIRED_PAGES = [
     "accreditation", "certificate", "certification", "coach-directory",
     "coach-directory-policy", "community", "curriculum", "dashboard",
     "educator-launchpad", "gap-analyzer", "launch-plan", "login", "starter-kit",
-    "teacher-to-coach", "verify", "ExEF-Capstone-Transparency-Rubric",
+    "teacher-to-coach", "telemetry", "verify", "ExEF-Capstone-Transparency-Rubric",
     "ExEF-Competency-Crosswalk-Map",
     *[f"module-{m}" for m in [*"123456789", "a-neuroscience", "b-pedagogy", "c-interventions"]],
 ]
@@ -174,7 +174,7 @@ def main() -> int:
         run_command(["python3", "scripts/check_launch_blockers.py"], "launch blocker check")
         run_command(["python3", "scripts/check_console_logs.py"], "console/debugger check")
         run_command(["python3", "scripts/check_perf_budget.py"], "performance budget check")
-        run_command(["node", "--test", "tests/ai-rubric.test.mjs"], "unit tests")
+        run_command(["node", "--test", *sorted(str(p) for p in (ROOT / "tests").glob("*.test.mjs"))], "unit tests")
         check_canonical_tags()
         check_sitemap()
         check_netlify_headers()

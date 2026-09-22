@@ -1,5 +1,14 @@
 # Deployment Baseline (Prototype to Production)
 
+> **Status (September 2026):** ExEF is coaching-only. The store, certification
+> program and their functions (auth, submissions, sync-progress, verify,
+> stripe-webhook, checkout, coach-directory, community-question, ops-config,
+> audit-logs, public-config, and the scheduled `process-due-feedback`) were
+> removed; restore them from git history if the program returns. The live
+> backend is `leads`, `track-event`, `sign-download` and `download-file`, and
+> `.env.example` lists what they need. Sections below that mention the removed
+> pieces are historical.
+
 ## 1) Environment
 - Copy `.env.example` into environment-specific configuration.
 - Set `BASE_URL`, `API_BASE_URL`, Stripe keys, certificate signing secret.

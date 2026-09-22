@@ -327,6 +327,18 @@
   force = true
 
 [[redirects]]
+  from = "/telemetry"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/telemetry.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/verify"
   to = "/coaching-home"
   status = 301

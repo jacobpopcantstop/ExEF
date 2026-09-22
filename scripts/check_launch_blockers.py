@@ -8,15 +8,12 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# The site is coaching-only: these are the functions the live pages call.
 REQUIRED_FILES = [
-  "netlify/functions/auth.js",
-  "netlify/functions/verify.js",
-  "netlify/functions/stripe-webhook.js",
-  "netlify/functions/sync-progress.js",
-  "netlify/functions/submissions.js",
-  "netlify/functions/coach-directory.js",
-  "netlify/functions/ops-config.js",
-  "netlify/functions/community-question.js",
+  "netlify/functions/leads.js",
+  "netlify/functions/track-event.js",
+  "netlify/functions/sign-download.js",
+  "netlify/functions/download-file.js",
   "data/video-library.json",
   "docs/progress.md",
   "docs/video-pipeline.md",
@@ -26,15 +23,10 @@ REQUIRED_ENV_KEYS = [
   "EFI_CRM_WEBHOOK_URL",
   "EFI_ESP_WEBHOOK_URL",
   "EFI_DOWNLOAD_SIGNING_SECRET",
-  "EFI_PURCHASE_SIGNING_SECRET",
   "SUPABASE_URL",
-  "SUPABASE_ANON_KEY",
   "SUPABASE_SERVICE_ROLE_KEY",
-  "GEMINI_API_KEY",
-  "STRIPE_WEBHOOK_SECRET",
-  "EFI_SUBMISSIONS_CRON_SECRET",
-  "EFI_VIDEO_PROVIDER",
-  "EFI_VIDEO_ALLOWED_HOSTS",
+  "EFI_RESEND_API_KEY",
+  "EFI_LEAD_NOTIFY_EMAIL",
 ]
 
 

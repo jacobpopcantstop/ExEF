@@ -1,7 +1,5 @@
 {
   "hiddenPages": [
-    "ExEF-Capstone-Transparency-Rubric.html",
-    "ExEF-Competency-Crosswalk-Map.html",
     "accreditation.html",
     "certificate.html",
     "certification.html",
@@ -11,6 +9,8 @@
     "dashboard.html",
     "educator-launchpad.html",
     "enroll.html",
+    "ExEF-Capstone-Transparency-Rubric.html",
+    "ExEF-Competency-Crosswalk-Map.html",
     "gap-analyzer.html",
     "launch-plan.html",
     "module-1.html",
@@ -28,6 +28,7 @@
     "starter-kit.html",
     "store.html",
     "teacher-to-coach.html",
+    "telemetry.html",
     "verify.html"
   ],
   "copyLabOnlyPages": [
@@ -121,7 +122,6 @@
     "team-cole-m.html",
     "team-diamond-b.html",
     "team-jacob-rozansky.html",
-    "telemetry.html",
     "terms.html",
     "win-vault.html"
   ]

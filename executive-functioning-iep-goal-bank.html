@@ -62,7 +62,7 @@
         </div>
         <div class="nav__cluster nav__cluster--support">
           <span class="nav__auth"></span>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=executive-functioning-iep-goal-bank&amp;utm_medium=site&amp;utm_content=nav-cta" class="nav__link nav__link--cta" data-analytics-event="book_call_click" data-analytics-label="executive-functioning-iep-goal-bank-nav-cta">Book Consultation</a>
+          <a href="https://calendly.com/jacobansky/30min?utm_source=executive-functioning-iep-goal-bank&amp;utm_medium=site&amp;utm_content=nav-cta" class="nav__link nav__link--cta" data-analytics-event="book_call_click" data-analytics-label="executive-functioning-iep-goal-bank-nav-cta">Book Consultation</a>
         </div>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -531,7 +531,7 @@
           <h4>Connect</h4>
           <ul class="footer__links">
             <li><a href="/coaching-home#service-lanes">Services</a></li>
-            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=executive-functioning-iep-goal-bank&amp;utm_medium=site&amp;utm_content=footer" data-analytics-event="book_call_click" data-analytics-label="executive-functioning-iep-goal-bank-footer">Book a Consultation</a></li>
+            <li><a href="https://calendly.com/jacobansky/30min?utm_source=executive-functioning-iep-goal-bank&amp;utm_medium=site&amp;utm_content=footer" data-analytics-event="book_call_click" data-analytics-label="executive-functioning-iep-goal-bank-footer">Book a Consultation</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="/search">Search</a></li>
           </ul>
@@ -549,71 +549,6 @@
   <script src="js/nav-auth.min.js" defer></script>
   <script src="js/tool-lead-capture.min.js" defer></script>
   <script src="js/main.min.js" defer></script>
-  <script>
-    (function () {
-      function setStatus(button, message) {
-        var status = button.parentElement ? button.parentElement.querySelector('.copy-status') : null;
-        if (status) status.textContent = message;
-      }
-
-      document.querySelectorAll('[data-copy-text]').forEach(function (button) {
-        button.addEventListener('click', function () {
-          var text = button.getAttribute('data-copy-text') || '';
-          function fallbackCopy() {
-            var textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.setAttribute('readonly', '');
-            textarea.style.position = 'fixed';
-            textarea.style.top = '-999px';
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-              document.execCommand('copy');
-              setStatus(button, 'Copied.');
-            } catch (err) {
-              setStatus(button, 'Copy unavailable in this browser.');
-            }
-            document.body.removeChild(textarea);
-          }
-          if (!navigator.clipboard || !navigator.clipboard.writeText) {
-            fallbackCopy();
-            return;
-          }
-          navigator.clipboard.writeText(text).then(function () {
-            setStatus(button, 'Copied.');
-          }).catch(fallbackCopy);
-        });
-      });
-
-      document.querySelectorAll('.accordion__header').forEach(function (header) {
-        header.setAttribute('aria-expanded', 'false');
-        var body = header.nextElementSibling;
-        if (body) {
-          if (!body.id) body.id = 'acc-body-' + Math.random().toString(36).slice(2, 8);
-          header.setAttribute('aria-controls', body.id);
-        }
-        header.addEventListener('click', function () {
-          window.setTimeout(function () {
-            var item = header.closest('.accordion__item');
-            var expanded = item && item.classList.contains('active');
-            header.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-          }, 0);
-        });
-      });
-
-      document.querySelectorAll('[data-open-goal]').forEach(function (link) {
-        link.addEventListener('click', function () {
-          var id = link.getAttribute('data-open-goal');
-          var item = id ? document.getElementById(id) : null;
-          var header = item ? item.querySelector('.accordion__header') : null;
-          if (!item || !header) return;
-          window.setTimeout(function () {
-            if (!item.classList.contains('active')) header.click();
-            item.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 80);
-        });
-      });
-    })();
-  </script>
+  <script src="js/iep-goal-bank-inline.min.js" defer></script>
 </body>
 </html>

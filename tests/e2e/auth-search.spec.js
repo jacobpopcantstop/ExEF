@@ -27,7 +27,7 @@ test.describe('Auth UI', () => {
     await page.getByRole('button', { name: 'Create one' }).click();
 
     await expect(heroTitle).toHaveText('Welcome');
-    await expect(heroLead).toContainText('Create an account to access your EFI dashboard');
+    await expect(heroLead).toContainText('Create an account to access your ExEF dashboard');
     await expect(registerPanel).toBeVisible();
     await expect(loginPanel).toBeHidden();
 
@@ -50,11 +50,11 @@ test.describe('Search', () => {
     await expect(page.locator('#search-input')).toHaveValue('esqr');
 
     const esqrResult = page.locator('.search-result-card', {
-      has: page.locator('h3', { hasText: 'Free Executive Functioning Test (ESQ-R) | EFI' })
+      has: page.locator('h3', { hasText: 'Free Executive Functioning Test (ESQ-R) | ExEF' })
     });
 
     await expect(esqrResult).toBeVisible();
-    await expect(esqrResult).toHaveAttribute('href', '/esqr.html');
+    await expect(esqrResult).toHaveAttribute('href', '/esqr');
   });
 
   test('typed queries persist across reload and keep result rendering stable', async ({ page }) => {
@@ -67,11 +67,11 @@ test.describe('Search', () => {
     await expect(page.locator('#search-status')).toContainText('result', { timeout: 10000 });
 
     const result = page.locator('.search-result-card', {
-      has: page.locator('h3', { hasText: 'Time Blindness Calibrator | EFI' })
+      has: page.locator('h3', { hasText: 'Free Time Blindness Test — Calibrate Your Time Estimates | ExEF' })
     });
 
     await expect(result).toBeVisible();
-    await expect(result).toHaveAttribute('href', '/time-blindness-calibrator.html');
+    await expect(result).toHaveAttribute('href', '/time-blindness-calibrator');
 
     await page.reload({ waitUntil: 'domcontentloaded' });
 

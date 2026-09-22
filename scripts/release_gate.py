@@ -32,31 +32,16 @@ VISIBILITY = load_visibility()
 IGNORED_HTML = {"404.html", *VISIBILITY.get("hiddenPages", []), *VISIBILITY.get("utilityPages", [])}
 CANONICAL_OVERRIDES = {
     "index.html": CANONICAL_DOMAIN,
-    "blog.html": CANONICAL_DOMAIN + "blog/",
     "checkout.html": CANONICAL_DOMAIN + "store#purchase-status",
-    "coaching-home.html": CANONICAL_DOMAIN + "coaching/",
-    "coaching-contact.html": CANONICAL_DOMAIN + "coaching/contact/",
-    "coaching-methodology.html": CANONICAL_DOMAIN + "coaching/methodology/",
     "educator-launchpad.html": CANONICAL_DOMAIN + "teacher-to-coach#launchpad",
     "educator-toolkit.html": CANONICAL_DOMAIN + "resources#toolkits",
     "enroll.html": CANONICAL_DOMAIN + "store",
     "further-sources.html": CANONICAL_DOMAIN + "open-ef-resources-directory#citations",
     "getting-started.html": CANONICAL_DOMAIN + "#start-paths",
-    "module-1.html": CANONICAL_DOMAIN + "modules/1/",
-    "module-2.html": CANONICAL_DOMAIN + "modules/2/",
-    "module-3.html": CANONICAL_DOMAIN + "modules/3/",
-    "module-4.html": CANONICAL_DOMAIN + "modules/4/",
-    "module-5.html": CANONICAL_DOMAIN + "modules/5/",
-    "module-6.html": CANONICAL_DOMAIN + "modules/6/",
-    "module-7.html": CANONICAL_DOMAIN + "modules/7/",
-    "module-8.html": CANONICAL_DOMAIN + "modules/8/",
-    "module-9.html": CANONICAL_DOMAIN + "modules/9/",
-    "module-a-neuroscience.html": CANONICAL_DOMAIN + "modules/1/",
-    "module-b-pedagogy.html": CANONICAL_DOMAIN + "modules/3/",
-    "module-c-interventions.html": CANONICAL_DOMAIN + "modules/4/",
+    "module-a-neuroscience.html": CANONICAL_DOMAIN + "module-1",
+    "module-b-pedagogy.html": CANONICAL_DOMAIN + "module-3",
+    "module-c-interventions.html": CANONICAL_DOMAIN + "module-4",
     "parent-toolkit.html": CANONICAL_DOMAIN + "resources#toolkits",
-    "search.html": CANONICAL_DOMAIN + "search/",
-    "verify.html": CANONICAL_DOMAIN + "verify/",
 }
 
 
@@ -142,6 +127,37 @@ def check_netlify_headers() -> None:
         raise RuntimeError("Netlify header check failed")
 
 
+RETIRED_PAGES = [
+    # purchase path
+    "store", "checkout", "checkout-return", "enroll",
+    # certification program
+    "accreditation", "certificate", "certification", "coach-directory",
+    "coach-directory-policy", "community", "curriculum", "dashboard",
+    "educator-launchpad", "gap-analyzer", "launch-plan", "login", "starter-kit",
+    "teacher-to-coach", "telemetry", "verify", "ExEF-Capstone-Transparency-Rubric",
+    "ExEF-Competency-Crosswalk-Map",
+    *[f"module-{m}" for m in [*"123456789", "a-neuroscience", "b-pedagogy", "c-interventions"]],
+]
+RETIRED_ROUTES = [route for page in RETIRED_PAGES for route in (f"/{page}", f"/{page}.html")] + ["/modules/*"]
+
+
+def check_retired_routes() -> None:
+    """The site sells coaching via discovery calls; the retired store and
+    certification program must stay unreachable."""
+    print("[gate] retired store/program routes redirect to coaching")
+    body = (ROOT / "netlify.toml").read_text(encoding="utf-8", errors="ignore")
+    blocks = body.split("[[redirects]]")
+    missing = []
+    for route in RETIRED_ROUTES:
+        rule = next((b for b in blocks if f'from = "{route}"' in b), "")
+        if 'status = 301' not in rule or 'force = true' not in rule or 'to = "/coaching-home' not in rule:
+            missing.append(route)
+    if missing:
+        for route in missing:
+            print(f" - {route} must 301 (force) to /coaching-home in netlify.toml")
+        raise RuntimeError("Retired route check failed")
+
+
 def main() -> int:
     try:
         run_command(["python3", "scripts/build_css.py"], "css build")
@@ -158,10 +174,11 @@ def main() -> int:
         run_command(["python3", "scripts/check_launch_blockers.py"], "launch blocker check")
         run_command(["python3", "scripts/check_console_logs.py"], "console/debugger check")
         run_command(["python3", "scripts/check_perf_budget.py"], "performance budget check")
-        run_command(["node", "--test", "tests/ai-rubric.test.mjs"], "unit tests")
+        run_command(["node", "--test", *sorted(str(p) for p in (ROOT / "tests").glob("*.test.mjs"))], "unit tests")
         check_canonical_tags()
         check_sitemap()
         check_netlify_headers()
+        check_retired_routes()
     except RuntimeError as err:
         print(f"[gate] release gate failed: {err}")
         return 1

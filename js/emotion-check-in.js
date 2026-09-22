@@ -1,0 +1,547 @@
+// Extracted from emotion-check-in.html so it runs under the site CSP (script-src 'self').
+// ── DATA ────────────────────────────────────────────────────
+const FAMILIES = [
+  { name:"Aliveness / Joy",      valence:"positive",
+    color:"#a0620e",
+    emotions:["Amazed","Awe","Bliss","Delighted","Eager","Ecstatic","Enchanted","Energized","Enthusiastic","Excited","Happy","Inspired","Lively","Passionate","Playful","Refreshed","Satisfied","Thrilled"],
+    prompt:"What's alive in you right now — and what made space for this feeling to emerge?" },
+  { name:"Accepting / Open",     valence:"positive",
+    color:"#1e6b4a",
+    emotions:["Calm","Centered","Content","Fulfilled","Patient","Peaceful","Present","Relaxed","Serene","Trusting"],
+    prompt:"What have you let go of or accepted that's allowing this sense of openness right now?" },
+  { name:"Courageous / Powerful",valence:"positive",
+    color:"#1a5276",
+    emotions:["Adventurous","Brave","Capable","Confident","Daring","Determined","Grounded","Proud","Strong","Worthy"],
+    prompt:"Where in your life is this strength or courage most asking to be expressed or honored?" },
+  { name:"Connected / Loving",   valence:"positive",
+    color:"#7c3a3a",
+    emotions:["Accepting","Affectionate","Caring","Compassion","Empathy","Safe","Warm"],
+    prompt:"Who or what is this love and connection in service of — and how does that feel in your body?" },
+  { name:"Grateful",             valence:"positive",
+    color:"#117a65",
+    emotions:["Appreciative","Blessed","Fortunate","Humbled","Lucky","Moved","Thankful","Touched"],
+    prompt:"What does this gratitude reveal about what truly matters most to you?" },
+  { name:"Hopeful",              valence:"positive",
+    color:"#2471a3",
+    emotions:["Encouraged","Expectant","Optimistic","Trusting"],
+    prompt:"What possibility or future are you allowing yourself to believe in right now?" },
+  { name:"Curious",              valence:"positive",
+    color:"#6c3483",
+    emotions:["Engaged","Exploring","Fascinated","Interested","Intrigued","Stimulated"],
+    prompt:"What is this curiosity inviting you to explore, discover, or lean into?" },
+  { name:"Angry / Annoyed",      valence:"negative",
+    color:"#a93226",
+    emotions:["Agitated","Aggravated","Bitter","Contempt","Cynical","Disturbed","Edgy","Exasperated","Frustrated","Furious","Grouchy","Hostile","Impatient","Irritated","Irate","Moody","Outraged","Resentful","Upset","Vindictive"],
+    prompt:"What value or need of yours is not being honored right now? What does this anger want you to know?" },
+  { name:"Despair / Sad",        valence:"negative",
+    color:"#2c3e50",
+    emotions:["Anguish","Depressed","Despondent","Disappointed","Discouraged","Forlorn","Gloomy","Grief","Heartbroken","Hopeless","Lonely","Melancholy","Sorrow","Unhappy","Weary","Yearning"],
+    prompt:"What loss, longing, or unmet need lives underneath this sadness? What does it most need from you?" },
+  { name:"Fear",                 valence:"negative",
+    color:"#5b2c6f",
+    emotions:["Afraid","Anxious","Apprehensive","Frightened","Hesitant","Nervous","Panic","Paralyzed","Scared","Terrified","Worried"],
+    prompt:"What is this fear trying to protect you from — and is that protection still serving you?" },
+  { name:"Embarrassed / Shame",  valence:"negative",
+    color:"#78281f",
+    emotions:["Ashamed","Humiliated","Inhibited","Mortified","Self-conscious","Useless","Weak","Worthless"],
+    prompt:"Whose voice is behind this shame? Is this message truly yours — or was it handed to you?" },
+  { name:"Guilt",                valence:"negative",
+    color:"#6e2f1a",
+    emotions:["Regret","Remorseful","Sorry"],
+    prompt:"What action or choice is this guilt calling you to acknowledge, make amends for, or change?" },
+  { name:"Powerless",            valence:"negative",
+    color:"#154360",
+    emotions:["Impotent","Incapable","Resigned","Trapped","Victim"],
+    prompt:"Where have you been giving your power away — and what would it look like to reclaim even a small piece of it?" },
+  { name:"Fragile",              valence:"negative",
+    color:"#7b5ea7",
+    emotions:["Helpless","Sensitive"],
+    prompt:"What part of you is asking for more gentleness, care, or protection right now?" },
+  { name:"Disconnected / Numb",  valence:"mixed",
+    color:"#566573",
+    emotions:["Aloof","Bored","Confused","Distant","Empty","Indifferent","Isolated","Lethargic","Listless","Removed","Resistant","Shut Down","Withdrawn"],
+    prompt:"What might you be protecting yourself from by staying distant or numb — and is it safe to get a little closer to it?" },
+  { name:"Stressed / Tense",     valence:"mixed",
+    color:"#a04000",
+    emotions:["Burned out","Cranky","Depleted","Edgy","Exhausted","Frazzled","Overwhelmed","Rattled","Restless","Shaken","Tight","Worn out"],
+    prompt:"What would need to shift — even just 10% — for you to feel more ease or spaciousness right now?" },
+  { name:"Unsettled / Doubt",    valence:"mixed",
+    color:"#7d6608",
+    emotions:["Apprehensive","Concerned","Dissatisfied","Grouchy","Hesitant","Perplexed","Questioning","Reluctant","Skeptical","Suspicious","Ungrounded","Unsure","Worried"],
+    prompt:"What is this doubt or uncertainty asking you to slow down and look more carefully at?" },
+  { name:"Tender",               valence:"mixed",
+    color:"#1e8449",
+    emotions:["Calm","Caring","Loving","Reflective","Self-loving","Serene","Vulnerable","Warm"],
+    prompt:"What would it mean to fully allow and honor this tender, open part of yourself right now?" },
+];
+
+const DEFS = {
+  "Amazed":"Struck by wonder at something unexpected or extraordinary.",
+  "Awe":"Overwhelmed by something so vast or powerful it exceeds your frame.",
+  "Bliss":"Complete happiness — a state of effortless peace and joy.",
+  "Delighted":"Lit up with pleasure by something that genuinely pleases you.",
+  "Eager":"Keenly ready and wanting to dive in.",
+  "Ecstatic":"Joy so intense it overflows — a feeling of being transported.",
+  "Enchanted":"Captivated and charmed, as if under a magical spell.",
+  "Energized":"A surge of vitality that makes you ready to move and act.",
+  "Enthusiastic":"Fired up with active interest and excitement about something.",
+  "Excited":"Stirred up with anticipation — your nervous system saying yes.",
+  "Happy":"A general sense of pleasure, well-being, and things being good.",
+  "Inspired":"Filled with creative energy or a compelling urge to make something.",
+  "Lively":"Full of spirit and animation — alert and buzzing with presence.",
+  "Passionate":"Driven by deep, intense feeling toward someone or something.",
+  "Playful":"Lighthearted and spontaneous — enjoying life without heaviness.",
+  "Refreshed":"Renewed and restored, like a window just washed clean.",
+  "Satisfied":"A settled sense that something has been completed or fulfilled.",
+  "Thrilled":"Excitement at the edge of trembling — can barely contain it.",
+  "Calm":"Free from agitation — a quiet, steady inner stillness.",
+  "Centered":"Balanced and anchored in yourself — not pulled off your axis.",
+  "Content":"At peace with how things are; nothing feels missing right now.",
+  "Fulfilled":"A deep sense that your life and efforts carry meaning.",
+  "Patient":"Able to wait without urgency or distress.",
+  "Peaceful":"Inner quiet and freedom from conflict or disturbance.",
+  "Present":"Fully here — not drifting to past or future.",
+  "Relaxed":"Tension released; body and mind comfortable and easy.",
+  "Serene":"Calm and clear, like still water on a windless day.",
+  "Trusting":"Confident in the safety and reliability of someone or something.",
+  "Adventurous":"Willing to move toward the unknown with curiosity rather than fear.",
+  "Brave":"Facing fear or difficulty with resolve instead of retreat.",
+  "Capable":"Knowing you have what it takes to handle what's ahead.",
+  "Confident":"Secure in your judgment, abilities, and sense of self.",
+  "Daring":"Bold enough to act despite risk or uncertainty.",
+  "Determined":"Committed to your goal and not easily discouraged.",
+  "Grounded":"Firmly connected to yourself — stable and unshaken.",
+  "Proud":"Deep satisfaction in your own achievement, identity, or effort.",
+  "Strong":"Robust in will, body, or emotion — able to carry weight.",
+  "Worthy":"Believing you deserve care, respect, and good things.",
+  "Accepting":"Embracing someone or something as they are, without conditions.",
+  "Affectionate":"Expressing gentle, warm care toward another.",
+  "Caring":"Genuinely invested in another person's well-being.",
+  "Compassion":"Moved by another's suffering and wanting to ease it.",
+  "Empathy":"Attuning to someone's inner experience as if it were your own.",
+  "Safe":"Protected from harm and free to be yourself.",
+  "Warm":"A gentle, friendly goodwill toward people or the world.",
+  "Appreciative":"Noticing and valuing the goodness in what you've received.",
+  "Blessed":"Touched by a grace or fortune that goes beyond what you earned.",
+  "Fortunate":"Aware that circumstances have favored you in meaningful ways.",
+  "Humbled":"Moved to release ego when something greater or kinder meets you.",
+  "Lucky":"A light awareness that chance has gone in your favor.",
+  "Moved":"Emotionally stirred by something beautiful, kind, or significant.",
+  "Thankful":"Feeling and wanting to express gratitude for what's been given.",
+  "Touched":"Gently reached in your heart by an act of kindness or beauty.",
+  "Encouraged":"Given enough support or evidence to keep going.",
+  "Expectant":"Anticipating something good — leaning forward with open attention.",
+  "Optimistic":"Inclined to believe positive outcomes are likely.",
+  "Engaged":"Actively absorbed — fully in it, not just observing.",
+  "Exploring":"Moving into the unknown with openness and discovery.",
+  "Fascinated":"Deeply captivated — held still by something remarkable.",
+  "Interested":"Drawn toward something; wanting to learn or understand more.",
+  "Intrigued":"Caught by a mystery or puzzle that keeps pulling you in.",
+  "Stimulated":"Activated and alive from interesting ideas or input.",
+  "Agitated":"Restless and unsettled inside — difficulty staying still.",
+  "Aggravated":"Irritated beyond your patience threshold.",
+  "Bitter":"Holding resentment over a hurt or injustice that hasn't healed.",
+  "Contempt":"A mix of superiority and disdain toward someone or something.",
+  "Cynical":"Distrustful of people's motives; expecting the worst.",
+  "Disturbed":"Troubled by something that violates your sense of order or safety.",
+  "Edgy":"On edge and easily triggered — like everything is too loud.",
+  "Exasperated":"Worn out by repeated frustration or futility.",
+  "Frustrated":"Blocked from a goal despite effort; hitting a wall.",
+  "Furious":"Intense rage that's hard to contain or direct.",
+  "Grouchy":"Mildly irritable and prone to complaint.",
+  "Hostile":"Actively unfriendly — opposing rather than engaging.",
+  "Impatient":"Wanting things to move faster than they are.",
+  "Irritated":"Mildly annoyed by a persistent friction.",
+  "Irate":"Intensely angry about something felt as wrong or unjust.",
+  "Moody":"Shifting emotionally without a clear cause.",
+  "Outraged":"Angry because something has violated your values or sense of justice.",
+  "Resentful":"Carrying anger about being wronged — a slow-burning wound.",
+  "Upset":"Emotionally disturbed or distressed — often a mix of feelings.",
+  "Vindictive":"Wanting to get back at someone who hurt you.",
+  "Anguish":"Severe emotional pain that feels almost unbearable.",
+  "Depressed":"Persistent low mood with loss of energy, hope, and interest.",
+  "Despondent":"So without hope you've stopped caring what happens.",
+  "Disappointed":"Saddened because someone or something fell short of expectation.",
+  "Discouraged":"Lost the motivation or belief that things can improve.",
+  "Forlorn":"Lonely and abandoned — without comfort or hope.",
+  "Gloomy":"A heavy, dark inner atmosphere — difficulty finding light.",
+  "Grief":"Deep sorrow in the wake of a significant loss.",
+  "Heartbroken":"Devastated by loss or betrayal in something that mattered deeply.",
+  "Hopeless":"Unable to imagine a positive outcome — the future feels closed.",
+  "Lonely":"Isolated or disconnected, even when others are near.",
+  "Melancholy":"A quiet, lingering sadness — pensive and heavy.",
+  "Sorrow":"Deep grief or regret carried over time.",
+  "Unhappy":"A general state of dissatisfaction and low mood.",
+  "Weary":"Tired to the bone — physically, mentally, and emotionally.",
+  "Yearning":"A deep ache for something or someone out of reach.",
+  "Afraid":"Feeling threatened by a specific danger or harm.",
+  "Anxious":"Uneasy about uncertain outcomes — mind rehearsing what could go wrong.",
+  "Apprehensive":"A mild but persistent unease about what's coming.",
+  "Frightened":"Suddenly gripped by fear in response to a real or imagined threat.",
+  "Hesitant":"Holding back because something feels risky or uncertain.",
+  "Nervous":"Edgy anticipation — especially before something high-stakes.",
+  "Panic":"Sudden, overwhelming fear that disrupts thought and action.",
+  "Paralyzed":"Frozen and unable to move because fear has taken over.",
+  "Scared":"In the grip of fear — feeling unable to cope with what's coming.",
+  "Terrified":"Extreme fear that takes over body and mind.",
+  "Worried":"Preoccupied with potential problems or bad outcomes.",
+  "Ashamed":"Feeling bad about who you are, not just what you did.",
+  "Humiliated":"Made to feel deeply degraded or small in front of others.",
+  "Inhibited":"Held back from expressing yourself by fear of judgment.",
+  "Mortified":"So embarrassed you wish you could disappear.",
+  "Self-conscious":"Overly aware of how you appear — uncomfortably exposed.",
+  "Useless":"Believing you have no value or contribution to offer.",
+  "Weak":"Feeling like a failure of strength, will, or character.",
+  "Worthless":"Believing at the core that you don't matter or deserve good things.",
+  "Regret":"Wishing you had made a different choice — looking back with pain.",
+  "Remorseful":"Deeply sorry for harm caused — moved to make it right.",
+  "Sorry":"Acknowledging impact or wrongdoing with a desire to repair it.",
+  "Impotent":"Unable to act or change things despite wanting to.",
+  "Incapable":"Believing you lack the ability to do what's needed.",
+  "Resigned":"Accepting a bad situation because nothing seems worth trying.",
+  "Trapped":"Caught with no visible way out — options feel nonexistent.",
+  "Victim":"Feeling like things happen to you with no power to respond.",
+  "Helpless":"Unable to help yourself or change what's happening.",
+  "Sensitive":"More affected than usual by emotions, words, or the environment.",
+  "Aloof":"Detached and distant — not letting others in.",
+  "Bored":"Unstimulated — nothing seems interesting or worth engaging.",
+  "Confused":"Unable to make sense of what's happening inside or around you.",
+  "Distant":"Pulled away from others or yourself — not fully here.",
+  "Empty":"Feeling hollow inside — lacking meaning, energy, or feeling.",
+  "Indifferent":"Without preference or reaction — nothing seems to matter.",
+  "Isolated":"Cut off from others or from your own inner life.",
+  "Lethargic":"Heavy and slow — body and motivation both dragging.",
+  "Listless":"Without energy or direction — just drifting.",
+  "Removed":"Standing apart from what's happening — watching from a distance.",
+  "Resistant":"Pushing against something; unwilling to engage or change.",
+  "Shut Down":"Emotionally closed off — protecting yourself from feeling.",
+  "Withdrawn":"Pulled inward — less available to others or the world.",
+  "Burned out":"Depleted by sustained effort — reserves are empty.",
+  "Cranky":"Short-tempered and irritable from fatigue or accumulated stress.",
+  "Depleted":"Drained of energy, resources, or resilience.",
+  "Exhausted":"Completely spent — no energy left to give.",
+  "Frazzled":"Overwhelmed and frayed at the edges — pulled in too many directions.",
+  "Overwhelmed":"More coming at you than you can process or manage.",
+  "Rattled":"Shaken and disoriented by something unexpected.",
+  "Restless":"Unable to settle — a persistent urge to move or change something.",
+  "Shaken":"Unsettled by something that disrupted your equilibrium.",
+  "Tight":"Constricted — physically or emotionally bracing against something.",
+  "Worn out":"Tired through and through — running on fumes.",
+  "Concerned":"Mildly troubled by something that might be a problem.",
+  "Dissatisfied":"Things don't feel right — a persistent sense of not enough.",
+  "Perplexed":"Puzzled and unable to understand — searching for clarity.",
+  "Questioning":"Examining assumptions — not sure what to believe.",
+  "Reluctant":"Willing in theory but holding back in practice.",
+  "Skeptical":"Doubtful of claims or intentions — needing more evidence.",
+  "Suspicious":"Sensing something is off — distrusting what you see.",
+  "Ungrounded":"Floating and unmoored — lacking connection to your foundation.",
+  "Unsure":"Without confidence about what's true or what to do.",
+  "Loving":"Holding someone or something with genuine warmth and care.",
+  "Reflective":"Thoughtfully looking inward or backward with openness.",
+  "Self-loving":"Extending care and compassion toward yourself.",
+  "Vulnerable":"Open and exposed in a way that requires courage and trust.",
+};
+
+const FDEFS = {
+  "Aliveness / Joy":"The energy of being fully alive — delight, excitement, and thriving.",
+  "Accepting / Open":"Inner spaciousness — calm, contentment, and ease.",
+  "Courageous / Powerful":"Strength and agency — confidence, groundedness, and courage.",
+  "Connected / Loving":"The warmth of bond — love, care, and safety with others.",
+  "Grateful":"Appreciation for what you've received — moved by goodness.",
+  "Hopeful":"Leaning toward possibility — encouraged and expectant.",
+  "Curious":"An alert, alive interest in learning and exploring.",
+  "Angry / Annoyed":"Activation around unmet values or needs — frustration, irritation, rage.",
+  "Despair / Sad":"The weight of loss, disappointment, or longing.",
+  "Fear":"Alarm in the face of perceived threat or uncertainty.",
+  "Embarrassed / Shame":"Pain about your sense of self or how you appear to others.",
+  "Guilt":"A response to having caused harm — regret and remorse.",
+  "Powerless":"Feeling unable to act or change your situation.",
+  "Fragile":"Feeling raw, exposed, or too sensitive to cope right now.",
+  "Disconnected / Numb":"A muted or absent connection to yourself or others.",
+  "Stressed / Tense":"Overwhelm, depletion, and the strain of too much.",
+  "Unsettled / Doubt":"Inner restlessness — questioning, unease, and uncertainty.",
+  "Tender":"Soft openness — vulnerability, reflection, and self-compassion.",
+};
+
+// ── STATE ───────────────────────────────────────────────────
+const S = { valence:null, families:[], emotions:{} };
+
+// ── TOOLTIP ─────────────────────────────────────────────────
+const tt = document.getElementById('tt');
+let ttT;
+
+function showTT(el, text) {
+  clearTimeout(ttT);
+  tt.textContent = text;
+  tt.classList.add('show');
+  const r = el.getBoundingClientRect();
+  const w = Math.min(230, window.innerWidth - 16);
+  tt.style.maxWidth = w + 'px';
+  const tw = tt.getBoundingClientRect().width || w;
+  const th = tt.getBoundingClientRect().height || 40;
+  let l = r.left + r.width/2 - tw/2 + scrollX;
+  let t = r.top - th - 10 + scrollY;
+  l = Math.max(8+scrollX, Math.min(l, scrollX+innerWidth-tw-8));
+  if (t < scrollY+8) t = r.bottom + 10 + scrollY;
+  tt.style.left = l+'px'; tt.style.top = t+'px';
+  tt.style.setProperty('--al', Math.min(Math.max((r.left+r.width/2+scrollX)-l,12),tw-12)+'px');
+}
+function hideTT() { ttT = setTimeout(()=>tt.classList.remove('show'),80); }
+function bindTT(el, text) {
+  el.addEventListener('mouseenter', ()=>showTT(el,text));
+  el.addEventListener('mouseleave', hideTT);
+}
+
+// ── HELPERS ─────────────────────────────────────────────────
+function visFams() {
+  if (S.valence==='positive') return FAMILIES.filter(f=>f.valence==='positive');
+  if (S.valence==='negative') return FAMILIES.filter(f=>f.valence==='negative');
+  return FAMILIES;
+}
+function nEmo() { return Object.values(S.emotions).reduce((n,a)=>n+a.length,0); }
+
+// ── STEP 1 ──────────────────────────────────────────────────
+function pickV(btn) {
+  document.querySelectorAll('.v-btn').forEach(b=>{ b.classList.remove('sel'); b.setAttribute('aria-pressed','false'); });
+  btn.classList.add('sel'); btn.setAttribute('aria-pressed','true');
+  const prev = S.valence;
+  S.valence = btn.dataset.v;
+  if (prev!==S.valence) { S.families=[]; S.emotions={}; }
+  document.getElementById('btn1').disabled = false;
+}
+
+// ── STEP 2 ──────────────────────────────────────────────────
+function buildFams() {
+  const g = document.getElementById('famGrid');
+  g.innerHTML = '';
+  visFams().forEach(f => {
+    const sel = S.families.includes(f.name);
+    const c = document.createElement('button');
+    c.className = 'chip'+(sel?' sel':'');
+    c.setAttribute('aria-pressed', sel ? 'true' : 'false');
+    c.textContent = f.name;
+    c.onclick = ()=>toggleFam(c,f.name);
+    if (FDEFS[f.name]) bindTT(c,FDEFS[f.name]);
+    g.appendChild(c);
+  });
+  document.getElementById('btn2').disabled = S.families.length===0;
+}
+function toggleFam(chip, name) {
+  const i = S.families.indexOf(name);
+  if (i>-1) {
+    S.families.splice(i,1); delete S.emotions[name];
+    chip.classList.remove('sel'); chip.setAttribute('aria-pressed','false');
+  } else {
+    S.families.push(name);
+    chip.classList.add('sel'); chip.setAttribute('aria-pressed','true');
+  }
+  document.getElementById('btn2').disabled = S.families.length===0;
+}
+
+// ── STEP 3 ──────────────────────────────────────────────────
+function buildEmos() {
+  Object.keys(S.emotions).forEach(n=>{ if (!S.families.includes(n)) delete S.emotions[n]; });
+  const c = document.getElementById('eg');
+  c.innerHTML = '';
+  S.families.forEach(fn => {
+    const fam = FAMILIES.find(f=>f.name===fn);
+    if (!fam) return;
+    const g = document.createElement('div');
+    const l = document.createElement('div');
+    l.className='gl'; l.textContent=fam.name; g.appendChild(l);
+    const grid = document.createElement('div');
+    grid.className='chip-grid';
+    fam.emotions.forEach(e=>{
+      const sel = !!(S.emotions[fn]?.includes(e));
+      const ch = document.createElement('button');
+      ch.className='chip'+(sel?' sel':'');
+      ch.setAttribute('aria-pressed', sel ? 'true' : 'false');
+      ch.textContent=e;
+      ch.onclick=()=>toggleEmo(ch,fn,e);
+      if (DEFS[e]) bindTT(ch,DEFS[e]);
+      grid.appendChild(ch);
+    });
+    g.appendChild(grid);
+    c.appendChild(g);
+  });
+  document.getElementById('btn3').disabled = nEmo()===0;
+}
+function toggleEmo(chip,fn,e) {
+  if (!S.emotions[fn]) S.emotions[fn]=[];
+  const a=S.emotions[fn], i=a.indexOf(e);
+  if (i>-1) {
+    a.splice(i,1); chip.classList.remove('sel'); chip.setAttribute('aria-pressed','false');
+  } else {
+    a.push(e); chip.classList.add('sel'); chip.setAttribute('aria-pressed','true');
+  }
+  document.getElementById('btn3').disabled = nEmo()===0;
+}
+
+// ── WORD CLOUD ──────────────────────────────────────────────
+const SIZE_START = 24;
+const SIZE_MIN   = 12;
+const SIZE_MAX   = 80;
+// Diagonal drag: delta = dx + dy (SE = bigger, NW = smaller)
+// Sensitivity lower than vertical-only since diagonal combines two axes
+const SENS = 0.22;
+
+function buildCloud() {
+  const cloud = document.getElementById('wordCloud');
+  cloud.innerHTML = '';
+  const seen = new Set(); // deduplicate across families
+
+  S.families.forEach(fn => {
+    const emos = S.emotions[fn];
+    if (!emos || emos.length===0) return;
+    const fam = FAMILIES.find(f=>f.name===fn);
+    if (!fam) return;
+
+    emos.forEach(e => {
+      if (seen.has(e)) return; // skip if already rendered from another family
+      seen.add(e);
+      // wrapper
+      const wrap = document.createElement('span');
+      wrap.className = 'cw';
+      wrap.style.fontSize = SIZE_START + 'px';
+      wrap.style.color = fam.color;
+
+      // text node
+      const text = document.createElement('span');
+      text.className = 'cw-text';
+      text.textContent = e;
+      if (DEFS[e]) bindTT(text, DEFS[e]);
+
+      // corner drag handle
+      const tag = document.createElement('span');
+      tag.className = 'cw-tag';
+      tag.title = 'Drag to resize';
+
+      wrap.appendChild(text);
+      wrap.appendChild(tag);
+
+      // ── mouse: drag on the tag ──
+      tag.addEventListener('mousedown', ev => {
+        if (ev.button !== 0) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        const startX  = ev.clientX;
+        const startY  = ev.clientY;
+        const startSz = parseFloat(wrap.style.fontSize);
+        wrap.classList.add('active');
+
+        const onMove = mv => {
+          // SE drag (right+down) = larger; NW drag = smaller
+          const delta = (mv.clientX - startX) + (mv.clientY - startY);
+          wrap.style.fontSize = Math.min(SIZE_MAX, Math.max(SIZE_MIN, startSz + delta * SENS)) + 'px';
+        };
+        const onUp = () => {
+          wrap.classList.remove('active');
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+        };
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+
+      // ── touch: drag on the tag ──
+      let tX, tY, tSz;
+      tag.addEventListener('touchstart', ev => {
+        tX  = ev.touches[0].clientX;
+        tY  = ev.touches[0].clientY;
+        tSz = parseFloat(wrap.style.fontSize);
+        wrap.classList.add('active');
+        ev.stopPropagation();
+      }, {passive:true});
+      tag.addEventListener('touchmove', ev => {
+        ev.preventDefault();
+        const delta = (ev.touches[0].clientX - tX) + (ev.touches[0].clientY - tY);
+        wrap.style.fontSize = Math.min(SIZE_MAX, Math.max(SIZE_MIN, tSz + delta * SENS)) + 'px';
+      }, {passive:false});
+      tag.addEventListener('touchend', () => wrap.classList.remove('active'));
+
+      cloud.appendChild(wrap);
+    });
+  });
+}
+
+// ── REFLECTION CARDS ────────────────────────────────────────
+function buildCards() {
+  const c = document.getElementById('rCards');
+  c.innerHTML = '';
+  S.families.forEach(fn => {
+    const emos = S.emotions[fn];
+    if (!emos || emos.length===0) return;
+    const fam = FAMILIES.find(f=>f.name===fn);
+    if (!fam) return;
+    const card = document.createElement('div');
+    card.className = 'rc';
+    const fl = document.createElement('div');
+    fl.className = 'rc-fam';
+    fl.style.color = fam.color;
+    fl.textContent = fam.name;
+    const el = document.createElement('div');
+    el.className = 'rc-emotions';
+    el.style.color = fam.color;
+    el.textContent = emos.join(' · ');
+    const q = document.createElement('div');
+    q.className = 'rc-q';
+    q.textContent = fam.prompt;
+    card.appendChild(fl); card.appendChild(el); card.appendChild(q);
+    c.appendChild(card);
+  });
+}
+
+// ── NAV ─────────────────────────────────────────────────────
+function go(n) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('prog').style.visibility='visible';
+  if (n===1) document.getElementById('s1').classList.add('active');
+  else if (n===2) { buildFams(); document.getElementById('s2').classList.add('active'); }
+  else if (n===3) { buildEmos(); document.getElementById('s3').classList.add('active'); }
+  updProg(n);
+  scrollTo({top:0,behavior:'smooth'});
+}
+
+function showR() {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('prog').style.visibility='hidden';
+  const d = new Date();
+  document.getElementById('pMeta').innerHTML =
+    d.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) +
+    '<br>ExEF Emotion Check-In';
+  buildCloud();
+  buildCards();
+  document.getElementById('sR').classList.add('active');
+  scrollTo({top:0,behavior:'smooth'});
+}
+
+function startOver() {
+  S.valence=null; S.families=[]; S.emotions={};
+  document.querySelectorAll('.v-btn').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('btn1').disabled=true;
+  document.getElementById('prog').style.visibility='visible';
+  go(1);
+}
+
+function updProg(step) {
+  for (let i=1;i<=3;i++) {
+    const d=document.getElementById('pd'+i);
+    d.classList.remove('active','done');
+    if (i<step) d.classList.add('done');
+    else if (i===step) d.classList.add('active');
+  }
+  for (let i=1;i<=2;i++)
+    document.getElementById('pl'+i).classList.toggle('done',i<step);
+}
+
+// Button wiring lives here rather than in onclick="" attributes, which the CSP blocks.
+document.addEventListener('click', function (ev) {
+  var btn = ev.target.closest('[data-ec-action], [data-ec-go]');
+  if (!btn || btn.disabled) return;
+  if (btn.hasAttribute('data-ec-go')) { go(Number(btn.getAttribute('data-ec-go'))); return; }
+  var action = btn.getAttribute('data-ec-action');
+  if (action === 'pick') pickV(btn);
+  else if (action === 'result') showR();
+  else if (action === 'restart') startOver();
+  else if (action === 'print') window.print();
+});

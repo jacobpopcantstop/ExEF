@@ -30,8 +30,8 @@ REQUIRED_PAGE_MARKERS = {
     "teacher-to-coach.html": "Further Sources: Business/Certification Citations",
     "barkley-model-guide.html": "Further Sources: Barkley Citations",
     "brown-clusters-tool.html": "Further Sources: Brown Citations",
-    "resources.html": "open-ef-resources-directory.html#citations",
-    "further-sources.html": "open-ef-resources-directory.html#citations",
+    "resources.html": "open-ef-resources-directory#citations",
+    "further-sources.html": "open-ef-resources-directory#citations",
 }
 
 

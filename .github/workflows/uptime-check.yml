@@ -15,10 +15,10 @@ jobs:
     steps:
       - name: Probe key EFI routes
         env:
-          BASE_URL: https://executivefunctioninginstitute.com
+          BASE_URL: https://exef.org
         run: |
           set -euo pipefail
-          paths=("/" "/modules/1/" "/search/" "/verify/" "/health.html")
+          paths=("/" "/coaching-home" "/coaching-contact" "/blog" "/health")
           for p in "${paths[@]}"; do
             code=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL$p")
             echo "$p -> $code"
@@ -69,10 +69,10 @@ jobs:
               '',
               'Probed routes:',
               '- /',
-              '- /modules/1/',
-              '- /search/',
-              '- /verify/',
-              '- /health.html'
+              '- /coaching-home',
+              '- /coaching-contact',
+              '- /blog',
+              '- /health'
             ].join('\n');
             const { data: issues } = await github.rest.issues.listForRepo({
               owner: context.repo.owner,

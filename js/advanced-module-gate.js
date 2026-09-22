@@ -40,7 +40,7 @@
     var loginLink = document.getElementById('advanced-gate-login');
     if (!gate || !content || !gateMessage || !gateActions || !window.EFI || !EFI.Auth) return;
 
-    var current = window.location.pathname.split('/').pop() || 'curriculum.html';
+    var current = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'curriculum.html';
     if (loginLink) {
       loginLink.href = 'login.html?redirect=' + encodeURIComponent(current);
     }

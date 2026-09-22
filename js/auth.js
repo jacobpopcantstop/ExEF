@@ -714,7 +714,7 @@ EFI.Auth = (function () {
 
   function requireAuth() {
     if (!isLoggedIn()) {
-      var current = window.location.pathname.split('/').pop();
+      var current = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html');
       window.location.href = 'login.html?redirect=' + encodeURIComponent(current);
       return false;
     }

@@ -69,7 +69,7 @@
   }
 
   function highlightActiveNavLinks() {
-    var currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
     document.querySelectorAll('.nav__link').forEach(function (link) {
       link.classList.remove('nav__link--active');
       link.removeAttribute('aria-current');

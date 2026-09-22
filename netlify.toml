@@ -64,6 +64,7 @@
 
 # ---------------------------------------------------------------------------
 # Retired directory-style routes -> canonical flat URLs.
+# (/modules/N now lives with the retired certification program below.)
 #
 # These paths used to be served by `status = 200` rewrites. Every link and
 # asset path in this repo is document-relative (href="css/styles.css"), so a
@@ -103,63 +104,6 @@
   force = true
 
 [[redirects]]
-  from = "/modules/1"
-  to = "/module-1"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/modules/2"
-  to = "/module-2"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/modules/3"
-  to = "/module-3"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/modules/4"
-  to = "/module-4"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/modules/5"
-  to = "/module-5"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/modules/6"
-  to = "/module-6"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/modules/7"
-  to = "/module-7"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/modules/8"
-  to = "/module-8"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/modules/9"
-  to = "/module-9"
-  status = 301
-  force = true
-
-# /blog/, /search/ and /verify/ differ from their canonical URLs only by the
-# trailing slash, so they CANNOT be 301'd (see the warning above). Terminal
-# rewrites keep them serving 200; the canonical tag consolidates them.
-[[redirects]]
   from = "/blog/"
   to = "/blog.html"
   status = 200
@@ -167,11 +111,6 @@
 [[redirects]]
   from = "/search/"
   to = "/search.html"
-  status = 200
-
-[[redirects]]
-  from = "/verify/"
-  to = "/verify.html"
   status = 200
 
 # --- Content aliases and legacy paths (targets differ from the generic
@@ -202,21 +141,6 @@
   force = true
 
 [[redirects]]
-  from = "/module-a-neuroscience.html"
-  to = "/module-1"
-  status = 301
-
-[[redirects]]
-  from = "/module-b-pedagogy.html"
-  to = "/module-3"
-  status = 301
-
-[[redirects]]
-  from = "/module-c-interventions.html"
-  to = "/module-4"
-  status = 301
-
-[[redirects]]
   from = "/methodology.html"
   to = "/coaching-methodology"
   status = 301
@@ -231,19 +155,438 @@
   to = "/coaching-contact"
   status = 301
 
+# --- Retired certification program. ExEF is coaching-only for now, so the
+# --- coach-training pages (curriculum, modules, certification, learner
+# --- login/dashboard, verification, educator funnel) all land on coaching.
 [[redirects]]
-  from = "/checkout.html"
-  to = "/store"
+  from = "/accreditation"
+  to = "/coaching-home"
   status = 301
+  force = true
+
+[[redirects]]
+  from = "/accreditation.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/certificate"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/certificate.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/certification"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/certification.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/coach-directory"
+  to = "/coaching-home"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/coach-directory.html"
   to = "/coaching-home"
   status = 301
+  force = true
 
-# --- Canonical URL enforcement (must stay last) ----------------------------
+[[redirects]]
+  from = "/coach-directory-policy"
+  to = "/coaching-home"
+  status = 301
+  force = true
 
-# /index.html would otherwise become /index and 404.
+[[redirects]]
+  from = "/coach-directory-policy.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/community"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/community.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/curriculum"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/curriculum.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/dashboard"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/dashboard.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/educator-launchpad"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/educator-launchpad.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/gap-analyzer"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/gap-analyzer.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/launch-plan"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/launch-plan.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/login"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/login.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/starter-kit"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/starter-kit.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/teacher-to-coach"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/teacher-to-coach.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/telemetry"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/telemetry.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/verify"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/verify.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/ExEF-Capstone-Transparency-Rubric"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/ExEF-Capstone-Transparency-Rubric.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/ExEF-Competency-Crosswalk-Map"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/ExEF-Competency-Crosswalk-Map.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-1"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-1.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-2"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-2.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-3"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-3.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-4"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-4.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-5"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-5.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-6"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-6.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-7"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-7.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-8"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-8.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-9"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-9.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-a-neuroscience"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-a-neuroscience.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-b-pedagogy"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-b-pedagogy.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-c-interventions"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/module-c-interventions.html"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/ExEF-Capstone-Transparency-Rubric.pdf"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/ExEF-Competency-Crosswalk-Map.pdf"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/modules/*"
+  to = "/coaching-home"
+  status = 301
+  force = true
+
+# --- Retired purchase path. ExEF sells coaching, booked through a discovery
+# --- call, so every store/checkout/enrollment URL (and any indexed or
+# --- bookmarked copy of it) lands on the coaching packages instead.
+[[redirects]]
+  from = "/store"
+  to = "/coaching-home#coaching-packages"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/store.html"
+  to = "/coaching-home#coaching-packages"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/checkout"
+  to = "/coaching-home#coaching-packages"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/checkout.html"
+  to = "/coaching-home#coaching-packages"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/checkout-return"
+  to = "/coaching-home#coaching-packages"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/checkout-return.html"
+  to = "/coaching-home#coaching-packages"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/enroll"
+  to = "/coaching-home#coaching-packages"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/enroll.html"
+  to = "/coaching-home#coaching-packages"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/index.html"
   to = "/"

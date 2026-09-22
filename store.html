@@ -80,7 +80,7 @@
         </div>
         <div class="nav__cluster nav__cluster--support">
           <span class="nav__auth"></span>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=store&amp;utm_medium=site&amp;utm_content=nav-cta" class="nav__link nav__link--cta" data-analytics-event="book_call_click" data-analytics-label="store-nav-cta">Book Consultation</a>
+          <a href="https://calendly.com/jacobansky/30min?utm_source=store&amp;utm_medium=site&amp;utm_content=nav-cta" class="nav__link nav__link--cta" data-analytics-event="book_call_click" data-analytics-label="store-nav-cta">Book Consultation</a>
         </div>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -644,7 +644,7 @@
           <h4>Connect</h4>
           <ul class="footer__links">
             <li><a href="/coaching-home#service-lanes">Services</a></li>
-            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=store&amp;utm_medium=site&amp;utm_content=footer" data-analytics-event="book_call_click" data-analytics-label="store-footer">Book a Consultation</a></li>
+            <li><a href="https://calendly.com/jacobansky/30min?utm_source=store&amp;utm_medium=site&amp;utm_content=footer" data-analytics-event="book_call_click" data-analytics-label="store-footer">Book a Consultation</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="/search">Search</a></li>
           </ul>
@@ -666,7 +666,7 @@
 <!-- Embedded Checkout Modal -->
 <div id="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-modal-title"
   style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.55);overflow-y:auto;padding:var(--space-xl) var(--space-md);">
-  <div style="background:#fff;border-radius:var(--border-radius);max-width:860px;margin:0 auto;position:relative;display:grid;grid-template-columns:1fr 1fr;min-height:400px;">
+  <div style="background:#fff;border-radius:var(--border-radius);max-width:860px;margin:0 auto;position:relative;display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 320px), 1fr));min-height:400px;">
     <!-- Close button -->
     <button id="checkout-modal-close" type="button" aria-label="Close checkout"
       style="position:absolute;top:var(--space-md);right:var(--space-md);background:none;border:none;font-size:1.5rem;cursor:pointer;line-height:1;color:var(--color-text-light);z-index:1;">&#x2715;</button>

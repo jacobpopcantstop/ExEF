@@ -19,9 +19,7 @@
 
     var startedAt = new Date().toISOString();
     var checks = [
-      { label: 'track-event function', url: '/api/track-event' },
-      { label: 'auth config', url: '/api/auth?action=config' },
-      { label: 'public config', url: '/api/public-config' }
+      { label: 'track-event function', url: '/api/track-event' }
     ];
 
     Promise.all(checks.map(function (check) {

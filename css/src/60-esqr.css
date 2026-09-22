@@ -56,6 +56,7 @@
   margin-bottom: var(--space-xl);
   background: var(--color-white);
   position: relative;
+  min-width: 0; /* fieldsets default to min-content and overflow narrow screens */
 }
 
 .esqr-skill-group__legend {

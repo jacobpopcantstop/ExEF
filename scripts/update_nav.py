@@ -16,7 +16,7 @@ NEW_NAV_INNER = """
         </div>
         <div class="nav__cluster nav__cluster--support">
           <span class="nav__auth"></span>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04" class="nav__link nav__link--cta">Book Consultation</a>
+          <a href="https://calendly.com/jacobansky/30min" class="nav__link nav__link--cta">Book Consultation</a>
         </div>
       """
 

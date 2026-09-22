@@ -606,6 +606,12 @@
   transform: translateY(0);
 }
 
+/* Long inline code (API keys, commands) must wrap instead of widening the page. */
+p code,
+li code {
+  overflow-wrap: anywhere;
+}
+
 /* --- Forced Colors / High Contrast Mode --- */
 @media (forced-colors: active) {
   .btn {

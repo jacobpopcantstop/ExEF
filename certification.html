@@ -98,7 +98,7 @@
         </div>
         <div class="nav__cluster nav__cluster--support">
           <span class="nav__auth"></span>
-          <a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=certification&amp;utm_medium=site&amp;utm_content=nav-cta" class="nav__link nav__link--cta" data-analytics-event="book_call_click" data-analytics-label="certification-nav-cta">Book Consultation</a>
+          <a href="https://calendly.com/jacobansky/30min?utm_source=certification&amp;utm_medium=site&amp;utm_content=nav-cta" class="nav__link nav__link--cta" data-analytics-event="book_call_click" data-analytics-label="certification-nav-cta">Book Consultation</a>
         </div>
       </div>
       <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -151,47 +151,7 @@
     </div>
   </section>
 
-  <script>
-    (function () {
-      var form = document.getElementById('certification-interest-form');
-      var status = document.getElementById('certification-interest-status');
-      if (!form) return;
-      form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        if (!form.reportValidity()) return;
-        var name = document.getElementById('cert-interest-name').value.trim();
-        var email = document.getElementById('cert-interest-email').value.trim();
-        var role = document.getElementById('cert-interest-role').value;
-        var notes = document.getElementById('cert-interest-notes').value.trim();
-        var submit = form.querySelector('button[type="submit"]');
-        var original = submit ? submit.textContent : '';
-        if (submit) { submit.disabled = true; submit.textContent = 'Adding...'; }
-        if (status) { status.style.color = 'var(--color-text-muted)'; status.textContent = 'Saving your interest...'; }
-        try {
-          var response = await fetch('/api/leads', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: name,
-              email: email,
-              consent: true,
-              source: 'certification_interest',
-              lead_type: 'certification_interest',
-              metadata: { page: 'certification.html', role: role, notes: notes }
-            })
-          });
-          var body = await response.json();
-          if (!response.ok || !body.ok) throw new Error((body && body.error) || 'Unable to save right now.');
-          status.textContent = 'Thanks. We\u2019ll email you when certification opens.';
-          form.reset();
-        } catch (err) {
-          if (status) { status.style.color = 'var(--color-danger, #b42318)'; status.textContent = err.message || 'Unable to save right now.'; }
-        } finally {
-          if (submit) { submit.disabled = false; submit.textContent = original; }
-        }
-      });
-    })();
-  </script>
+  <script src="js/certification-inline.min.js" defer></script>
 
   <!-- Page Header — simplified -->
   <header class="page-header certification-masthead">
@@ -1032,7 +992,7 @@
           <h4>Connect</h4>
           <ul class="footer__links">
             <li><a href="/coaching-home#service-lanes">Services</a></li>
-            <li><a href="https://calendly.com/jacobansky/30min?month=2026-04&amp;utm_source=certification&amp;utm_medium=site&amp;utm_content=footer" data-analytics-event="book_call_click" data-analytics-label="certification-footer">Book a Consultation</a></li>
+            <li><a href="https://calendly.com/jacobansky/30min?utm_source=certification&amp;utm_medium=site&amp;utm_content=footer" data-analytics-event="book_call_click" data-analytics-label="certification-footer">Book a Consultation</a></li>
             <li><a href="mailto:jacob@exef.org">jacob@exef.org</a></li>
             <li><a href="/search">Search</a></li>
           </ul>

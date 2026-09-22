@@ -1,21 +1,17 @@
 const { test, expect } = require('@playwright/test');
 
-async function gotoIndex(page) {
-  await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
-  await page.waitForSelector('.dark-toggle', { timeout: 10000 });
-}
 
 test.describe('Navigation — Search link', () => {
 
-  test('Search link present in rebuilt nav on representative pages', async ({ page }) => {
+  test('Search link present in rebuilt footer on representative pages', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    const pages = ['index.html', 'curriculum.html', 'resources.html'];
+    const pages = ['index.html', 'coaching-home.html', 'resources.html'];
     for (const p of pages) {
       await page.goto(`/${p}`);
       await page.waitForSelector('.nav__cluster', { timeout: 10000 });
-      const searchLink = page.locator('nav a[href="search.html"]');
-      await expect(searchLink).toBeVisible({ timeout: 5000 });
-      await expect(searchLink).toContainText('Search');
+      const searchLink = page.locator('footer a', { hasText: 'Search' });
+      await expect(searchLink).toHaveCount(1, { timeout: 5000 });
+      await expect(searchLink).toHaveAttribute('href', /^\/?search(\.html)?$/);
     }
   });
 
@@ -42,43 +38,31 @@ test.describe('Navigation — Search link', () => {
 
 });
 
-test.describe('Dark Mode', () => {
+test.describe('Navigation — active state', () => {
 
-  test('toggle switches data-theme to dark', async ({ page }) => {
-    await gotoIndex(page);
+  test('highlights the current section on extensionless URLs', async ({ page }) => {
+    // Production serves /resources (no .html); emulate Netlify's pretty URLs.
+    await page.route('**/resources', (route) => route.fulfill({ path: 'resources.html' }));
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/resources');
+    const active = page.locator('.nav__link--active');
+    await expect(active).toHaveCount(1, { timeout: 10000 });
+    await expect(active).toHaveText('Resources');
+  });
 
+});
+
+test.describe('Dark Mode (retired)', () => {
+
+  test('a stale dark preference is cleared and never applied', async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('efi_theme', 'dark');
+    });
+
+    await page.goto('/index.html', { waitUntil: 'load' });
     await expect(page.locator('html')).not.toHaveAttribute('data-theme', 'dark');
-    await page.locator('.dark-toggle').evaluate(el => el.click());
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  });
-
-  test('dark mode persists across page reload', async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem('efi_theme', 'dark');
-    });
-
-    await gotoIndex(page);
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-
-    await page.reload({ waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('.dark-toggle', { timeout: 10000 });
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  });
-
-  test('dark mode hero background is not cream (regression guard)', async ({ page }) => {
-    await page.addInitScript(() => {
-      localStorage.setItem('efi_theme', 'dark');
-    });
-
-    await gotoIndex(page);
-    await page.waitForSelector('.hero');
-
-    const heroBg = await page.locator('.hero').evaluate(
-      el => window.getComputedStyle(el).backgroundColor
-    );
-
-    expect(heroBg).not.toBe('rgb(247, 243, 235)');
-    expect(heroBg).not.toBe('rgb(255, 255, 255)');
+    await expect(page.locator('.dark-toggle')).toHaveCount(0);
+    expect(await page.evaluate(() => localStorage.getItem('efi_theme'))).toBeNull();
   });
 
 });

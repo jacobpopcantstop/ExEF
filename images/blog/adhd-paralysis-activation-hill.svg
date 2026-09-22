@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">The activation hill</title>
+<desc id="d">A stick figure strains to push a ball labeled task up a steep hill; past the peak it rolls downhill easily.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="42" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="24" fill="#243543" text-anchor="middle" font-weight="bold">Starting a task vs. continuing it</text>
+<path d="M40.0 330.0 L58.4 330.2 L78.5 329.9 L95.7 330.3 L113.3 330.0 L133.3 330.9 L150.1 329.4 L170.0 330.0 L179.4 316.3 L192.0 299.2 L203.5 287.5 L213.2 271.7 L222.2 255.1 L234.1 240.6 L243.7 226.5 L253.8 212.6 L265.8 199.1 L276.7 183.8 L287.3 169.2 L297.9 153.3 L310.3 140.9 L320.4 125.3 L330.0 110.0 L344.4 119.1 L359.3 128.6 L375.9 139.7 L390.0 150.0 L404.9 162.1 L419.0 176.1 L429.7 186.6 L446.3 199.9 L460.3 212.2 L471.1 225.4 L487.1 236.8 L500.0 250.0 L516.7 254.5 L537.5 260.8 L552.8 264.2 L570.7 268.6 L591.0 274.0 L608.2 279.8 L625.0 285.7 L642.8 290.5 L660.8 294.7 L680.0 300.0" fill="none" stroke="#274960" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="262" cy="178" r="26" fill="#ebe4d7" stroke="#243543" stroke-width="3"/>
+<text x="262" y="184" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">task</text>
+<circle cx="214" cy="180" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M214.0 194.0 L213.2 214.5 L214.0 234.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M248.0 206.0 L232.1 208.1 L214.0 212.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M248.0 220.0 L232.0 217.1 L214.0 212.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M188.0 272.0 L201.5 253.8 L214.0 234.0 L216.2 254.2 L220.0 272.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="209" cy="178" r="1.8" fill="#243543"/><circle cx="219" cy="178" r="1.8" fill="#243543"/>
+<path d="M208 188 Q214 183 220 188" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<path d="M205.0 170.0 L209.1 170.3 L212.0 172.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M216.0 172.0 L219.9 171.5 L223.0 170.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="120" y="150" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="18" fill="#7c5a2b" text-anchor="middle" font-weight="normal" font-style="italic">the hard part</text>
+<text x="560" y="222" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="18" fill="#7c5a2b" text-anchor="middle" font-weight="normal" font-style="italic">wheee (the easy part)</text>
+<text x="360" y="372" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#243543" text-anchor="middle" font-weight="normal">Most of the effort is spent before anything visibly happens.</text>
+</svg>

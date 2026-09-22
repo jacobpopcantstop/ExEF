@@ -6,7 +6,7 @@ test.describe('Service Worker', () => {
     const response = await page.goto('/sw.js');
     expect(response.status()).toBe(200);
     const body = await response.text();
-    expect(body).toContain('efi-static-v2');
+    expect(body).toMatch(/exef-static-v\d+/);
     expect(body).toContain('/js/main.min.js');
     expect(body).toContain('/js/main.bundle.min.js');
     expect(body).toContain('/js/nav-auth.min.js');

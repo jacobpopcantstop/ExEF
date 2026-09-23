@@ -6,6 +6,10 @@ lines and handwritten labels built from a few helpers so the set stays
 visually consistent. Re-run after editing a drawing:
 
   python3 scripts/build_blog_illustrations.py
+
+Then check label layout (overlaps, clipped text, lines through labels):
+
+  npm run check:illustrations
 """
 from __future__ import annotations
 
@@ -442,6 +446,166 @@ def external_scaffolding():
                "\n".join(body))
 
 
+def overbooked_day():
+    body = [
+        text(360, 40, "The day you planned vs. the day you have", 22, INK, weight="bold"),
+        f'<rect x="80" y="110" width="400" height="70" rx="8" fill="#fff" stroke="{INK}" stroke-width="3"/>',
+        text(280, 100, "hours you actually have (about 8 free)", 14, INK),
+        f'<rect x="80" y="220" width="560" height="70" rx="8" fill="{WASH}" stroke="{ACCENT}" stroke-width="3"/>',
+        line([(480, 208), (480, 296)], 301, 3, ACCENT, dash="7 6"),
+        text(360, 316, "what you planned (about 11 hours of tasks)", 14, ACCENT),
+        text(560, 262, "overflow", 16, ACCENT, italic=True),
+        text(170, 262, "email", 14), text(260, 262, "report", 14), text(350, 262, "errands", 14), text(430, 262, "calls", 14),
+        stick(640, 205, "shrug", 311, "worried"),
+        text(360, 360, "Most \u201cbad days\u201d start as a plan that never fit in the first place.", 15),
+    ]
+    return svg(720, 400, "An overbooked day",
+               "A box for the hours you actually have next to a longer bar of planned tasks that runs past it, labeled overflow, with a worried stick figure.",
+               "\n".join(body))
+
+
+def three_lists():
+    def card(x, title, items, color, seed):
+        parts = [f'<rect x="{x - 95}" y="90" width="190" height="220" rx="12" fill="#fff" stroke="{color}" stroke-width="3"/>',
+                 text(x, 122, title, 18, color, weight="bold")]
+        for i, it in enumerate(items):
+            parts.append(text(x, 162 + i * 34, it, 15))
+        return "\n".join(parts)
+    body = [
+        text(360, 42, "Three lists instead of one endless one", 22, INK, weight="bold"),
+        card(135, "Today (max 3)", ["1. pay rent", "2. draft intro", "3. call dentist"], BLUE, 321),
+        card(360, "This week", ["grocery run", "reply to Sam", "fix bike", "plan Friday"], INK, 322),
+        card(585, "Parking lot", ["learn Spanish", "reorganize garage", "that app idea"], ACCENT, 323),
+        text(360, 360, "Today stays short on purpose. Ideas go to the parking lot so they stop nagging you.", 14),
+    ]
+    return svg(720, 400, "Three lists",
+               "Three cards: Today with at most three items, This week with a handful, and a Parking lot for ideas that are not scheduled yet.",
+               "\n".join(body))
+
+
+def nag_cycle():
+    pts = [(360, 95), (560, 215), (360, 320), (160, 215)]
+    labels = ["A task gets forgotten", "Partner reminds", "Reminder feels like nagging", "Tension, then more forgetting"]
+    body = [text(360, 40, "The reminder loop many couples fall into", 22, INK, weight="bold"),
+            f'<ellipse cx="360" cy="210" rx="200" ry="112" fill="none" stroke="{SOFT}" stroke-width="3" stroke-dasharray="9 8"/>']
+    for (x, y), lab in zip(pts, labels):
+        w = len(lab) * 8.2 + 26
+        body.append(f'<rect x="{x - w / 2:.0f}" y="{y - 18}" width="{w:.0f}" height="36" rx="18" fill="#fff" stroke="{INK}" stroke-width="2.5"/>')
+        body.append(text(x, y + 6, lab, 15))
+    body.append(stick(325, 262, "stand", 331, "worried"))
+    body.append(stick(400, 262, "shrug", 332, "worried"))
+    body.append(text(360, 380, "Nobody in this picture is the villain. The loop is the problem to solve.", 15))
+    return svg(720, 400, "The reminder loop",
+               "A loop of four steps: a task gets forgotten, the partner reminds, the reminder feels like nagging, tension leads to more forgetting. Two worried stick figures stand in the middle.",
+               "\n".join(body))
+
+
+def shared_system():
+    body = [
+        text(360, 40, "Move the reminders into a shared system", 22, INK, weight="bold"),
+        f'<rect x="250" y="80" width="220" height="170" rx="10" fill="#fff" stroke="{INK}" stroke-width="3"/>',
+        text(360, 108, "Shared board", 17, BLUE, weight="bold"),
+        text(360, 140, "Tue: trash out \u2713", 14), text(360, 166, "Wed: vet at 4pm", 14),
+        text(360, 192, "Fri: pay electric", 14), text(360, 218, "Sun: 15-min check-in", 14),
+        stick(140, 330, "point", 341, "happy"),
+        stick(580, 330, "stand", 342, "happy"),
+        line([(178, 250), (248, 200)], 343, 2.5, SOFT, dash="6 6"),
+        line([(542, 250), (472, 200)], 344, 2.5, SOFT, dash="6 6"),
+        text(360, 380, "The board does the remembering, so neither of you has to play manager.", 15),
+    ]
+    return svg(720, 400, "A shared system",
+               "Two relaxed stick figures on either side of a shared board listing the week: trash on Tuesday, vet on Wednesday, the electric bill on Friday, and a 15-minute check-in on Sunday.",
+               "\n".join(body))
+
+
+def help_decision_tree():
+    def node(x, y, w, lines_, fill="#fff", color=INK):
+        h = 22 * len(lines_) + 16
+        parts = [f'<rect x="{x - w / 2}" y="{y - h / 2}" width="{w}" height="{h}" rx="10" fill="{fill}" stroke="{color}" stroke-width="2.5"/>']
+        for i, l in enumerate(lines_):
+            parts.append(text(x, y - h / 2 + 26 + i * 22, l, 14, "#fff" if fill == BLUE else INK))
+        return "\n".join(parts)
+    body = [
+        text(360, 34, "Which kind of help first?", 22, INK, weight="bold"),
+        node(360, 82, 330, ["In crisis, unsafe, or mood is really low?"]),
+        line([(360, 102), (360, 128)], 351, 2.5),
+        text(376, 120, "no", 13, ACCENT, "start"),
+        line([(530, 82), (600, 82)], 352, 2.5), text(565, 74, "yes", 13, ACCENT),
+        node(640, 82, 120, ["Doctor or", "therapist now"], BLUE),
+        node(360, 158, 330, ["Need a diagnosis or medication?"]),
+        line([(530, 158), (600, 158)], 353, 2.5), text(565, 150, "yes", 13, ACCENT),
+        node(640, 158, 120, ["Doctor or", "psychiatrist"], BLUE),
+        line([(360, 178), (360, 204)], 354, 2.5), text(376, 196, "no", 13, ACCENT, "start"),
+        node(360, 238, 330, ["Mostly feelings, history,", "or anxiety driving it?"]),
+        line([(530, 238), (600, 238)], 355, 2.5), text(565, 230, "yes", 13, ACCENT),
+        node(640, 238, 120, ["Therapist"], BLUE),
+        line([(360, 268), (360, 294)], 356, 2.5), text(376, 286, "no", 13, ACCENT, "start"),
+        node(360, 324, 330, ["Know what to do, but it", "doesn\u2019t happen?"]),
+        line([(530, 324), (600, 324)], 357, 2.5), text(565, 316, "yes", 13, ACCENT),
+        node(640, 324, 120, ["Coach"], BLUE),
+        text(110, 380, "Plenty of people end up with more than one.", 13, ACCENT, "start"),
+    ]
+    return svg(720, 400, "Which kind of help first",
+               "A decision chart. If you are in crisis or your mood is very low, see a doctor or therapist now. If you need a diagnosis or medication, see a doctor or psychiatrist. If feelings, history or anxiety are driving things, see a therapist. If you know what to do but it does not happen, see a coach.",
+               "\n".join(body))
+
+
+def help_venn():
+    body = [
+        text(360, 40, "Where coaching and therapy overlap", 22, INK, weight="bold"),
+        f'<circle cx="275" cy="220" r="140" fill="{BLUE}" fill-opacity="0.10" stroke="{BLUE}" stroke-width="3"/>',
+        f'<circle cx="445" cy="220" r="140" fill="{ACCENT}" fill-opacity="0.10" stroke="{ACCENT}" stroke-width="3"/>',
+        text(190, 76, "Therapy", 18, BLUE, weight="bold"),
+        text(530, 76, "Coaching", 18, ACCENT, weight="bold"),
+        text(205, 180, "anxiety,", 14), text(205, 202, "depression", 14), text(205, 236, "trauma and", 14), text(205, 258, "history", 14),
+        text(360, 190, "planning", 14), text(360, 214, "skills", 14), text(360, 238, "CBT-style", 14), text(360, 262, "strategies", 14),
+        text(515, 180, "weekly", 14), text(515, 202, "follow-through", 14), text(515, 236, "systems for", 14), text(515, 258, "real life", 14),
+        text(360, 385, "CBT for adult ADHD teaches many of the same planning skills a coach works on.", 14, ACCENT),
+    ]
+    return svg(720, 400, "Coaching and therapy overlap",
+               "Two overlapping circles. Therapy covers anxiety, depression, trauma and history. Coaching covers weekly follow-through and systems for real life. The overlap holds planning skills and CBT-style strategies.",
+               "\n".join(body))
+
+
+def structure_drop():
+    body = [
+        text(360, 40, "What changes on move-in day", 22, INK, weight="bold"),
+        text(190, 82, "High school", 18, BLUE, weight="bold"),
+        text(530, 82, "College", 18, ACCENT, weight="bold"),
+        f'<line x1="360" y1="66" x2="360" y2="340" stroke="{SOFT}" stroke-width="3" stroke-dasharray="8 8"/>',
+        text(190, 120, "bells tell you where to be", 14), text(190, 146, "teachers chase missing work", 14),
+        text(190, 172, "parents see the grades", 14), text(190, 198, "school runs IEP / 504 meetings", 14),
+        text(530, 120, "a syllabus, once, in week one", 14), text(530, 146, "nobody chases you", 14),
+        text(530, 172, "privacy rules limit what parents see", 14), text(530, 198, "you request accommodations yourself", 14),
+        stick(190, 330, "cheer", 361, "happy"),
+        stick(530, 330, "shrug", 362, "worried"),
+        text(360, 385, "The scaffolding goes away all at once, so plan to rebuild it.", 15),
+    ]
+    return svg(720, 400, "High school versus college structure",
+               "Two columns. High school: bells tell you where to be, teachers chase missing work, parents see grades, the school runs IEP and 504 meetings. College: one syllabus in week one, nobody chases you, privacy rules limit what parents see, and you request accommodations yourself.",
+               "\n".join(body))
+
+
+def accommodation_steps():
+    steps = [("1", "Get documentation", "that meets the college\u2019s rules"),
+             ("2", "Register with the", "disability services office"),
+             ("3", "Request accommodations", "(many schools: every term)"),
+             ("4", "Share the letter", "with each professor"),
+             ("5", "Actually use them", "(the hardest step)")]
+    body = [text(360, 40, "Getting college accommodations, step by step", 22, INK, weight="bold")]
+    for i, (n, a, b2) in enumerate(steps):
+        y = 90 + i * 58
+        body.append(f'<circle cx="120" cy="{y + 8}" r="18" fill="{BLUE}"/>')
+        body.append(text(120, y + 14, n, 16, "#fff", weight="bold"))
+        body.append(text(155, y + 6, a, 16, INK, "start", weight="bold"))
+        body.append(text(155, y + 26, b2, 14, ACCENT, "start"))
+    body.append(stick(590, 340, "cheer", 371, "happy"))
+    body.append(text(590, 372, "The student starts this, not the parent.", 13, ACCENT))
+    return svg(720, 400, "Getting college accommodations",
+               "Five numbered steps: get documentation that meets the college's rules, register with the disability services office, request accommodations (many schools require this every term), share the letter with each professor, and actually use them.",
+               "\n".join(body))
+
+
 DRAWINGS = {
     "adhd-paralysis-activation-hill.svg": activation_hill,
     "adhd-paralysis-outside-inside.svg": outside_inside,
@@ -459,6 +623,14 @@ DRAWINGS = {
     "body-doubling-simple-vs-complex.svg": simple_vs_complex,
     "improve-ef-brain-training.svg": brain_training_transfer,
     "improve-ef-scaffolding.svg": external_scaffolding,
+    "time-management-overbooked-day.svg": overbooked_day,
+    "time-management-three-lists.svg": three_lists,
+    "relationships-reminder-loop.svg": nag_cycle,
+    "relationships-shared-system.svg": shared_system,
+    "coach-vs-therapist-decision.svg": help_decision_tree,
+    "coach-vs-therapist-overlap.svg": help_venn,
+    "college-structure-drop.svg": structure_drop,
+    "college-accommodation-steps.svg": accommodation_steps,
 }
 
 

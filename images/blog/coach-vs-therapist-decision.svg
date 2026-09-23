@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">Which kind of help first</title>
+<desc id="d">A decision chart. If you are in crisis or your mood is very low, see a doctor or therapist now. If you need a diagnosis or medication, see a doctor or psychiatrist. If feelings, history or anxiety are driving things, see a therapist. If you know what to do but it does not happen, see a coach.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="34" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="22" fill="#243543" text-anchor="middle" font-weight="bold">Which kind of help first?</text>
+<rect x="195.0" y="63.0" width="330" height="38" rx="10" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<text x="360" y="89.0" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">In crisis, unsafe, or mood is really low?</text>
+<path d="M360.0 102.0 L360.9 115.2 L360.0 128.0" fill="none" stroke="#243543" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="376" y="120" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#7c5a2b" text-anchor="start" font-weight="normal">no</text>
+<path d="M530.0 82.0 L554.3 81.1 L575.6 83.1 L600.0 82.0" fill="none" stroke="#243543" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="565" y="74" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#7c5a2b" text-anchor="middle" font-weight="normal">yes</text>
+<rect x="580.0" y="52.0" width="120" height="60" rx="10" fill="#274960" stroke="#243543" stroke-width="2.5"/>
+<text x="640" y="78.0" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#fff" text-anchor="middle" font-weight="normal">Doctor or</text>
+<text x="640" y="100.0" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#fff" text-anchor="middle" font-weight="normal">therapist now</text>
+<rect x="195.0" y="139.0" width="330" height="38" rx="10" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<text x="360" y="165.0" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">Need a diagnosis or medication?</text>
+<path d="M530.0 158.0 L552.4 157.7 L577.2 158.2 L600.0 158.0" fill="none" stroke="#243543" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="565" y="150" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#7c5a2b" text-anchor="middle" font-weight="normal">yes</text>
+<rect x="580.0" y="128.0" width="120" height="60" rx="10" fill="#274960" stroke="#243543" stroke-width="2.5"/>
+<text x="640" y="154.0" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#fff" text-anchor="middle" font-weight="normal">Doctor or</text>
+<text x="640" y="176.0" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#fff" text-anchor="middle" font-weight="normal">psychiatrist</text>
+<path d="M360.0 178.0 L359.3 190.0 L360.0 204.0" fill="none" stroke="#243543" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="376" y="196" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#7c5a2b" text-anchor="start" font-weight="normal">no</text>
+<rect x="195.0" y="208.0" width="330" height="60" rx="10" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<text x="360" y="234.0" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">Mostly feelings, history,</text>
+<text x="360" y="256.0" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">or anxiety driving it?</text>
+<path d="M530.0 238.0 L552.5 238.3 L576.3 236.9 L600.0 238.0" fill="none" stroke="#243543" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="565" y="230" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#7c5a2b" text-anchor="middle" font-weight="normal">yes</text>
+<rect x="580.0" y="219.0" width="120" height="38" rx="10" fill="#274960" stroke="#243543" stroke-width="2.5"/>
+<text x="640" y="245.0" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#fff" text-anchor="middle" font-weight="normal">Therapist</text>
+<path d="M360.0 268.0 L360.4 280.9 L360.0 294.0" fill="none" stroke="#243543" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="376" y="286" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#7c5a2b" text-anchor="start" font-weight="normal">no</text>
+<rect x="195.0" y="294.0" width="330" height="60" rx="10" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<text x="360" y="320.0" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">Know what to do, but it</text>
+<text x="360" y="342.0" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">doesn’t happen?</text>
+<path d="M530.0 324.0 L552.6 325.0 L575.6 325.0 L600.0 324.0" fill="none" stroke="#243543" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="565" y="316" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#7c5a2b" text-anchor="middle" font-weight="normal">yes</text>
+<rect x="580.0" y="305.0" width="120" height="38" rx="10" fill="#274960" stroke="#243543" stroke-width="2.5"/>
+<text x="640" y="331.0" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#fff" text-anchor="middle" font-weight="normal">Coach</text>
+<text x="110" y="380" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#7c5a2b" text-anchor="start" font-weight="normal">Plenty of people end up with more than one.</text>
+</svg>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">Getting college accommodations</title>
+<desc id="d">Five numbered steps: get documentation that meets the college's rules, register with the disability services office, request accommodations (many schools require this every term), share the letter with each professor, and actually use them.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="40" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="22" fill="#243543" text-anchor="middle" font-weight="bold">Getting college accommodations, step by step</text>
+<circle cx="120" cy="98" r="18" fill="#274960"/>
+<text x="120" y="104" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#fff" text-anchor="middle" font-weight="bold">1</text>
+<text x="155" y="96" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#243543" text-anchor="start" font-weight="bold">Get documentation</text>
+<text x="155" y="116" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="start" font-weight="normal">that meets the college’s rules</text>
+<circle cx="120" cy="156" r="18" fill="#274960"/>
+<text x="120" y="162" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#fff" text-anchor="middle" font-weight="bold">2</text>
+<text x="155" y="154" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#243543" text-anchor="start" font-weight="bold">Register with the</text>
+<text x="155" y="174" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="start" font-weight="normal">disability services office</text>
+<circle cx="120" cy="214" r="18" fill="#274960"/>
+<text x="120" y="220" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#fff" text-anchor="middle" font-weight="bold">3</text>
+<text x="155" y="212" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#243543" text-anchor="start" font-weight="bold">Request accommodations</text>
+<text x="155" y="232" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="start" font-weight="normal">(many schools: every term)</text>
+<circle cx="120" cy="272" r="18" fill="#274960"/>
+<text x="120" y="278" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#fff" text-anchor="middle" font-weight="bold">4</text>
+<text x="155" y="270" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#243543" text-anchor="start" font-weight="bold">Share the letter</text>
+<text x="155" y="290" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="start" font-weight="normal">with each professor</text>
+<circle cx="120" cy="330" r="18" fill="#274960"/>
+<text x="120" y="336" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#fff" text-anchor="middle" font-weight="bold">5</text>
+<text x="155" y="328" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#243543" text-anchor="start" font-weight="bold">Actually use them</text>
+<text x="155" y="348" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="start" font-weight="normal">(the hardest step)</text>
+<circle cx="590" cy="248" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M590.0 262.0 L589.5 281.8 L590.0 302.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M562.0 242.0 L575.1 261.2 L590.0 278.0 L604.6 259.4 L618.0 242.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M572.0 340.0 L580.6 321.5 L590.0 302.0 L599.7 320.1 L608.0 340.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="585" cy="245" r="1.8" fill="#243543"/><circle cx="595" cy="245" r="1.8" fill="#243543"/>
+<path d="M584 252 Q590 258 596 252" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<text x="590" y="372" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#7c5a2b" text-anchor="middle" font-weight="normal">The student starts this, not the parent.</text>
+</svg>

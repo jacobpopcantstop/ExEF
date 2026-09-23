@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">Coaching and therapy overlap</title>
+<desc id="d">Two overlapping circles. Therapy covers anxiety, depression, trauma and history. Coaching covers weekly follow-through and systems for real life. The overlap holds planning skills and CBT-style strategies.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="40" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="22" fill="#243543" text-anchor="middle" font-weight="bold">Where coaching and therapy overlap</text>
+<circle cx="275" cy="220" r="140" fill="#274960" fill-opacity="0.10" stroke="#274960" stroke-width="3"/>
+<circle cx="445" cy="220" r="140" fill="#7c5a2b" fill-opacity="0.10" stroke="#7c5a2b" stroke-width="3"/>
+<text x="190" y="76" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="18" fill="#274960" text-anchor="middle" font-weight="bold">Therapy</text>
+<text x="530" y="76" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="18" fill="#7c5a2b" text-anchor="middle" font-weight="bold">Coaching</text>
+<text x="205" y="180" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">anxiety,</text>
+<text x="205" y="202" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">depression</text>
+<text x="205" y="236" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">trauma and</text>
+<text x="205" y="258" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">history</text>
+<text x="360" y="190" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">planning</text>
+<text x="360" y="214" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">skills</text>
+<text x="360" y="238" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">CBT-style</text>
+<text x="360" y="262" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">strategies</text>
+<text x="515" y="180" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">weekly</text>
+<text x="515" y="202" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">follow-through</text>
+<text x="515" y="236" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">systems for</text>
+<text x="515" y="258" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">real life</text>
+<text x="360" y="385" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">CBT for adult ADHD teaches many of the same planning skills a coach works on.</text>
+</svg>

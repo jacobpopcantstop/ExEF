@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">The reminder loop</title>
+<desc id="d">A loop of four steps: a task gets forgotten, the partner reminds, the reminder feels like nagging, tension leads to more forgetting. Two worried stick figures stand in the middle.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="40" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="22" fill="#243543" text-anchor="middle" font-weight="bold">The reminder loop many couples fall into</text>
+<ellipse cx="360" cy="210" rx="200" ry="112" fill="none" stroke="#c9bca5" stroke-width="3" stroke-dasharray="9 8"/>
+<rect x="261" y="77" width="198" height="36" rx="18" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<text x="360" y="101" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">A task gets forgotten</text>
+<rect x="486" y="197" width="149" height="36" rx="18" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<text x="560" y="221" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">Partner reminds</text>
+<rect x="236" y="302" width="247" height="36" rx="18" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<text x="360" y="326" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">Reminder feels like nagging</text>
+<rect x="28" y="197" width="264" height="36" rx="18" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<text x="160" y="221" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">Tension, then more forgetting</text>
+<circle cx="325" cy="170" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M325.0 184.0 L325.8 203.6 L325.0 224.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M299.0 218.0 L311.4 209.1 L325.0 200.0 L338.2 209.5 L351.0 218.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M307.0 262.0 L317.0 243.1 L325.0 224.0 L335.0 242.8 L343.0 262.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="320" cy="168" r="1.8" fill="#243543"/><circle cx="330" cy="168" r="1.8" fill="#243543"/>
+<path d="M319 178 Q325 173 331 178" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<path d="M316.0 160.0 L318.3 161.6 L323.0 162.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M327.0 162.0 L329.8 161.8 L334.0 160.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="400" cy="170" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M400.0 184.0 L399.4 204.1 L400.0 224.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M370.0 192.0 L377.1 199.6 L384.0 208.0 L393.2 203.0 L400.0 200.0 L408.1 203.6 L416.0 208.0 L422.4 201.1 L430.0 192.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M382.0 262.0 L390.1 243.7 L400.0 224.0 L409.1 243.9 L418.0 262.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="395" cy="168" r="1.8" fill="#243543"/><circle cx="405" cy="168" r="1.8" fill="#243543"/>
+<path d="M394 178 Q400 173 406 178" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<path d="M391.0 160.0 L393.8 161.8 L398.0 162.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M402.0 162.0 L404.6 160.5 L409.0 160.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="360" y="380" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">Nobody in this picture is the villain. The loop is the problem to solve.</text>
+</svg>

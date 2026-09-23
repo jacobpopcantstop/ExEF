@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">An overbooked day</title>
+<desc id="d">A box for the hours you actually have next to a longer bar of planned tasks that runs past it, labeled overflow, with a worried stick figure.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="40" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="22" fill="#243543" text-anchor="middle" font-weight="bold">The day you planned vs. the day you have</text>
+<rect x="80" y="110" width="400" height="70" rx="8" fill="#fff" stroke="#243543" stroke-width="3"/>
+<text x="280" y="100" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">hours you actually have (about 8 free)</text>
+<rect x="80" y="220" width="560" height="70" rx="8" fill="#ebe4d7" stroke="#7c5a2b" stroke-width="3"/>
+<path d="M480.0 208.0 L479.8 230.7 L480.0 251.9 L479.4 274.4 L480.0 296.0" fill="none" stroke="#7c5a2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 6"/>
+<text x="360" y="316" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">what you planned (about 11 hours of tasks)</text>
+<text x="560" y="262" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#7c5a2b" text-anchor="middle" font-weight="normal" font-style="italic">overflow</text>
+<text x="170" y="262" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">email</text>
+<text x="260" y="262" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">report</text>
+<text x="350" y="262" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">errands</text>
+<text x="430" y="262" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">calls</text>
+<circle cx="640" cy="113" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M640.0 127.0 L640.8 146.4 L640.0 167.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M610.0 135.0 L617.4 143.4 L624.0 151.0 L630.9 146.2 L640.0 143.0 L649.1 146.3 L656.0 151.0 L663.4 142.9 L670.0 135.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M622.0 205.0 L630.3 185.1 L640.0 167.0 L647.8 186.3 L658.0 205.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="635" cy="111" r="1.8" fill="#243543"/><circle cx="645" cy="111" r="1.8" fill="#243543"/>
+<path d="M634 121 Q640 116 646 121" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<path d="M631.0 103.0 L633.4 105.1 L638.0 105.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M642.0 105.0 L645.4 104.5 L649.0 103.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="360" y="360" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">Most “bad days” start as a plan that never fit in the first place.</text>
+</svg>

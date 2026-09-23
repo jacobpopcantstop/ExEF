@@ -6,6 +6,7 @@
   },
   "scripts": {
     "copy:lab": "node scripts/copy-lab-server.mjs",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "check:illustrations": "node scripts/check_blog_illustrations.mjs"
   }
 }

@@ -164,7 +164,7 @@ def now_vs_not_now():
         text(455, 151, "not now", 24, "#8a7d68", italic=True),
         text(455, 179, "(tomorrow, Friday, the deadline, 2031… all the same fog)", 14, "#8a7d68"),
         stick(145, 352, "cheer", 51, "happy"),
-        text(360, 385, "If it isn't NOW, it barely registers — until it becomes NOW.", 16),
+        text(360, 385, "If it isn't NOW, it barely registers, until suddenly it is.", 16),
     ]
     return svg(720, 400, "Now versus not now",
                "A big solid block labeled NOW next to a long faded fog labeled not now, containing tomorrow, Friday, the deadline and the distant future.",
@@ -211,7 +211,7 @@ def front_office():
         desk(130, 262, "The Brakes", "inhibition", 81, "plain"),
         desk(360, 262, "The Whiteboard", "working memory", 91, "worried"),
         desk(590, 262, "The Plan B Desk", "cognitive flexibility", 101, "happy"),
-        text(360, 380, "Executive dysfunction = the office is understaffed, not the boss being lazy.", 15),
+        text(360, 380, "Executive dysfunction usually means the office is understaffed.", 15),
     ]
     return svg(720, 400, "The brain's front office",
                "An org chart: the goal at the top, with three stick-figure departments below labeled The Brakes (inhibition), The Whiteboard (working memory) and The Plan B Desk (cognitive flexibility).",
@@ -231,7 +231,7 @@ def knowing_doing_gap():
         text(640, 305, "what actually gets done", 15, ACCENT, "end"),
         f'<path d="M360 116 L360 262" stroke="{INK}" stroke-width="2" stroke-dasharray="5 6"/>',
         bubble(380, 160, 250, 58, ["executive function lives here"], 15),
-        text(360, 370, "More information rarely closes the gap. Better systems do.", 16),
+        text(360, 370, "Closing this gap is mostly a matter of better systems.", 16),
     ]
     return svg(720, 400, "The knowing-doing gap",
                "Two lines on a chart: a high steady line for what you know you should do and a lower wobbly line for what gets done; the gap between them is labeled executive function lives here.",
@@ -282,6 +282,166 @@ def mood_trade():
                "\n".join(body))
 
 
+def coach_therapist_tutor():
+    def col(x, title, q, sub, seed, face):
+        return "\n".join([
+            stick(x, 330, "stand", seed, face),
+            bubble(x - 105, 92, 210, 70, q, 15, (x - 10, 205)),
+            text(x, 362, title, 19, INK, weight="bold"),
+            text(x, 386, sub, 14, ACCENT),
+        ])
+    body = [
+        text(360, 42, "Three helpers, three different questions", 24, INK, weight="bold"),
+        col(125, "Therapist", ["“Why does this", "feel so hard?”"], "feelings, history, health", 161, "plain"),
+        col(360, "Coach", ["“What will you", "do on Tuesday?”"], "systems, habits, follow-through", 171, "happy"),
+        col(595, "Tutor", ["“How do you", "solve #4?”"], "subject content", 181, "plain"),
+    ]
+    return svg(720, 400, "Therapist, coach, tutor",
+               "Three stick figures. The therapist asks why this feels so hard, the coach asks what you will do on Tuesday, and the tutor asks how to solve problem 4.",
+               "\n".join(body))
+
+
+def coaching_loop():
+    cx, cy, r = 330, 215, 90
+    pts = [(cx, cy - r), (cx + r, cy), (cx, cy + r), (cx - r, cy)]
+    labels = [("1. Pick one", "friction point"), ("2. Build one", "small system"), ("3. Run it in your", "real week"), ("4. Review and", "adjust")]
+    offs = [(145, 4), (125, 4), (160, 14), (-125, 4)]
+    body = [text(360, 40, "How coaching works, one lap at a time", 22, INK, weight="bold"),
+            f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="{SOFT}" stroke-width="4" stroke-dasharray="10 8"/>']
+    for (px, py), (a, b2), (ox, oy) in zip(pts, labels, offs):
+        body.append(f'<circle cx="{px}" cy="{py}" r="12" fill="{BLUE}"/>')
+        body.append(text(px + ox, py + oy - 8, a, 16, INK, weight="bold"))
+        body.append(text(px + ox, py + oy + 12, b2, 15, ACCENT))
+    body.append(stick(cx, cy + 45, "cheer", 191, "happy"))
+    body.append(text(360, 388, "Each lap makes the system fit your actual life a little better.", 15))
+    return svg(720, 400, "The coaching loop",
+               "A circular loop with four steps: pick one friction point, build one small system, run it in your real week, review and adjust, then repeat.",
+               "\n".join(body))
+
+
+def burnout_battery():
+    body = [
+        text(360, 40, "Where the energy goes", 24, INK, weight="bold"),
+        f'<rect x="250" y="90" width="220" height="250" rx="18" fill="#fff" stroke="{INK}" stroke-width="4"/>',
+        f'<rect x="320" y="72" width="80" height="20" rx="5" fill="{INK}"/>',
+        f'<rect x="262" y="300" width="196" height="28" rx="6" fill="{ACCENT}"/>',
+        text(360, 320, "4%", 16, "#fff", weight="bold"),
+        text(120, 120, "masking", 16, ACCENT, italic=True),
+        text(110, 175, "catch-up sprints", 16, ACCENT, italic=True),
+        text(120, 230, "missed reminders", 16, ACCENT, italic=True),
+        text(120, 285, "shame spirals", 16, ACCENT, italic=True),
+        line([(180, 125), (248, 150)], 201, 2.5, ACCENT),
+        line([(190, 180), (248, 190)], 202, 2.5, ACCENT),
+        line([(190, 235), (248, 235)], 203, 2.5, ACCENT),
+        line([(180, 290), (248, 280)], 204, 2.5, ACCENT),
+        stick(590, 340, "shrug", 211, "worried"),
+        bubble(510, 90, 170, 70, ["“But I rested", "all weekend?”"], 15, (566, 196)),
+        text(360, 385, "Rest refills the battery slower than the drains empty it.", 15),
+    ]
+    return svg(720, 400, "Where the energy goes",
+               "A nearly empty battery at 4 percent, with drains labeled masking, catch-up sprints, missed reminders and shame spirals. A tired stick figure wonders why a weekend of rest did not fix it.",
+               "\n".join(body))
+
+
+def boom_bust():
+    body = [
+        text(360, 40, "The push-crash cycle (schematic)", 24, INK, weight="bold"),
+        line([(90, 320), (650, 320)], 221, 3),
+        line([(90, 320), (90, 70)], 222, 3),
+        text(76, 200, "output", 15, INK, "end"),
+        text(640, 345, "weeks →", 14, INK, "end"),
+        line([(100, 220), (160, 110), (200, 280), (260, 300), (300, 120), (340, 270), (400, 305), (440, 150), (480, 290), (560, 312), (640, 300)], 223, 4, ACCENT, amp=1.4),
+        line([(100, 200), (640, 196)], 224, 4, BLUE, amp=1.2),
+        text(160, 96, "hyperfocus sprint", 14, ACCENT),
+        text(205, 300, "crash", 14, ACCENT),
+        text(600, 186, "steady pace", 15, BLUE),
+        text(360, 385, "Each crash tends to land a little lower than the last one.", 14, ACCENT),
+    ]
+    return svg(720, 400, "The push-crash cycle",
+               "A spiky line of hyperfocus sprints followed by crashes that sink lower over time, next to a flat steady line labeled steady pace.",
+               "\n".join(body))
+
+
+def body_double_continuum():
+    body = [
+        text(360, 36, "Body doubling comes in more than one flavor", 22, INK, weight="bold"),
+        line([(110, 330), (660, 330)], 231, 3),
+        line([(110, 330), (110, 70)], 232, 3),
+        text(385, 360, "same room, same time  →  different place  →  different time", 14),
+        text(96, 110, "check-ins,", 13, INK, "end"),
+        text(96, 128, "accountability", 13, INK, "end"),
+        text(96, 300, "quiet", 13, INK, "end"),
+        text(96, 318, "company", 13, INK, "end"),
+        f'<circle cx="200" cy="280" r="10" fill="{BLUE}"/>', text(200, 262, "co-working café", 14, BLUE),
+        f'<circle cx="220" cy="120" r="10" fill="{BLUE}"/>', text(220, 102, "working next to a friend", 14, BLUE),
+        f'<circle cx="400" cy="200" r="10" fill="{BLUE}"/>', text(400, 182, "video call, cameras on", 14, BLUE),
+        f'<circle cx="590" cy="290" r="10" fill="{BLUE}"/>', text(590, 272, "“study with me” video", 14, BLUE),
+        f'<circle cx="590" cy="115" r="10" fill="{BLUE}"/>', text(590, 97, "text a buddy: start + done", 14, BLUE),
+        text(385, 388, "Model adapted from Eagle, Baltaxe-Admony & Ringland (2023).", 13, ACCENT),
+    ]
+    return svg(720, 400, "Types of body doubling",
+               "A two-axis chart. Left to right runs same room and time to different place and time. Bottom to top runs quiet company to active accountability. Examples: co-working cafe, working next to a friend, video call with cameras on, study-with-me videos, and texting a buddy at start and finish.",
+               "\n".join(body))
+
+
+def simple_vs_complex():
+    body = [
+        text(360, 40, "What an audience does to your work", 24, INK, weight="bold"),
+        f'<line x1="360" y1="70" x2="360" y2="340" stroke="{SOFT}" stroke-width="3" stroke-dasharray="8 8"/>',
+        text(185, 90, "Simple, familiar tasks", 19, INK, weight="bold"),
+        text(185, 112, "(email, dishes, filing)", 14, ACCENT),
+        stick(150, 290, "cheer", 241, "happy"), stick(230, 290, "stand", 242, "plain"),
+        text(185, 330, "↑ faster with company", 18, BLUE, weight="bold"),
+        text(540, 90, "Brand-new, tricky tasks", 19, INK, weight="bold"),
+        text(540, 112, "(learning, hard problem-solving)", 14, ACCENT),
+        stick(505, 290, "shrug", 243, "worried"), stick(585, 290, "stand", 244, "plain"),
+        text(540, 330, "↓ a bit slower when watched", 18, ACCENT, weight="bold"),
+        text(360, 385, "Bond & Titus (1983): 241 studies, small but consistent effects.", 14, ACCENT),
+    ]
+    return svg(720, 400, "Simple versus complex tasks with company",
+               "Left: two stick figures working on simple familiar tasks, labeled faster with company. Right: two figures on brand-new tricky tasks, labeled a bit slower when watched.",
+               "\n".join(body))
+
+
+def brain_training_transfer():
+    body = [
+        text(360, 40, "Brain games: great at making you good at brain games", 21, INK, weight="bold"),
+        line([(90, 320), (650, 320)], 251, 3),
+        line([(90, 320), (90, 70)], 252, 3),
+        text(640, 345, "weeks of training →", 14, INK, "end"),
+        line([(100, 290), (250, 220), (400, 150), (550, 105), (640, 92)], 253, 4, BLUE, amp=1.2),
+        text(560, 85, "score on the trained game", 15, BLUE),
+        line([(100, 280), (250, 279), (400, 276), (550, 280), (640, 277)], 254, 4, ACCENT, amp=1.4),
+        text(560, 262, "real-life planning, reading, math", 15, ACCENT),
+        stick(250, 200, "shrug", 261, "worried"),
+        text(360, 385, "Schematic of Melby-Lervåg & Hulme (2013): gains stay inside the game.", 14, ACCENT),
+    ]
+    return svg(720, 400, "Brain training transfer",
+               "A rising line for the score on the trained game and a flat line for real-life planning, reading and math, showing gains that do not transfer.",
+               "\n".join(body))
+
+
+def external_scaffolding():
+    body = [
+        text(360, 40, "Build the scaffolding outside your head", 24, INK, weight="bold"),
+        line([(200, 330), (200, 110), (520, 110), (520, 330)], 271, 4, ACCENT),
+        line([(200, 190), (520, 190)], 272, 3, ACCENT),
+        line([(200, 260), (520, 260)], 273, 3, ACCENT),
+        line([(290, 110), (360, 186), (430, 110)], 274, 2, SOFT),
+        stick(360, 330, "cheer", 281, "happy"),
+        f'<rect x="215" y="126" width="58" height="48" rx="4" fill="#fff" stroke="{INK}" stroke-width="2.5"/>', text(244, 156, "cal", 14),
+        f'<circle cx="480" cy="150" r="22" fill="#fff" stroke="{INK}" stroke-width="2.5"/>', text(480, 156, "⏱", 16),
+        f'<rect x="215" y="206" width="58" height="42" rx="4" fill="#fff" stroke="{INK}" stroke-width="2.5"/>', text(244, 232, "✓✓", 14),
+        f'<rect x="450" y="206" width="58" height="42" rx="4" fill="#fff" stroke="{INK}" stroke-width="2.5"/>', text(479, 232, "☺☺", 14),
+        text(110, 150, "calendar", 14, ACCENT), text(610, 150, "timer", 14, ACCENT),
+        text(110, 230, "checklist", 14, ACCENT), text(610, 230, "people", 14, ACCENT),
+        text(360, 385, "You don’t have to hold it all up by yourself.", 15),
+    ]
+    return svg(720, 400, "External scaffolding",
+               "A stick figure standing inside a scaffold hung with a calendar, a timer, a checklist and a pair of friendly faces, captioned you do not have to hold it all up by yourself.",
+               "\n".join(body))
+
+
 DRAWINGS = {
     "adhd-paralysis-activation-hill.svg": activation_hill,
     "adhd-paralysis-outside-inside.svg": outside_inside,
@@ -291,6 +451,14 @@ DRAWINGS = {
     "executive-dysfunction-knowing-doing-gap.svg": knowing_doing_gap,
     "procrastination-stress-curves.svg": stress_curves,
     "procrastination-mood-trade.svg": mood_trade,
+    "adhd-coaching-coach-therapist-tutor.svg": coach_therapist_tutor,
+    "adhd-coaching-loop.svg": coaching_loop,
+    "adhd-burnout-battery.svg": burnout_battery,
+    "adhd-burnout-push-crash.svg": boom_bust,
+    "body-doubling-continuum.svg": body_double_continuum,
+    "body-doubling-simple-vs-complex.svg": simple_vs_complex,
+    "improve-ef-brain-training.svg": brain_training_transfer,
+    "improve-ef-scaffolding.svg": external_scaffolding,
 }
 
 

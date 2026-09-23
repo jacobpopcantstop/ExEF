@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">The coaching loop</title>
+<desc id="d">A circular loop with four steps: pick one friction point, build one small system, run it in your real week, review and adjust, then repeat.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="40" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="22" fill="#243543" text-anchor="middle" font-weight="bold">How coaching works, one lap at a time</text>
+<circle cx="330" cy="215" r="90" fill="none" stroke="#c9bca5" stroke-width="4" stroke-dasharray="10 8"/>
+<circle cx="330" cy="125" r="12" fill="#274960"/>
+<text x="475" y="121" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#243543" text-anchor="middle" font-weight="bold">1. Pick one</text>
+<text x="475" y="141" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#7c5a2b" text-anchor="middle" font-weight="normal">friction point</text>
+<circle cx="420" cy="215" r="12" fill="#274960"/>
+<text x="545" y="211" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#243543" text-anchor="middle" font-weight="bold">2. Build one</text>
+<text x="545" y="231" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#7c5a2b" text-anchor="middle" font-weight="normal">small system</text>
+<circle cx="330" cy="305" r="12" fill="#274960"/>
+<text x="490" y="311" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#243543" text-anchor="middle" font-weight="bold">3. Run it in your</text>
+<text x="490" y="331" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#7c5a2b" text-anchor="middle" font-weight="normal">real week</text>
+<circle cx="240" cy="215" r="12" fill="#274960"/>
+<text x="115" y="211" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#243543" text-anchor="middle" font-weight="bold">4. Review and</text>
+<text x="115" y="231" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#7c5a2b" text-anchor="middle" font-weight="normal">adjust</text>
+<circle cx="330" cy="168" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M330.0 182.0 L330.6 202.7 L330.0 222.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M302.0 162.0 L315.7 179.5 L330.0 198.0 L343.9 181.1 L358.0 162.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M312.0 260.0 L321.8 240.0 L330.0 222.0 L338.2 240.7 L348.0 260.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="325" cy="165" r="1.8" fill="#243543"/><circle cx="335" cy="165" r="1.8" fill="#243543"/>
+<path d="M324 172 Q330 178 336 172" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<text x="360" y="388" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">Each lap makes the system fit your actual life a little better.</text>
+</svg>

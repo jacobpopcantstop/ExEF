@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">Types of body doubling</title>
+<desc id="d">A two-axis chart. Left to right runs same room and time to different place and time. Bottom to top runs quiet company to active accountability. Examples: co-working cafe, working next to a friend, video call with cameras on, study-with-me videos, and texting a buddy at start and finish.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="36" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="22" fill="#243543" text-anchor="middle" font-weight="bold">Body doubling comes in more than one flavor</text>
+<path d="M110.0 330.0 L129.2 331.1 L147.4 330.9 L166.2 330.6 L184.3 329.4 L202.3 330.2 L219.5 329.9 L237.9 331.1 L257.3 329.5 L275.4 329.1 L292.4 330.9 L312.5 329.6 L329.5 329.7 L347.2 330.7 L367.7 330.5 L383.9 329.9 L404.5 328.9 L422.1 330.1 L440.7 330.4 L458.0 329.7 L476.1 329.1 L495.8 330.0 L514.3 330.3 L530.5 330.3 L549.6 329.7 L567.3 330.9 L587.0 329.8 L606.0 330.6 L623.0 329.6 L641.1 329.6 L660.0 330.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M110.0 330.0 L109.5 310.8 L109.0 293.7 L109.5 273.8 L111.1 255.5 L110.0 236.2 L109.4 218.2 L109.0 199.4 L109.9 182.2 L110.4 162.1 L110.3 145.5 L110.5 125.9 L109.0 106.1 L109.2 88.5 L110.0 70.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="385" y="360" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">same room, same time  →  different place  →  different time</text>
+<text x="96" y="110" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#243543" text-anchor="end" font-weight="normal">check-ins,</text>
+<text x="96" y="128" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#243543" text-anchor="end" font-weight="normal">accountability</text>
+<text x="96" y="300" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#243543" text-anchor="end" font-weight="normal">quiet</text>
+<text x="96" y="318" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#243543" text-anchor="end" font-weight="normal">company</text>
+<circle cx="200" cy="280" r="10" fill="#274960"/>
+<text x="200" y="262" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#274960" text-anchor="middle" font-weight="normal">co-working café</text>
+<circle cx="220" cy="120" r="10" fill="#274960"/>
+<text x="220" y="102" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#274960" text-anchor="middle" font-weight="normal">working next to a friend</text>
+<circle cx="400" cy="200" r="10" fill="#274960"/>
+<text x="400" y="182" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#274960" text-anchor="middle" font-weight="normal">video call, cameras on</text>
+<circle cx="590" cy="290" r="10" fill="#274960"/>
+<text x="590" y="272" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#274960" text-anchor="middle" font-weight="normal">“study with me” video</text>
+<circle cx="590" cy="115" r="10" fill="#274960"/>
+<text x="590" y="97" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#274960" text-anchor="middle" font-weight="normal">text a buddy: start + done</text>
+<text x="385" y="388" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="13" fill="#7c5a2b" text-anchor="middle" font-weight="normal">Model adapted from Eagle, Baltaxe-Admony &amp; Ringland (2023).</text>
+</svg>

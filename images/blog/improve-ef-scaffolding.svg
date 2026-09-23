@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">External scaffolding</title>
+<desc id="d">A stick figure standing inside a scaffold hung with a calendar, a timer, a checklist and a pair of friendly faces, captioned you do not have to hold it all up by yourself.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="40" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="24" fill="#243543" text-anchor="middle" font-weight="bold">Build the scaffolding outside your head</text>
+<path d="M200.0 330.0 L200.0 311.3 L200.4 293.0 L200.1 275.4 L200.8 255.7 L200.7 237.4 L199.8 220.6 L199.1 202.5 L199.6 183.2 L199.6 164.1 L200.5 146.6 L200.8 128.3 L200.0 110.0 L219.8 110.7 L238.8 109.7 L255.5 111.0 L274.5 110.8 L295.1 109.3 L313.0 111.2 L332.4 110.3 L351.6 110.3 L370.3 109.3 L389.0 110.9 L406.2 109.5 L426.3 111.1 L443.8 110.9 L463.9 110.5 L482.3 109.9 L500.9 110.3 L520.0 110.0 L519.7 127.3 L521.1 146.8 L521.1 164.6 L519.8 184.0 L519.5 201.3 L521.0 221.1 L520.1 238.2 L521.0 255.7 L519.9 275.4 L520.4 292.3 L520.8 311.7 L520.0 330.0" fill="none" stroke="#7c5a2b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M200.0 190.0 L220.0 189.7 L238.0 190.0 L256.2 190.5 L274.8 190.3 L295.2 191.1 L313.7 189.2 L332.4 188.9 L349.9 189.1 L370.1 190.0 L389.4 190.4 L407.2 190.5 L426.5 189.1 L443.7 189.9 L464.7 189.3 L482.6 190.2 L502.1 190.4 L520.0 190.0" fill="none" stroke="#7c5a2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M200.0 260.0 L218.1 260.3 L237.0 260.6 L256.7 259.1 L276.1 260.0 L294.2 260.0 L313.3 260.8 L332.6 260.7 L351.6 259.5 L368.6 259.8 L387.9 260.3 L407.5 259.2 L425.9 259.5 L444.4 260.0 L463.8 259.5 L481.2 259.5 L500.4 259.8 L520.0 260.0" fill="none" stroke="#7c5a2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M290.0 110.0 L303.1 124.9 L316.9 139.7 L332.4 154.9 L346.7 171.4 L360.0 186.0 L372.8 171.7 L387.9 154.5 L401.7 140.1 L416.1 125.4 L430.0 110.0" fill="none" stroke="#c9bca5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="360" cy="238" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M360.0 252.0 L358.8 271.4 L360.0 292.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M332.0 232.0 L346.4 251.1 L360.0 268.0 L374.0 250.9 L388.0 232.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M342.0 330.0 L349.9 310.5 L360.0 292.0 L368.0 310.9 L378.0 330.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="355" cy="235" r="1.8" fill="#243543"/><circle cx="365" cy="235" r="1.8" fill="#243543"/>
+<path d="M354 242 Q360 248 366 242" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<rect x="215" y="126" width="58" height="48" rx="4" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<text x="244" y="156" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">cal</text>
+<circle cx="480" cy="150" r="22" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<text x="480" y="156" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#243543" text-anchor="middle" font-weight="normal">⏱</text>
+<rect x="215" y="206" width="58" height="42" rx="4" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<text x="244" y="232" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">✓✓</text>
+<rect x="450" y="206" width="58" height="42" rx="4" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<text x="479" y="232" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">☺☺</text>
+<text x="110" y="150" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">calendar</text>
+<text x="610" y="150" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">timer</text>
+<text x="110" y="230" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">checklist</text>
+<text x="610" y="230" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">people</text>
+<text x="360" y="385" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">You don’t have to hold it all up by yourself.</text>
+</svg>

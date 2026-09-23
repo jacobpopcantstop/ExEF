@@ -511,6 +511,36 @@ p {
   border-color: rgba(22, 43, 60, 0.3);
 }
 
+/* Primary conversion button: sits in the header bar (not the collapsible
+   menu) so it is visible at every screen width. */
+.nav__book {
+  grid-column: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.65rem 1.1rem;
+  margin-left: var(--space-sm);
+  background: var(--color-primary-dark);
+  color: #fff;
+  border: 1px solid var(--color-primary-dark);
+  border-radius: var(--border-radius);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--transition), transform var(--transition);
+}
+
+.nav__book:hover,
+.nav__book:focus-visible {
+  background: var(--color-primary);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
 .nav__toggle {
   display: none;
   background: none;
@@ -4237,14 +4267,16 @@ select.form-control {
   }
 }
 
-@media (max-width: 1360px) {
+/* Collapse the links into the menu only on tablets and phones; the
+   booking button (.nav__book) stays in the bar at every width. */
+@media (max-width: 900px) {
   .nav__links {
     display: none;
     position: absolute;
     top: 72px;
     left: 0;
     right: 0;
-    background: rgba(250, 247, 241, 0.72);
+    background: rgba(250, 247, 241, 0.97);
     flex-direction: column;
     padding: var(--space-md);
     max-height: calc(100vh - 72px);
@@ -4302,6 +4334,18 @@ select.form-control {
 
   .nav__toggle {
     display: flex;
+  }
+}
+
+@media (max-width: 420px) {
+  .nav__inner {
+    padding: 0 var(--space-md);
+  }
+
+  .nav__book {
+    padding: 0.55rem 0.8rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
   }
 }
 

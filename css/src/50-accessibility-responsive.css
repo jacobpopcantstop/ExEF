@@ -30,14 +30,16 @@
   }
 }
 
-@media (max-width: 1360px) {
+/* Collapse the links into the menu only on tablets and phones; the
+   booking button (.nav__book) stays in the bar at every width. */
+@media (max-width: 900px) {
   .nav__links {
     display: none;
     position: absolute;
     top: 72px;
     left: 0;
     right: 0;
-    background: rgba(250, 247, 241, 0.72);
+    background: rgba(250, 247, 241, 0.97);
     flex-direction: column;
     padding: var(--space-md);
     max-height: calc(100vh - 72px);
@@ -95,6 +97,18 @@
 
   .nav__toggle {
     display: flex;
+  }
+}
+
+@media (max-width: 420px) {
+  .nav__inner {
+    padding: 0 var(--space-md);
+  }
+
+  .nav__book {
+    padding: 0.55rem 0.8rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
   }
 }
 

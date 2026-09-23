@@ -49,7 +49,6 @@ PRIORITIES = {
     "certification.html": "0.8",
     "coach-directory.html": "0.8",
     "coaching-contact.html": "0.8",
-    "coaching-methodology.html": "0.8",
     "ef-profile-story.html": "0.8",
     "full-ef-profile.html": "0.8",
     "open-ef-resources-directory.html": "0.8",

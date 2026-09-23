@@ -38,6 +38,25 @@ test.describe('Navigation — Search link', () => {
 
 });
 
+test.describe('Navigation — booking button', () => {
+
+  for (const width of [390, 1280, 1600]) {
+    test(`"Book a free call" is visible without opening the menu at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto('/index.html');
+      const book = page.locator('.nav__inner > .nav__book');
+      await expect(book).toHaveCount(1, { timeout: 10000 });
+      await expect(book).toBeVisible();
+      await expect(book).toHaveText(/book a free call/i);
+      await expect(book).toHaveAttribute('data-analytics-event', 'book_call_click');
+      await expect(book).toHaveAttribute('href', /calendly\.com\/.*utm_content=nav-cta/);
+      const box = await book.boundingBox();
+      expect(box.x + box.width).toBeLessThanOrEqual(width);
+    });
+  }
+
+});
+
 test.describe('Navigation — active state', () => {
 
   test('highlights the current section on extensionless URLs', async ({ page }) => {

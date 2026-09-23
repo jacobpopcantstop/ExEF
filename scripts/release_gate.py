@@ -131,6 +131,7 @@ RETIRED_PAGES = [
     # purchase path
     "store", "checkout", "checkout-return", "enroll",
     # certification program
+    "coaching-methodology",
     "accreditation", "certificate", "certification", "coach-directory",
     "coach-directory-policy", "community", "curriculum", "dashboard",
     "educator-launchpad", "gap-analyzer", "launch-plan", "login", "starter-kit",

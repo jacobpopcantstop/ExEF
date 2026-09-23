@@ -1176,14 +1176,18 @@ window.EFI.registerMainModule(function (shared) {
       'brown-clusters-tool.html', 'time-blindness-calibrator.html', 'task-start-friction.html'
     ];
     var resourcePages = [
-      'resources.html', 'blog.html', 'open-ef-resources-directory.html', 'printables.html',
+      'resources.html', 'open-ef-resources-directory.html', 'printables.html',
       'parent-toolkit.html', 'educator-toolkit.html', 'teacher-to-coach.html',
       'executive-functioning-iep-goal-bank.html', 'barkley-model-guide.html',
       'barkley-vs-brown.html', 'further-sources.html', 'scope-of-practice.html'
     ];
     function isActive(pageList) {
-      return pageList.indexOf(currentPage) !== -1;
+      return pageList.indexOf(currentPage) !== -1 ||
+        (pageList === blogPages && /^blog-.+\.html$/.test(currentPage));
     }
+    var blogPages = ['blog.html'];
+    var aboutPages = ['meet-the-team.html', 'about.html', 'team-jacob-rozansky.html', 'team-diamond-b.html', 'team-cole-m.html'];
+    var pageSlug = currentPage.replace(/\.html$/, '');
 
     function makeNavLink(container, href, label, pageList) {
       var className = 'nav__link' + (pageList && isActive(pageList) ? ' nav__link--active' : '');
@@ -1191,32 +1195,28 @@ window.EFI.registerMainModule(function (shared) {
     }
 
     document.querySelectorAll('.nav__links').forEach(function (links) {
-      var existingAuth = links.querySelector('.nav__auth');
-      var authNodes = existingAuth ? Array.from(existingAuth.childNodes) : [];
       clearNode(links);
 
       var primaryCluster = document.createElement('div');
       primaryCluster.className = 'nav__cluster';
       makeNavLink(primaryCluster, 'coaching-home.html', 'Coaching', ['coaching-home.html', 'coaching-contact.html', 'coaching-creative.html', 'coaching-about.html', 'coaching-methodology.html']);
-      makeNavLink(primaryCluster, 'free-executive-functioning-tests.html', 'Assessments', assessmentPages);
+      makeNavLink(primaryCluster, 'free-executive-functioning-tests.html', 'Free EF Tests', assessmentPages);
+      makeNavLink(primaryCluster, 'blog.html', 'Blog', blogPages);
       makeNavLink(primaryCluster, 'resources.html', 'Resources', resourcePages);
-      makeNavLink(primaryCluster, 'meet-the-team.html', 'Team', ['meet-the-team.html', 'about.html']);
-      var authWrap = document.createElement('span');
-      authWrap.className = 'nav__auth';
-      authNodes.forEach(function (node) {
-        authWrap.appendChild(node);
-      });
+      makeNavLink(primaryCluster, 'meet-the-team.html', 'About', aboutPages);
       links.appendChild(primaryCluster);
 
-      var supportCluster = document.createElement('div');
-      supportCluster.className = 'nav__cluster nav__cluster--support';
-      supportCluster.appendChild(authWrap);
-      var consultLink = document.createElement('a');
-      consultLink.href = CONSULT_URL;
-      consultLink.className = 'nav__link nav__link--cta';
-      consultLink.textContent = 'Book Consultation';
-      supportCluster.appendChild(consultLink);
-      links.appendChild(supportCluster);
+      // The booking button lives in the header bar, outside the collapsible
+      // menu, so it stays visible on phones and laptops too.
+      var inner = links.parentNode;
+      if (!inner || inner.querySelector('.nav__book')) return;
+      var book = document.createElement('a');
+      book.className = 'nav__book';
+      book.href = CONSULT_URL + '?utm_source=' + encodeURIComponent(pageSlug) + '&utm_medium=site&utm_content=nav-cta';
+      book.setAttribute('data-analytics-event', 'book_call_click');
+      book.setAttribute('data-analytics-label', pageSlug + '-nav-cta');
+      book.textContent = 'Book a free call';
+      inner.insertBefore(book, inner.querySelector('.nav__toggle'));
     });
   })();
 

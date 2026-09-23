@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">Therapist, coach, tutor</title>
+<desc id="d">Three stick figures. The therapist asks why this feels so hard, the coach asks what you will do on Tuesday, and the tutor asks how to solve problem 4.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="42" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="24" fill="#243543" text-anchor="middle" font-weight="bold">Three helpers, three different questions</text>
+<circle cx="125" cy="238" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M125.0 252.0 L125.0 272.1 L125.0 292.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M99.0 286.0 L110.9 278.0 L125.0 268.0 L137.3 276.3 L151.0 286.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M107.0 330.0 L115.0 310.5 L125.0 292.0 L135.1 310.9 L143.0 330.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="120" cy="235" r="1.8" fill="#243543"/><circle cx="130" cy="235" r="1.8" fill="#243543"/>
+<path d="M120.0 244.0 L123.8 245.1 L130.0 244.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="20" y="92" width="210" height="70" rx="18" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<circle cx="115" cy="205" r="5" fill="#fff" stroke="#243543" stroke-width="2"/>
+<circle cx="120" cy="184" r="7" fill="#fff" stroke="#243543" stroke-width="2"/>
+<text x="125.0" y="122.875" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">“Why does this</text>
+<text x="125.0" y="141.625" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">feel so hard?”</text>
+<text x="125" y="362" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="19" fill="#243543" text-anchor="middle" font-weight="bold">Therapist</text>
+<text x="125" y="386" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">feelings, history, health</text>
+<circle cx="360" cy="238" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M360.0 252.0 L360.7 272.1 L360.0 292.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M334.0 286.0 L346.6 276.3 L360.0 268.0 L373.8 277.6 L386.0 286.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M342.0 330.0 L351.7 310.9 L360.0 292.0 L367.9 310.7 L378.0 330.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="355" cy="235" r="1.8" fill="#243543"/><circle cx="365" cy="235" r="1.8" fill="#243543"/>
+<path d="M354 242 Q360 248 366 242" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<rect x="255" y="92" width="210" height="70" rx="18" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<circle cx="350" cy="205" r="5" fill="#fff" stroke="#243543" stroke-width="2"/>
+<circle cx="355" cy="184" r="7" fill="#fff" stroke="#243543" stroke-width="2"/>
+<text x="360.0" y="122.875" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">“What will you</text>
+<text x="360.0" y="141.625" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">do on Tuesday?”</text>
+<text x="360" y="362" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="19" fill="#243543" text-anchor="middle" font-weight="bold">Coach</text>
+<text x="360" y="386" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">systems, habits, follow-through</text>
+<circle cx="595" cy="238" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M595.0 252.0 L595.2 271.1 L595.0 292.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M569.0 286.0 L581.9 276.4 L595.0 268.0 L609.0 276.6 L621.0 286.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M577.0 330.0 L585.5 310.4 L595.0 292.0 L605.0 311.5 L613.0 330.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="590" cy="235" r="1.8" fill="#243543"/><circle cx="600" cy="235" r="1.8" fill="#243543"/>
+<path d="M590.0 244.0 L596.0 244.7 L600.0 244.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="490" y="92" width="210" height="70" rx="18" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<circle cx="585" cy="205" r="5" fill="#fff" stroke="#243543" stroke-width="2"/>
+<circle cx="590" cy="184" r="7" fill="#fff" stroke="#243543" stroke-width="2"/>
+<text x="595.0" y="122.875" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">“How do you</text>
+<text x="595.0" y="141.625" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">solve #4?”</text>
+<text x="595" y="362" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="19" fill="#243543" text-anchor="middle" font-weight="bold">Tutor</text>
+<text x="595" y="386" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">subject content</text>
+</svg>

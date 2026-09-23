@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">Simple versus complex tasks with company</title>
+<desc id="d">Left: two stick figures working on simple familiar tasks, labeled faster with company. Right: two figures on brand-new tricky tasks, labeled a bit slower when watched.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="40" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="24" fill="#243543" text-anchor="middle" font-weight="bold">What an audience does to your work</text>
+<line x1="360" y1="70" x2="360" y2="340" stroke="#c9bca5" stroke-width="3" stroke-dasharray="8 8"/>
+<text x="185" y="90" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="19" fill="#243543" text-anchor="middle" font-weight="bold">Simple, familiar tasks</text>
+<text x="185" y="112" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">(email, dishes, filing)</text>
+<circle cx="150" cy="198" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M150.0 212.0 L150.5 232.6 L150.0 252.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M122.0 192.0 L135.6 210.0 L150.0 228.0 L165.1 210.3 L178.0 192.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M132.0 290.0 L142.1 271.7 L150.0 252.0 L159.4 270.7 L168.0 290.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="145" cy="195" r="1.8" fill="#243543"/><circle cx="155" cy="195" r="1.8" fill="#243543"/>
+<path d="M144 202 Q150 208 156 202" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<circle cx="230" cy="198" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M230.0 212.0 L229.6 232.0 L230.0 252.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M204.0 246.0 L218.1 237.1 L230.0 228.0 L242.8 236.9 L256.0 246.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M212.0 290.0 L220.1 270.9 L230.0 252.0 L238.9 271.7 L248.0 290.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="225" cy="195" r="1.8" fill="#243543"/><circle cx="235" cy="195" r="1.8" fill="#243543"/>
+<path d="M225.0 204.0 L231.0 204.0 L235.0 204.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="185" y="330" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="18" fill="#274960" text-anchor="middle" font-weight="bold">↑ faster with company</text>
+<text x="540" y="90" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="19" fill="#243543" text-anchor="middle" font-weight="bold">Brand-new, tricky tasks</text>
+<text x="540" y="112" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">(learning, hard problem-solving)</text>
+<circle cx="505" cy="198" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M505.0 212.0 L506.1 232.1 L505.0 252.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M475.0 220.0 L483.1 228.7 L489.0 236.0 L497.4 231.7 L505.0 228.0 L513.2 231.0 L521.0 236.0 L527.0 228.6 L535.0 220.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M487.0 290.0 L497.0 271.0 L505.0 252.0 L514.5 270.0 L523.0 290.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="500" cy="196" r="1.8" fill="#243543"/><circle cx="510" cy="196" r="1.8" fill="#243543"/>
+<path d="M499 206 Q505 201 511 206" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<path d="M496.0 188.0 L500.3 189.5 L503.0 190.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M507.0 190.0 L510.0 189.9 L514.0 188.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="585" cy="198" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M585.0 212.0 L586.1 232.7 L585.0 252.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M559.0 246.0 L571.1 236.9 L585.0 228.0 L597.9 237.7 L611.0 246.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M567.0 290.0 L575.9 269.9 L585.0 252.0 L594.9 271.9 L603.0 290.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="580" cy="195" r="1.8" fill="#243543"/><circle cx="590" cy="195" r="1.8" fill="#243543"/>
+<path d="M580.0 204.0 L585.8 204.5 L590.0 204.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="540" y="330" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="18" fill="#7c5a2b" text-anchor="middle" font-weight="bold">↓ a bit slower when watched</text>
+<text x="360" y="385" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">Bond &amp; Titus (1983): 241 studies, small but consistent effects.</text>
+</svg>

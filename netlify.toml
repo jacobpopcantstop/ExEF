@@ -75,7 +75,7 @@
 
 [[redirects]]
   from = "/coaching/methodology"
-  to = "/coaching-methodology"
+  to = "/coaching-home#how-sessions-run"
   status = 301
   force = true
 
@@ -142,7 +142,7 @@
 
 [[redirects]]
   from = "/methodology.html"
-  to = "/coaching-methodology"
+  to = "/coaching-home#how-sessions-run"
   status = 301
 
 [[redirects]]
@@ -533,6 +533,18 @@
 [[redirects]]
   from = "/modules/*"
   to = "/coaching-home"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/coaching-methodology"
+  to = "/coaching-home#how-sessions-run"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/coaching-methodology.html"
+  to = "/coaching-home#how-sessions-run"
   status = 301
   force = true
 

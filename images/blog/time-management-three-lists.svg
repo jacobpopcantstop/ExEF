@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">Three lists</title>
+<desc id="d">Three cards: Today with at most three items, This week with a handful, and a Parking lot for ideas that are not scheduled yet.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="42" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="22" fill="#243543" text-anchor="middle" font-weight="bold">Three lists instead of one endless one</text>
+<rect x="40" y="90" width="190" height="220" rx="12" fill="#fff" stroke="#274960" stroke-width="3"/>
+<text x="135" y="122" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="18" fill="#274960" text-anchor="middle" font-weight="bold">Today (max 3)</text>
+<text x="135" y="162" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">1. pay rent</text>
+<text x="135" y="196" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">2. draft intro</text>
+<text x="135" y="230" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">3. call dentist</text>
+<rect x="265" y="90" width="190" height="220" rx="12" fill="#fff" stroke="#243543" stroke-width="3"/>
+<text x="360" y="122" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="18" fill="#243543" text-anchor="middle" font-weight="bold">This week</text>
+<text x="360" y="162" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">grocery run</text>
+<text x="360" y="196" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">reply to Sam</text>
+<text x="360" y="230" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">fix bike</text>
+<text x="360" y="264" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">plan Friday</text>
+<rect x="490" y="90" width="190" height="220" rx="12" fill="#fff" stroke="#7c5a2b" stroke-width="3"/>
+<text x="585" y="122" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="18" fill="#7c5a2b" text-anchor="middle" font-weight="bold">Parking lot</text>
+<text x="585" y="162" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">learn Spanish</text>
+<text x="585" y="196" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">reorganize garage</text>
+<text x="585" y="230" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">that app idea</text>
+<text x="360" y="360" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">Today stays short on purpose. Ideas go to the parking lot so they stop nagging you.</text>
+</svg>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">High school versus college structure</title>
+<desc id="d">Two columns. High school: bells tell you where to be, teachers chase missing work, parents see grades, the school runs IEP and 504 meetings. College: one syllabus in week one, nobody chases you, privacy rules limit what parents see, and you request accommodations yourself.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="40" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="22" fill="#243543" text-anchor="middle" font-weight="bold">What changes on move-in day</text>
+<text x="190" y="82" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="18" fill="#274960" text-anchor="middle" font-weight="bold">High school</text>
+<text x="530" y="82" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="18" fill="#7c5a2b" text-anchor="middle" font-weight="bold">College</text>
+<line x1="360" y1="66" x2="360" y2="340" stroke="#c9bca5" stroke-width="3" stroke-dasharray="8 8"/>
+<text x="190" y="120" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">bells tell you where to be</text>
+<text x="190" y="146" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">teachers chase missing work</text>
+<text x="190" y="172" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">parents see the grades</text>
+<text x="190" y="198" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">school runs IEP / 504 meetings</text>
+<text x="530" y="120" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">a syllabus, once, in week one</text>
+<text x="530" y="146" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">nobody chases you</text>
+<text x="530" y="172" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">privacy rules limit what parents see</text>
+<text x="530" y="198" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">you request accommodations yourself</text>
+<circle cx="190" cy="238" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M190.0 252.0 L191.0 271.1 L190.0 292.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M162.0 232.0 L176.6 250.1 L190.0 268.0 L204.3 249.7 L218.0 232.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M172.0 330.0 L181.7 310.0 L190.0 292.0 L200.0 311.9 L208.0 330.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="185" cy="235" r="1.8" fill="#243543"/><circle cx="195" cy="235" r="1.8" fill="#243543"/>
+<path d="M184 242 Q190 248 196 242" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<circle cx="530" cy="238" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M530.0 252.0 L530.6 272.1 L530.0 292.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M500.0 260.0 L507.7 268.8 L514.0 276.0 L522.1 271.5 L530.0 268.0 L537.0 272.9 L546.0 276.0 L552.8 268.6 L560.0 260.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M512.0 330.0 L521.4 312.0 L530.0 292.0 L539.6 310.5 L548.0 330.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="525" cy="236" r="1.8" fill="#243543"/><circle cx="535" cy="236" r="1.8" fill="#243543"/>
+<path d="M524 246 Q530 241 536 246" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<path d="M521.0 228.0 L523.4 229.1 L528.0 230.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M532.0 230.0 L536.4 229.2 L539.0 228.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="360" y="385" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">The scaffolding goes away all at once, so plan to rebuild it.</text>
+</svg>

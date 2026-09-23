@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">A shared system</title>
+<desc id="d">Two relaxed stick figures on either side of a shared board listing the week: trash on Tuesday, vet on Wednesday, the electric bill on Friday, and a 15-minute check-in on Sunday.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="40" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="22" fill="#243543" text-anchor="middle" font-weight="bold">Move the reminders into a shared system</text>
+<rect x="250" y="80" width="220" height="170" rx="10" fill="#fff" stroke="#243543" stroke-width="3"/>
+<text x="360" y="108" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="17" fill="#274960" text-anchor="middle" font-weight="bold">Shared board</text>
+<text x="360" y="140" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">Tue: trash out ✓</text>
+<text x="360" y="166" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">Wed: vet at 4pm</text>
+<text x="360" y="192" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">Fri: pay electric</text>
+<text x="360" y="218" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="middle" font-weight="normal">Sun: 15-min check-in</text>
+<circle cx="140" cy="238" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M140.0 252.0 L140.2 272.2 L140.0 292.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M116.0 288.0 L127.1 278.2 L140.0 268.0 L158.0 262.0 L178.0 256.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M122.0 330.0 L130.7 310.0 L140.0 292.0 L149.9 312.0 L158.0 330.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="135" cy="235" r="1.8" fill="#243543"/><circle cx="145" cy="235" r="1.8" fill="#243543"/>
+<path d="M134 242 Q140 248 146 242" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<circle cx="580" cy="238" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M580.0 252.0 L579.1 272.2 L580.0 292.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M554.0 286.0 L566.3 277.6 L580.0 268.0 L594.0 276.9 L606.0 286.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M562.0 330.0 L571.6 309.8 L580.0 292.0 L590.2 310.0 L598.0 330.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="575" cy="235" r="1.8" fill="#243543"/><circle cx="585" cy="235" r="1.8" fill="#243543"/>
+<path d="M574 242 Q580 248 586 242" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<path d="M178.0 250.0 L194.8 238.1 L214.0 224.9 L229.5 212.6 L248.0 200.0" fill="none" stroke="#c9bca5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 6"/>
+<path d="M542.0 250.0 L524.2 236.5 L507.9 226.0 L490.5 212.9 L472.0 200.0" fill="none" stroke="#c9bca5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 6"/>
+<text x="360" y="380" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">The board does the remembering, so neither of you has to play manager.</text>
+</svg>

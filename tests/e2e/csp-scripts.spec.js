@@ -10,7 +10,9 @@ test.describe('CSP — no inline scripts', () => {
     const visibility = require('../../data/site-visibility.json');
     const retired = new Set([...visibility.hiddenPages, 'checkout.html', 'checkout-return.html', 'login.html', 'community.html']);
     const pages = fs.readdirSync(path.resolve(__dirname, '../..'))
-      .filter(f => f.endsWith('.html') && !retired.has(f));
+      .filter(f => f.endsWith('.html') && !retired.has(f))
+      // Redirect stubs (meta refresh) navigate away mid-check; they carry no scripts.
+      .filter(f => !/http-equiv="refresh"/i.test(fs.readFileSync(path.resolve(__dirname, '../..', f), 'utf8')));
     for (const p of pages) {
       await page.goto(`/${p}`, { waitUntil: 'domcontentloaded' });
       const found = await page.evaluate(() => ({

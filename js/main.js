@@ -70,10 +70,9 @@
 
   function highlightActiveNavLinks() {
     var currentPage = window.location.pathname.replace(/\/+$/, '').split('/').pop().replace(/^([^.]+)$/, '$1.html') || 'index.html';
+    // Adds exact-page highlighting on top of the section highlighting that
+    // main-ui.js sets (e.g. "Blog" on a post), so it must not clear classes.
     document.querySelectorAll('.nav__link').forEach(function (link) {
-      link.classList.remove('nav__link--active');
-      link.removeAttribute('aria-current');
-
       var href = link.getAttribute('href');
       if (href === currentPage || (currentPage === '' && href === 'index.html')) {
         link.classList.add('nav__link--active');

@@ -61,11 +61,6 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://exef.org/coaching-methodology</loc>
-    <lastmod>2026-08-06</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://exef.org/conative-action-profile</loc>
     <lastmod>2026-08-06</lastmod>
     <priority>0.5</priority>
@@ -213,6 +208,46 @@
   <url>
     <loc>https://exef.org/blog-why-do-i-procrastinate</loc>
     <lastmod>2026-09-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://exef.org/blog-adhd-burnout</loc>
+    <lastmod>2026-09-23</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://exef.org/blog-body-doubling</loc>
+    <lastmod>2026-09-23</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://exef.org/blog-how-to-improve-executive-function</loc>
+    <lastmod>2026-09-23</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://exef.org/blog-what-is-adhd-coaching</loc>
+    <lastmod>2026-09-23</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://exef.org/blog-adhd-coach-vs-therapist</loc>
+    <lastmod>2026-09-23</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://exef.org/blog-adhd-in-college</loc>
+    <lastmod>2026-09-23</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://exef.org/blog-adhd-relationships</loc>
+    <lastmod>2026-09-23</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://exef.org/blog-adhd-time-management</loc>
+    <lastmod>2026-09-23</lastmod>
     <priority>0.5</priority>
   </url>
 </urlset>

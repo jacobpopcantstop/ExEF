@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">Where the energy goes</title>
+<desc id="d">A nearly empty battery at 4 percent, with drains labeled masking, catch-up sprints, missed reminders and shame spirals. A tired stick figure wonders why a weekend of rest did not fix it.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="40" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="24" fill="#243543" text-anchor="middle" font-weight="bold">Where the energy goes</text>
+<rect x="250" y="90" width="220" height="250" rx="18" fill="#fff" stroke="#243543" stroke-width="4"/>
+<rect x="320" y="72" width="80" height="20" rx="5" fill="#243543"/>
+<rect x="262" y="300" width="196" height="28" rx="6" fill="#7c5a2b"/>
+<text x="360" y="320" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#fff" text-anchor="middle" font-weight="bold">4%</text>
+<text x="120" y="120" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#7c5a2b" text-anchor="middle" font-weight="normal" font-style="italic">masking</text>
+<text x="110" y="175" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#7c5a2b" text-anchor="middle" font-weight="normal" font-style="italic">catch-up sprints</text>
+<text x="120" y="230" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#7c5a2b" text-anchor="middle" font-weight="normal" font-style="italic">missed reminders</text>
+<text x="120" y="285" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="16" fill="#7c5a2b" text-anchor="middle" font-weight="normal" font-style="italic">shame spirals</text>
+<path d="M180.0 125.0 L196.0 130.8 L212.8 137.0 L231.6 144.2 L248.0 150.0" fill="none" stroke="#7c5a2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M190.0 180.0 L210.0 183.7 L228.4 185.9 L248.0 190.0" fill="none" stroke="#7c5a2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M190.0 235.0 L208.4 235.8 L228.9 234.3 L248.0 235.0" fill="none" stroke="#7c5a2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M180.0 290.0 L202.4 285.7 L225.5 282.5 L248.0 280.0" fill="none" stroke="#7c5a2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="590" cy="248" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M590.0 262.0 L590.2 282.6 L590.0 302.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M560.0 270.0 L566.8 279.2 L574.0 286.0 L582.5 280.9 L590.0 278.0 L598.1 281.2 L606.0 286.0 L611.9 278.8 L620.0 270.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M572.0 340.0 L581.0 320.7 L590.0 302.0 L598.5 321.1 L608.0 340.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="585" cy="246" r="1.8" fill="#243543"/><circle cx="595" cy="246" r="1.8" fill="#243543"/>
+<path d="M584 256 Q590 251 596 256" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<path d="M581.0 238.0 L585.4 239.3 L588.0 240.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M592.0 240.0 L596.6 238.4 L599.0 238.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="510" y="90" width="170" height="70" rx="18" fill="#fff" stroke="#243543" stroke-width="2.5"/>
+<circle cx="566" cy="196" r="5" fill="#fff" stroke="#243543" stroke-width="2"/>
+<circle cx="580" cy="178" r="7" fill="#fff" stroke="#243543" stroke-width="2"/>
+<text x="595.0" y="120.875" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">“But I rested</text>
+<text x="595.0" y="139.625" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">all weekend?”</text>
+<text x="360" y="385" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#243543" text-anchor="middle" font-weight="normal">Rest refills the battery slower than the drains empty it.</text>
+</svg>

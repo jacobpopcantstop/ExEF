@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" role="img" aria-labelledby="t d">
+<title id="t">Brain training transfer</title>
+<desc id="d">A rising line for the score on the trained game and a flat line for real-life planning, reading and math, showing gains that do not transfer.</desc>
+<rect width="720" height="400" rx="16" fill="#f5f1e8"/>
+<text x="360" y="40" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="21" fill="#243543" text-anchor="middle" font-weight="bold">Brain games: great at making you good at brain games</text>
+<path d="M90.0 320.0 L107.9 319.7 L126.3 319.9 L144.0 320.0 L161.7 321.0 L180.1 321.1 L198.4 320.6 L217.7 320.2 L235.5 319.9 L251.8 318.8 L270.6 320.7 L289.6 319.3 L307.0 319.8 L324.0 321.1 L342.2 320.7 L360.2 319.1 L377.9 320.4 L397.8 320.1 L415.4 320.3 L432.5 321.1 L450.8 320.6 L469.2 321.1 L486.4 319.9 L506.2 319.9 L522.6 319.9 L542.1 319.2 L559.3 320.9 L576.6 319.2 L596.7 319.1 L615.0 320.9 L631.5 318.9 L650.0 320.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M90.0 320.0 L90.7 299.6 L90.4 281.6 L90.7 261.9 L89.9 242.5 L90.8 224.4 L91.1 204.8 L90.4 186.0 L90.7 166.7 L88.9 146.3 L90.7 128.2 L90.2 107.6 L90.4 88.7 L90.0 70.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="640" y="345" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#243543" text-anchor="end" font-weight="normal">weeks of training →</text>
+<path d="M100.0 290.0 L116.8 281.9 L134.2 274.8 L151.2 266.0 L167.5 257.8 L182.8 250.7 L200.1 242.2 L216.0 234.5 L233.1 227.5 L250.0 220.0 L266.6 211.2 L283.7 205.0 L300.7 197.8 L316.6 189.6 L333.9 180.3 L350.1 173.0 L365.9 165.3 L384.2 158.1 L400.0 150.0 L419.0 145.3 L438.5 138.4 L457.1 132.3 L475.1 128.2 L494.5 121.6 L512.8 115.6 L530.5 110.4 L550.0 105.0 L567.4 102.1 L585.7 100.6 L603.7 97.5 L621.7 94.8 L640.0 92.0" fill="none" stroke="#274960" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="560" y="85" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#274960" text-anchor="middle" font-weight="normal">score on the trained game</text>
+<path d="M100.0 280.0 L118.4 279.2 L138.0 279.0 L156.9 280.2 L174.5 279.5 L194.0 278.5 L211.2 278.0 L232.3 280.1 L250.0 279.0 L269.1 279.2 L286.4 277.8 L306.3 276.6 L324.7 277.2 L344.1 277.7 L361.8 276.0 L381.4 276.2 L400.0 276.0 L420.1 277.7 L436.6 276.6 L456.5 278.3 L474.9 279.3 L492.5 279.0 L513.3 280.1 L530.9 279.4 L550.0 280.0 L568.9 279.6 L585.9 280.2 L603.1 279.4 L622.6 278.9 L640.0 277.0" fill="none" stroke="#7c5a2b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="560" y="262" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="15" fill="#7c5a2b" text-anchor="middle" font-weight="normal">real-life planning, reading, math</text>
+<circle cx="250" cy="108" r="14" fill="#f5f1e8" stroke="#243543" stroke-width="3"/>
+<path d="M250.0 122.0 L249.8 143.2 L250.0 162.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M220.0 130.0 L226.6 138.1 L234.0 146.0 L241.9 141.7 L250.0 138.0 L257.6 141.3 L266.0 146.0 L271.8 138.2 L280.0 130.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M232.0 200.0 L241.3 181.4 L250.0 162.0 L259.1 181.0 L268.0 200.0" fill="none" stroke="#243543" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="245" cy="106" r="1.8" fill="#243543"/><circle cx="255" cy="106" r="1.8" fill="#243543"/>
+<path d="M244 116 Q250 111 256 116" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round"/>
+<path d="M241.0 98.0 L245.6 99.1 L248.0 100.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M252.0 100.0 L254.8 98.9 L259.0 98.0" fill="none" stroke="#243543" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="360" y="385" font-family="'Comic Sans MS','Chalkboard SE','Comic Neue','Segoe Print',sans-serif" font-size="14" fill="#7c5a2b" text-anchor="middle" font-weight="normal">Schematic of Melby-Lervåg &amp; Hulme (2013): gains stay inside the game.</text>
+</svg>
